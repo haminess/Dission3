@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Platform
+  - Object
+  - Wall
+  - ui
+  - tile
   layers:
   - Default
   - TransparentFX
@@ -13,14 +18,14 @@ TagManager:
   - UI
   - 
   - 
+  - Platform
+  - Wall
+  - Object
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Chart
+  - Note
+  - Noteonchart
+  - Charts
   - 
   - 
   - 
