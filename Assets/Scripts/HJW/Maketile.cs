@@ -19,6 +19,7 @@ public class Maketile : MonoBehaviour
     public int mode;
     private bool holding;
     public GameObject curmadiobj;
+    public int curmadi;
     public float curpos;
     [Space(20)]
     public float unmun = 0;
@@ -31,6 +32,7 @@ public class Maketile : MonoBehaviour
     public int divide;
     public bool fuckkkk;
     public float totalbak;
+    public bool is_fucking;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +49,7 @@ public class Maketile : MonoBehaviour
             fuckkkk = true;
         }
 
-        switch (makemadi.down)
+        switch (makemadi.down) 
         {
             case 32:
                 totalbak = 0.125f * makemadi.up;
@@ -67,7 +69,7 @@ public class Maketile : MonoBehaviour
             case 1:
                 totalbak = 4 * makemadi.up;
                 break;
-        }
+        }//calculate total bak
 
     }
 
@@ -79,19 +81,18 @@ public class Maketile : MonoBehaviour
         {
             if (makemadi.chart)
             {
-                int result;
                 int c = 0;
                 curmadiobj = GameObject.Find(makemadi.curmadi);
                 fakepointer.transform.SetParent(curmadiobj.transform);
                 curpointer.transform.SetParent(curmadiobj.transform);
-                if(int.TryParse(makemadi.curmadi, out result))
+                if(int.TryParse(makemadi.curmadi, out curmadi))
                 {
-                    c = result;
+                    c = curmadi;
                 }
                 //                                                                                             mouse   madi                 page
                 fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 380 - (505.5f * c) + (makemadi.page * 69f), 0);
                 backjapyo();
-                switch (Makenote.mode)
+                switch (Makenote.mode) 
                 {
                     case 0: //4 
                         if(fuckkkk & MathF.Floor( divide * zabun) != divide * zabun)
@@ -164,6 +165,7 @@ public class Maketile : MonoBehaviour
             else
             {
                 curpointer.transform.position = mospos;
+                is_fucking = false;
             }
         }
         else
@@ -184,10 +186,10 @@ public class Maketile : MonoBehaviour
             {
                 curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y + 0.5f);
             }
-        }
+        }//box move
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) //box
         {
             if (makemadi.chart || Makenote.chartmode)
             {
@@ -236,7 +238,7 @@ public class Maketile : MonoBehaviour
                     }
                     break;
             };
-        }
+        } //box edit
         repaint();
     }
     public void backjapyo()
@@ -282,6 +284,7 @@ public class Maketile : MonoBehaviour
     public void fuck(float note)
     {
         float a = (float)492 / (note * 2);
+        is_fucking = true;
         for (int i = 0; i < note * 2 - 1; i += 2)
         {
             if (-246 + a * i <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + a * (i + 2))
@@ -291,9 +294,10 @@ public class Maketile : MonoBehaviour
             }
         }
     }
-    public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감, note = 3.5, note = 1.5
+    public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감
     {
         float a = (float)492 / (note * 4);
+        is_fucking = true;
         for (int i = 0; i < note * 2 + MathF.Floor( note); i += 2)
         {
             if (-246 + (a * (i + 1)) <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + (a * (i + 3)))
@@ -303,7 +307,7 @@ public class Maketile : MonoBehaviour
             }
         }
     }
-    void repaint()
+    void repaint() //box
     {
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {

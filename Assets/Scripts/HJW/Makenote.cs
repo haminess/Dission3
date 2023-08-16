@@ -11,65 +11,80 @@ public class Makenote : MonoBehaviour
     public GameObject[] notes;
     [Space(20)]
     public double[] notedata;
-    private double data;
+    public GameObject[] notesobj;
 
+    private double data;
+    double madi_sec;
     private void Start()
     {
+        madi_sec = makemadi.sec / makemadi.madi; //how long is one madi
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode)
+        if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
         {
-            double madi_sec = Makemadi.instance.sec / Makemadi.instance.madi; //how long is one madi
-            int result;
-            int curmadi = 0;
-            if(int.TryParse(Makemadi.instance.curmadi, out result))
-            {
-                curmadi = result;
-            }
-            if (mode == 0) //4
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.zabun * 2)) * Maketile.instance.curpos);
-            }
-            else if (mode == 1) //8
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.palbun * 2)) * Maketile.instance.curpos);
-            }
-            else if (mode == 2) //16
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.sipukbun * 2)) * Maketile.instance.curpos);
-            }
-            else if (mode == 3) //32
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.samsipebun * 2)) * Maketile.instance.curpos);
-            }
-            else if (mode == 4) //1
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.unmun * 2)) * Maketile.instance.curpos);
-            }
-            else if (mode == 5) //2
-            {
-                data = (curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.ebun * 2)) * Maketile.instance.curpos);
-            }
+            Datacal();
             if (Array.Exists(notedata, x => x == data))
             {
-                var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-                var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
-                if(a)
-                {
-                    Destroy(a.collider.gameObject);
-                }
-                notedata = Array.FindAll(notedata, num => num != data).ToArray();
                 return;
             }
             var n = Instantiate(notes[mode], Maketile.instance.curmadiobj.transform);
             n.GetComponent<RectTransform>().localPosition = new Vector2(Maketile.instance.curpointer.transform.localPosition.x, Maketile.instance.curpointer.transform.localPosition.y);
 
+            Array.Resize(ref notesobj, notesobj.Length + 1);
+            notesobj[notesobj.Length - 1] = n;
+
             Array.Resize(ref notedata, notedata.Length + 1);
             notedata[notedata.Length - 1] = data;
         }
+
+        if (Input.GetMouseButtonDown(1) && makemadi.chart && chartmode) //erase note
+        {
+            Datacal();
+            if(Array.Exists(notedata, x => x == data) == false)
+            {
+                return;
+            }
+            var noteindex = Array.IndexOf(notedata, data);
+            Destroy(notesobj[noteindex]);
+            //var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
+            //var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
+            //if (a)
+            //{
+            //Destroy(a.collider.gameObject);
+            //}
+            notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
+            notedata = Array.FindAll(notedata, num => num != data).ToArray();
+        }
     }
 
+    void Datacal()
+    {
+        if (mode == 0) //4
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.zabun * 2)) * Maketile.instance.curpos);
+        }
+        else if (mode == 1) //8
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.palbun * 2)) * Maketile.instance.curpos);
+        }
+        else if (mode == 2) //16
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.sipukbun * 2)) * Maketile.instance.curpos);
+        }
+        else if (mode == 3) //32
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.samsipebun * 2)) * Maketile.instance.curpos);
+        }
+        else if (mode == 4) //1
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.unmun * 2)) * Maketile.instance.curpos);
+        }
+        else if (mode == 5) //2
+        {
+            data = (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.ebun * 2)) * Maketile.instance.curpos);
+        }
+    }
     #region switch
 
     public void mode0()
@@ -90,11 +105,11 @@ public class Makenote : MonoBehaviour
     public void mode1()
     {
         var data = Maketile.instance.divide * Maketile.instance.palbun;
-        if(Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 0.5f)
+        if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 0.5f)
         {
             return;
         }
-        else if ((MathF.Floor(data) != data || data == 0 ) && Maketile.instance.fuckkkk == false)
+        else if ((MathF.Floor(data) != data || data == 0) && Maketile.instance.fuckkkk == false)
         {
             return;
         }
