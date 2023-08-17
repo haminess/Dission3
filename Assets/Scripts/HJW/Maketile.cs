@@ -14,10 +14,12 @@ public class Maketile : MonoBehaviour
     public GameObject prefeb;
     public Vector3 mospos;
     public int index;
+    public int mode;
     [Space(20)]
     public Vector2[] boxpos;
-    public int mode;
     private bool holding;
+    [Space(20)]
+    [Header("Note")]
     public GameObject curmadiobj;
     public int curmadi;
     public float curpos;
@@ -30,8 +32,8 @@ public class Maketile : MonoBehaviour
     public float samsipebun = 0;
     [Space(20)]
     public int divide;
-    public bool fuckkkk;
     public float totalbak;
+    public bool fuckkkk;
     public bool is_fucking;
     // Start is called before the first frame update
     void Start()
@@ -160,7 +162,7 @@ public class Maketile : MonoBehaviour
 
                         }
                         break;
-                }
+                }//note move
             }
             else
             {
@@ -316,35 +318,39 @@ public class Maketile : MonoBehaviour
             boxpos[i] = gameObject.transform.GetChild(i).position;
         }
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(mospos, new Vector3(mospos.x, mospos.y, mospos.z + 2));
-    }
-
     #region switch
     public void erase()
     {
-        exitchart();
         mode = 1;
+        if (Makenote.chartmode)
+        {
+            Mouseevent.nopointer = true;
+        }
     }
     public void make()
     {
-        exitchart();
         mode = 0;
+        if (Makenote.chartmode)
+        {
+            Mouseevent.nopointer = false;
+        }
     }
 
     public void edit()
     {
-        exitchart();
         mode = 2;
+        if (Makenote.chartmode)
+        {
+            Mouseevent.nopointer = true;
+        }
     }
 
-    void exitchart()
+    public void exitchart()
     {
         note.GetComponent<SpriteRenderer>().enabled = false;
         tile.GetComponent<SpriteRenderer>().enabled = true;
         Makenote.chartmode = false;
+        Maketile.instance.mode = 0;
         curpointer = tile;
     }
     #endregion

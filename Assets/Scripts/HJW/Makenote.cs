@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Makenote : MonoBehaviour
 {
     public Makemadi makemadi;
     public static int mode;
-    public static bool chartmode;
+    public static bool chartmode; //현재 음표를 수정하고 있습니다.
+    public TextMeshProUGUI transitionbuttontext;
     public Sprite[] noteimg;
     public GameObject[] notes;
     [Space(20)]
@@ -15,46 +17,110 @@ public class Makenote : MonoBehaviour
 
     private double data;
     double madi_sec;
+    bool holding;
     private void Start()
     {
         madi_sec = makemadi.sec / makemadi.madi; //how long is one madi
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
+        if(Maketile.instance.mode == 0)
         {
-            Datacal();
-            if (Array.Exists(notedata, x => x == data))
+            if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
             {
-                return;
+                Datacal();
+                if (Array.Exists(notedata, x => x == data))
+                {
+                    return;
+                }
+                var n = Instantiate(notes[mode], Maketile.instance.curmadiobj.transform);
+                n.GetComponent<RectTransform>().localPosition = new Vector2(Maketile.instance.curpointer.transform.localPosition.x, Maketile.instance.curpointer.transform.localPosition.y);
+
+                Array.Resize(ref notesobj, notesobj.Length + 1);
+                notesobj[notesobj.Length - 1] = n;
+
+                Array.Resize(ref notedata, notedata.Length + 1);
+                notedata[notedata.Length - 1] = data;
             }
-            var n = Instantiate(notes[mode], Maketile.instance.curmadiobj.transform);
-            n.GetComponent<RectTransform>().localPosition = new Vector2(Maketile.instance.curpointer.transform.localPosition.x, Maketile.instance.curpointer.transform.localPosition.y);
-
-            Array.Resize(ref notesobj, notesobj.Length + 1);
-            notesobj[notesobj.Length - 1] = n;
-
-            Array.Resize(ref notedata, notedata.Length + 1);
-            notedata[notedata.Length - 1] = data;
         }
-
-        if (Input.GetMouseButtonDown(1) && makemadi.chart && chartmode) //erase note
+        else if(Maketile.instance.mode == 1)
         {
-            Datacal();
-            if(Array.Exists(notedata, x => x == data) == false)
+            if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode) //erase note
             {
-                return;
+                Datacal();
+                if (Array.Exists(notedata, x => x == data) == false)
+                {
+                    return;
+                }
+                var noteindex = Array.IndexOf(notedata, data);
+                Destroy(notesobj[noteindex]);
+                //var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
+                //var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
+                //if (a)
+                //{
+                //Destroy(a.collider.gameObject);
+                //}
+                notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
+                notedata = Array.FindAll(notedata, num => num != data).ToArray();
             }
-            var noteindex = Array.IndexOf(notedata, data);
-            Destroy(notesobj[noteindex]);
-            //var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-            //var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
-            //if (a)
-            //{
-            //Destroy(a.collider.gameObject);
-            //}
-            notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
-            notedata = Array.FindAll(notedata, num => num != data).ToArray();
+        }
+        else if(Maketile.instance.mode == 2) //edit note
+        {
+            if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode)
+            {
+                Datacal();
+                if (Array.Exists(notedata, x => x == data) == false && holding == false)
+                {
+                    return;
+                }
+                var noteindex = Array.IndexOf(notedata, data);
+                if(holding && Maketile.instance.is_fucking)
+                {
+                    var n = Instantiate(notes[mode], Maketile.instance.curmadiobj.transform);
+                    n.GetComponent<RectTransform>().localPosition = new Vector2(Maketile.instance.curpointer.transform.localPosition.x, Maketile.instance.curpointer.transform.localPosition.y);
+
+                    Array.Resize(ref notesobj, notesobj.Length + 1);
+                    notesobj[notesobj.Length - 1] = n;
+
+                    Array.Resize(ref notedata, notedata.Length + 1);
+                    notedata[notedata.Length - 1] = data;
+                    Destroy(Maketile.instance.curpointer);
+                    Maketile.instance.curpointer = Maketile.instance.note;
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                    Mouseevent.nopointer = true;
+                    holding = false;
+                }
+                else
+                {
+                    Maketile.instance.curpointer = notesobj[noteindex];
+                    notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
+                    notedata = Array.FindAll(notedata, num => num != data).ToArray();
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                    switch(Maketile.instance.curpointer.GetComponent<SpriteRenderer>().sprite.ToString())
+                    {
+                        case "음표_0":
+                            mode = 0;
+                            break;
+                        case "음표_1":
+                            mode = 1;
+                            break;
+                        case "음표_2":
+                            mode = 2;
+                            break;
+                        case "음표_3":
+                            mode = 3;
+                            break;
+                        case "음표_5":
+                            mode = 4;
+                            break;
+                        case "음표_6":
+                            mode = 6;
+                            break;
+                    }
+                    Mouseevent.nopointer = false;
+                    holding = true;
+                }
+            }
         }
     }
 
@@ -99,7 +165,6 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[0];
-        tochart();
         mode = 0;
     }
     public void mode1()
@@ -114,7 +179,6 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[1];
-        tochart();
         mode = 1;
     }
     public void mode2()
@@ -129,7 +193,6 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[2];
-        tochart();
         mode = 2;
 
     }
@@ -145,7 +208,6 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[3];
-        tochart();
         mode = 3;
     }
     public void mode4()
@@ -160,7 +222,6 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[4];
-        tochart();
         mode = 4;
     }
     public void mode5()
@@ -175,15 +236,29 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[5];
-        tochart();
         mode = 5;
     }
-
-    void tochart()
+    public void transition()
     {
+        Mouseevent.nopointer = false;
+        if(chartmode)
+        {
+            transitionbuttontext.text = "Chart";
+            Maketile.instance.exitchart();
+        }
+        else if(chartmode == false)
+        {
+            transitionbuttontext.text = "Box";
+            tochart();
+        }
+    }
+    public void tochart()
+    {
+        Maketile.instance.note.GetComponent<SpriteRenderer>().enabled = true;
         Maketile.instance.curpointer = Maketile.instance.note;
         Maketile.instance.tile.GetComponent<SpriteRenderer>().enabled = false;
         Maketile.instance.note.GetComponent<SpriteRenderer>().enabled = true;
+        Maketile.instance.mode = 0;
         chartmode = true;
     }
     #endregion

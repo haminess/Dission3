@@ -19,7 +19,7 @@ public class Makemadi : MonoBehaviour
     public int page;
     public uint endcount;
     public string curmadi = "0";
-    public bool chart;
+    public bool chart; //마디 범위 내에 들어와 있습니다.
     int c;
     // Start is called before the first frame update
     void Start()
@@ -50,7 +50,7 @@ public class Makemadi : MonoBehaviour
         if (a)
         {
             chart = true;
-            if (Makenote.chartmode)
+            if (Makenote.chartmode && Mouseevent.nopointer == false)
             {
                 Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
 

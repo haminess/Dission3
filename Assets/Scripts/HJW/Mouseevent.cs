@@ -6,11 +6,17 @@ public class Mouseevent : MonoBehaviour
     public bool anim;
     public bool clickanim;
     public Animator target;
+    public static bool nopointer;
     private void OnMouseEnter()
     {
         if (simplepointer)
         {
-            if (Makemadi.instance.chart && Makenote.chartmode)
+            if (nopointer)
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                return;
+            }
+            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
             {
                 return;
             }
@@ -27,6 +33,15 @@ public class Mouseevent : MonoBehaviour
     {
         if (simplepointer)
         {
+            if(nopointer)
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                return;
+            }
+            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
+            {
+                return;
+            }
             Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
 
         }
