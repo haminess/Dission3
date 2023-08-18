@@ -8,8 +8,16 @@ public class Makemadi : MonoBehaviour
     public Transform charts;
     public GameObject prefab;
     [Space(20)]
+    [Header("For fucking small madi")]
+    public GameObject total;
+    public GameObject start;
+    public GameObject Middle;
+    public GameObject End;
+    public float starttime;
+    public float length;
+    [Space(20)]
     public int bpm;
-    public double sec;
+    public double sec; //total sec
     public int what_four;
     [Header("Backjapyo")]
     public int up;
@@ -27,10 +35,40 @@ public class Makemadi : MonoBehaviour
         endcount = 0;
         instance = this;
         madi = bpm / what_four * (sec / 60);
-        for (int i = 0; i < madi; i++)
+        if(starttime != 0)
+        {
+            var onemadilength = sec / madi; //how long is one madi 2.3
+            length = (float)(starttime / onemadilength) * 519; //total length of madi
+            Middle.GetComponent<RectTransform>().sizeDelta = new Vector2( length , Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
+            total.GetComponent<BoxCollider2D>().size = new Vector2(length, total.GetComponent<RectTransform>().sizeDelta.y); //collider
+
+            var startpos = start.GetComponent<RectTransform>().anchoredPosition;
+            var endpos = End.GetComponent<RectTransform>().anchoredPosition;
+            if(starttime < onemadilength)
+            {
+                start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x + ((515 - length) / 2), startpos.y);
+                End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x - ((519 - length) / 2), endpos.y);
+            }
+            else
+            {
+                start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x - ((length - 515) / 2), startpos.y);
+                End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x + ((length - 519) / 2), endpos.y);
+            }
+
+            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -477);
+            total.transform.SetParent(charts.transform);
+        }
+        for (int i = 0; i < madi; i++) //make madi
         {
             var a = Instantiate(prefab, canvas);
-            a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+            if(starttime == 0)
+            {
+                a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+            }
+            else
+            {
+                a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+            }
             a.transform.SetParent(charts);
             a.name = i.ToString();
         }

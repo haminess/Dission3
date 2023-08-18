@@ -20,6 +20,7 @@ public class Maketile : MonoBehaviour
     private bool holding;
     [Space(20)]
     [Header("Note")]
+    public Sprite defaultnoteimg;
     public GameObject curmadiobj;
     public int curmadi;
     public float curpos;
@@ -91,8 +92,8 @@ public class Maketile : MonoBehaviour
                 {
                     c = curmadi;
                 }
-                //                                                                                             mouse   madi                 page
-                fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 380 - (505.5f * c) + (makemadi.page * 69f), 0);
+                //                                                                                              mouse     madi                 page
+                fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 370 - (505.5f * c) + (makemadi.page * 69f) - makemadi.length, 0);
                 backjapyo();
                 switch (Makenote.mode) 
                 {
@@ -332,6 +333,8 @@ public class Maketile : MonoBehaviour
         mode = 0;
         if (Makenote.chartmode)
         {
+            Makenote.mode = 0;
+            note.GetComponent<SpriteRenderer>().sprite = defaultnoteimg;
             Mouseevent.nopointer = false;
         }
     }

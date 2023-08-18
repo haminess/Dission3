@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3387621442106076369}
-  - component: {fileID: 8885318101524394933}
-  - component: {fileID: -104988992474446019}
+  - component: {fileID: 5206691128398453734}
+  - component: {fileID: 5596548246676647583}
   m_Layer: 14
-  m_Name: note 5
+  m_Name: note6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +38,7 @@ RectTransform:
   m_AnchoredPosition: {x: -1069.49, y: -279.01}
   m_SizeDelta: {x: 0.8, y: 2.56}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!61 &8885318101524394933
+--- !u!61 &5206691128398453734
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,16 +55,16 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.1, y: 0.7}
-    newSize: {x: 1.1, y: 0.7}
+    oldSize: {x: 0.77, y: 2.63}
+    newSize: {x: 0.77, y: 2.63}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1, y: 0.7}
+  m_Size: {x: 0.77, y: 2.63}
   m_EdgeRadius: 0
---- !u!212 &-104988992474446019
+--- !u!212 &5596548246676647583
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,12 +105,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1982228028, guid: d5596b09271e5644c8b12f8d7356c231, type: 3}
+  m_Sprite: {fileID: 1263133357, guid: d5596b09271e5644c8b12f8d7356c231, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.1, y: 0.7}
+  m_Size: {x: 0.77, y: 2.63}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
