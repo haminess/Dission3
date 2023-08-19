@@ -22,20 +22,22 @@ public class MainSetting : MonoBehaviour
 
         judgeRange.onValueChanged.AddListener(delegate { OnRangeChanged(); });
         musicVolume.onValueChanged.AddListener(delegate { OnVolumeChanged(); });
+
+        tJudgeRange.text = judgeRange.value.ToString("0.00");
+        tMusicVolume.text = musicVolume.value.ToString("0.0");
     }
 // Update Hp Bar
     private void OnRangeChanged()
     {
         MainGame.instance.userRange = judgeRange.value;
         tJudgeRange.text = judgeRange.value.ToString("0.00");
-        print(MainGame.instance.userRange);
     }
 
 
     private void OnVolumeChanged()
     {
         MainGame.instance.BGM.volume = musicVolume.value;
-        tMusicVolume.text = judgeRange.value.ToString("0.00");
+        tMusicVolume.text = musicVolume.value.ToString("0.0");
     }
 
     // Update is called once per frame
