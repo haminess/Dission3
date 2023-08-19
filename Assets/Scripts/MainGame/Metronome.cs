@@ -13,6 +13,7 @@ public class Metronome : MonoBehaviour
     public float tempo2 = 4;
 
     public float sec;
+    public float startSec = 0;
 
     public bool startMetronome = false;
     public bool isMetroPlaying = false;
@@ -37,6 +38,13 @@ public class Metronome : MonoBehaviour
             StartCoroutine(Play());
             startMetronome = false;
         }
+
+        else if (!isMetroPlaying && startSec < MainGame.instance.BGM.time)
+        {
+            isMetroPlaying = true;
+            StartCoroutine(Play());
+            startMetronome = false;
+        }
     }
 
     IEnumerator Play()
@@ -45,7 +53,7 @@ public class Metronome : MonoBehaviour
         if (isMetroPlaying)
         {
             metro.Play();
-            ShowMetronome();
+            MakeTic();
             yield return new WaitForSeconds(sec);
             StartCoroutine(Play());
         }
@@ -55,8 +63,9 @@ public class Metronome : MonoBehaviour
         }
     }
 
-    void ShowMetronome()
+    void MakeTic()
     {
+        // 박자 생성
         GameObject tempTic = Instantiate(ticPrefab, canvas.transform);
         tempTic.transform.SetParent(canvas.transform, false);
         Destroy(tempTic, sec * (tempo1 - tic) - (sec / 2));
@@ -72,7 +81,10 @@ public class Metronome : MonoBehaviour
             tempTic.transform.localPosition = new Vector2(((int)tempo1 / 2) * -60 + (tic * 60) + 30, 0); // 시작위치 + 60 간격 + 30
         }
 
+        // 박자 카운트
         tic++;
+
+        // 박자 다 나오면 리셋
         if(tic >= tempo1)
         {
             tic = 0;

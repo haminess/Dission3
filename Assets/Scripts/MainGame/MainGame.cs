@@ -12,21 +12,22 @@ public class MainGame : MonoBehaviour
 
     // 컴포넌트 참조
     public AudioSource BGM;
+    public StoryManager storyManager;
 
     // 오브젝트 연결
     public Player player;
 
-    public MainGameData ResultData;
+    public MainGameData DataObject;
 
-    // 게임 정보
-    public int stageNum = 1;
 
     // 채보 더미 데이터
     public float[][] chart;              // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
     public int noteIndex;                // 채보 포인터
 
     // 시간 관리
-    public bool startButton = true;      // true면 게임시작
+    public bool startButton = false;      // true면 게임시작
+    public int stageNum = 1;
+    public bool stageButton = false;      // true면 게임시작
     public bool isStart = false;         // true면 게임중인 상태
     public bool isGame = false;          // true면 스톱워치 설정
     public bool isEnd = false;           // true면 게임종료
@@ -49,6 +50,8 @@ public class MainGame : MonoBehaviour
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
     public float missRange = 0.5f;
+    public float userRange = 0f;
+    public float userRangePlus = 0.1f;
 
     // 판정 점수 관리
     public int perfectScore = 500;
@@ -74,7 +77,7 @@ public class MainGame : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
 
         // 밟았을 때 이펙트
@@ -92,7 +95,12 @@ public class MainGame : MonoBehaviour
         // 데이터 정보(캐릭터, 스테이지값) 받아오기
         player = GameObject.Find("Player").GetComponent<Player>();
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
-        ResultData = GameObject.Find("Data").GetComponent<MainGameData>();
+        storyManager = GetComponent<StoryManager>();
+        if (DataObject)
+        {
+            DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
+            stageNum = DataObject.STageNum;
+        }
 
         // 채보 데이터 불러오기(chart 채보 이차원배열 값, 노트 개수)
         noteIndex = 0;
@@ -184,6 +192,13 @@ public class MainGame : MonoBehaviour
             startButton = false;
         }
 
+        // startButton == true 되면 스테이지 시작
+        if (stageButton)
+        {
+            StageStart(stageNum);
+            stageButton = false;
+        }
+
         // 게임 중이면 스톱워치 설정
         if (isGame)
         {
@@ -193,8 +208,8 @@ public class MainGame : MonoBehaviour
 
         // miss 처리
         // **개선사항
-        if (isGame && noteIndex < chart.Length - 1 &&         // 시작했으면서 판정할 노트가 남아있고
-            BGM.time > (chart[noteIndex][0] + badRange))  // 현재 시간이 판정시간을 지났으면 (판정시간 + 판정범위 + 생성시간 1초)
+        if (isGame && noteIndex < chart.Length - 1 &&                   // 시작했으면서 판정할 노트가 남아있고
+            BGM.time > (chart[noteIndex][0] + badRange + userRange))    // 현재 시간이 판정시간을 지났으면 (판정시간 + 판정범위 + 생성시간 1초)
         {
             noteIndex++;
             miss++;
@@ -233,10 +248,8 @@ public class MainGame : MonoBehaviour
         judgeUI.text = "";
         comboUI.text = "";
 
-        // 플레이어 노트 시작 위치
-        player.CurPos = new Vector2(
-                MainGame.instance.chart[MainGame.instance.noteIndex][1],
-                MainGame.instance.chart[MainGame.instance.noteIndex][2]);
+        // 플레이어 노트 앞으로 위치
+        PlayerReposition();
 
         // 첫 노트 보여주기 
         yield return StartCoroutine(ShowNextNoteCo());
@@ -248,10 +261,27 @@ public class MainGame : MonoBehaviour
         isStart = true;
         isGame = true;
         startTime = Time.time;
+        BGM.Stop();
+        BGM.time = 0;
 
         // 1초 후 음악 틀기
         yield return new WaitForSeconds(1);
         BGM.Play();
+    }
+
+
+    // 스테이지 시작
+    public void StageStart(int _stageNum)
+    {
+        Start();
+        gameCanvas.SetActive(true);
+        StartCoroutine(StageStartCo());
+    }
+
+    public IEnumerator StageStartCo()
+    {
+        yield return StartCoroutine(storyManager.ShowStoryCo());
+        GameStart();
     }
 
     // 게임 진행도
@@ -313,7 +343,6 @@ public class MainGame : MonoBehaviour
         // 결과창 띄우기
         resultUI.SetActive(true);
         TextMeshProUGUI[] results = resultUI.transform.GetChild(1).gameObject.GetComponentsInChildren<TextMeshProUGUI>();
-        print(results.Length);
         results[0].text = rank;
         results[1].text = score.ToString();
         results[2].text = combo.ToString();
@@ -321,8 +350,6 @@ public class MainGame : MonoBehaviour
         results[4].text = good.ToString();
         results[5].text = bad.ToString();
         results[6].text = miss.ToString();
-
-
     }
 
     // 게임 끝내지 못한 경우
@@ -359,7 +386,6 @@ public class MainGame : MonoBehaviour
 
         // 판정 이후로 10개만 좌표 맞는 데이터배열 찾기
         // **개선사항: 판정 안된 10개 노트를 점검하는 시스템
-        print("move" + time);
 
         for (int i = noteIndex; i < noteIndex + 10; i++)
         {
@@ -368,7 +394,7 @@ public class MainGame : MonoBehaviour
             {
 
                 // 시간 판정 맞는지 확인
-                if (time < (chart[i][0] + perfectRange) && time > (chart[i][0] - perfectRange))  // PERFECT
+                if (time < (chart[i][0] + perfectRange + userRange) && time > (chart[i][0] - perfectRange + userRange))  // PERFECT
                 {
                     perfect++;
                     curCombo++;
@@ -379,7 +405,7 @@ public class MainGame : MonoBehaviour
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else if (time < (chart[i][0] + goodRange) && time > (chart[i][0] - goodRange))   // GOOD
+                else if (time < (chart[i][0] + goodRange + userRange) && time > (chart[i][0] - goodRange + userRange))   // GOOD
                 {
                     good++;
                     curCombo++;
@@ -390,7 +416,7 @@ public class MainGame : MonoBehaviour
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else if (time < (chart[i][0] + badRange) && time > (chart[i][0] - badRange))    // BAD
+                else if (time < (chart[i][0] + badRange + userRange) && time > (chart[i][0] - badRange + userRange))    // BAD
                 {
                     bad++;
                     combo = curCombo;
@@ -402,7 +428,7 @@ public class MainGame : MonoBehaviour
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else if (time < (chart[i][0] + missRange) && time > (chart[i][0] - missRange))  // MISS
+                else if (time < (chart[i][0] + missRange + userRange) && time > (chart[i][0] - missRange + userRange))  // MISS
                 {
                     miss++;
                     combo = curCombo;
@@ -424,6 +450,8 @@ public class MainGame : MonoBehaviour
 
     public void Stop()
     {
+        if (!isGame) return;
+
         // 게임 정지
         isGame = false;
 
@@ -432,9 +460,7 @@ public class MainGame : MonoBehaviour
 
         // 음악 정지
         BGM.Pause();
-        BGM.time = chart[noteIndex][0];
-
-        // **개선 사항: chart 구성을 audiosorce.time으로 설정하여 정확도를 높일 지
+        BGM.time = chart[noteIndex][0] - 1;
     }
     public void Continue()
     {
@@ -448,9 +474,17 @@ public class MainGame : MonoBehaviour
 
     IEnumerator ContinueCo()
     {
+        // 플레이어 노트 앞으로 위치
+        PlayerReposition();
+
         yield return StartCoroutine(ShowNextNoteCo());
         yield return StartCoroutine(TimeCountCo());
+
+        // 게임 시작(노트 띄우기)
         isGame = true;
+
+        // 1초 후에 음악 시작
+        // 노트 띄우는 시간 때문에
         yield return new WaitForSeconds(1);
         BGM.Play();
     }
@@ -467,16 +501,12 @@ public class MainGame : MonoBehaviour
     IEnumerator TimeCountCo(TextMeshProUGUI textUI)
     {
         textUI.text = "3";
-        Debug.Log("COUNT 3");
         yield return new WaitForSeconds(1);
         textUI.text = "2";
-        Debug.Log("COUNT 3");
         yield return new WaitForSeconds(1);
         textUI.text = "1";
-        Debug.Log("COUNT 3");
         yield return new WaitForSeconds(1);
         textUI.text = "START";
-        Debug.Log("START");
         yield return new WaitForSeconds(1);
         textUI.text = "";
     }
@@ -502,5 +532,35 @@ public class MainGame : MonoBehaviour
         note1.transform.position = new Vector3(chart[noteIndex][1], chart[noteIndex][2], 0);
         Destroy(note1, 3);
         yield return new WaitForSeconds(3);
+    }
+
+    public void PlayerReposition()
+    {
+        // 플레이어 노트 시작 위치
+
+        Vector2 firstNote = new Vector2(
+                MainGame.instance.chart[MainGame.instance.noteIndex][1],
+                MainGame.instance.chart[MainGame.instance.noteIndex][2]);
+
+        player.CurPos = firstNote;
+
+        LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
+
+        if (Physics2D.Raycast(firstNote, Vector3.up, 1, mask) == false)
+        {
+            player.CurPos += Vector3.up;
+        }
+        else if (Physics2D.Raycast(firstNote, Vector3.down, 1, mask) == false)
+        {
+            player.CurPos += Vector3.down;
+        }
+        else if (Physics2D.Raycast(firstNote, Vector3.left, 1, mask) == false)
+        {
+            player.CurPos += Vector3.left;
+        }
+        else if (Physics2D.Raycast(firstNote, Vector3.right, 1, mask) == false)
+        {
+            player.CurPos += Vector3.right;
+        }
     }
 }

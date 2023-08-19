@@ -53,31 +53,6 @@ public class NoteGenerator : MonoBehaviour
         {
             chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
         }
-
-        //chart[0] = new float[3] { 0.584f, -6, 0 };
-        //chart[1] = new float[3] { 1.052f, -6, -1 };
-        //chart[2] = new float[3] { 1.253f, -5, -1 };
-        //chart[3] = new float[3] { 1.458f, -4, -1 };
-        //chart[4] = new float[3] { 1.635f, -3, -1 };
-        //chart[5] = new float[3] { 1.819f, -3, 0 };
-        //chart[6] = new float[3] { 2.269f, -3, 1 };
-        //chart[7] = new float[3] { 2.470f, -2, 1 };
-        //chart[8] = new float[3] { 2.652f, -1, 1 };
-        //chart[9] = new float[3] { 2.835f, 0, 1 };
-        //chart[10] = new float[3] { 3.00f, 0, 0 };
-        //chart[11] = new float[3] { 3.453f, 0, -1 };
-        //chart[12] = new float[3] { 3.671f, 1, -1 };
-        //chart[13] = new float[3] { 3.837f, 2, -1 };
-        //chart[14] = new float[3] { 4.020f, 3, -1 };
-        //chart[15] = new float[3] { 4.203f, 3, 0 };
-        //chart[16] = new float[3] { 4.686f, 2, 0 };
-        //chart[17] = new float[3] { 4.871f, 1, 0 };
-        //chart[18] = new float[3] { 5.053f, 0, 0 };
-        //chart[19] = new float[3] { 5.222f, -1, 0 };
-        //chart[20] = new float[3] { 5.420f, -2, 0 };
-
-        noteIndex = -1;
-
     }
 
     // Update is called once per frame
@@ -107,24 +82,14 @@ public class NoteGenerator : MonoBehaviour
     {
         if (noteIndex > chart.Length - 1) return;
 
-
         // 처음 경로 4칸 띄우기
-        if (noteIndex == -1)
+        if (!MainGame.instance.BGM.isPlaying)
         {
-            GameObject route = Instantiate(routeNote);
-            route.transform.position = new Vector2(chart[0][1], chart[0][2]);
-            Destroy(route, chart[0][0] + 1);
-            route = Instantiate(routeNote);
-            route.transform.position = new Vector2(chart[1][1], chart[1][2]);
-            Destroy(route, chart[1][0] + 1);
-            route = Instantiate(routeNote);
-            route.transform.position = new Vector2(chart[2][1], chart[2][2]);
-            Destroy(route, chart[2][0] + 1);
-            route = Instantiate(routeNote);
-            route.transform.position = new Vector2(chart[3][1], chart[3][2]);
-            Destroy(route, chart[3][0] + 1);
-
-            noteIndex++;
+            if (GameObject.Find("route")) return;
+            MakeRoute(noteIndex + 0).name = "route";
+            MakeRoute(noteIndex + 1);
+            MakeRoute(noteIndex + 2);
+            MakeRoute(noteIndex + 3);
         }
 
         // 노트가 1초 내인 경우만 따로 처리
@@ -141,13 +106,7 @@ public class NoteGenerator : MonoBehaviour
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)
             {
-                GameObject route = Instantiate(routeNote);
-
-                print(chart.Length);
-                print(noteIndex);
-                print(chart[noteIndex + 4][1]);
-                route.transform.position = new Vector2(chart[noteIndex + 4][1], chart[noteIndex + 4][2]);
-                Destroy(route, chart[noteIndex + 4][0] - MainGame.instance.BGM.time);
+                MakeRoute(noteIndex + 4);
             }
 
             // 실제 노트 뿌리기
@@ -168,10 +127,17 @@ public class NoteGenerator : MonoBehaviour
         noteIndex++;
     }
 
-    void MakeRoute(int _index)
+    GameObject MakeRoute(int _index)
     {
+        // route 생성
         GameObject route = Instantiate(routeNote);
+
+        // route 위치 지정
         route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
-        Destroy(route, chart[_index][0] + 1);
+
+        // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
+        Destroy(route, chart[_index][0] - MainGame.instance.BGM.time);
+
+        return route;
     }
 }

@@ -39,7 +39,7 @@ public class StoryManager : MonoBehaviour
     {
         playerCam.SetActive(true);
         storyCamera.SetActive(false);
-        gameCanvas.SetActive(true);
+        gameCanvas.SetActive(false);
 
         // 스테이지 별
         // 맵 오브젝트 활성화
@@ -114,6 +114,19 @@ public class StoryManager : MonoBehaviour
         // 게임 UI On
         gameCanvas.SetActive(true);
     }
+
+    // 스토리 스킵
+    public void Skip()
+    {
+        storyCamera.SetActive(false);
+        playerCam.SetActive(true);
+
+        player.SetActive(true);
+        player.GetComponent<Player>().enabled = true;
+        player.GetComponentInChildren<SpriteRenderer>().enabled = true;
+
+    }
+
 
     IEnumerator Story1()
     {
@@ -707,12 +720,6 @@ public class StoryManager : MonoBehaviour
     }
 
 
-    public void Skip()
-    {
-        storyCamera.SetActive(false);
-        playerCam.SetActive(true);
-        player.SetActive(true);
-    }
 
     // npc 캐릭터 생성
     public GameObject NPC(Sprite _sprite, float _x, float _y)

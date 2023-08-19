@@ -164,11 +164,9 @@ public class Player : MonoBehaviour
 
             // 플레이어 움직임
             Movable = true;
-            
+
             // 노트 위치로 이동
-            CurPos = new Vector2(
-                MainGame.instance.chart[MainGame.instance.noteIndex][1], 
-                MainGame.instance.chart[MainGame.instance.noteIndex][2]); 
+            MainGame.instance.PlayerReposition();
 
             // 이어하기 호출
             MainGame.instance.Continue();
