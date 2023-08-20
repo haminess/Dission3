@@ -1911,7 +1911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stdBPM: 60
-  musicBPM: 100
+  musicBPM: 101.5
   tempo1: 4
   tempo2: 4
   sec: 0
