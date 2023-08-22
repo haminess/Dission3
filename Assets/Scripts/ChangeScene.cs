@@ -35,7 +35,7 @@ public class ChangeScene : MonoBehaviour
 
     public void ToMainGameScene()
     {
-        SceneManager.LoadScene("MainGameScene");
+        SceneManager.LoadScene("MainGame");
     }
 
     public void ToScoreScene()
