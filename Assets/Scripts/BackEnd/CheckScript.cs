@@ -32,5 +32,6 @@ public class CheckScript : MonoBehaviour
     //private void OnApplicationQuit() //게임 종료 시 자동 저장
     //{
     //    DataManager.Instance.SaveMainGameData();
+    //    DataManager.Instance.SaveSoundData();
     //}
 }
