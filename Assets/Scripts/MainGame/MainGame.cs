@@ -13,6 +13,7 @@ public class MainGame : MonoBehaviour
     // 컴포넌트 참조
     public AudioSource BGM;
     public StoryManager storyManager;
+    public ChangeScene sceneManager;
 
     // 오브젝트 연결
     public Player player;
@@ -27,7 +28,7 @@ public class MainGame : MonoBehaviour
     // 시간 관리
     public bool startButton = false;      // true면 게임시작
     public int stageNum = 1;
-    public bool stageButton = false;      // true면 게임시작
+    public bool stageMode = false;      // true면 게임시작
     public bool isStart = false;         // true면 게임중인 상태
     public bool isGame = false;          // true면 스톱워치 설정
     public bool isEnd = false;           // true면 게임종료
@@ -69,7 +70,6 @@ public class MainGame : MonoBehaviour
     public GameObject gameCanvas;
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI countUI;
-    public GameObject resultUI;
     public Slider progressUI;
 
     // 게임 오브젝트
@@ -95,6 +95,7 @@ public class MainGame : MonoBehaviour
         // 데이터 정보(캐릭터, 스테이지값) 받아오기
         player = GameObject.Find("Player").GetComponent<Player>();
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
+        sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
         var data = GameObject.Find("Data");
@@ -133,35 +134,13 @@ public class MainGame : MonoBehaviour
             chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
         }
 
-
-        //chart[0] = new float[3] { 0.584f, -6, 0 };
-        //chart[1] = new float[3] { 1.052f, -6, -1 };
-        //chart[2] = new float[3] { 1.253f, -5, -1 };
-        //chart[3] = new float[3] { 1.458f, -4, -1 };
-        //chart[4] = new float[3] { 1.635f, -3, -1 };
-        //chart[5] = new float[3] { 1.819f, -3, 0 };
-        //chart[6] = new float[3] { 2.269f, -3, 1 };
-        //chart[7] = new float[3] { 2.470f, -2, 1 };
-        //chart[8] = new float[3] { 2.652f, -1, 1 };
-        //chart[9] = new float[3] { 2.835f, 0, 1 };
-        //chart[10] = new float[3] { 3.00f, 0, 0 };
-        //chart[11] = new float[3] { 3.453f, 0, -1 };
-        //chart[12] = new float[3] { 3.671f, 1, -1 };
-        //chart[13] = new float[3] { 3.837f, 2, -1 };
-        //chart[14] = new float[3] { 4.020f, 3, -1 };
-        //chart[15] = new float[3] { 4.203f, 3, 0 };
-        //chart[16] = new float[3] { 4.686f, 2, 0 };
-        //chart[17] = new float[3] { 4.871f, 1, 0 };
-        //chart[18] = new float[3] { 5.053f, 0, 0 };
-        //chart[19] = new float[3] { 5.222f, -1, 0 };
-        //chart[20] = new float[3] { 5.420f, -2, 0 };
-
         // 게임 초기화
         isStart = false;
         isGame = false;
         isEnd = false;
         BGM.Stop();
-        
+        Settable(false);     // 설정창 잠금
+
         // 시간 초기화
         gameTime = 0;
         musicTime = 0;
@@ -178,7 +157,6 @@ public class MainGame : MonoBehaviour
         collection = 0;
 
         // UI 세팅
-        resultUI.SetActive(false);
         gameCanvas.SetActive(false);
     }
 
@@ -190,16 +168,17 @@ public class MainGame : MonoBehaviour
         // startButton == true 되면 게임시작
         if (startButton)
         {
-            GameStart();
+            if(stageMode)
+            {
+                StageStart();
+            }
+            else
+            {
+                GameStart();
+            }
             startButton = false;
         }
 
-        // startButton == true 되면 스테이지 시작
-        if (stageButton)
-        {
-            StageStart(stageNum);
-            stageButton = false;
-        }
 
         // 게임 중이면 스톱워치 설정
         if (isGame)
@@ -225,11 +204,18 @@ public class MainGame : MonoBehaviour
 
         // 게임 종료
         // 모든 노트 판정하면
-        if (noteIndex == chart.Length && !isEnd)
+        if (noteIndex > chart.Length - 1 && !isEnd)
         {
             // 게임 종료
+            if (stageMode)
+            {
+                StageEnd();
+            }
+            else
+            {
+                GameEnd();
+            }
             isEnd = true;
-            GameEnd();
         }
 
         // 음악 진행도
@@ -260,20 +246,24 @@ public class MainGame : MonoBehaviour
         yield return StartCoroutine(TimeCountCo(judgeUI));
 
         // 게임시작
-        isStart = true;
-        isGame = true;
+        isStart = true;        // 시작 했는지
+        isGame = true;         // 게임 중인지
         startTime = Time.time;
-        BGM.Stop();
-        BGM.time = 0;
+
+        // 음원 초기화
+        BGM.Stop();                  
+        BGM.time = 0;                
 
         // 1초 후 음악 틀기
         yield return new WaitForSeconds(1);
         BGM.Play();
+        yield return new WaitForSeconds(3);
+        Settable(true);        // 설정창 사용가능
     }
 
 
     // 스테이지 시작
-    public void StageStart(int _stageNum)
+    public void StageStart()
     {
         Start();
         gameCanvas.SetActive(true);
@@ -289,21 +279,18 @@ public class MainGame : MonoBehaviour
     // 게임 진행도
     public void MusicProgress()
     {
-        progressUI.value = BGM.time / BGM.clip.length;
+        // 음원 기준 진행도
+        //progressUI.value = BGM.time / BGM.clip.length;
+
+        // 채보 기준 진행도
+        progressUI.value = BGM.time / chart[chart.Length - 1][0];
     }
 
     // 게임 종료
     public void GameEnd()
     {
-        // 게임 종료
-        isStart = false;
-        isGame = false;
-        judgeUI.text = "Game Clear!";
-        judgeUI.color = Color.yellow;
         StartCoroutine(GameEndCo());
 
-        // 데이터 저장
-        GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
         // 스토리 띄우기
 
@@ -314,57 +301,65 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameEndCo()
     {
+        // 게임 종료
+        isStart = false;
+        isGame = false;
+
+        Settable(true);     // 설정창 멈춤
+
+        // score ui 변경
+        judgeUI.text = "Game Clear!";
+        judgeUI.color = Color.yellow;
+
+        // 데이터 저장
+        GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
+
         // 5초 후 음악 끄기
         yield return new WaitForSeconds(5);
+
+        // ui 초기화
         judgeUI.text = "";
         comboUI.text = "";
         judgeUI.color = Color.white;
+
+        // 음원 초기화
         BGM.Stop();
-
-        string rank = "";
-        if(score > 10000)
-        {
-            rank = "SS";
-        }
-        else if (score > 5000)
-        {
-            rank = "S";
-        }
-        else if (score > 1000)
-        {
-            rank = "A";
-        }
-        else if (score > 100)
-        {
-            rank = "B";
-        }
-        else
-        {
-            rank = "F";
-        }
-
-        // 결과창 띄우기
-        resultUI.SetActive(true);
-        TextMeshProUGUI[] results = resultUI.transform.GetChild(1).gameObject.GetComponentsInChildren<TextMeshProUGUI>();
-        results[0].text = rank;
-        results[1].text = score.ToString();
-        results[2].text = combo.ToString();
-        results[3].text = perfect.ToString();
-        results[4].text = good.ToString();
-        results[5].text = bad.ToString();
-        results[6].text = miss.ToString();
     }
 
     // 게임 끝내지 못한 경우
     // 게임 오버
     public void GameOver()
     {
-        // 게임 종료
-        isStart = false;
-        isGame = false;
         StartCoroutine(GameEndCo());
 
-        // 결과 화면 띄우기
+    }
+    IEnumerator GameOverCo()
+    {
+        // 게임 종료
+        yield return StartCoroutine(GameEndCo());
+
+        // 결과 화면 전환
+        yield return new WaitForSeconds(1);
+        sceneManager.ToScoreScene();
+    }
+
+    public void StageEnd()
+    {
+        StartCoroutine(StageEndCo());
+
+    }
+    IEnumerator StageEndCo()
+    {
+        // 게임 종료
+        yield return StartCoroutine(GameEndCo());
+
+        // 엔딩 스토리 출력
+        yield return new WaitForSeconds(1);
+        yield return StartCoroutine(storyManager.ShowStoryCo());
+
+        // 결과 화면 전환
+        yield return new WaitForSeconds(1);
+        sceneManager.ToScoreScene();
     }
 
     // 판정 함수
@@ -463,6 +458,9 @@ public class MainGame : MonoBehaviour
 
         // 음악 정지
         BGM.Pause();
+        
+        // 음악 시간 세팅 
+        if (chart[noteIndex][0] < 1) return;
         BGM.time = chart[noteIndex][0] - 1;
     }
     public void Continue()
@@ -565,5 +563,11 @@ public class MainGame : MonoBehaviour
         {
             player.CurPos += Vector3.right;
         }
+    }
+
+    public void Settable(bool _isCan)
+    {
+        gameCanvas.transform.GetChild(0).gameObject.SetActive(_isCan);
+        player.GetComponent<Player>().Settable = _isCan;
     }
 }

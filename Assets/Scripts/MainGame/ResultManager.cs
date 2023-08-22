@@ -42,10 +42,11 @@ public class ResultManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "ScoreScene")
         {
-            print("로드됨");
 
-
-            GameObject.Find("Data").GetComponent<DataManager>().LoadMainGameData();
+            if (GameObject.Find("Data"))
+            {
+                GameObject.Find("Data").GetComponent<DataManager>().LoadMainGameData();
+            }
             TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
 
 
@@ -102,7 +103,10 @@ public class ResultManager : MonoBehaviour
         {
             maingamedata.score = score;
             maingamedata.collection = collection;
-            GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
+            if (GameObject.Find("Data"))
+            {
+                GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
+            }
             print(score + "신기록" + maingamedata.score);
             print("메인게임 저장");
         }

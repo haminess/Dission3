@@ -101,12 +101,12 @@ public class NoteGenerator : MonoBehaviour
             }
             return;
         }
-        else if (MainGame.instance.BGM.time + 1 > chart[noteIndex][0])       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (MainGame.instance.BGM.time > chart[noteIndex][0] - 1)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)
             {
-                MakeRoute(noteIndex + 4);
+                MakeRoute(noteIndex + 4).name = "route";
             }
 
             // 실제 노트 뿌리기
