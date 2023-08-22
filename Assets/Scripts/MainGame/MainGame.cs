@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using Unity.VisualScripting;
 
 public class MainGame : MonoBehaviour
 {
@@ -18,7 +18,6 @@ public class MainGame : MonoBehaviour
     public Player player;
 
     public MainGameData DataObject;
-
 
     // 채보 더미 데이터
     public float[][] chart;              // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
@@ -96,7 +95,9 @@ public class MainGame : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player>();
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
         storyManager = GetComponent<StoryManager>();
-        if (DataObject)
+
+        var data = GameObject.Find("Data");
+        if (data)
         {
             DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
             stageNum = DataObject.STageNum;

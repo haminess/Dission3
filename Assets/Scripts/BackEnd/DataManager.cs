@@ -4,6 +4,8 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.Playables;
 using UnityEngine.UI;
+using UnityEngine.SocialPlatforms.Impl;
+using Unity.Burst.Intrinsics;
 
 public class DataManager : MonoBehaviour
 {
@@ -39,11 +41,15 @@ public class DataManager : MonoBehaviour
     public MainGameData maingamedata = new MainGameData();
     public SoundManager sounddata = new SoundManager();
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        LoadMainGameData();
     }
 
     // Update is called once per frame
@@ -67,12 +73,25 @@ public class DataManager : MonoBehaviour
         else
         {
             //기몬값 초기화 코드
-            sounddata = new SoundManager(); // 또는 다른 초기값으로 설정할 수 있음
+            maingamedata = new MainGameData(); // 또는 다른 초기값으로 설정할 수 있음
+
+            //초기화
+            maingamedata.STageNum = 1;
+            maingamedata.score = 0;
+            maingamedata.combo = 0;
+            maingamedata.curCombo = 0;
+            maingamedata.perfect = 0;
+            maingamedata.good = 0;
+            maingamedata.bad = 0;
+            maingamedata.miss = 0;
+            maingamedata.collection = 0;
 
             SaveMainGameData();
 
             Debug.Log("LoadMainGameData().else 실행"); //(확인용)
         }
+
+        Debug.Log(maingamedata.STageNum); //(확인용)
     }
 
     public void LoadSoundData()
@@ -91,7 +110,8 @@ public class DataManager : MonoBehaviour
         {
             //기몬값 초기화 코드
 
-            SaveMainGameData();
+            SaveSoundData();
+            //SaveMainGameData();
 
             Debug.Log("LoadSoundData().else 실행"); //(확인용)
         }
@@ -108,6 +128,9 @@ public class DataManager : MonoBehaviour
         File.WriteAllText(filePath, ToJsonData);
 
         Debug.Log("SaveMainGameData() 실행"); //(확인용)
+
+        Debug.Log(maingamedata.STageNum); //(확인용)
+
     }
 
     public void SaveSoundData()

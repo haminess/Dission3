@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainGameData : MonoBehaviour
+public class MainGameData //: MonoBehaviour
 {
     public int STageNum;
 
@@ -16,27 +16,40 @@ public class MainGameData : MonoBehaviour
     public int miss;
     public int collection;
 
-
-    private void Awake()
+    public MainGameData()
     {
-        DontDestroyOnLoad(gameObject);
+        //√ ±‚»≠
+        STageNum = 1;
+        score = 0;
+        combo = 0;
+        curCombo = 0;
+        perfect = 0;
+        good = 0;
+        bad = 0;
+        miss = 0;
+        collection = 0;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    //private void Awake()
+    //{
+    //    DontDestroyOnLoad(gameObject);
+    //}
+
+    //// Start is called before the first frame update
+    //void Start()
+    //{
         
-    }
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
+    //// Update is called once per frame
+    //void Update()
+    //{
         
-    }
+    //}
 
-    public void GoScoreScene()
-    {
-        SceneManager.LoadScene("ScoreScene");
-    }
+    //public void GoScoreScene()
+    //{
+    //    SceneManager.LoadScene("ScoreScene");
+    //}
 
 }
