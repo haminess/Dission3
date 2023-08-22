@@ -11,14 +11,19 @@ public class SoundManager : MonoBehaviour
     public AudioSource BGM;
     public AudioSource Effect;
 
+    public Slider bgmslider;
+    public Slider effectslider;
+
     public void Start()
     {
+        // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
 
-        GameObject.Find("bgm sound").GetComponent<Slider>().value = sounddata.bgm;
-        Debug.Log(sounddata.bgm);
+        Debug.Log(sounddata.bgm);   // 저장된 브금값 (확인용)
 
-        GameObject.Find("effect sound").GetComponent<Slider>().value = sounddata.effect;
+        // 초기 값 세팅
+        bgmslider.value = sounddata.bgm;
+        effectslider.value = sounddata.effect;
 
 
         //if (gameObject.name == "bgm sound")
