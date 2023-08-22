@@ -39,7 +39,7 @@ public class DataManager : MonoBehaviour
 
     //저장용 클래스 변수
     public MainGameData maingamedata = new MainGameData();
-    public SoundManager sounddata = new SoundManager();
+    public SoundData sounddata = new SoundData();
 
     private void Awake()
     {
@@ -50,6 +50,7 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         LoadMainGameData();
+        //LoadSoundData();
     }
 
     // Update is called once per frame
@@ -91,7 +92,7 @@ public class DataManager : MonoBehaviour
             Debug.Log("LoadMainGameData().else 실행"); //(확인용)
         }
 
-        Debug.Log(maingamedata.STageNum); //(확인용)
+        //Debug.Log(maingamedata.STageNum); //(확인용)
     }
 
     public void LoadSoundData()
@@ -103,17 +104,28 @@ public class DataManager : MonoBehaviour
         {
             //불러오기
             string FromJsonData = File.ReadAllText(filePath);
-            sounddata = JsonUtility.FromJson<SoundManager>(FromJsonData);
+            sounddata = JsonUtility.FromJson<SoundData>(FromJsonData);
             Debug.Log("LoadSoundData() 실행"); //(확인용)
         }
         else
         {
-            //기몬값 초기화 코드
+            //기본값 초기화 코드
+            sounddata = new SoundData();
 
-            SaveSoundData();
-            //SaveMainGameData();
+            sounddata.bgm = 1;
+            sounddata.effect = 1;
+
+            SaveSoundData();       
 
             Debug.Log("LoadSoundData().else 실행"); //(확인용)
+        }
+
+        //Debug.Log(sounddata.bgm); //(확인용)
+        //Debug.Log(sounddata.effect); //(확인용)
+        if (sounddata != null)
+        {
+            Debug.Log(sounddata.bgm); //(확인용)
+            Debug.Log(sounddata.effect); //(확인용)
         }
     }
 
@@ -144,5 +156,11 @@ public class DataManager : MonoBehaviour
         File.WriteAllText(filePath, ToJsonData);
 
         Debug.Log("SaveSoundData() 실행"); //(확인용)
+
+        if (sounddata != null)
+        {
+            Debug.Log(sounddata.bgm); //(확인용)
+            Debug.Log(sounddata.effect); //(확인용)
+        }
     }
 }
