@@ -17,6 +17,7 @@ public class MainGame : MonoBehaviour
     // 오브젝트 연결
     public Player player;
 
+    // 데이터 불러오기
     public MainGameData DataObject;
 
     // 채보 더미 데이터
@@ -99,8 +100,8 @@ public class MainGame : MonoBehaviour
         var data = GameObject.Find("Data");
         if (data)
         {
-            DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
-            stageNum = DataObject.STageNum;
+            //DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
+            //stageNum = DataObject.STageNum;
         }
 
         // 채보 데이터 불러오기(chart 채보 이차원배열 값, 노트 개수)
@@ -302,6 +303,7 @@ public class MainGame : MonoBehaviour
         StartCoroutine(GameEndCo());
 
         // 데이터 저장
+        GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
         // 스토리 띄우기
 
