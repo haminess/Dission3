@@ -49607,7 +49607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGM: {fileID: 1044927709}
   storyManager: {fileID: 1385423844}
-  sceneManager: {fileID: 0}
+  sceneManager: {fileID: 675823392}
   player: {fileID: 1935883538}
   noteIndex: 0
   startButton: 0
@@ -68672,17 +68672,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 358c9a3d8f8f5a64683687c7d07dde93, type: 2}
+    - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_fontColor.b
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_fontColor.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_fontColor.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5150734977905232667, guid: 358c9a3d8f8f5a64683687c7d07dde93, type: 2}
     - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4278190080
@@ -68739,6 +68747,14 @@ PrefabInstance:
       propertyPath: settingUI
       value: 
       objectReference: {fileID: 983556640}
+    - target: {fileID: 3062581098880202695, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 358c9a3d8f8f5a64683687c7d07dde93, type: 2}
+    - target: {fileID: 3062581098880202695, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5150734977905232667, guid: 358c9a3d8f8f5a64683687c7d07dde93, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
 --- !u!1001 &7115696227576676630
