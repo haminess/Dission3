@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     // 컴포넌트 참조
     Rigidbody2D rigid;
-    SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     Animator animator;
     AudioSource BGM;
 
@@ -30,8 +31,13 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+
+        // 메인게임 아닐 때 리턴
+        if (SceneManager.GetActiveScene().name != "MainGame") return;
+
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
 
+        // 설정창 숨김
         settingUI.SetActive(false);
 
         // 스테이지 별
@@ -39,12 +45,16 @@ public class Player : MonoBehaviour
         switch(MainGame.instance.stageNum)
         {
             case 1:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 2:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 3:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 4:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             default:
                 break;
@@ -74,14 +84,24 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // 좌우 반전
+            print("좌우반전");
+            print(sprite.name);
+            print(sprite.enabled);
+            print(sprite.flipX);
             sprite.flipX = false;
+            print(sprite.flipX);
             Head(Vector3.left);
 
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // 좌우 반전
+            print("좌우반전");
+            print(sprite.name);
+            print(sprite.enabled);
+            print(sprite.flipX);
             sprite.flipX = true;
+            print(sprite.flipX);
             Head(Vector3.right);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -113,7 +133,12 @@ public class Player : MonoBehaviour
         if (!rayHit)
         {
             CurPos += _head;
-            MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
+
+            // 메인게임 아니면 리턴
+            if (SceneManager.GetActiveScene().name != "MainGame") return;
+            // 판정
+            if (MainGame.instance.isGame)
+                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
         }
     }
 
