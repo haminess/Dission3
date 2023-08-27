@@ -20,14 +20,14 @@ public class CheckScript : MonoBehaviour
         
     }
 
-    public void STageNumCheck()
-    {
-        maingamedata.STageNum++;
-        Debug.Log("STageNumCheck() 실행");
-        Debug.Log(maingamedata.STageNum);
+    //public void STageNumCheck()
+    //{
+    //    //maingamedata.STageNum++;
+    //    Debug.Log("STageNumCheck() 실행");
+    //    Debug.Log(maingamedata.STageNum);
 
-        DataManager.Instance.SaveMainGameData();
-    }
+    //    DataManager.Instance.SaveMainGameData();
+    //}
 
     //private void OnApplicationQuit() //게임 종료 시 자동 저장
     //{

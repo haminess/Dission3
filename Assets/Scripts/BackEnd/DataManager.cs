@@ -77,15 +77,20 @@ public class DataManager : MonoBehaviour
             maingamedata = new MainGameData(); // 또는 다른 초기값으로 설정할 수 있음
 
             //초기화
-            maingamedata.STageNum = 1;
-            maingamedata.score = 0;
-            maingamedata.combo = 0;
-            maingamedata.curCombo = 0;
-            maingamedata.perfect = 0;
-            maingamedata.good = 0;
-            maingamedata.bad = 0;
-            maingamedata.miss = 0;
-            maingamedata.collection = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                maingamedata.STageNum[i] = i + 1;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                maingamedata.score[i] = 0;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                maingamedata.collection[i] = 0;
+            }
 
             SaveMainGameData();
 
