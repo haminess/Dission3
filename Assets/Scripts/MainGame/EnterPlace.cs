@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class StageButton : MonoBehaviour
+public class EnterPlace : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,7 @@ public class StageButton : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        StageManager sm = GameObject.Find("StageManager").GetComponent<StageManager>();
-
+        print(gameObject.name);
+        GetComponent<Button>().onClick.Invoke();
     }
 }

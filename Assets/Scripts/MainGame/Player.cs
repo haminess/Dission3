@@ -84,11 +84,12 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // 좌우 반전
-            print("좌우반전");
+            print("왼쪽");
             print(sprite.name);
             print(sprite.enabled);
             print(sprite.flipX);
-            sprite.flipX = false;
+            //sprite.flipX = false;
+            sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             print(sprite.flipX);
             Head(Vector3.left);
 
@@ -96,11 +97,12 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // 좌우 반전
-            print("좌우반전");
+            print("오른쪽");
             print(sprite.name);
             print(sprite.enabled);
             print(sprite.flipX);
-            sprite.flipX = true;
+            //sprite.flipX = true;
+            sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
             print(sprite.flipX);
             Head(Vector3.right);
         }
@@ -112,7 +114,6 @@ public class Player : MonoBehaviour
         {
             Head(Vector3.down);
         }
-
         // 캐릭터 좌표 이동
         transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
         if (transform.localPosition == CurPos)
