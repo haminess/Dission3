@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class Collect : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class Collect : MonoBehaviour
     public string Cname;
 
     //클래스 불러오기
-    private MainGameData maingamedata => DataManager.Instance.maingamedata;
+    //private MainGameData maingamedata => DataManager.Instance.maingamedata;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +24,7 @@ public class Collect : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        MainGame.instance.collection[maingamedata.STageNum[MainGame.instance.stageNum-1]] += CNum;
+        MainGame.instance.collection[MainGame.instance.stageNum-1] += CNum;
         Destroy(gameObject);
     }
 }

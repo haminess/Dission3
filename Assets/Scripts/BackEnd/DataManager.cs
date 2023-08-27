@@ -13,6 +13,12 @@ public class DataManager : MonoBehaviour
 
     //싱글톤으로 선언
     static DataManager instance;
+
+    // 게임 진행중 사용할 정보
+    public int characterNum;
+    public int stageNum;
+    public int difficulty;
+
     public static DataManager Instance
     {
         get
@@ -49,6 +55,12 @@ public class DataManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 정보 초기화
+        characterNum = 0;
+        stageNum = 1;
+        difficulty = 0;
+
+
         LoadMainGameData();
         //LoadSoundData();
     }

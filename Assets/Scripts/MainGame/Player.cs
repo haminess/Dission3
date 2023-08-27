@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     // 컴포넌트 참조
     Rigidbody2D rigid;
-    SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     Animator animator;
     AudioSource BGM;
 
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
 
     // 움직임 제어 관리
     public bool Movable = true;
+    public bool Settable = false;
     public float speed = 0.1f;
 
     public float setTime = 10;
@@ -29,8 +31,13 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+
+        // 메인게임 아닐 때 리턴
+        if (SceneManager.GetActiveScene().name != "MainGame") return;
+
         BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
 
+        // 설정창 숨김
         settingUI.SetActive(false);
 
         // 스테이지 별
@@ -38,12 +45,16 @@ public class Player : MonoBehaviour
         switch(MainGame.instance.stageNum)
         {
             case 1:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 2:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 3:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             case 4:
+                CurPos = new Vector3(0, 0, 0);
                 break;
             default:
                 break;
@@ -58,14 +69,11 @@ public class Player : MonoBehaviour
         {
             Move();
         }
+
         // 시작 후 설정창
         if (Input.GetKeyDown(KeyCode.Escape) && MainGame.instance.isStart)
         {
             OnSetting();
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("space" + BGM.time);
         }
 
     }
@@ -73,64 +81,36 @@ public class Player : MonoBehaviour
     private void Move()
     {
         // 이동
-        LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
-
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // 좌우 반전
+            print("좌우반전");
+            print(sprite.name);
+            print(sprite.enabled);
+            print(sprite.flipX);
             sprite.flipX = false;
-
-            // 점프 애니메이션
-            animator.SetTrigger("Jump");
-
-            // 벽 오브젝트 감지
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.left, 1, mask);
-            // 벽 없으면
-            if (!rayHit)
-            {
-                // 갈 곳 설정
-                CurPos += Vector3.left;
-
-                // 판정함수 호출
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
-            }
+            print(sprite.flipX);
+            Head(Vector3.left);
 
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // 좌우 반전
+            print("좌우반전");
+            print(sprite.name);
+            print(sprite.enabled);
+            print(sprite.flipX);
             sprite.flipX = true;
-
-            animator.SetTrigger("Jump");
-
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.right, 1, mask);
-            if (!rayHit)
-            {
-                CurPos += Vector3.right;
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
-            }
+            print(sprite.flipX);
+            Head(Vector3.right);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            animator.SetTrigger("Jump");
-
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.up, 1, mask);
-            if (!rayHit)
-            {
-                CurPos += Vector3.up;
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
-            }
+            Head(Vector3.up);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            animator.SetTrigger("Jump");
-
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, mask);
-            if (!rayHit)
-            {
-                CurPos += Vector3.down;
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
-            }
+            Head(Vector3.down);
         }
 
         // 캐릭터 좌표 이동
@@ -141,8 +121,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Head(Vector3 _head)
+    {
+        // 벽 이동불가
+        LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
+
+        // 애니메이션
+        animator.SetTrigger("Jump");
+
+        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1, mask);
+        if (!rayHit)
+        {
+            CurPos += _head;
+
+            // 메인게임 아니면 리턴
+            if (SceneManager.GetActiveScene().name != "MainGame") return;
+            // 판정
+            if (MainGame.instance.isGame)
+                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
+        }
+    }
+
     public void OnSetting()
     {
+        if (!Settable) return;
         if (!isSetOn)
         {
             // 설정창 상태 설정
@@ -174,5 +176,17 @@ public class Player : MonoBehaviour
             // 설정창 비활성화
             settingUI.SetActive(false);
         }
+    }
+
+    public void OffSetting()
+    {
+        // 설정창 상태 해제
+        isSetOn = false;
+
+        // 플레이어 움직임
+        Movable = true;
+
+        // 설정창 비활성화
+        settingUI.SetActive(false);
     }
 }
