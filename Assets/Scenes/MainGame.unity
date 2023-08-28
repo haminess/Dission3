@@ -2203,7 +2203,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044927708}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: be2cfc09b11465641a08202b9ac4f9a1, type: 3}
@@ -50035,28 +50035,8 @@ MonoBehaviour:
   perfectScore: 500
   goodScore: 300
   badScore: 100
-  missScore: -500
+  missScore: 0
   comboScore: 10
-  location:
-  - "\uAD50\uC2E4"
-  - "\uAD50\uBB38"
-  - "\uB4B7 \uD654\uB2E8"
-  - "\uC6B4\uB3D9\uC7A5"
-  bgmName:
-  - "\uB178\uB7981"
-  - "\uB178\uB7982"
-  - "\uB178\uB7983"
-  - "\uB178\uB7984"
-  bgmClip:
-  - {fileID: 8300000, guid: a433e4e769a71d4448202b8aed390146, type: 3}
-  - {fileID: 8300000, guid: be2cfc09b11465641a08202b9ac4f9a1, type: 3}
-  - {fileID: 8300000, guid: 8015491939bdb1a45a82f24f64f68426, type: 3}
-  - {fileID: 8300000, guid: cbb02b363de184e40b3cea2235a793df, type: 3}
-  difficulty:
-  - "\uBCF4\uD1B5"
-  - "\uC5B4\uB824\uC6C0"
-  - "\uC5B4\uB824\uC6C0"
-  - "\uBCF4\uD1B5"
   uiHideTime: 5
   judgeUI: {fileID: 309723475}
   comboUI: {fileID: 1515829675}

@@ -24,7 +24,7 @@ public class MainGameData //: MonoBehaviour
 
     public MainGameData()
     {
-        //초기화
+        // 초기화
         for (int i = 0; i < 4; i++)
         {
             stageNum[i] = i + 1;

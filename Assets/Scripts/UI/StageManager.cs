@@ -36,8 +36,6 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
         audioManager = GameObject.Find("BGM").GetComponent<AudioSource>();
         stageInfo = GameObject.Find("StagePanel").GetComponentsInChildren<TextMeshProUGUI>();
         if (GameObject.Find("Data"))
@@ -53,45 +51,35 @@ public class StageManager : MonoBehaviour
         DataManager.Instance.LoadMainGameData();
         for(int i = 0; i < maingamedata.score.Length; i++)
         {
+
             stageScore[i] = maingamedata.score[i];
         }
 
-        for (int i = 0; i < maingamedata.score.Length; i++)
-        {
-            print(maingamedata.score[i]);
-        }
+        isUnlock[0] = true;
+        stage[0].GetComponent<Button>().enabled = true;
+
+        // 해금기능
+        SetStageLock();
 
     }
-    void OnEnable()
+    void Awake()
     {
+        print("awake fuck");
         // 씬 매니저의 sceneLoaded에 체인을 건다.
-        SceneManager.sceneLoaded += OnStageLoaded;
+        //SceneManager.sceneLoaded += OnStageLoaded;
     }
 
     // 체인을 걸어서 이 함수는 매 씬마다 호출된다.
     void OnStageLoaded(Scene scene, LoadSceneMode mode)
     {
+        print("fuck");
         // 데이터 불러오기
         // 스테이지 기록 가져와서 화면 출력
-        // 스테이지 기록에 따라 해금 기능 구현
+
+        // 해금 기능 호출
         if (SceneManager.GetActiveScene().name == "StageScene")
         {
-            isUnlock[0] = true;
-            stage[0].GetComponent<Button>().enabled = true;
 
-            for (int i = 1; i < stageScore.Length; i++)
-            {
-                if (stageScore[i] > 1000)
-                {
-                    isUnlock[i] = true;
-                    stage[i].GetComponent<Button>().enabled = true;
-                }
-                else
-                {
-                    isUnlock[i] = false;
-                    stage[i].GetComponent<Button>().enabled = false;
-                }
-            }
         }
     }
 
@@ -131,21 +119,21 @@ public class StageManager : MonoBehaviour
         stageInfo[0].text = "stage " + curStage.ToString();
         stageInfo[1].text = location[curStage - 1].ToString();
         stageInfo[2].text = bgmClip[curStage - 1].name.ToString();
-        stageInfo[3].text = bgmClip[curStage - 1].length.ToString("00:00");
+        stageInfo[3].text = (Mathf.Floor( bgmClip[curStage - 1].length / 60.0f)).ToString("00") + ":" + (bgmClip[curStage - 1].length % 60).ToString("00");
         stageInfo[4].text = "Difficulty";
+
         switch (difficulty[curStage - 1])
         {
             case 1:
-                stageInfo[5].text = "AAT";
+                stageInfo[5].text = "TAA";
                 break;
             case 2:
-                stageInfo[5].text = "ATT";
+                stageInfo[5].text = "TTA";
                 break;
             case 3:
                 stageInfo[5].text = "TTT";
                 break;
         }
-        print(maingamedata.score[1]);
         stageInfo[6].text = maingamedata.score[curStage - 1].ToString() + " Score";
         string rank = "";
         int rankscore = maingamedata.score[curStage - 1];
@@ -179,6 +167,40 @@ public class StageManager : MonoBehaviour
         {
             stageInfo[8].text = "Sad Ending";
             stageInfo[9].text = maingamedata.collection[curStage - 1].ToString() + " Collection";
+        }
+
+        // 해금기능 
+        if (isUnlock[curStage - 1])
+        {
+            stage[curStage - 1].GetComponent<Button>().enabled = true;
+        }
+        else
+        {
+            stage[curStage - 1].GetComponent<Button>().enabled = false;
+        }
+    }
+    
+
+    public void SetStageLock()
+    {
+        print("setstagelock 진입" + stageScore.Length);
+        // 스테이지 기록에 따라 해금 기능 구현
+        for (int i = 1; i < stageScore.Length; i++)
+        {
+
+            print("setstagelock for문 진입");
+            if (stageScore[i] > 1000)
+            {
+                isUnlock[i] = true;
+                print("setstagelock unlock" + i);
+                //stage[i].GetComponent<Button>().enabled = true;
+            }
+            else
+            {
+                isUnlock[i] = false;
+                print("setstagelock lock" + i);
+                //stage[i].GetComponent<Button>().enabled = false;
+            }
         }
     }
 

@@ -62,11 +62,6 @@ public class MainGame : MonoBehaviour
     public int missScore = 0;
     public int comboScore = 10;
 
-    // 스테이지 정보 관리
-    public string[] location = { "교실", "교문", "뒷 화단", "운동장" };
-    public string[] bgmName = { "노래1", "노래2", "노래3", "노래4" };
-    public AudioClip[] bgmClip;
-    public string[] difficulty = { "보통", "어려움", "어려움", "보통" };
 
     // 판정 UI
     public int uiHideTime = 5;
@@ -156,14 +151,14 @@ public class MainGame : MonoBehaviour
         good = 0;
         bad = 0;
         miss = 0;
-        //score = 0;
-        if(stageNum >= 1 && stageNum <= 4)
+        score = 0;
+        if (stageNum >= 1 && stageNum <= 4)
         {
             score = 0;
         }
         combo = 0;
         curCombo = 0;
-        //collection = 0;
+        collection = 0;
         if (stageNum >= 1 && stageNum <= 4)
         {
             collection = 0;
@@ -210,10 +205,6 @@ public class MainGame : MonoBehaviour
             combo = curCombo;
             curCombo = 0;
             score += missScore;
-            if (stageNum >= 1 && stageNum <= 4)
-            {
-                score += missScore;
-            }
             judgeUI.text = "MISS";
             comboUI.text = "";
             scoreUI.text = "SCORE\n" + score.ToString();
@@ -413,10 +404,7 @@ public class MainGame : MonoBehaviour
                 {
                     perfect++;
                     curCombo++;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score = score + perfectScore + comboScore * curCombo;
-                    }
+                    score = score + perfectScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "PERFECT!";
                     comboUI.text = curCombo.ToString();
@@ -427,10 +415,7 @@ public class MainGame : MonoBehaviour
                 {
                     good++;
                     curCombo++;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score = score + goodScore + comboScore * curCombo;
-                    }
+                    score = score + goodScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "GOOD";
                     comboUI.text = curCombo.ToString();
@@ -442,10 +427,7 @@ public class MainGame : MonoBehaviour
                     bad++;
                     combo = curCombo;
                     curCombo = 0;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score += badScore;
-                    }
+                    score += badScore;
                     noteIndex++;
                     judgeUI.text = "BAD";
                     comboUI.text = "";
@@ -457,10 +439,7 @@ public class MainGame : MonoBehaviour
                     miss++;
                     combo = curCombo;
                     curCombo = 0;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score += missScore;
-                    }
+                    score += missScore;
                     noteIndex++;
                     judgeUI.text = "MISS";
                     comboUI.text = "";

@@ -51,6 +51,15 @@ public class DataManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        maingamedata = new MainGameData();
+        sounddata = new SoundData();
+
+        print(maingamedata.score.Length);
+        for (int i = 0; i < maingamedata.score.Length; i++)
+        {
+            print(maingamedata.score[i]);
+        }
+        print("Data Manager 데이터 객체 생성 및 초기화");
     }
 
     // Start is called before the first frame update
@@ -60,7 +69,6 @@ public class DataManager : MonoBehaviour
         characterNum = 0;
         stageNum = 1;
         difficulty = 0;
-
 
         LoadMainGameData();
         LoadSoundData();
@@ -83,34 +91,40 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             maingamedata = JsonUtility.FromJson<MainGameData>(FromJsonData);
             Debug.Log("LoadMainGameData() 실행"); //(확인용)
+
+            if(maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
+            {
+                // 데이터 값 정상이면 리턴
+                print("저장된 파일 정상 로드");
+                print("파일 점수 1: " + maingamedata.score[0] + "2: " + maingamedata.score[1] + "3: " + maingamedata.score[2] + "4: " + maingamedata.score[3]);
+                return;
+            }
+
         }
-        else
+
+        print("로드 초기화");
+        //기몬값 초기화 코드
+        maingamedata = new MainGameData(); // 또는 다른 초기값으로 설정할 수 있음
+
+        //초기화
+        for (int i = 0; i < 4; i++)
         {
-            //기몬값 초기화 코드
-            maingamedata = new MainGameData(); // 또는 다른 초기값으로 설정할 수 있음
-
-            //초기화
-            for (int i = 0; i < 4; i++)
-            {
-                maingamedata.stageNum[i] = i + 1;
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                maingamedata.score[i] = 0;
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                maingamedata.collection[i] = 0;
-            }
-
-            SaveMainGameData();
-
-            Debug.Log("LoadMainGameData().else 실행"); //(확인용)
+            maingamedata.stageNum[i] = i + 1;
         }
 
-        //Debug.Log(maingamedata.STageNum); //(확인용)
+        for (int i = 0; i < 4; i++)
+        {
+            maingamedata.score[i] = 0;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            maingamedata.collection[i] = 0;
+        }
+
+        SaveMainGameData();
+
+        Debug.Log("LoadMainGameData().else 실행"); //(확인용)
     }
 
     public void LoadSoundData()
