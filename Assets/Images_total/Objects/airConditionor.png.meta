@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c93c691b82926464f918b3ffa146fc0f
+guid: d4fc31aea68e68b448fcb4b012923b13
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: frame_1_0
+      name: airConditionor_0
       rect:
         serializedVersion: 2
-        x: 20
-        y: 20
-        width: 280
-        height: 280
+        x: 30
+        y: 150
+        width: 580
+        height: 660
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a852e4ed3e477447b731445fe24cc17
-      internalID: 50340654
+      spriteID: e6403bc2cb4f10f4fa0f1bfc05152b32
+      internalID: -1637711623
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      frame_1_0: 50340654
+      airConditionor_0: -1637711623
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c93c691b82926464f918b3ffa146fc0f
+guid: 17e99609cf2f4d345abe8d4c33731dec
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: frame_1_0
+      name: waterTank_0
       rect:
         serializedVersion: 2
-        x: 20
-        y: 20
-        width: 280
-        height: 280
+        x: 180
+        y: 40
+        width: 600
+        height: 790
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,8 +131,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a852e4ed3e477447b731445fe24cc17
-      internalID: 50340654
+      spriteID: 62d533aecf08de64e8264839fd38721b
+      internalID: 312633547
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      frame_1_0: 50340654
+      waterTank_0: 312633547
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
