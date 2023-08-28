@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StageButton : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class StageButton : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         StageManager sm = GameObject.Find("StageManager").GetComponent<StageManager>();
-
+        print(gameObject.name + "스테이지 충돌");
+        GetComponent<Button>().onClick.Invoke();
     }
 }

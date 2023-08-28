@@ -24,7 +24,7 @@ public class Collect : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        MainGame.instance.collection[MainGame.instance.stageNum-1] += CNum;
+        MainGame.instance.collection += CNum;
         Destroy(gameObject);
     }
 }

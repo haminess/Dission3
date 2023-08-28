@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
+    public float moveDistance = 1;
 
     // 움직임 제어 관리
     public bool Movable = true;
@@ -84,26 +85,14 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // 좌우 반전
-            print("왼쪽");
-            print(sprite.name);
-            print(sprite.enabled);
-            print(sprite.flipX);
-            //sprite.flipX = false;
             sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
-            print(sprite.flipX);
             Head(Vector3.left);
 
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // 좌우 반전
-            print("오른쪽");
-            print(sprite.name);
-            print(sprite.enabled);
-            print(sprite.flipX);
-            //sprite.flipX = true;
             sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
-            print(sprite.flipX);
             Head(Vector3.right);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -130,10 +119,10 @@ public class Player : MonoBehaviour
         // 애니메이션
         animator.SetTrigger("Jump");
 
-        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1, mask);
+        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
         {
-            CurPos += _head;
+            CurPos += _head * moveDistance;
 
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;

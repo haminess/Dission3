@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainGameData //: MonoBehaviour
 {
     //public int STageNum;
-    public int[] STageNum = new int[4];
+    public int[] stageNum = new int[4];
 
     //public int score;
     public int[] score = new int[4];
@@ -27,7 +27,7 @@ public class MainGameData //: MonoBehaviour
         //√ ±‚»≠
         for (int i = 0; i < 4; i++)
         {
-            STageNum[i] = i + 1;
+            stageNum[i] = i + 1;
         }
 
         for (int i = 0; i < 4; i++)

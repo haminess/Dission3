@@ -14,10 +14,14 @@ public class DataManager : MonoBehaviour
     //싱글톤으로 선언
     static DataManager instance;
 
-    // 게임 진행중 사용할 정보
+    // 게임 진행중 dontdestroy 정보
     public int characterNum;
     public int stageNum;
     public int difficulty;
+
+    //저장용 클래스 변수
+    public MainGameData maingamedata = new MainGameData();
+    public SoundData sounddata = new SoundData();
 
     public static DataManager Instance
     {
@@ -43,9 +47,6 @@ public class DataManager : MonoBehaviour
     string MainGameDataFileName = "MainGameData.json"; //지금은 지정인데 채보 올리거나 할 땐 사용자가 입력할 수 있게
     string SoundDataFileName = "SoundData.json";
 
-    //저장용 클래스 변수
-    public MainGameData maingamedata = new MainGameData();
-    public SoundData sounddata = new SoundData();
 
     private void Awake()
     {
@@ -62,7 +63,7 @@ public class DataManager : MonoBehaviour
 
 
         LoadMainGameData();
-        //LoadSoundData();
+        LoadSoundData();
     }
 
     // Update is called once per frame
@@ -91,7 +92,7 @@ public class DataManager : MonoBehaviour
             //초기화
             for (int i = 0; i < 4; i++)
             {
-                maingamedata.STageNum[i] = i + 1;
+                maingamedata.stageNum[i] = i + 1;
             }
 
             for (int i = 0; i < 4; i++)
@@ -158,7 +159,7 @@ public class DataManager : MonoBehaviour
 
         Debug.Log("SaveMainGameData() 실행"); //(확인용)
 
-        Debug.Log(maingamedata.STageNum); //(확인용)
+        Debug.Log(maingamedata.stageNum); //(확인용)
 
     }
 

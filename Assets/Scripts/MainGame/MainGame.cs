@@ -12,14 +12,15 @@ public class MainGame : MonoBehaviour
 
     // 컴포넌트 참조
     public AudioSource BGM;
-    public StoryManager storyManager;
-    public ChangeScene sceneManager;
+    StoryManager storyManager;
+    ChangeScene sceneManager;
 
     // 오브젝트 연결
-    public Player player;
+    Player player;
+    public GameObject note;
 
     // 데이터 불러오기
-    public MainGameData DataObject;
+    DataManager DataObject;
 
     // 채보 더미 데이터
     public float[][] chart;              // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
@@ -37,16 +38,14 @@ public class MainGame : MonoBehaviour
     public float startTime;              // 게임시작 시간
 
     // 스코어 개수
-    //public int score;
-    public int[] score = new int[4];
+    public int score;
     public int combo;
     public int curCombo;
     public int perfect;
     public int good;   
     public int bad;    
     public int miss;
-    //public int collection;
-    public int[] collection = new int[4];
+    public int collection;
 
     // 판정 범위 관리
     public float perfectRange = 0.05f;
@@ -60,8 +59,14 @@ public class MainGame : MonoBehaviour
     public int perfectScore = 500;
     public int goodScore = 300;
     public int badScore = 100;
-    public int missScore = -500;
+    public int missScore = 0;
     public int comboScore = 10;
+
+    // 스테이지 정보 관리
+    public string[] location = { "교실", "교문", "뒷 화단", "운동장" };
+    public string[] bgmName = { "노래1", "노래2", "노래3", "노래4" };
+    public AudioClip[] bgmClip;
+    public string[] difficulty = { "보통", "어려움", "어려움", "보통" };
 
     // 판정 UI
     public int uiHideTime = 5;
@@ -74,8 +79,6 @@ public class MainGame : MonoBehaviour
     public TextMeshProUGUI countUI;
     public Slider progressUI;
 
-    // 게임 오브젝트
-    public GameObject note;
 
 
     // Start is called before the first frame update
@@ -103,8 +106,8 @@ public class MainGame : MonoBehaviour
         var data = GameObject.Find("Data");
         if (data)
         {
-            //DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
-            //stageNum = DataObject.STageNum;
+            DataObject = GameObject.Find("Data").GetComponent<DataManager>();
+            stageNum = DataObject.stageNum;
         }
 
         // 채보 데이터 불러오기(chart 채보 이차원배열 값, 노트 개수)
@@ -156,14 +159,14 @@ public class MainGame : MonoBehaviour
         //score = 0;
         if(stageNum >= 1 && stageNum <= 4)
         {
-            score[stageNum - 1] = 0;
+            score = 0;
         }
         combo = 0;
         curCombo = 0;
         //collection = 0;
         if (stageNum >= 1 && stageNum <= 4)
         {
-            collection[stageNum - 1] = 0;
+            collection = 0;
         }
 
         // UI 세팅
@@ -206,10 +209,10 @@ public class MainGame : MonoBehaviour
             miss++;
             combo = curCombo;
             curCombo = 0;
-            //score += missScore;
+            score += missScore;
             if (stageNum >= 1 && stageNum <= 4)
             {
-                score[stageNum - 1] += missScore;
+                score += missScore;
             }
             judgeUI.text = "MISS";
             comboUI.text = "";
@@ -412,7 +415,7 @@ public class MainGame : MonoBehaviour
                     curCombo++;
                     if (stageNum >= 1 && stageNum <= 4)
                     {
-                        score[stageNum - 1] = score[stageNum - 1] + perfectScore + comboScore * curCombo;
+                        score = score + perfectScore + comboScore * curCombo;
                     }
                     noteIndex++;
                     judgeUI.text = "PERFECT!";
@@ -426,7 +429,7 @@ public class MainGame : MonoBehaviour
                     curCombo++;
                     if (stageNum >= 1 && stageNum <= 4)
                     {
-                        score[stageNum - 1] = score[stageNum - 1] + goodScore + comboScore * curCombo;
+                        score = score + goodScore + comboScore * curCombo;
                     }
                     noteIndex++;
                     judgeUI.text = "GOOD";
@@ -441,7 +444,7 @@ public class MainGame : MonoBehaviour
                     curCombo = 0;
                     if (stageNum >= 1 && stageNum <= 4)
                     {
-                        score[stageNum - 1] += badScore;
+                        score += badScore;
                     }
                     noteIndex++;
                     judgeUI.text = "BAD";
@@ -456,7 +459,7 @@ public class MainGame : MonoBehaviour
                     curCombo = 0;
                     if (stageNum >= 1 && stageNum <= 4)
                     {
-                        score[stageNum - 1] += missScore;
+                        score += missScore;
                     }
                     noteIndex++;
                     judgeUI.text = "MISS";
