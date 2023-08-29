@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
             GameObject total = GameObject.Find("SoundManager");
             soundMan = total.GetComponent<SoundManager>();
         }
-
         bgm = soundMan.bgm;
         effect = soundMan.effect;
 

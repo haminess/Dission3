@@ -9,6 +9,8 @@ public class ResultManager : MonoBehaviour
     // 저장된 데이터 불러오기
     private MainGameData maingamedata => DataManager.Instance.maingamedata;
 
+    public SoundManager soundmanager;
+
     public int StageNum;
 
     //public int score;
@@ -49,6 +51,20 @@ public class ResultManager : MonoBehaviour
             {
                 GameObject.Find("Data").GetComponent<DataManager>().LoadMainGameData();
             }
+
+            if (GameObject.Find("BGM"))
+            {
+                soundmanager = GameObject.Find("BGM").GetComponent<SoundManager>();
+            }
+
+            if (GameObject.Find("SoundManager"))
+            {
+                soundmanager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+            }
+
+            soundmanager.SetEffect(3);
+            soundmanager.PlayEffect();
+            Debug.Log("Complete sound");
 
             // 결과 화면 출력
             ShowResult();

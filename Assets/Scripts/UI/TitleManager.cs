@@ -8,6 +8,9 @@ public class TitleManager : MonoBehaviour
     public GameObject arrow;
     public GameObject[] TitleButton;
     public int arrowPoint;
+
+    public SoundManager soundmanager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,11 +32,15 @@ public class TitleManager : MonoBehaviour
         {
             arrowPoint += 1;
             arrow.transform.position = TitleButton[arrowPoint].transform.position;
+            soundmanager.SetEffect(2);
+            soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow) && arrow.transform.position.y < TitleButton[0].transform.position.y)
         {
             arrowPoint -= 1;
             arrow.transform.position = TitleButton[arrowPoint].transform.position;
+            soundmanager.SetEffect(2);
+            soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
