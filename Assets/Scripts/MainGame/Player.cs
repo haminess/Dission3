@@ -9,7 +9,9 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     public SpriteRenderer sprite;
     Animator animator;
-    AudioSource BGM;
+    public SoundManager soundMan;
+    AudioSource bgm;
+    AudioSource effect;
 
     // 오브젝트 참조
     public GameObject settingUI;
@@ -17,6 +19,7 @@ public class Player : MonoBehaviour
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
+    public float moveDistance = 1;
 
     // 움직임 제어 관리
     public bool Movable = true;
@@ -32,10 +35,19 @@ public class Player : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
+
+        if (GameObject.Find("SoundManager"))
+        {
+            GameObject total = GameObject.Find("SoundManager");
+            soundMan = total.GetComponent<SoundManager>();
+        }
+        bgm = soundMan.bgm;
+        effect = soundMan.effect;
+
+
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
 
-        BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
 
         // 설정창 숨김
         settingUI.SetActive(false);
@@ -76,6 +88,11 @@ public class Player : MonoBehaviour
             OnSetting();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            print(MainGame.instance.bgm.time);
+        }
+
     }
 
     private void Move()
@@ -84,24 +101,14 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // 좌우 반전
-            print("좌우반전");
-            print(sprite.name);
-            print(sprite.enabled);
-            print(sprite.flipX);
-            sprite.flipX = false;
-            print(sprite.flipX);
+            sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             Head(Vector3.left);
 
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // 좌우 반전
-            print("좌우반전");
-            print(sprite.name);
-            print(sprite.enabled);
-            print(sprite.flipX);
-            sprite.flipX = true;
-            print(sprite.flipX);
+            sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
             Head(Vector3.right);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -112,7 +119,6 @@ public class Player : MonoBehaviour
         {
             Head(Vector3.down);
         }
-
         // 캐릭터 좌표 이동
         transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
         if (transform.localPosition == CurPos)
@@ -128,17 +134,19 @@ public class Player : MonoBehaviour
 
         // 애니메이션
         animator.SetTrigger("Jump");
+        // 효과음
+        soundMan.SetEffect(0);
 
-        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1, mask);
+        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
         {
-            CurPos += _head;
+            CurPos += _head * moveDistance;
 
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
             if (MainGame.instance.isGame)
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
+                MainGame.instance.Judge(bgm.time, CurPos.x, CurPos.y);
         }
     }
 

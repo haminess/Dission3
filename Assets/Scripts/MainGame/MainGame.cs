@@ -11,15 +11,18 @@ public class MainGame : MonoBehaviour
     public static MainGame instance;
 
     // 컴포넌트 참조
-    public AudioSource BGM;
-    public StoryManager storyManager;
-    public ChangeScene sceneManager;
+    public AudioSource bgm;
+    public AudioSource effect;
+    public SoundManager soundMan;
+    StoryManager storyManager;
+    ChangeScene sceneManager;
 
     // 오브젝트 연결
     public Player player;
+    public GameObject note;
 
     // 데이터 불러오기
-    public MainGameData DataObject;
+    DataManager DataObject;
 
     // 채보 더미 데이터
     public float[][] chart;              // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
@@ -37,16 +40,14 @@ public class MainGame : MonoBehaviour
     public float startTime;              // 게임시작 시간
 
     // 스코어 개수
-    //public int score;
-    public int[] score = new int[4];
+    public int score;
     public int combo;
     public int curCombo;
     public int perfect;
     public int good;   
     public int bad;    
     public int miss;
-    //public int collection;
-    public int[] collection = new int[4];
+    public int collection;
 
     // 판정 범위 관리
     public float perfectRange = 0.05f;
@@ -60,8 +61,9 @@ public class MainGame : MonoBehaviour
     public int perfectScore = 500;
     public int goodScore = 300;
     public int badScore = 100;
-    public int missScore = -500;
+    public int missScore = 0;
     public int comboScore = 10;
+
 
     // 판정 UI
     public int uiHideTime = 5;
@@ -74,8 +76,6 @@ public class MainGame : MonoBehaviour
     public TextMeshProUGUI countUI;
     public Slider progressUI;
 
-    // 게임 오브젝트
-    public GameObject note;
 
 
     // Start is called before the first frame update
@@ -87,60 +87,75 @@ public class MainGame : MonoBehaviour
         // 이펙트를 넣었다
         // 경로 기능
         // 라이프 기능
-        // 수집 기능
         // 싱크 시스템
-        // 노래 볼륨 시스템
+        // 설정 기능 연결
 
         // 값 초기화
         MainGame.instance = this;
 
         // 데이터 정보(캐릭터, 스테이지값) 받아오기
         player = GameObject.Find("Player").GetComponent<Player>();
-        BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
         sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
+
+
+        if (GameObject.Find("SoundManager"))
+        {
+            GameObject total = GameObject.Find("SoundManager");
+            soundMan = total.GetComponent<SoundManager>();
+            bgm = soundMan.bgm;
+            effect = soundMan.effect;
+        }
+
 
         var data = GameObject.Find("Data");
         if (data)
         {
-            //DataObject = GameObject.Find("Data").GetComponent<MainGameData>();
-            //stageNum = DataObject.STageNum;
+            DataObject = GameObject.Find("Data").GetComponent<DataManager>();
+            stageNum = DataObject.stageNum;
         }
 
         // 채보 데이터 불러오기(chart 채보 이차원배열 값, 노트 개수)
         noteIndex = 0;
-        chart = new float[71][];
-        chart[0] = new float[3] { 0.639f, -6, 0 };
-        chart[1] = new float[3] { 1.052f, -6, -1 };
-        chart[2] = new float[3] { 1.258f, -5, -1 };
-        chart[3] = new float[3] { 1.450f, -4, -1 };
-        chart[4] = new float[3] { 1.642f, -3, -1 };
-        chart[5] = new float[3] { 1.834f, -3, 0 };
-        chart[6] = new float[3] { 2.303f, -3, 1 };
-        chart[7] = new float[3] { 2.474f, -2, 1 };
-        chart[8] = new float[3] { 2.666f, -1, 1 };
-        chart[9] = new float[3] { 2.794f, 0, 1 };
-        chart[10] = new float[3] { 3.029f, 0, 0 };
-        chart[11] = new float[3] { 3.477f, 0, -1 };
-        chart[12] = new float[3] { 3.669f, 1, -1 };
-        chart[13] = new float[3] { 3.839f, 2, -1 };
-        chart[14] = new float[3] { 4.031f, 3, -1 };
-        chart[15] = new float[3] { 4.245f, 3, 0 };
-        chart[16] = new float[3] { 4.671f, 2, 0 };
-        chart[17] = new float[3] { 4.863f, 1, 0 };
-        chart[18] = new float[3] { 5.034f, 0, 0 };
-        chart[19] = new float[3] { 5.247f, -1, 0 };
-        chart[20] = new float[3] { 5.461f, -2, 0 };
-        for (int i = 0; i < 50; i++)
-        {
-            chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
-        }
+        chart = new float[6][];
+        chart[0] = new float[3] { 1, 0, 0 };
+        chart[1] = new float[3] { 2, 1, 0 };
+        chart[2] = new float[3] { 3, 2, 0 };
+        chart[3] = new float[3] { 4, 3, 0 };
+        chart[4] = new float[3] { 5, 4, 0 };
+        chart[5] = new float[3] { 6, 5, 0 };
+        //chart = new float[71][];
+        //chart[0] = new float[3] { 0.639f, -6, 0 };
+        //chart[1] = new float[3] { 1.052f, -6, -1 };
+        //chart[2] = new float[3] { 1.258f, -5, -1 };
+        //chart[3] = new float[3] { 1.450f, -4, -1 };
+        //chart[4] = new float[3] { 1.642f, -3, -1 };
+        //chart[5] = new float[3] { 1.834f, -3, 0 };
+        //chart[6] = new float[3] { 2.303f, -3, 1 };
+        //chart[7] = new float[3] { 2.474f, -2, 1 };
+        //chart[8] = new float[3] { 2.666f, -1, 1 };
+        //chart[9] = new float[3] { 2.794f, 0, 1 };
+        //chart[10] = new float[3] { 3.029f, 0, 0 };
+        //chart[11] = new float[3] { 3.477f, 0, -1 };
+        //chart[12] = new float[3] { 3.669f, 1, -1 };
+        //chart[13] = new float[3] { 3.839f, 2, -1 };
+        //chart[14] = new float[3] { 4.031f, 3, -1 };
+        //chart[15] = new float[3] { 4.245f, 3, 0 };
+        //chart[16] = new float[3] { 4.671f, 2, 0 };
+        //chart[17] = new float[3] { 4.863f, 1, 0 };
+        //chart[18] = new float[3] { 5.034f, 0, 0 };
+        //chart[19] = new float[3] { 5.247f, -1, 0 };
+        //chart[20] = new float[3] { 5.461f, -2, 0 };
+        //for (int i = 0; i < 50; i++)
+        //{
+        //    chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
+        //}
 
         // 게임 초기화
         isStart = false;
         isGame = false;
         isEnd = false;
-        BGM.Stop();
+        bgm.Stop();
         Settable(false);     // 설정창 잠금
 
         // 시간 초기화
@@ -153,17 +168,17 @@ public class MainGame : MonoBehaviour
         good = 0;
         bad = 0;
         miss = 0;
-        //score = 0;
-        if(stageNum >= 1 && stageNum <= 4)
+        score = 0;
+        if (stageNum >= 1 && stageNum <= 4)
         {
-            score[stageNum - 1] = 0;
+            score = 0;
         }
         combo = 0;
         curCombo = 0;
-        //collection = 0;
+        collection = 0;
         if (stageNum >= 1 && stageNum <= 4)
         {
-            collection[stageNum - 1] = 0;
+            collection = 0;
         }
 
         // UI 세팅
@@ -194,23 +209,19 @@ public class MainGame : MonoBehaviour
         if (isGame)
         {
             gameTime += Time.deltaTime;
-            musicTime = BGM.time;
+            musicTime = bgm.time;
         }
 
         // miss 처리
         // **개선사항
         if (isGame && noteIndex < chart.Length - 1 &&                   // 시작했으면서 판정할 노트가 남아있고
-            BGM.time > (chart[noteIndex][0] + badRange + userRange))    // 현재 시간이 판정시간을 지났으면 (판정시간 + 판정범위 + 생성시간 1초)
+            bgm.time > (chart[noteIndex][0] + badRange + userRange))    // 현재 시간이 판정시간을 지났으면 (판정시간 + 판정범위 + 생성시간 1초)
         {
             noteIndex++;
             miss++;
             combo = curCombo;
             curCombo = 0;
-            //score += missScore;
-            if (stageNum >= 1 && stageNum <= 4)
-            {
-                score[stageNum - 1] += missScore;
-            }
+            score += missScore;
             judgeUI.text = "MISS";
             comboUI.text = "";
             scoreUI.text = "SCORE\n" + score.ToString();
@@ -265,12 +276,12 @@ public class MainGame : MonoBehaviour
         startTime = Time.time;
 
         // 음원 초기화
-        BGM.Stop();                  
-        BGM.time = 0;                
+        bgm.Stop();                  
+        bgm.time = 0;                
 
         // 1초 후 음악 틀기
         yield return new WaitForSeconds(1);
-        BGM.Play();
+        bgm.Play();
         yield return new WaitForSeconds(3);
         Settable(true);        // 설정창 사용가능
     }
@@ -297,7 +308,7 @@ public class MainGame : MonoBehaviour
         //progressUI.value = BGM.time / BGM.clip.length;
 
         // 채보 기준 진행도
-        progressUI.value = BGM.time / chart[chart.Length - 1][0];
+        progressUI.value = bgm.time / chart[chart.Length - 1][0];
     }
 
     // 게임 종료
@@ -337,7 +348,7 @@ public class MainGame : MonoBehaviour
         judgeUI.color = Color.white;
 
         // 음원 초기화
-        BGM.Stop();
+        bgm.Stop();
     }
 
     // 게임 끝내지 못한 경우
@@ -410,10 +421,7 @@ public class MainGame : MonoBehaviour
                 {
                     perfect++;
                     curCombo++;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score[stageNum - 1] = score[stageNum - 1] + perfectScore + comboScore * curCombo;
-                    }
+                    score = score + perfectScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "PERFECT!";
                     comboUI.text = curCombo.ToString();
@@ -424,10 +432,7 @@ public class MainGame : MonoBehaviour
                 {
                     good++;
                     curCombo++;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score[stageNum - 1] = score[stageNum - 1] + goodScore + comboScore * curCombo;
-                    }
+                    score = score + goodScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "GOOD";
                     comboUI.text = curCombo.ToString();
@@ -439,10 +444,7 @@ public class MainGame : MonoBehaviour
                     bad++;
                     combo = curCombo;
                     curCombo = 0;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score[stageNum - 1] += badScore;
-                    }
+                    score += badScore;
                     noteIndex++;
                     judgeUI.text = "BAD";
                     comboUI.text = "";
@@ -454,10 +456,7 @@ public class MainGame : MonoBehaviour
                     miss++;
                     combo = curCombo;
                     curCombo = 0;
-                    if (stageNum >= 1 && stageNum <= 4)
-                    {
-                        score[stageNum - 1] += missScore;
-                    }
+                    score += missScore;
                     noteIndex++;
                     judgeUI.text = "MISS";
                     comboUI.text = "";
@@ -483,11 +482,11 @@ public class MainGame : MonoBehaviour
         gameTime = chart[noteIndex][0];
 
         // 음악 정지
-        BGM.Pause();
+        bgm.Pause();
         
         // 음악 시간 세팅 
         if (chart[noteIndex][0] < 1) return;
-        BGM.time = chart[noteIndex][0] - 1;
+        bgm.time = chart[noteIndex][0] - 1;
     }
     public void Continue()
     {
@@ -513,7 +512,7 @@ public class MainGame : MonoBehaviour
         // 1초 후에 음악 시작
         // 노트 띄우는 시간 때문에
         yield return new WaitForSeconds(1);
-        BGM.Play();
+        bgm.Play();
     }
 
     public void TimeCount()

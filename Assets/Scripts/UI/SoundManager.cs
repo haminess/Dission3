@@ -8,45 +8,129 @@ public class SoundManager : MonoBehaviour
 {
     private SoundData sounddata => DataManager.Instance.sounddata;
 
-    public AudioSource BGM;
-    public AudioSource Effect;
+    public AudioSource bgm;
+    public AudioSource effect;
 
-    public Slider bgmslider;
+    // bgm 관리
+    public AudioClip[] bgmClip;
+    public float[] bgmHookTime; // 스테이지에서 bgm 훅부분부터 출력
+
+    // effect 관리
+    public AudioClip[] effectClip;
+
+    public Slider bgmslider;    // 설정창 값 슬라이더
     public Slider effectslider;
 
     public void Start()
     {
+        // 컴포넌트 참조
+        AudioSource[] audioSources = GetComponentsInChildren<AudioSource>();
+        bgm = audioSources[0];
+        effect = audioSources[1];
+
+
         // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
 
-        Debug.Log(sounddata.bgm);   // 저장된 브금값 (확인용)
-
         // 초기 값 세팅
-        bgmslider.value = sounddata.bgm;
-        effectslider.value = sounddata.effect;
+        if(GameObject.Find("Option"))
+        {
+            Transform settingui = GameObject.Find("SettingUI").transform.GetChild(0);
+            settingui.gameObject.SetActive(true);
+            Slider[] slider = settingui.GetComponentsInChildren<Slider>();
+            bgmslider = slider[0];
+            effectslider = slider[1];
 
+            bgmslider.value = sounddata.bgm;
+            effectslider.value = sounddata.effect;
+            settingui.gameObject.SetActive(false);
+        }
+    }
+    public void SetBgm(int _num)
+    {
+        bgm.clip = bgmClip[_num];
+    }
+    public void SetBgm(string _name)
+    {
+        for(int i = 0; i < bgmClip.Length; i++)
+        {
+            if(bgmClip[i].name == _name)
+            {
+                bgm.clip = bgmClip[i];
+            }
+        }
+    }
+    public void SetBgm(AudioClip _clip)
+    {
+        bgm.clip = _clip;
+    }
 
-        //if (gameObject.name == "bgm sound")
-        //{
+    public void SetEffect(int _num)
+    {
+        effect.clip = effectClip[_num];
+    }
+    public void SetEffect(string _name)
+    {
+        for (int i = 0; i < effectClip.Length; i++)
+        {
+            if (effectClip[i].name == _name)
+            {
+                effect.clip = bgmClip[i];
+            }
+        }
+    }
+    public void SetEffect(AudioClip _clip)
+    {
+        effect.clip = _clip;
+    }
 
-        //    Debug.Log(sounddata.bgm);
-        //}
-        //else if (gameObject.name == "effect sound")
-        //{
-        //    GetComponent<Slider>().value = sounddata.effect;
-        //    Debug.Log(sounddata.effect);
-        //}
+    public void PlayEffect()
+    {
+        if(GameObject.Find("SoundManager"))
+        {
+            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+            soundMan.effect.Play();
+            return;
+        }
+
+        effect.Play();
+    }
+    public void PlayEffect(int _num)
+    {
+        if (GameObject.Find("SoundManager"))
+        {
+            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+            soundMan.SetEffect(_num);
+            soundMan.effect.Play();
+            return;
+        }
+
+        SetEffect(_num);
+        effect.Play();
+    }
+    public void PlayEffect(AudioClip _clip)
+    {
+        if (GameObject.Find("SoundManager"))
+        {
+            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+            soundMan.SetEffect(_clip);
+            soundMan.effect.Play();
+            return;
+        }
+
+        SetEffect(_clip);
+        effect.Play();
     }
 
     public void SetMusicVol(float bgm)
     {
-        BGM.volume = bgm;
+        this.bgm.volume = bgm;
         sounddata.bgm = bgm;
     }
 
     public void SetEffectVol(float effect)
     {
-        Effect.volume = effect;
+        this.effect.volume = effect;
         sounddata.effect = effect;
     }
 }

@@ -9,10 +9,12 @@ public class ResultManager : MonoBehaviour
     // 저장된 데이터 불러오기
     private MainGameData maingamedata => DataManager.Instance.maingamedata;
 
+    public SoundManager soundmanager;
+
     public int StageNum;
 
     //public int score;
-    public int[] score = new int[4];
+    public int score;
     public int combo;
     public int curCombo;
     public int perfect;
@@ -20,7 +22,7 @@ public class ResultManager : MonoBehaviour
     public int bad;
     public int miss;
     //public int collection;
-    public int[] collection = new int[4];
+    public int collection;
 
     private void Awake()
     {
@@ -49,81 +51,59 @@ public class ResultManager : MonoBehaviour
             {
                 GameObject.Find("Data").GetComponent<DataManager>().LoadMainGameData();
             }
-            TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
 
-
-            string rank = "";
-            if (StageNum >= 1 && StageNum <= 4)
+            if (GameObject.Find("BGM"))
             {
-                if (score[StageNum - 1] > 10000)
-                {
-                    rank = "SS";
-                }
-                else if (score[StageNum - 1] > 5000)
-                {
-                    rank = "S";
-                }
-                else if (score[StageNum - 1] > 1000)
-                {
-                    rank = "A";
-                }
-                else if (score[StageNum - 1] > 100)
-                {
-                    rank = "B";
-                }
-                else
-                {
-                    rank = "F";
-                }
-
-                contents[0].text = rank;
-                contents[1].text = score.ToString();
-                contents[2].text = combo.ToString();
-                contents[3].text = perfect.ToString();
-                contents[4].text = good.ToString();
-                contents[5].text = bad.ToString();
-                contents[6].text = miss.ToString();
-
-                SaveResult();
+                soundmanager = GameObject.Find("BGM").GetComponent<SoundManager>();
             }
+
+            if (GameObject.Find("SoundManager"))
+            {
+                soundmanager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+            }
+
+            soundmanager.SetEffect(3);
+            soundmanager.PlayEffect();
+            Debug.Log("Complete sound");
+
+            // 결과 화면 출력
+            ShowResult();
+
+            // 로컬 데이터 저장
+            SaveResult();
         }
     }
 
     public void SendResult()
     {
+        // 메인게임 결과값 결과씬에 전달
         StageNum = MainGame.instance.stageNum;
-        //score = MainGame.instance.score;
-        //score[StageNum - 1] = maingamedata.score[StageNum - 1];
-        if (StageNum >= 1 && StageNum <= 4)
-        {
-            score[StageNum - 1] = maingamedata.score[StageNum - 1];
-        }
+        score = MainGame.instance.score;
         combo = MainGame.instance.combo;
         curCombo = MainGame.instance.curCombo;
         perfect = MainGame.instance.perfect;
         good = MainGame.instance.good;
         bad = MainGame.instance.bad;
         miss = MainGame.instance.miss;
-        //collection = MainGame.instance.collection;
-        //collection[StageNum - 1] = maingamedata.collection[StageNum-1];
-        if (StageNum >= 1 && StageNum <= 4)
-        {
-            collection[StageNum - 1] = maingamedata.collection[StageNum - 1];
-
-        }
+        collection = MainGame.instance.collection;
     }
 
     public void SaveResult()
     {
-        if (score[StageNum - 1] > maingamedata.score[StageNum - 1])
+        if (StageNum < 1 || StageNum > 4)
         {
-            maingamedata.score[StageNum-1] = score[StageNum - 1];
-            maingamedata.collection = collection;
+            print("스테이지 번호 비정상으로 저장 실패");
+            return;
+        }
+        if (score > maingamedata.score[StageNum - 1])
+        {
+            maingamedata.score[StageNum - 1] = score;
+            maingamedata.collection[StageNum - 1] = collection;
             if (GameObject.Find("Data"))
             {
                 GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
             }
-            print(score[StageNum-1] + "신기록" + maingamedata.score);
+            print(score + "신기록" + maingamedata.score);
             print("메인게임 저장");
         }
         else
@@ -131,5 +111,41 @@ public class ResultManager : MonoBehaviour
             print(MainGame.instance.score + "신기록 실패" + maingamedata.score);
             print("메인게임 저장안됨");
         }
+    }
+
+    public void ShowResult()
+    {
+        TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
+
+
+        string rank = "";
+        if (score > 10000)
+        {
+            rank = "SS";
+        }
+        else if (score > 5000)
+        {
+            rank = "S";
+        }
+        else if (score > 1000)
+        {
+            rank = "A";
+        }
+        else if (score > 100)
+        {
+            rank = "B";
+        }
+        else
+        {
+            rank = "F";
+        }
+
+        contents[0].text = rank;
+        contents[1].text = score.ToString();
+        contents[2].text = combo.ToString();
+        contents[3].text = perfect.ToString();
+        contents[4].text = good.ToString();
+        contents[5].text = bad.ToString();
+        contents[6].text = miss.ToString();
     }
 }
