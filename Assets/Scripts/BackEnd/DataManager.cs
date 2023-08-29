@@ -53,13 +53,6 @@ public class DataManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         maingamedata = new MainGameData();
         sounddata = new SoundData();
-
-        print(maingamedata.score.Length);
-        for (int i = 0; i < maingamedata.score.Length; i++)
-        {
-            print(maingamedata.score[i]);
-        }
-        print("Data Manager 데이터 객체 생성 및 초기화");
     }
 
     // Start is called before the first frame update

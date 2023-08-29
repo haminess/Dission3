@@ -23,12 +23,12 @@ public class StageManager : MonoBehaviour
 
     // 음악
     // 스테이지 정보 관리
-    AudioSource audioManager;
+    public AudioSource bgm;
+    public AudioSource effect;
+    public SoundManager soundMan;
 
     public string[] location = { "교실", "교문", "뒷 화단", "운동장" };
-    public string[] bgmName = { "노래1", "노래2", "노래3", "노래4" };
     public int[] difficulty = { 2, 3, 3, 2 };   // 1: 쉬움, 2: 보통, 3: 어려움
-    public AudioClip[] bgmClip;
 
     // 스테이지 오브젝트
     TextMeshProUGUI[] stageInfo;
@@ -36,17 +36,26 @@ public class StageManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioManager = GameObject.Find("BGM").GetComponent<AudioSource>();
         stageInfo = GameObject.Find("StagePanel").GetComponentsInChildren<TextMeshProUGUI>();
+        
+        // 데이터 불러오기
         if (GameObject.Find("Data"))
         {
             find = true;
             data = GameObject.Find("Data").GetComponent<DataManager>();
         }
 
-        // 데이터 불러오기
+        if(GameObject.Find("SoundManager"))
+        {
+            GameObject total = GameObject.Find("SoundManager");
+            soundMan = total.GetComponent<SoundManager>();
+            this.bgm = soundMan.bgm;
+            this.effect = soundMan.effect;
+        }
+
+        // 로컬 데이터 불러오기
         DataManager.Instance.LoadSoundData();
-        audioManager.volume = sounddata.bgm;
+        bgm.volume = sounddata.bgm;
 
         DataManager.Instance.LoadMainGameData();
         for(int i = 0; i < maingamedata.score.Length; i++)
@@ -64,23 +73,13 @@ public class StageManager : MonoBehaviour
     }
     void Awake()
     {
-        print("awake fuck");
         // 씬 매니저의 sceneLoaded에 체인을 건다.
         //SceneManager.sceneLoaded += OnStageLoaded;
     }
 
-    // 체인을 걸어서 이 함수는 매 씬마다 호출된다.
     void OnStageLoaded(Scene scene, LoadSceneMode mode)
     {
-        print("fuck");
-        // 데이터 불러오기
-        // 스테이지 기록 가져와서 화면 출력
-
-        // 해금 기능 호출
-        if (SceneManager.GetActiveScene().name == "StageScene")
-        {
-
-        }
+        // 체인을 걸어서 이 함수는 매 씬마다 호출된다.
     }
 
 
@@ -111,15 +110,20 @@ public class StageManager : MonoBehaviour
         DataManager.Instance.LoadMainGameData();
 
         // 음악 출력
-        audioManager.clip = bgmClip[curStage - 1];
-        audioManager.time = highlightTime;
-        audioManager.Play();
+        bgm.clip = soundMan.bgmClip[curStage - 1];
+        bgm.time = soundMan.bgmHookTime[curStage - 1];
+        bgm.Play();
 
         // 스테이지 정보 출력
+        // 스테이지 번호
         stageInfo[0].text = "stage " + curStage.ToString();
+        // 장소
         stageInfo[1].text = location[curStage - 1].ToString();
-        stageInfo[2].text = bgmClip[curStage - 1].name.ToString();
-        stageInfo[3].text = (Mathf.Floor( bgmClip[curStage - 1].length / 60.0f)).ToString("00") + ":" + (bgmClip[curStage - 1].length % 60).ToString("00");
+        // 곡 이름
+        stageInfo[2].text = soundMan.bgmClip[curStage - 1].name.ToString();
+        // 곡 시간
+        stageInfo[3].text = (Mathf.Floor(soundMan.bgmClip[curStage - 1].length / 60.0f)).ToString("00") + ":" + (soundMan.bgmClip[curStage - 1].length % 60).ToString("00");
+        // 난이도
         stageInfo[4].text = "Difficulty";
 
         switch (difficulty[curStage - 1])
@@ -134,6 +138,8 @@ public class StageManager : MonoBehaviour
                 stageInfo[5].text = "TTT";
                 break;
         }
+
+        // 최고점수
         stageInfo[6].text = maingamedata.score[curStage - 1].ToString() + " Score";
         string rank = "";
         int rankscore = maingamedata.score[curStage - 1];
@@ -170,36 +176,36 @@ public class StageManager : MonoBehaviour
         }
 
         // 해금기능 
+        GameObject playButton = GameObject.Find("PlayButton");
         if (isUnlock[curStage - 1])
         {
             stage[curStage - 1].GetComponent<Button>().enabled = true;
+            playButton.GetComponent<Button>().enabled = true;
+            playButton.GetComponent<Image>().color = Color.white;
+            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
         }
         else
         {
             stage[curStage - 1].GetComponent<Button>().enabled = false;
+            playButton.GetComponent<Button>().enabled = false;
+            playButton.GetComponent<Image>().color = Color.gray;
+            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
         }
     }
     
-
     public void SetStageLock()
     {
-        print("setstagelock 진입" + stageScore.Length);
         // 스테이지 기록에 따라 해금 기능 구현
         for (int i = 1; i < stageScore.Length; i++)
         {
 
-            print("setstagelock for문 진입");
             if (stageScore[i] > 1000)
             {
                 isUnlock[i] = true;
-                print("setstagelock unlock" + i);
-                //stage[i].GetComponent<Button>().enabled = true;
             }
             else
             {
                 isUnlock[i] = false;
-                print("setstagelock lock" + i);
-                //stage[i].GetComponent<Button>().enabled = false;
             }
         }
     }

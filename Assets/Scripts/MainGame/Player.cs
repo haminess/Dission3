@@ -9,7 +9,9 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     public SpriteRenderer sprite;
     Animator animator;
-    AudioSource BGM;
+    public SoundManager soundMan;
+    AudioSource bgm;
+    AudioSource effect;
 
     // 오브젝트 참조
     public GameObject settingUI;
@@ -33,10 +35,18 @@ public class Player : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
+
+        if (GameObject.Find("SoundManager"))
+        {
+            GameObject total = GameObject.Find("SoundManager");
+            soundMan = total.GetComponent<SoundManager>();
+            bgm = soundMan.bgm;
+            effect = soundMan.effect;
+        }
+
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
 
-        BGM = GameObject.Find("BGM").GetComponent<AudioSource>();
 
         // 설정창 숨김
         settingUI.SetActive(false);
@@ -75,6 +85,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && MainGame.instance.isStart)
         {
             OnSetting();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            print(MainGame.instance.bgm.time);
         }
 
     }
@@ -118,6 +133,9 @@ public class Player : MonoBehaviour
 
         // 애니메이션
         animator.SetTrigger("Jump");
+        // 효과음
+        soundMan.SetEffect(0);
+        effect.Play();
 
         RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
@@ -128,7 +146,7 @@ public class Player : MonoBehaviour
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
             if (MainGame.instance.isGame)
-                MainGame.instance.Judge(BGM.time, CurPos.x, CurPos.y);
+                MainGame.instance.Judge(bgm.time, CurPos.x, CurPos.y);
         }
     }
 

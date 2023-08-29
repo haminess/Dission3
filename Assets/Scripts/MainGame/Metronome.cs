@@ -27,6 +27,7 @@ public class Metronome : MonoBehaviour
     {
         metro = GetComponent<AudioSource>();
         tic = 0;
+        sec = (stdBPM / musicBPM) * (tempo1 / tempo2);
     }
 
     // Update is called once per frame
@@ -39,10 +40,18 @@ public class Metronome : MonoBehaviour
             startMetronome = false;
         }
 
-        else if (!isMetroPlaying && startSec < MainGame.instance.BGM.time)
+        else if (!isMetroPlaying && startSec < MainGame.instance.bgm.time)
         {
             isMetroPlaying = true;
+
+            // 애니메이션 리듬 맞추기
+            Animator animator = MainGame.instance.player.GetComponentInChildren<Animator>();
+            animator.Rebind();
+            animator.speed = 1.0f / sec;
+
             StartCoroutine(Play());
+
+
             startMetronome = false;
         }
     }
@@ -50,6 +59,8 @@ public class Metronome : MonoBehaviour
     IEnumerator Play()
     {
         sec = (stdBPM / musicBPM) * (tempo1 / tempo2);
+
+        // 메트로놈
         if (isMetroPlaying)
         {
             metro.Play();

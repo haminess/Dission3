@@ -36,7 +36,7 @@ public class MainSetting : MonoBehaviour
 
     private void OnVolumeChanged()
     {
-        MainGame.instance.BGM.volume = musicVolume.value;
+        MainGame.instance.bgm.volume = musicVolume.value;
         tMusicVolume.text = musicVolume.value.ToString("0.0");
     }
 

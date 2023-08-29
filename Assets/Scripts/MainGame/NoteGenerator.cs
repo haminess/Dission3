@@ -23,36 +23,40 @@ public class NoteGenerator : MonoBehaviour
 
         // 더미데이터(추후 삭제)
         noteIndex = 0;
-        chart = new float[71][];
+        chart = new float[6][];
+        chart[0] = new float[3] { 1, 0, 0 };
+        chart[1] = new float[3] { 2, 1, 0 };
+        chart[2] = new float[3] { 3, 2, 0 };
+        chart[3] = new float[3] { 4, 3, 0 };
+        chart[4] = new float[3] { 5, 4, 0 };
+        chart[5] = new float[3] { 6, 5, 0 };
+        //chart = new float[71][];
+        //chart[0] = new float[3] { 0.639f, -6, 0 };
+        //chart[1] = new float[3] { 1.052f, -6, -1 };
+        //chart[2] = new float[3] { 1.258f, -5, -1 };
+        //chart[3] = new float[3] { 1.450f, -4, -1 };
+        //chart[4] = new float[3] { 1.642f, -3, -1 };
+        //chart[5] = new float[3] { 1.834f, -3, 0 };
+        //chart[6] = new float[3] { 2.303f, -3, 1 };
+        //chart[7] = new float[3] { 2.474f, -2, 1 };
+        //chart[8] = new float[3] { 2.666f, -1, 1 };
+        //chart[9] = new float[3] { 2.794f, 0, 1 };
+        //chart[10] = new float[3] { 3.029f, 0, 0 };
+        //chart[11] = new float[3] { 3.477f, 0, -1 };
+        //chart[12] = new float[3] { 3.669f, 1, -1 };
+        //chart[13] = new float[3] { 3.839f, 2, -1 };
+        //chart[14] = new float[3] { 4.031f, 3, -1 };
+        //chart[15] = new float[3] { 4.245f, 3, 0 };
+        //chart[16] = new float[3] { 4.671f, 2, 0 };
+        //chart[17] = new float[3] { 4.863f, 1, 0 };
+        //chart[18] = new float[3] { 5.034f, 0, 0 };
+        //chart[19] = new float[3] { 5.247f, -1, 0 };
+        //chart[20] = new float[3] { 5.461f, -2, 0 };
 
-        // 1초 내의 노트들을 출력하기 위한 방책
-        // 1초 내의 노트들은 시작하자마자 뿌려지는 문제..
-        chart[0] = new float[3] { 0.639f, -6, 0 };
-        chart[1] = new float[3] { 1.052f, -6, -1 };
-        chart[2] = new float[3] { 1.258f, -5, -1 };
-        chart[3] = new float[3] { 1.450f, -4, -1 };
-        chart[4] = new float[3] { 1.642f, -3, -1 };
-        chart[5] = new float[3] { 1.834f, -3, 0 };
-        chart[6] = new float[3] { 2.303f, -3, 1 };
-        chart[7] = new float[3] { 2.474f, -2, 1 };
-        chart[8] = new float[3] { 2.666f, -1, 1 };
-        chart[9] = new float[3] { 2.794f, 0, 1 };
-        chart[10] = new float[3] { 3.029f, 0, 0 };
-        chart[11] = new float[3] { 3.477f, 0, -1 };
-        chart[12] = new float[3] { 3.669f, 1, -1 };
-        chart[13] = new float[3] { 3.839f, 2, -1 };
-        chart[14] = new float[3] { 4.031f, 3, -1 };
-        chart[15] = new float[3] { 4.245f, 3, 0 };
-        chart[16] = new float[3] { 4.671f, 2, 0 };
-        chart[17] = new float[3] { 4.863f, 1, 0 };
-        chart[18] = new float[3] { 5.034f, 0, 0 };
-        chart[19] = new float[3] { 5.247f, -1, 0 };
-        chart[20] = new float[3] { 5.461f, -2, 0 };
-
-        for (int i = 0; i < 50; i++)
-        {
-            chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
-        }
+        //for (int i = 0; i < 50; i++)
+        //{
+        //    chart[21 + i] = new float[3] { 5.461f + (0.6f * i), 9, 0 - i };
+        //}
     }
 
     // Update is called once per frame
@@ -83,7 +87,7 @@ public class NoteGenerator : MonoBehaviour
         if (noteIndex > chart.Length - 1) return;
 
         // 처음 경로 4칸 띄우기
-        if (!MainGame.instance.BGM.isPlaying)
+        if (!MainGame.instance.bgm.isPlaying)
         {
             if (GameObject.Find("route")) return;
             MakeRoute(noteIndex + 0).name = "route";
@@ -101,7 +105,7 @@ public class NoteGenerator : MonoBehaviour
             }
             return;
         }
-        else if (MainGame.instance.BGM.time > chart[noteIndex][0] - 1)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (MainGame.instance.bgm.time > chart[noteIndex][0] - 1)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)
@@ -136,7 +140,7 @@ public class NoteGenerator : MonoBehaviour
         route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
 
         // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-        Destroy(route, chart[_index][0] - MainGame.instance.BGM.time);
+        Destroy(route, chart[_index][0] - MainGame.instance.bgm.time);
 
         return route;
     }
