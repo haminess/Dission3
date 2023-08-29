@@ -3908,7 +3908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d4ff5afb77e1249a113a52940f525a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundmanager: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+  soundmanager: {fileID: 0}
   StageNum: 0
   score: 0
   combo: 0
