@@ -40,9 +40,10 @@ public class Player : MonoBehaviour
         {
             GameObject total = GameObject.Find("SoundManager");
             soundMan = total.GetComponent<SoundManager>();
-            bgm = soundMan.bgm;
-            effect = soundMan.effect;
         }
+        bgm = soundMan.bgm;
+        effect = soundMan.effect;
+
 
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
@@ -135,7 +136,6 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Jump");
         // 효과음
         soundMan.SetEffect(0);
-        effect.Play();
 
         RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
