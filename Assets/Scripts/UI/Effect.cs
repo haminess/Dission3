@@ -5,7 +5,16 @@ using UnityEngine.UI;
 
 public class Effect : MonoBehaviour
 {
+    Animator animator;
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+    public void PlayAnim(string _trigger)
+    {
+        animator.SetTrigger(_trigger);
+    }
 
     public IEnumerator Fade(GameObject obj, bool IsShowing = true)
     {
@@ -81,4 +90,6 @@ public class Effect : MonoBehaviour
             }
         }
     }
+
+
 }

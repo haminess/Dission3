@@ -35,15 +35,13 @@ public class SoundManager : MonoBehaviour
         // 초기 값 세팅
         if(GameObject.Find("Option"))
         {
-            Transform settingui = GameObject.Find("SettingUI").transform.GetChild(0);
-            settingui.gameObject.SetActive(true);
+            GameObject settingui = GameObject.Find("SettingUI");
             Slider[] slider = settingui.GetComponentsInChildren<Slider>();
             bgmslider = slider[0];
             effectslider = slider[1];
 
             bgmslider.value = sounddata.bgm;
             effectslider.value = sounddata.effect;
-            settingui.gameObject.SetActive(false);
         }
     }
     public void SetBgm(int _num)

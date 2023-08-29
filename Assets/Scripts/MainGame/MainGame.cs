@@ -20,6 +20,7 @@ public class MainGame : MonoBehaviour
     // 오브젝트 연결
     public Player player;
     public GameObject note;
+    public GameObject judgeEffect;
 
     // 데이터 불러오기
     DataManager DataObject;
@@ -426,6 +427,10 @@ public class MainGame : MonoBehaviour
                     judgeUI.text = "PERFECT!";
                     comboUI.text = curCombo.ToString();
                     scoreUI.text = "SCORE\n" + score.ToString();
+
+                    GameObject effect = Instantiate(judgeEffect);
+                    effect.transform.localPosition = new Vector3(chart[i][1], chart[i][2]);
+                    Destroy(effect, 0.5f);
                     break;
                 }
                 else if (time < (chart[i][0] + goodRange + userRange) && time > (chart[i][0] - goodRange + userRange))   // GOOD
@@ -437,6 +442,10 @@ public class MainGame : MonoBehaviour
                     judgeUI.text = "GOOD";
                     comboUI.text = curCombo.ToString();
                     scoreUI.text = "SCORE\n" + score.ToString();
+
+                    GameObject effect = Instantiate(judgeEffect);
+                    effect.transform.localPosition = new Vector3(chart[i][1], chart[i][2]);
+                    Destroy(effect, 0.5f);
                     break;
                 }
                 else if (time < (chart[i][0] + badRange + userRange) && time > (chart[i][0] - badRange + userRange))    // BAD

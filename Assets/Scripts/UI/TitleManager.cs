@@ -40,4 +40,5 @@ public class TitleManager : MonoBehaviour
             TitleButton[arrowPoint].GetComponent<Button>().onClick.Invoke();
         }
     }
+
 }
