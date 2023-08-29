@@ -7215,7 +7215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 3062581096853133231}
-  soundMan: {fileID: 0}
+  soundMan: {fileID: 89451837}
   settingUI: {fileID: 0}
   CurPos: {x: -6.509, y: -3.323, z: 0}
   moveDistance: 0.5
