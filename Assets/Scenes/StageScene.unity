@@ -3134,7 +3134,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &704641475
 GameObject:
@@ -3518,7 +3518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4215,7 +4215,7 @@ RectTransform:
   m_Children:
   - {fileID: 1392976641}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4296,7 +4296,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7115696228671164030, guid: 16b65e121b44834409dbacbd0444cf71, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7115696228671164030, guid: 16b65e121b44834409dbacbd0444cf71, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4512,6 +4512,7 @@ Transform:
   m_Children:
   - {fileID: 494510061}
   - {fileID: 558233324}
+  - {fileID: 1869781721}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5441,7 +5442,7 @@ RectTransform:
   m_Children:
   - {fileID: 1560738464}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6378,7 +6379,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869781717}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 90}
   m_LocalScale: {x: 0.022222223, y: 0.022222223, z: 0.022222223}
   m_ConstrainProportionsScale: 0
@@ -6388,8 +6389,8 @@ RectTransform:
   - {fileID: 1228500090}
   - {fileID: 891347782}
   - {fileID: 1432648782}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1076305443}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7178,6 +7179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 3062581096853133231}
+  soundMan: {fileID: 0}
   settingUI: {fileID: 0}
   CurPos: {x: -6.509, y: -3.323, z: 0}
   moveDistance: 0.5
