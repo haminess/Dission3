@@ -57071,7 +57071,7 @@ MonoBehaviour:
   soundMan: {fileID: 1232927423}
   player: {fileID: 1935883538}
   note: {fileID: 2464535124320205488, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
-  judgeEffect: {fileID: 1715814828434402506, guid: 64c0c8f791163324b850a94bb129619f, type: 3}
+  judgeEffect: {fileID: 1715814828434402506, guid: 4a0d49b73cee22747a15fb6f3a0bb35c, type: 3}
   noteIndex: 0
   startButton: 0
   stageNum: 0
