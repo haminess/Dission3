@@ -22,6 +22,9 @@ public class MainGameData //: MonoBehaviour
     //public int collection;
     public int[] collection = new int[4];
 
+    public float synk;
+    public float judge;
+
     public MainGameData()
     {
         // √ ±‚»≠
@@ -39,6 +42,9 @@ public class MainGameData //: MonoBehaviour
         {
             collection[i] = 0;
         }
+
+        synk = 1;
+        judge = 1;
         //collection = 0;
     }
 

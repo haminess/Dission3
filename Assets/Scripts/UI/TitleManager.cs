@@ -7,44 +7,91 @@ public class TitleManager : MonoBehaviour
 {
     public GameObject arrow;
     public GameObject[] TitleButton;
+    public GameObject[] OptionButton;
     public int arrowPoint;
+    public int mode;
 
     public SoundManager soundmanager;
+
+    public Animator titleLogo;
+    public Animator titleUI;
 
     // Start is called before the first frame update
     void Start()
     {
         arrowPoint = 0;
-        arrow = GameObject.Find("Arrow");
+        mode = 0;
 
+
+        arrow = GameObject.Find("Arrow");
         arrow.transform.position = TitleButton[0].transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ArrowControl();
+        ModeControl();
     }
     
-    void ArrowControl()
+    void ArrowControl(GameObject[] _mode)
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow) && arrow.transform.position.y > TitleButton[TitleButton.Length - 1].transform.position.y)
+        if (Input.GetKeyDown(KeyCode.DownArrow) && arrow.transform.position.y > _mode[_mode.Length - 1].transform.position.y)
         {
             arrowPoint += 1;
-            arrow.transform.position = TitleButton[arrowPoint].transform.position;
+            arrow.transform.position = _mode[arrowPoint].transform.position;
             soundmanager.SetEffect(2);
             soundmanager.PlayEffect();
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && arrow.transform.position.y < TitleButton[0].transform.position.y)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && arrow.transform.position.y < _mode[0].transform.position.y)
         {
             arrowPoint -= 1;
-            arrow.transform.position = TitleButton[arrowPoint].transform.position;
+            arrow.transform.position = _mode[arrowPoint].transform.position;
             soundmanager.SetEffect(2);
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            TitleButton[arrowPoint].GetComponent<Button>().onClick.Invoke();
+            _mode[arrowPoint].GetComponent<Button>().onClick.Invoke();
         }
     }
+
+    public void ModeControl()
+    {
+        switch(mode)
+        {
+            case 0:
+                if(Input.anyKeyDown)
+                {
+                    mode = 1;
+                    titleLogo.Play("title_title_logo");
+                    titleUI.Play("title_titleui");
+                }
+                break;
+            case 1:
+                ArrowControl(TitleButton);
+                break;
+            case 2:
+                ArrowControl(OptionButton);
+                break;
+            case 99:
+                break;
+        }
+    }
+
+    public void SetMode(int _mode)
+    {
+        mode = _mode;
+        arrowPoint = 0;
+        switch(mode)
+        {
+            case 1:
+                arrow.transform.position = TitleButton[0].transform.position;
+                break;
+            case 2:
+                arrow.transform.position = OptionButton[0].transform.position;
+                break;
+          
+        }
+    }
+
 }

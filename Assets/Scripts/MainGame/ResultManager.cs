@@ -52,22 +52,39 @@ public class ResultManager : MonoBehaviour
                 GameObject.Find("Data").GetComponent<DataManager>().LoadMainGameData();
             }
 
-            if (GameObject.Find("BGM"))
-            {
-                soundmanager = GameObject.Find("BGM").GetComponent<SoundManager>();
-            }
+            soundmanager = GameObject.Find("resultBGM").GetComponent<SoundManager>();
 
             if (GameObject.Find("SoundManager"))
             {
                 soundmanager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
             }
 
-            soundmanager.SetEffect(3);
-            soundmanager.PlayEffect();
-            Debug.Log("Complete sound");
 
-            // 결과 화면 출력
+
+            // 결과 화면 출력(왼쪽)
             ShowResult();
+
+            // (오른쪽)
+            if (GameObject.Find("rightpanel"))
+            {
+                Animator right = GameObject.Find("rightpanel").GetComponent<Animator>();
+
+                string animName = StageNum.ToString() + "_";
+
+                if (collection > 2)
+                {
+                    soundmanager.SetEffect(3);
+                    soundmanager.PlayEffect();
+                    animName += "happy";
+                }
+                else
+                {
+                    soundmanager.SetEffect(4);
+                    soundmanager.PlayEffect();
+                    animName += "sad";
+                }
+                right.Play(animName);
+            }
 
             // 로컬 데이터 저장
             SaveResult();
