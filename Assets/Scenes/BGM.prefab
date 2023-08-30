@@ -302,8 +302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 715aa44d04277cd46aa3563ee674158a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgm: {fileID: 0}
-  effect: {fileID: 0}
+  bgm: {fileID: 4152625803934422686}
+  effect: {fileID: 5097806893214239328}
   bgmClip:
   - {fileID: 8300000, guid: 1e26ba2c880b73a4897f404c4f1b54fc, type: 3}
   - {fileID: 8300000, guid: a36651e3ae85966469426b4a85313765, type: 3}
@@ -320,5 +320,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1e3c46429940a5247a2a7ebcbe444ec9, type: 3}
   - {fileID: 8300000, guid: 163a4df6216d55d4b9f9c1576d624ba8, type: 3}
   - {fileID: 8300000, guid: 4631951fbf1fc0342a1869522f6fa3e8, type: 3}
+  - {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
   bgmslider: {fileID: 0}
   effectslider: {fileID: 0}
