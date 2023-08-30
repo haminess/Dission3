@@ -3908,6 +3908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d4ff5afb77e1249a113a52940f525a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundmanager: {fileID: 0}
   StageNum: 0
   score: 0
   combo: 0
@@ -9380,6 +9381,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4152625803934422686, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097806893214239328, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491692, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_Name
       value: mainBGM
@@ -57062,7 +57071,7 @@ MonoBehaviour:
   soundMan: {fileID: 1232927423}
   player: {fileID: 1935883538}
   note: {fileID: 2464535124320205488, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
-  judgeEffect: {fileID: 3897983031524542703, guid: 920a3468efdff0c4f8f399906a1d7a3e, type: 3}
+  judgeEffect: {fileID: 1715814828434402506, guid: 64c0c8f791163324b850a94bb129619f, type: 3}
   noteIndex: 0
   startButton: 0
   stageNum: 0

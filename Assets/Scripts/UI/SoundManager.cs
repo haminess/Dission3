@@ -29,6 +29,8 @@ public class SoundManager : MonoBehaviour
         bgm = audioSources[0];
         effect = audioSources[1];
 
+        if (gameObject.name != "SoundManager")
+            return;
 
         // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
