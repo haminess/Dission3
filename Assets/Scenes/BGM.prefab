@@ -320,6 +320,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1e3c46429940a5247a2a7ebcbe444ec9, type: 3}
   - {fileID: 8300000, guid: 163a4df6216d55d4b9f9c1576d624ba8, type: 3}
   - {fileID: 8300000, guid: 4631951fbf1fc0342a1869522f6fa3e8, type: 3}
+  - {fileID: 8300000, guid: 9f0a2fbcb61f6514d8aa1cdd9be56567, type: 3}
+  - {fileID: 8300000, guid: 1d260dca3586ca74ca08ad45574bc117, type: 3}
   - {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
   bgmslider: {fileID: 0}
   effectslider: {fileID: 0}

@@ -60,9 +60,6 @@ public class ResultManager : MonoBehaviour
             }
 
 
-            soundmanager.SetEffect(3);
-            soundmanager.PlayEffect();
-            Debug.Log("Complete sound");
 
             // 결과 화면 출력(왼쪽)
             ShowResult();
@@ -76,10 +73,14 @@ public class ResultManager : MonoBehaviour
 
                 if (collection > 2)
                 {
+                    soundmanager.SetEffect(3);
+                    soundmanager.PlayEffect();
                     animName += "happy";
                 }
                 else
                 {
+                    soundmanager.SetEffect(4);
+                    soundmanager.PlayEffect();
                     animName += "sad";
                 }
                 right.Play(animName);
