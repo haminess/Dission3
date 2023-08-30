@@ -84,12 +84,15 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             maingamedata = JsonUtility.FromJson<MainGameData>(FromJsonData);
             Debug.Log("LoadMainGameData() 실행"); //(확인용)
+            print("로컬 싱크 " + maingamedata.synk + "판정" + maingamedata.judge);
 
-            if(maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
+            if (maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
             {
                 // 데이터 값 정상이면 리턴
                 print("저장된 파일 정상 로드");
                 print("파일 점수 1: " + maingamedata.score[0] + "2: " + maingamedata.score[1] + "3: " + maingamedata.score[2] + "4: " + maingamedata.score[3]);
+
+                print("로컬 싱크 " + maingamedata.synk + "판정" + maingamedata.judge);
                 return;
             }
 
@@ -115,12 +118,12 @@ public class DataManager : MonoBehaviour
             maingamedata.collection[i] = 0;
         }
 
-        maingamedata.synk = 1;
-        maingamedata.judge = 1;
+        maingamedata.synk = 0;
+        maingamedata.judge = 0;
 
         SaveMainGameData();
 
-        Debug.Log("LoadMainGameData().else 실행"); //(확인용)
+        Debug.Log("LoadMainGameData().else 초기화 실행"); //(확인용)
     }
 
     public void LoadSoundData()
@@ -145,20 +148,22 @@ public class DataManager : MonoBehaviour
 
             SaveSoundData();       
 
-            Debug.Log("LoadSoundData().else 실행"); //(확인용)
+            Debug.Log("LoadSoundData().else 초기화 실행"); //(확인용)
         }
 
         //Debug.Log(sounddata.bgm); //(확인용)
         //Debug.Log(sounddata.effect); //(확인용)
         if (sounddata != null)
         {
-            Debug.Log(sounddata.bgm); //(확인용)
-            Debug.Log(sounddata.effect); //(확인용)
+            //Debug.Log(sounddata.bgm); //(확인용)
+            //Debug.Log(sounddata.effect); //(확인용)
         }
     }
 
     public void SaveMainGameData()
     {
+        print("저장하기 " + maingamedata.synk);
+
         //클래스->Json 전환
         string ToJsonData = JsonUtility.ToJson(maingamedata, true);
         string filePath = Application.persistentDataPath+ "/" + MainGameDataFileName;
@@ -169,8 +174,9 @@ public class DataManager : MonoBehaviour
 
         Debug.Log("SaveMainGameData() 실행"); //(확인용)
 
-        Debug.Log(maingamedata.stageNum); //(확인용)
+        //Debug.Log(maingamedata.stageNum); //(확인용)
 
+        print("저장하기 " + maingamedata.synk);
     }
 
     public void SaveSoundData()
@@ -187,8 +193,8 @@ public class DataManager : MonoBehaviour
 
         if (sounddata != null)
         {
-            Debug.Log(sounddata.bgm); //(확인용)
-            Debug.Log(sounddata.effect); //(확인용)
+            //Debug.Log(sounddata.bgm); //(확인용)
+            //Debug.Log(sounddata.effect); //(확인용)
         }
     }
 }

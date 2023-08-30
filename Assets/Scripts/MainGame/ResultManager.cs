@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -116,10 +117,6 @@ public class ResultManager : MonoBehaviour
         {
             maingamedata.score[StageNum - 1] = score;
             maingamedata.collection[StageNum - 1] = collection;
-            if (GameObject.Find("Data"))
-            {
-                GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
-            }
             print(score + "신기록" + maingamedata.score);
             print("메인게임 저장");
         }
@@ -128,12 +125,26 @@ public class ResultManager : MonoBehaviour
             print(MainGame.instance.score + "신기록 실패" + maingamedata.score);
             print("메인게임 저장안됨");
         }
+
+        if(collection > maingamedata.collection[StageNum - 1])
+        {
+            print("수집품 신기록 저장");
+            maingamedata.collection[StageNum - 1] = collection;
+        }
+
+        if (GameObject.Find("Data"))
+        {
+            GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
+        }
     }
 
     public void ShowResult()
     {
-        TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
+        GameObject collectPanel = GameObject.Find("CollectPanel");
+        GameObject scorePanel = GameObject.Find("ScorePanel");
 
+        // score 패널
+        TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
 
         string rank = "";
         if (score > 10000)
@@ -164,5 +175,10 @@ public class ResultManager : MonoBehaviour
         contents[4].text = good.ToString();
         contents[5].text = bad.ToString();
         contents[6].text = miss.ToString();
+
+        // collect 패널
+        Button[] collects = collectPanel.GetComponentsInChildren<Button>();
+
+        collectPanel.SetActive(false);
     }
 }

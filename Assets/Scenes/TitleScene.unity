@@ -234,6 +234,7 @@ RectTransform:
   - {fileID: 592174017}
   - {fileID: 406041640}
   - {fileID: 1404370569}
+  - {fileID: 1657383737}
   m_Father: {fileID: 2118304349}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -272,6 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 114721587}
   - component: {fileID: 114721586}
+  - component: {fileID: 114721588}
   m_Layer: 0
   m_Name: TitleManager
   m_TagString: Untagged
@@ -321,6 +323,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114721588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114721585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c063bcf4655795d49923ca9a6a84a742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundMan: {fileID: 0}
 --- !u!1 &147537635
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +347,7 @@ GameObject:
   - component: {fileID: 147537636}
   - component: {fileID: 147537637}
   m_Layer: 5
-  m_Name: effect sound
+  m_Name: judgeslider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -405,20 +420,32 @@ MonoBehaviour:
   m_FillRect: {fileID: 667096782}
   m_HandleRect: {fileID: 1693800951}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1351845219}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SetJudge
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1644727831}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -435,7 +462,7 @@ GameObject:
   - component: {fileID: 148175190}
   - component: {fileID: 148175191}
   m_Layer: 5
-  m_Name: effect sound
+  m_Name: effectslider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -515,8 +542,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
         m_MethodName: SetEffectVol
         m_Mode: 0
         m_Arguments:
@@ -527,8 +554,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
         m_MethodName: ShowValue
         m_Mode: 2
         m_Arguments:
@@ -1202,6 +1229,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SubValue01
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 381166033}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2014443403}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &240503063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,7 +1303,7 @@ GameObject:
   - component: {fileID: 330013535}
   - component: {fileID: 330013534}
   m_Layer: 5
-  m_Name: effectvolume
+  m_Name: effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1571,7 +1622,7 @@ GameObject:
   - component: {fileID: 381166032}
   - component: {fileID: 381166033}
   m_Layer: 5
-  m_Name: bgm sound
+  m_Name: synkslider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1644,20 +1695,32 @@ MonoBehaviour:
   m_FillRect: {fileID: 2119132493}
   m_HandleRect: {fileID: 1200788420}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1351845219}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SetSynk
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2014443403}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1779,6 +1842,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1051567786}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1905,20 +1980,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: AddMusicVol
-        m_Mode: 4
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: AddValue1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1143904271}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0.1
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
         m_MethodName: ShowValue
         m_Mode: 2
         m_Arguments:
@@ -2800,6 +2875,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: AddValue01
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 381166033}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2014443403}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &810063872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2866,7 +2965,7 @@ GameObject:
   - component: {fileID: 859324395}
   - component: {fileID: 859324394}
   m_Layer: 5
-  m_Name: bgm (1)
+  m_Name: effecttitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3093,20 +3192,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: AddMusicVol
-        m_Mode: 4
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SubValue1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1143904271}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: -0.1
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
         m_MethodName: ShowValue
         m_Mode: 2
         m_Arguments:
@@ -3706,7 +3805,7 @@ GameObject:
   - component: {fileID: 1051567786}
   - component: {fileID: 1051567785}
   m_Layer: 5
-  m_Name: VolumeSet
+  m_Name: VolumeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3820,6 +3919,66 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: UpdateData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1143904271}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 148175191}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2089127868}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 330013534}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4119,27 +4278,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: AddEffectVol
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0.1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: ShowValue
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: AddValue1
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 330013534}
-          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_ObjectArgument: {fileID: 148175191}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 0.1
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -4150,6 +4297,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 330013534}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4485,6 +4644,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: AddValue01
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 147537637}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1644727831}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1118506900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4534,7 +4717,7 @@ GameObject:
   - component: {fileID: 1143904270}
   - component: {fileID: 1143904271}
   m_Layer: 5
-  m_Name: bgm sound
+  m_Name: bgmslider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4614,9 +4797,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: SetMusicVol
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SetBGMVol
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4626,8 +4809,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
         m_MethodName: ShowValue
         m_Mode: 2
         m_Arguments:
@@ -5138,9 +5321,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1351845223}
-        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
-        m_MethodName: SaveSoundData
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SaveData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5714,27 +5897,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: AddEffectVol
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: -0.1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 831898587}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: ShowValue
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SubValue1
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 330013534}
-          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_ObjectArgument: {fileID: 148175191}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: -0.1
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -5745,6 +5916,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 330013534}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5850,7 +6033,7 @@ GameObject:
   - component: {fileID: 1379375397}
   - component: {fileID: 1379375396}
   m_Layer: 5
-  m_Name: SynkSet
+  m_Name: SynkButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5969,6 +6152,66 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: UpdateData
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 381166033}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 147537637}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2014443403}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1644727831}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1379375398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6036,8 +6279,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1657383737}
+  m_Children: []
   m_Father: {fileID: 98653033}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6371,6 +6613,30 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SubValue01
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 147537637}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: ShowValue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1644727831}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6773,7 +7039,7 @@ GameObject:
   - component: {fileID: 1644727832}
   - component: {fileID: 1644727831}
   m_Layer: 5
-  m_Name: judgesec
+  m_Name: judge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6927,12 +7193,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1404370569}
-  m_RootOrder: 0
+  m_Father: {fileID: 98653033}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: 1.9999847}
+  m_AnchoredPosition: {x: 423, y: 186.99997}
   m_SizeDelta: {x: 33.42, y: 33.413}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657383738
@@ -7000,7 +7266,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: anim_title_to_option
+          m_StringArgument: title_camera_to_option
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 114721586}
@@ -7011,6 +7277,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1051567786}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: Select
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7667,7 +7945,7 @@ GameObject:
   - component: {fileID: 1960145053}
   - component: {fileID: 1960145052}
   m_Layer: 5
-  m_Name: bgm
+  m_Name: bgmtitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7955,9 +8233,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1351845223}
-        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
-        m_MethodName: SaveSoundData
+      - m_Target: {fileID: 114721588}
+        m_TargetAssemblyTypeName: Connector, Assembly-CSharp
+        m_MethodName: SaveData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8053,7 +8331,7 @@ GameObject:
   - component: {fileID: 2014443404}
   - component: {fileID: 2014443403}
   m_Layer: 5
-  m_Name: synksec
+  m_Name: synk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8715,7 +8993,7 @@ GameObject:
   - component: {fileID: 2089127869}
   - component: {fileID: 2089127868}
   m_Layer: 5
-  m_Name: bgmvolume
+  m_Name: bgm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

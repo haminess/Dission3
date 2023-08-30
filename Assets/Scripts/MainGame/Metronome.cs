@@ -40,20 +40,21 @@ public class Metronome : MonoBehaviour
             startMetronome = false;
         }
 
-        else if (!isMetroPlaying && startSec < MainGame.instance.bgm.time)
-        {
-            isMetroPlaying = true;
+        //// 메트로놈 기능
+        //else if (!isMetroPlaying && startSec < MainGame.instance.bgm.time)
+        //{
+        //    isMetroPlaying = true;
 
-            // 애니메이션 리듬 맞추기
-            Animator animator = MainGame.instance.player.GetComponentInChildren<Animator>();
-            animator.Rebind();
-            animator.speed = 1.0f / sec;
+        //    // 애니메이션 리듬 맞추기
+        //    Animator animator = MainGame.instance.player.GetComponentInChildren<Animator>();
+        //    animator.Rebind();
+        //    animator.speed = 1.0f / sec;
 
-            StartCoroutine(Play());
+        //    StartCoroutine(Play());
 
 
-            startMetronome = false;
-        }
+        //    startMetronome = false;
+        //}
     }
 
     IEnumerator Play()

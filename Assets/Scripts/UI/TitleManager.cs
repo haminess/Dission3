@@ -89,9 +89,17 @@ public class TitleManager : MonoBehaviour
                 break;
             case 2:
                 arrow.transform.position = OptionButton[0].transform.position;
+                OptionButton[arrowPoint].GetComponent<Button>().onClick.Invoke();
                 break;
           
         }
+    }
+    
+    public void MoveArrow(GameObject _button)
+    {
+        // 미완성
+        // arrowpoint 값도 변경되게 하기
+        arrow.transform.position = _button.transform.position;
     }
 
 }
