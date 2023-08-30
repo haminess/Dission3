@@ -115,6 +115,9 @@ public class DataManager : MonoBehaviour
             maingamedata.collection[i] = 0;
         }
 
+        maingamedata.synk = 1;
+        maingamedata.judge = 1;
+
         SaveMainGameData();
 
         Debug.Log("LoadMainGameData().else 실행"); //(확인용)
