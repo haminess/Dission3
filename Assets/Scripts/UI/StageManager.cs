@@ -18,7 +18,7 @@ public class StageManager : MonoBehaviour
     public GameObject[] stage;
     public bool[] isUnlock;
     public int[] stageScore = new int[4];
-    public int curStage = 2;
+    public int curStage = 1;
     float highlightTime = 0;
 
     // 음악
@@ -37,9 +37,6 @@ public class StageManager : MonoBehaviour
     void Start()
     {
         stageInfo = GameObject.Find("StagePanel").GetComponentsInChildren<TextMeshProUGUI>();
-
-        // 값 초기화
-        curStage = 2;
         
         // 데이터 불러오기
         if (GameObject.Find("Data"))
@@ -68,10 +65,10 @@ public class StageManager : MonoBehaviour
         }
 
         isUnlock[0] = true;
+        stage[0].GetComponent<Button>().enabled = true;
 
         // 해금기능
         SetStageLock();
-        ShowStage();
 
     }
     void Awake()
@@ -178,7 +175,22 @@ public class StageManager : MonoBehaviour
             stageInfo[9].text = maingamedata.collection[curStage - 1].ToString() + " Collection";
         }
 
-        LockPlayButton();
+        // 해금기능 
+        GameObject playButton = GameObject.Find("PlayButton");
+        if (isUnlock[curStage - 1])
+        {
+            stage[curStage - 1].GetComponent<Button>().enabled = true;
+            playButton.GetComponent<Button>().enabled = true;
+            playButton.GetComponent<Image>().color = Color.white;
+            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
+        }
+        else
+        {
+            stage[curStage - 1].GetComponent<Button>().enabled = false;
+            playButton.GetComponent<Button>().enabled = false;
+            playButton.GetComponent<Image>().color = Color.gray;
+            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+        }
     }
     
     public void SetStageLock()
@@ -195,34 +207,6 @@ public class StageManager : MonoBehaviour
             {
                 isUnlock[i] = false;
             }
-        }
-
-        // 출시 전 2, 3, 4 스테이지 잠금
-        isUnlock[1] = false;
-        isUnlock[2] = false;
-        isUnlock[3] = false;
-
-        LockPlayButton();
-
-    }
-
-    public void LockPlayButton()
-    {
-        // 해금기능 
-        GameObject playButton = GameObject.Find("PlayButton");
-        if (isUnlock[curStage - 1])
-        {
-            stage[curStage - 1].GetComponent<Button>().enabled = true;
-            playButton.GetComponent<Button>().enabled = true;
-            playButton.GetComponent<Image>().color = Color.white;
-            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
-        }
-        else
-        {
-            stage[curStage - 1].GetComponent<Button>().enabled = false;
-            playButton.GetComponent<Button>().enabled = false;
-            playButton.GetComponent<Image>().color = Color.gray;
-            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
         }
     }
 
