@@ -50,7 +50,14 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if(GameObject.FindObjectsOfType<DataManager>().Length == 1)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else if(GameObject.FindObjectsOfType<DataManager>().Length > 1)
+        {
+            Destroy(gameObject);
+        }
         maingamedata = new MainGameData();
         sounddata = new SoundData();
     }

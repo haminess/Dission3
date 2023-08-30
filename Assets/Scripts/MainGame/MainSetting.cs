@@ -23,21 +23,32 @@ public class MainSetting : MonoBehaviour
         judgeRange.onValueChanged.AddListener(delegate { OnRangeChanged(); });
         musicVolume.onValueChanged.AddListener(delegate { OnVolumeChanged(); });
 
+
+        // 로컬 데이터값 반영
+        judgeRange.value = DataManager.Instance.maingamedata.judge;
+        musicVolume.value = DataManager.Instance.sounddata.bgm;
+
         tJudgeRange.text = judgeRange.value.ToString("0.00");
-        tMusicVolume.text = musicVolume.value.ToString("0.0");
+        tMusicVolume.text = (musicVolume.value * 100).ToString("0");
     }
 // Update Hp Bar
     private void OnRangeChanged()
     {
         MainGame.instance.userRange = judgeRange.value;
         tJudgeRange.text = judgeRange.value.ToString("0.00");
+
+        // 로컬 저장
+        DataManager.Instance.maingamedata.judge = judgeRange.value;
     }
 
 
     private void OnVolumeChanged()
     {
         MainGame.instance.bgm.volume = musicVolume.value;
-        tMusicVolume.text = musicVolume.value.ToString("0.0");
+        tMusicVolume.text = (musicVolume.value * 100).ToString("0");
+
+        // 로컬 저장
+        DataManager.Instance.sounddata.bgm = musicVolume.value;
     }
 
     // Update is called once per frame
