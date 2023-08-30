@@ -179,6 +179,24 @@ public class ResultManager : MonoBehaviour
         // collect ÆÐ³Î
         Button[] collects = collectPanel.GetComponentsInChildren<Button>();
 
+        if(collection > 2)
+        {
+            collects[0].gameObject.SetActive(true);
+            collects[1].gameObject.SetActive(false);
+        }
+        else
+        {
+            collects[0].gameObject.SetActive(false);
+            collects[1].gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < collection; i++)
+        {
+            GameObject c = Instantiate(collects[2].gameObject, collectPanel.transform);
+            c.transform.localPosition += Vector3.right * 110 * i;
+        }
+
+        Destroy(contents[2].gameObject);
         collectPanel.SetActive(false);
     }
 }
