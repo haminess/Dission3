@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5717572534552283312}
   - component: {fileID: 1655666727568087359}
   m_Layer: 0
-  m_Name: effect_judge
+  m_Name: effect_judge 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ Animator:
   m_GameObject: {fileID: 1715814828434402506}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1c12120f0053eb948b4c78ab963ed991, type: 2}
+  m_Controller: {fileID: 9100000, guid: f7e06ee9feb53804e92eb97930fa4d2d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
