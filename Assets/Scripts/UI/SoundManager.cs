@@ -15,6 +15,8 @@ public class SoundManager : MonoBehaviour
     // bgm 관리
     public AudioClip[] bgmClip;
     public float[] bgmHookTime; // 스테이지에서 bgm 훅부분부터 출력
+    public float[] bgmBpm;
+    public float[] bgmStartTime;
 
     // effect 관리
     public AudioClip[] effectClip;
