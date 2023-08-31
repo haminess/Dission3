@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class MainGame : MonoBehaviour
     public GameObject note;
     public GameObject judgeEffect;
     public Animation comboeff;
+    public Animation judgeeff;
 
     // ������ �ҷ�����
     DataManager DataObject;
@@ -50,6 +52,7 @@ public class MainGame : MonoBehaviour
     public int bad;    
     public int miss;
     public int collection;
+    public Color[] color;
 
     // ���� ���� ����
     public float perfectRange = 0.05f;
@@ -71,6 +74,7 @@ public class MainGame : MonoBehaviour
     public int uiHideTime = 5;
     public TextMeshProUGUI judgeUI;
     public TextMeshProUGUI comboUI;
+    public TextMeshProUGUI combotext;
 
     // ���� UI
     public GameObject gameCanvas;
@@ -400,8 +404,11 @@ public class MainGame : MonoBehaviour
             combo = curCombo;
             curCombo = 0;
             score += missScore;
+            judgeeff.Play();
+            judgeUI.color = color[3];
             judgeUI.text = "MISS";
             comboUI.text = "";
+            combotext.text = "";
             scoreUI.text = "SCORE\n" + score.ToString();
         }
 
@@ -439,6 +446,7 @@ public class MainGame : MonoBehaviour
         scoreUI.text = "";
         judgeUI.text = "";
         comboUI.text = "";
+        combotext.text = "";
 
         // �÷��̾� ��Ʈ ������ ��ġ
         PlayerReposition();
@@ -526,6 +534,7 @@ public class MainGame : MonoBehaviour
         // ui �ʱ�ȭ
         judgeUI.text = "";
         comboUI.text = "";
+        combotext.text = "";
         judgeUI.color = Color.white;
 
         // ���� �ʱ�ȭ
@@ -606,7 +615,10 @@ public class MainGame : MonoBehaviour
                     score = score + perfectScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "PERFECT!";
+                    judgeUI.color = color[0];
+                    judgeeff.Play();
                     comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
                     scoreUI.text = "SCORE\n" + score.ToString();
 
                     GameObject effect = Instantiate(judgeEffect);
@@ -622,7 +634,10 @@ public class MainGame : MonoBehaviour
                     score = score + goodScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "GOOD";
+                    judgeUI.color = color[1];
+                    judgeeff.Play();
                     comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
                     scoreUI.text = "SCORE\n" + score.ToString();
 
                     GameObject effect = Instantiate(judgeEffect);
@@ -638,7 +653,10 @@ public class MainGame : MonoBehaviour
                     score += badScore;
                     noteIndex++;
                     judgeUI.text = "BAD";
+                    judgeUI.color = color[2];
+                    judgeeff.Play();
                     comboUI.text = "";
+                    combotext.text = "";
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
@@ -650,7 +668,10 @@ public class MainGame : MonoBehaviour
                     score += missScore;
                     noteIndex++;
                     judgeUI.text = "MISS";
+                    judgeUI.color = color[3];
+                    judgeeff.Play();
                     comboUI.text = "";
+                    combotext.text = "";
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
