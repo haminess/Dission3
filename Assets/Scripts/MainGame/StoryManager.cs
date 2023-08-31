@@ -25,6 +25,7 @@ public class StoryManager : MonoBehaviour
     // 캐릭터 이미지 스프라이트
     public Sprite baby;
     public Sprite student;
+    public Sprite friend1;
 
     public GameObject ChatPrefab;
     public Image black;
