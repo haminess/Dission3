@@ -16,7 +16,7 @@ public class TitleManager : MonoBehaviour
     public Animator titleLogo;
     public Animator titleUI;
 
-    // synk ¿ÀºêÁ§Æ®
+    // synk ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     public GameObject synkNote;
     float time;
 
@@ -81,12 +81,10 @@ public class TitleManager : MonoBehaviour
                 ArrowControl(OptionButton);
                 break;
             case 3:
-                // note synk mode
-                break;
-            case 4:
-                // judge synk mode
+                // synk mode
                 SynkControl();
                 break;
+
             case 99:
                 // none mode
                 break;
@@ -112,8 +110,8 @@ public class TitleManager : MonoBehaviour
     
     public void MoveArrow(GameObject _button)
     {
-        // ¹Ì¿Ï¼º
-        // arrowpoint °ªµµ º¯°æµÇ°Ô ÇÏ±â
+        // ï¿½Ì¿Ï¼ï¿½
+        // arrowpoint ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½Ï±ï¿½
         arrow.transform.position = _button.transform.position;
     }
 
@@ -121,27 +119,13 @@ public class TitleManager : MonoBehaviour
     {
         if(Input.anyKey)
         {
-            print(soundmanager.bgm.time - soundmanager.bgmStartTime[0] / soundmanager.GetBeatTime(0));
+            
         }
     }
 
-    public IEnumerator ShowNoteSynk()
+    public void ShowSynkNote()
     {
-        float sec = soundmanager.GetBeatTime(0);
-        yield return new WaitForSeconds(soundmanager.bgmStartTime[0] + GetComponent<Connector>().maingamedata.synk);
-        StartCoroutine(ShowBeat(sec));
-        
-        yield return new WaitForSeconds(1);
-        soundmanager.bgm.Stop();
-        soundmanager.SetBgm(0);
-        soundmanager.bgm.Play();
+
     }
 
-    public IEnumerator ShowBeat(float _sec)
-    {
-        Instantiate(synkNote);
-        Destroy(synkNote, 1.5f);
-        yield return new WaitForSeconds(_sec);
-        StartCoroutine(ShowBeat(_sec));
-    }
 }

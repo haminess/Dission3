@@ -4,43 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
-    // ¸ðµç ½ºÅ©¸³Æ®¿¡¼­ ÂüÁ¶ °¡´ÉÇÏ°Ô ÇÏ±â
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ï±ï¿½
     public static MainGame instance;
 
-    // ÄÄÆ÷³ÍÆ® ÂüÁ¶
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     public AudioSource bgm;
     public AudioSource effect;
     public SoundManager soundMan;
     StoryManager storyManager;
     ChangeScene sceneManager;
 
-    // ¿ÀºêÁ§Æ® ¿¬°á
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     public Player player;
     public GameObject note;
     public GameObject judgeEffect;
+    public Animation comboeff;
+    public Animation judgeeff;
 
-    // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
     DataManager DataObject;
 
-    // Ã¤º¸ ´õ¹Ì µ¥ÀÌÅÍ
-    public float[][] chart;              // Ã¤º¸, Çà: Ã¤º¸ ³ëÆ® ÀÎ½ºÅÏ½º, ¿­: {time, x, y}
-    public int noteIndex;                // Ã¤º¸ Æ÷ÀÎÅÍ
+    // Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float[][] chart;              // Ã¤ï¿½ï¿½, ï¿½ï¿½: Ã¤ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½Î½ï¿½ï¿½Ï½ï¿½, ï¿½ï¿½: {time, x, y}
+    public int noteIndex;                // Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    // ½Ã°£ °ü¸®
-    public bool startButton = false;      // true¸é °ÔÀÓ½ÃÀÛ
+    // ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public bool startButton = false;      // trueï¿½ï¿½ ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½
     public int stageNum = 1;
-    public bool stageMode = false;      // true¸é °ÔÀÓ½ÃÀÛ
-    public bool isStart = false;         // true¸é °ÔÀÓÁßÀÎ »óÅÂ
-    public bool isGame = false;          // true¸é ½ºÅé¿öÄ¡ ¼³Á¤
-    public bool isEnd = false;           // true¸é °ÔÀÓÁ¾·á
-    public float gameTime;               // ½ºÅé¿öÄ¡
-    public float musicTime;              // À½¿ø ½Ã°£
-    public float startTime;              // °ÔÀÓ½ÃÀÛ ½Ã°£
+    public bool stageMode = false;      // trueï¿½ï¿½ ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½
+    public bool isStart = false;         // trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public bool isGame = false;          // trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+    public bool isEnd = false;           // trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float gameTime;               // ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡
+    public float musicTime;              // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+    public float startTime;              // ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
-    // ½ºÄÚ¾î °³¼ö
+    // ï¿½ï¿½ï¿½Ú¾ï¿½ ï¿½ï¿½ï¿½ï¿½
     public int score;
     public int combo;
     public int curCombo;
@@ -49,8 +52,9 @@ public class MainGame : MonoBehaviour
     public int bad;    
     public int miss;
     public int collection;
+    public Color[] color;
 
-    // ÆÇÁ¤ ¹üÀ§ °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public float perfectRange = 0.05f;
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
@@ -58,7 +62,7 @@ public class MainGame : MonoBehaviour
     public float userRange = 0f;
     public float userRangePlus = 0.1f;
 
-    // ÆÇÁ¤ Á¡¼ö °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public int perfectScore = 500;
     public int goodScore = 300;
     public int badScore = 100;
@@ -66,12 +70,13 @@ public class MainGame : MonoBehaviour
     public int comboScore = 10;
 
 
-    // ÆÇÁ¤ UI
+    // ï¿½ï¿½ï¿½ï¿½ UI
     public int uiHideTime = 5;
     public TextMeshProUGUI judgeUI;
     public TextMeshProUGUI comboUI;
+    public TextMeshProUGUI combotext;
 
-    // °ÔÀÓ UI
+    // ï¿½ï¿½ï¿½ï¿½ UI
     public GameObject gameCanvas;
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI countUI;
@@ -83,30 +88,30 @@ public class MainGame : MonoBehaviour
     public void Start()
     {
 
-        // ¹â¾ÒÀ» ¶§ ÀÌÆåÆ®
-        // È¿°úÀ½À» ³Ö¾úµû
-        // ÀÌÆåÆ®¸¦ ³Ö¾ú´Ù
-        // °æ·Î ±â´É
-        // ¶óÀÌÇÁ ±â´É
-        // ½ÌÅ© ½Ã½ºÅÛ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
+        // È¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+        // ï¿½ï¿½Å© ï¿½Ã½ï¿½ï¿½ï¿½
 
-        // °ª ÃÊ±âÈ­
+        // ï¿½ï¿½ ï¿½Ê±ï¿½È­
         MainGame.instance = this;
 
-        // ÄÄÆ÷³ÍÆ® ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         player = GameObject.Find("Player").GetComponent<Player>();
         sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
-        // ¸ÞÀÎ µ¥ÀÌÅÍ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         ResetMain();
 
-        // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         GetMainData();
 
 
 
-        // Ã¤º¸ µ¥ÀÌÅÍ ºÒ·¯¿À±â(chart Ã¤º¸ ÀÌÂ÷¿ø¹è¿­ °ª, ³ëÆ® °³¼ö)
+        // Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½(chart Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¿­ ï¿½ï¿½, ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½)
         {
             chart = new float[236][];
             chart[0] = new float[3] { 1, 7, -27 };
@@ -347,7 +352,7 @@ public class MainGame : MonoBehaviour
             chart[235] = new float[3] { 105.642f, -3, 20 };
         }
 
-        // ½ºÅ×ÀÌÁö ¸ðµåÀÌ¸é ¹Ù·Î ½ÃÀÛ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(stageMode)
         {
             StageStart();
@@ -364,7 +369,7 @@ public class MainGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // startButton == true µÇ¸é °ÔÀÓ½ÃÀÛ
+        // startButton == true ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½
         if (startButton)
         {
             if(stageMode)
@@ -382,33 +387,36 @@ public class MainGame : MonoBehaviour
         if (!isGame)
             return;
 
-        // °ÔÀÓ ÁßÀÌ¸é ½ºÅé¿öÄ¡ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         if (isGame)
         {
             gameTime += Time.deltaTime;
             musicTime = bgm.time;
         }
 
-        // miss Ã³¸®
-        // **°³¼±»çÇ×
-        if (isGame && noteIndex < chart.Length - 1 &&                   // ½ÃÀÛÇßÀ¸¸é¼­ ÆÇÁ¤ÇÒ ³ëÆ®°¡ ³²¾ÆÀÖ°í
-            bgm.time > (chart[noteIndex][0] + badRange + userRange))    // ÇöÀç ½Ã°£ÀÌ ÆÇÁ¤½Ã°£À» Áö³µÀ¸¸é (ÆÇÁ¤½Ã°£ + ÆÇÁ¤¹üÀ§ + »ý¼º½Ã°£ 1ÃÊ)
+        // miss Ã³ï¿½ï¿½
+        // **ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (isGame && noteIndex < chart.Length - 1 &&                   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½
+            bgm.time > (chart[noteIndex][0] + badRange + userRange))    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ 1ï¿½ï¿½)
         {
             noteIndex++;
             miss++;
             combo = curCombo;
             curCombo = 0;
             score += missScore;
+            judgeeff.Play();
+            judgeUI.color = color[3];
             judgeUI.text = "MISS";
             comboUI.text = "";
+            combotext.text = "";
             scoreUI.text = "SCORE\n" + score.ToString();
         }
 
-        // °ÔÀÓ Á¾·á
-        // ¸ðµç ³ëÆ® ÆÇÁ¤ÇÏ¸é
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½
         if (noteIndex > chart.Length - 1 && !isEnd)
         {
-            // °ÔÀÓ Á¾·á
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (stageMode)
             {
                 StageEnd();
@@ -420,11 +428,11 @@ public class MainGame : MonoBehaviour
             isEnd = true;
         }
 
-        // À½¾Ç ÁøÇàµµ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ
         MusicProgress();
     }
 
-    // °ÔÀÓ ½ÃÀÛ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void GameStart()
     {
         ResetMain();
@@ -434,41 +442,42 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameStartCo()
     {
-        print("°ÔÀÓ ½ÃÀÛ");
+        print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         scoreUI.text = "";
         judgeUI.text = "";
         comboUI.text = "";
+        combotext.text = "";
 
-        // ÇÃ·¹ÀÌ¾î ³ëÆ® ¾ÕÀ¸·Î À§Ä¡
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         PlayerReposition();
 
-        // Ã¹ ³ëÆ® º¸¿©ÁÖ±â 
+        // Ã¹ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ 
         yield return StartCoroutine(ShowNextNoteCo());
 
-        // Ä«¿îÆ®
+        // Ä«ï¿½ï¿½Æ®
         yield return StartCoroutine(TimeCountCo(judgeUI));
 
-        // °ÔÀÓ½ÃÀÛ
-        isStart = true;        // ½ÃÀÛ Çß´ÂÁö
-        isGame = true;         // °ÔÀÓ ÁßÀÎÁö
+        // ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½
+        isStart = true;        // ï¿½ï¿½ï¿½ï¿½ ï¿½ß´ï¿½ï¿½ï¿½
+        isGame = true;         // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         startTime = Time.time;
 
-        // À½¿ø ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         bgm.Stop();                  
         bgm.time = 0;                
 
-        // 1ÃÊ ÈÄ À½¾Ç Æ²±â
+        // 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ²ï¿½ï¿½
         yield return new WaitForSeconds(1);
         bgm.Play();
         yield return new WaitForSeconds(3);
-        Settable(true);        // ¼³Á¤Ã¢ »ç¿ë°¡´É
+        Settable(true);        // ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ë°¡ï¿½ï¿½
     }
 
 
-    // ½ºÅ×ÀÌÁö ½ÃÀÛ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void StageStart()
     {
-        print("½ºÅ×ÀÌÁö ½ÃÀÛ");
+        print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         ResetMain();
         gameCanvas.SetActive(true);
         StartCoroutine(StageStartCo());
@@ -480,59 +489,60 @@ public class MainGame : MonoBehaviour
         GameStart();
     }
 
-    // °ÔÀÓ ÁøÇàµµ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ
     public void MusicProgress()
     {
-        // À½¿ø ±âÁØ ÁøÇàµµ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ
         //progressUI.value = BGM.time / BGM.clip.length;
 
-        // Ã¤º¸ ±âÁØ ÁøÇàµµ
+        // Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ
         if(bgm.time > 0)
             progressUI.value = bgm.time / chart[chart.Length - 1][0];
     }
 
-    // °ÔÀÓ Á¾·á
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void GameEnd()
     {
         StartCoroutine(GameEndCo());
 
 
-        // ½ºÅä¸® ¶ç¿ì±â
+        // ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½
 
-        // °á°ú È­¸é ¶ç¿ì±â
+        // ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // °á°ú È­¸é ²ô±â
+        // ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½
     }
 
     IEnumerator GameEndCo()
     {
-        // °ÔÀÓ Á¾·á
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         isStart = false;
         isGame = false;
 
-        Settable(true);     // ¼³Á¤Ã¢ ¸ØÃã
+        Settable(true);     // ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½
 
-        // score ui º¯°æ
+        // score ui ï¿½ï¿½ï¿½ï¿½
         judgeUI.text = "Game Clear!";
         judgeUI.color = Color.yellow;
 
-        // µ¥ÀÌÅÍ ÀúÀå
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
-        // 5ÃÊ ÈÄ À½¾Ç ²ô±â
+        // 5ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(5);
 
-        // ui ÃÊ±âÈ­
+        // ui ï¿½Ê±ï¿½È­
         judgeUI.text = "";
         comboUI.text = "";
+        combotext.text = "";
         judgeUI.color = Color.white;
 
-        // À½¿ø ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         bgm.Stop();
     }
 
-    // °ÔÀÓ ³¡³»Áö ¸øÇÑ °æ¿ì
-    // °ÔÀÓ ¿À¹ö
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void GameOver()
     {
         StartCoroutine(GameEndCo());
@@ -540,10 +550,10 @@ public class MainGame : MonoBehaviour
     }
     IEnumerator GameOverCo()
     {
-        // °ÔÀÓ Á¾·á
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return StartCoroutine(GameEndCo());
 
-        // °á°ú È­¸é ÀüÈ¯
+        // ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½È¯
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -555,56 +565,60 @@ public class MainGame : MonoBehaviour
     }
     IEnumerator StageEndCo()
     {
-        // °ÔÀÓ Á¾·á
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return StartCoroutine(GameEndCo());
 
-        // ¿£µù ½ºÅä¸® Ãâ·Â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(1);
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
-        // °á°ú È­¸é ÀüÈ¯
+        // ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½È¯
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
 
-    // ÆÇÁ¤ ÇÔ¼ö
-    // ÀÌµ¿ÇÒ ¶§¸¶´Ù È£Ãâ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
+    // ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
     public void Judge(float time, float x, float y)
     {
-        // °ÔÀÓ ½ÃÀÛ ¾ÈÇßÀ¸¸é Á¾·á
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!isGame) return;
 
-        // ÆÇÁ¤ ÇÔ¼ö *****
-        // º¯¼ö
-        // time: player ÀÌµ¿ ½Ã°£,
-        // x: player xÁÂÇ¥,
-        // y: player yÁÂÇ¥
-        // chart[i][0]: note ÆÇÁ¤ ½Ã°£,
-        // chart[i][1]: note xÁÂÇ¥,
-        // chart[i][2]: note yÁÂÇ¥,
-        // i: chartCount(0 ~ ³ëÆ® °³¼ö)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ *****
+        // ï¿½ï¿½ï¿½ï¿½
+        // time: player ï¿½Ìµï¿½ ï¿½Ã°ï¿½,
+        // x: player xï¿½ï¿½Ç¥,
+        // y: player yï¿½ï¿½Ç¥
+        // chart[i][0]: note ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½,
+        // chart[i][1]: note xï¿½ï¿½Ç¥,
+        // chart[i][2]: note yï¿½ï¿½Ç¥,
+        // i: chartCount(0 ~ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½)
 
-        // ÆÇÁ¤¿¡¼­ ³ëÆ® »ý¼º½Ã°£ 1ÃÊ »©ÁÖ±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½Ö±ï¿½
         //time -= 1;
 
-        // ÆÇÁ¤ ÀÌÈÄ·Î 10°³¸¸ ÁÂÇ¥ ¸Â´Â µ¥ÀÌÅÍ¹è¿­ Ã£±â
-        // **°³¼±»çÇ×: ÆÇÁ¤ ¾ÈµÈ 10°³ ³ëÆ®¸¦ Á¡°ËÇÏ´Â ½Ã½ºÅÛ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä·ï¿½ 10ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¹è¿­ Ã£ï¿½ï¿½
+        // **ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½ 10ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½
 
         for (int i = noteIndex; i < noteIndex + 10; i++)
         {
-            if (i > chart.Length - 1) break; // ¸¶Áö¸· ³ëÆ®º¸´Ù Å©¸é break
-            if (x == chart[i][1] && y == chart[i][2]) // ÁÂÇ¥ ÀÏÄ¡ÇÏ¸é
+            if (i > chart.Length - 1) break; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ break
+            if (x == chart[i][1] && y == chart[i][2]) // ï¿½ï¿½Ç¥ ï¿½ï¿½Ä¡ï¿½Ï¸ï¿½
             {
 
-                // ½Ã°£ ÆÇÁ¤ ¸Â´ÂÁö È®ÀÎ
+                // ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Â´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
                 if (time < (chart[i][0] + perfectRange + userRange) && time > (chart[i][0] - perfectRange + userRange))  // PERFECT
                 {
                     perfect++;
                     curCombo++;
+                    comboeff.Play();
                     score = score + perfectScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "PERFECT!";
+                    judgeUI.color = color[0];
+                    judgeeff.Play();
                     comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
                     scoreUI.text = "SCORE\n" + score.ToString();
 
                     GameObject effect = Instantiate(judgeEffect);
@@ -616,10 +630,14 @@ public class MainGame : MonoBehaviour
                 {
                     good++;
                     curCombo++;
+                    comboeff.Play();
                     score = score + goodScore + comboScore * curCombo;
                     noteIndex++;
                     judgeUI.text = "GOOD";
+                    judgeUI.color = color[1];
+                    judgeeff.Play();
                     comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
                     scoreUI.text = "SCORE\n" + score.ToString();
 
                     GameObject effect = Instantiate(judgeEffect);
@@ -635,7 +653,10 @@ public class MainGame : MonoBehaviour
                     score += badScore;
                     noteIndex++;
                     judgeUI.text = "BAD";
+                    judgeUI.color = color[2];
+                    judgeeff.Play();
                     comboUI.text = "";
+                    combotext.text = "";
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
@@ -647,11 +668,14 @@ public class MainGame : MonoBehaviour
                     score += missScore;
                     noteIndex++;
                     judgeUI.text = "MISS";
+                    judgeUI.color = color[3];
+                    judgeeff.Play();
                     comboUI.text = "";
+                    combotext.text = "";
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else                                                                             // ÁÂÇ¥´Â °°Àºµ¥ ½Ã°£ÀÌ ¾È¸Â¾Æ ÆÇÁ¤XÀÎ °æ¿ì
+                else                                                                             // ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½È¸Â¾ï¿½ ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ ï¿½ï¿½ï¿½
                 {
                     break; 
                 }
@@ -663,23 +687,23 @@ public class MainGame : MonoBehaviour
     {
         if (!isGame) return;
 
-        // °ÔÀÓ Á¤Áö
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         isGame = false;
 
-        // °ÔÀÓ ½Ã°£Àº ÇöÀç ³ëÆ®ÀÇ ½Ã°£À¸·Î ¼³Á¤(´Ù½Ã ½ÃÀÛ À§ÇØ)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         gameTime = chart[noteIndex][0];
 
-        // À½¾Ç Á¤Áö
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         bgm.Pause();
         
-        // À½¾Ç ½Ã°£ ¼¼ÆÃ 
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         if (chart[noteIndex][0] < 1) return;
         bgm.time = chart[noteIndex][0] - 1;
     }
     public void Continue()
     {
-        // °ÔÀÓ °è¼Ó
-        // °ÔÀÓ ÇÒ ¶§¸¸ ¼³Á¤ °¡´É
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (isStart)
         {
             StartCoroutine(ContinueCo());
@@ -688,17 +712,17 @@ public class MainGame : MonoBehaviour
 
     IEnumerator ContinueCo()
     {
-        // ÇÃ·¹ÀÌ¾î ³ëÆ® ¾ÕÀ¸·Î À§Ä¡
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         PlayerReposition();
 
         yield return StartCoroutine(ShowNextNoteCo());
         yield return StartCoroutine(TimeCountCo());
 
-        // °ÔÀÓ ½ÃÀÛ(³ëÆ® ¶ç¿ì±â)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½)
         isGame = true;
 
-        // 1ÃÊ ÈÄ¿¡ À½¾Ç ½ÃÀÛ
-        // ³ëÆ® ¶ç¿ì´Â ½Ã°£ ¶§¹®¿¡
+        // 1ï¿½ï¿½ ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(1);
         bgm.Play();
     }
@@ -750,7 +774,7 @@ public class MainGame : MonoBehaviour
 
     public void PlayerReposition()
     {
-        // ÇÃ·¹ÀÌ¾î ³ëÆ® ½ÃÀÛ À§Ä¡
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 
         Vector2 firstNote = new Vector2(
                 MainGame.instance.chart[MainGame.instance.noteIndex][1],
@@ -787,21 +811,21 @@ public class MainGame : MonoBehaviour
 
     public void ResetMain()
     {
-        // µ¥ÀÌÅÍ ÃÊ±âÈ­ÇÔ¼ö
-        // //°ÔÀÓ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ô¼ï¿½
+        // //ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         noteIndex = 0;
         isStart = false;
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // ¼³Á¤Ã¢ Àá±Ý
+        Settable(false);     // ï¿½ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½
 
-        // ½Ã°£ ÃÊ±âÈ­
+        // ï¿½Ã°ï¿½ ï¿½Ê±ï¿½È­
         gameTime = 0;
         musicTime = 0;
         startTime = 0;
 
-        // °ÔÀÓ Á¡¼ö ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         perfect = 0;
         good = 0;
         bad = 0;
@@ -819,13 +843,13 @@ public class MainGame : MonoBehaviour
             collection = 0;
         }
 
-        // UI ¼¼ÆÃ
+        // UI ï¿½ï¿½ï¿½ï¿½
         gameCanvas.SetActive(false);
     }
 
     public void GetMainData()
     {
-        // soundmanager ºÒ·¯¿À±â
+        // soundmanager ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         if (GameObject.Find("mainBGM"))
         {
             GameObject total = GameObject.Find("mainBGM");
@@ -842,7 +866,7 @@ public class MainGame : MonoBehaviour
             effect = soundMan.effect;
         }
 
-        // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         var data = GameObject.Find("Data");
         if (data)
         {
