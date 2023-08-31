@@ -106,23 +106,17 @@ public class DataManager : MonoBehaviour
         }
 
         print("로드 초기화");
-        //기몬값 초기화 코드
+        // 기몬값 초기화 코드
         maingamedata = new MainGameData(); // 또는 다른 초기값으로 설정할 수 있음
 
-        //초기화
+        // 초기화
         for (int i = 0; i < 4; i++)
         {
             maingamedata.stageNum[i] = i + 1;
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
             maingamedata.score[i] = 0;
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
             maingamedata.collection[i] = 0;
+            maingamedata.happy[i] = false;
+            maingamedata.sad[i] = false;
         }
 
         maingamedata.synk = 0;

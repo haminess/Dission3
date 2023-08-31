@@ -21,9 +21,12 @@ public class MainGameData //: MonoBehaviour
 
     //public int collection;
     public int[] collection = new int[4];
+    public bool[] happy = new bool[4];
+    public bool[] sad = new bool[4];
 
     public float synk;
     public float judge;
+    
 
 
     public MainGameData()
@@ -32,17 +35,12 @@ public class MainGameData //: MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             stageNum[i] = i + 1;
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
             score[i] = 0;
+            collection[i] = 0;
+            happy[i] = false;
+            sad[i] = false;
         }
 
-        for (int i = 0;i<4;i++)
-        {
-            collection[i] = 0;
-        }
 
         synk = 0;
         judge = 0;
