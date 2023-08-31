@@ -849,5 +849,10 @@ public class MainGame : MonoBehaviour
             DataObject = GameObject.Find("Data").GetComponent<DataManager>();
             stageNum = DataObject.stageNum;
         }
+
+        // 로컬 데이터 불러오기
+        Connector connector = GetComponent<Connector>();
+        connector.UpdateData();
+        userRange = connector.maingamedata.judge;
     }
 }
