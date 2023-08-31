@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
-    // ��� ��ũ��Ʈ���� ���� �����ϰ� �ϱ�
+    // ���?��ũ��Ʈ���� ���� �����ϰ� �ϱ�
     public static MainGame instance;
 
     // ������Ʈ ����
@@ -37,9 +37,9 @@ public class MainGame : MonoBehaviour
     public int stageNum = 1;
     public bool stageMode = false;      // true�� ���ӽ���
     public bool isStart = false;         // true�� �������� ����
-    public bool isGame = false;          // true�� �����ġ ����
+    public bool isGame = false;          // true�� ������?����
     public bool isEnd = false;           // true�� ��������
-    public float gameTime;               // �����ġ
+    public float gameTime;               // ������?
     public float musicTime;              // ���� �ð�
     public float startTime;              // ���ӽ��� �ð�
 
@@ -88,11 +88,11 @@ public class MainGame : MonoBehaviour
     public void Start()
     {
 
-        // ����� �� ����Ʈ
+        // �����?�� ����Ʈ
         // ȿ������ �־���
         // ����Ʈ�� �־���
-        // ��� ���
-        // ������ ���
+        // ���?���?
+        // ������ ���?
         // ��ũ �ý���
 
         // �� �ʱ�ȭ
@@ -352,7 +352,7 @@ public class MainGame : MonoBehaviour
             chart[235] = new float[3] { 105.642f, -3, 20 };
         }
 
-        // �������� ����̸� �ٷ� ����
+        // �������� ����̸�?�ٷ� ����
         if(stageMode)
         {
             StageStart();
@@ -387,7 +387,7 @@ public class MainGame : MonoBehaviour
         if (!isGame)
             return;
 
-        // ���� ���̸� �����ġ ����
+        // ���� ���̸� ������?����
         if (isGame)
         {
             gameTime += Time.deltaTime;
@@ -413,7 +413,7 @@ public class MainGame : MonoBehaviour
         }
 
         // ���� ����
-        // ��� ��Ʈ �����ϸ�
+        // ���?��Ʈ �����ϸ�
         if (noteIndex > chart.Length - 1 && !isEnd)
         {
             // ���� ����
@@ -470,7 +470,7 @@ public class MainGame : MonoBehaviour
         yield return new WaitForSeconds(1);
         bgm.Play();
         yield return new WaitForSeconds(3);
-        Settable(true);        // ����â ��밡��
+        Settable(true);        // ����â ��밡��?
     }
 
 
@@ -508,9 +508,9 @@ public class MainGame : MonoBehaviour
 
         // ���丮 ����
 
-        // ��� ȭ�� ����
+        // ���?ȭ�� ����
 
-        // ��� ȭ�� ���
+        // ���?ȭ�� ���?
     }
 
     IEnumerator GameEndCo()
@@ -528,7 +528,7 @@ public class MainGame : MonoBehaviour
         // ������ ����
         GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
-        // 5�� �� ���� ���
+        // 5�� �� ���� ���?
         yield return new WaitForSeconds(5);
 
         // ui �ʱ�ȭ
@@ -541,7 +541,7 @@ public class MainGame : MonoBehaviour
         bgm.Stop();
     }
 
-    // ���� ������ ���� ���
+    // ���� ������ ���� ���?
     // ���� ����
     public void GameOver()
     {
@@ -553,7 +553,7 @@ public class MainGame : MonoBehaviour
         // ���� ����
         yield return StartCoroutine(GameEndCo());
 
-        // ��� ȭ�� ��ȯ
+        // ���?ȭ�� ��ȯ
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -568,11 +568,20 @@ public class MainGame : MonoBehaviour
         // ���� ����
         yield return StartCoroutine(GameEndCo());
 
-        // ���� ���丮 ���
+        // ���� ���丮 ���?
         yield return new WaitForSeconds(1);
+        storyManager.storyID = stageNum - 1;
+        if(collection > 3)
+        {
+            storyManager.storyID += 1;
+        }
+        else
+        {
+            storyManager.storyID += 2;
+        }
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
-        // ��� ȭ�� ��ȯ
+        // ���?ȭ�� ��ȯ
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -675,7 +684,7 @@ public class MainGame : MonoBehaviour
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else                                                                             // ��ǥ�� ������ �ð��� �ȸ¾� ����X�� ���
+                else                                                                             // ��ǥ�� ������ �ð��� �ȸ¾� ����X�� ���?
                 {
                     break; 
                 }
@@ -702,7 +711,7 @@ public class MainGame : MonoBehaviour
     }
     public void Continue()
     {
-        // ���� ���
+        // ���� ���?
         // ���� �� ���� ���� ����
         if (isStart)
         {
@@ -818,7 +827,7 @@ public class MainGame : MonoBehaviour
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // ����â ���
+        Settable(false);     // ����â ���?
 
         // �ð� �ʱ�ȭ
         gameTime = 0;
