@@ -23,6 +23,8 @@ public class SoundManager : MonoBehaviour
 
     public Slider bgmslider;    // 설정창 값 슬라이더
     public Slider effectslider;
+    public float tempo1 = 4;
+    public float tempo2 = 4;
 
     public void Start()
     {
@@ -203,5 +205,12 @@ public class SoundManager : MonoBehaviour
             bgm = sm.bgm;
             effect = sm.effect;
         }
+    }
+
+    public float GetBeatTime(int _bgm)
+    {
+        float sec = (60f / bgmBpm[_bgm]) * (tempo1 / tempo2);
+        
+        return sec;
     }
 }

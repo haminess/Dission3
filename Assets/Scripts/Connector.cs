@@ -6,8 +6,8 @@ using TMPro;
 public class Connector : MonoBehaviour
 {
     // 로컬데이터와 연결해주는 스크립트
-    private MainGameData maingamedata => DataManager.Instance.maingamedata;
-    private SoundData sounddata  => DataManager.Instance.sounddata;
+    public MainGameData maingamedata => DataManager.Instance.maingamedata;
+    public SoundData sounddata  => DataManager.Instance.sounddata;
 
     public SoundManager soundMan;
 
