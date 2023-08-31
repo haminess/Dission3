@@ -16,6 +16,11 @@ public class TitleManager : MonoBehaviour
     public Animator titleLogo;
     public Animator titleUI;
 
+    // synk 오브젝트
+    public GameObject synkNote;
+    float time;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,12 +73,19 @@ public class TitleManager : MonoBehaviour
                 }
                 break;
             case 1:
+                // title mode
                 ArrowControl(TitleButton);
                 break;
             case 2:
+                // option mode
                 ArrowControl(OptionButton);
                 break;
+            case 3:
+                // synk mode
+                SynkControl();
+
             case 99:
+                // none mode
                 break;
         }
     }
@@ -100,6 +112,19 @@ public class TitleManager : MonoBehaviour
         // 미완성
         // arrowpoint 값도 변경되게 하기
         arrow.transform.position = _button.transform.position;
+    }
+
+    public void SynkControl()
+    {
+        if(Input.anyKey)
+        {
+            
+        }
+    }
+
+    public void ShowSynkNote()
+    {
+
     }
 
 }
