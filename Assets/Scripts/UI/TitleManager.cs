@@ -83,10 +83,11 @@ public class TitleManager : MonoBehaviour
             case 3:
                 // note synk mode
                 break;
-            case 4:
-                // judge synk mode
-                SynkControl();
-                break;
+            //case 4:
+            //    // judge synk mode
+            //    SynkControl();
+            //    break;
+
             case 99:
                 // none mode
                 break;
