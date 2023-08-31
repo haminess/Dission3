@@ -8,7 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
-    // О©╫О©╫О©?О©╫О©╫е╘О©╫О©╫ф╝О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫о╟О©╫ О©╫о╠О©╫
+    // О©╫О©╫О©╫?О©╫О©╫е╘О©╫О©╫ф╝О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫о╟О©╫ О©╫о╠О©╫
     public static MainGame instance;
 
     // О©╫О©╫О©╫О©╫О©╫О©╫ф╝ О©╫О©╫О©╫О©╫
@@ -37,9 +37,9 @@ public class MainGame : MonoBehaviour
     public int stageNum = 1;
     public bool stageMode = false;      // trueО©╫О©╫ О©╫О©╫О©╫с╫О©╫О©╫О©╫
     public bool isStart = false;         // trueО©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
-    public bool isGame = false;          // trueО©╫О©╫ О©╫О©╫О©╫О©╫О©╫д?О©╫О©╫О©╫О©╫
+    public bool isGame = false;          // trueО©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫?О©╫О©╫О©╫О©╫
     public bool isEnd = false;           // trueО©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
-    public float gameTime;               // О©╫О©╫О©╫О©╫О©╫д?
+    public float gameTime;               // О©╫О©╫О©╫О©╫О©╫О©╫?
     public float musicTime;              // О©╫О©╫О©╫О©╫ О©╫ц╟О©╫
     public float startTime;              // О©╫О©╫О©╫с╫О©╫О©╫О©╫ О©╫ц╟О©╫
 
@@ -88,11 +88,11 @@ public class MainGame : MonoBehaviour
     public void Start()
     {
 
-        // О©╫О©╫О©╫О©╫О©?О©╫О©╫ О©╫О©╫О©╫О©╫ф╝
+        // О©╫О©╫О©╫О©╫О©╫?О©╫О©╫ О©╫О©╫О©╫О©╫ф╝
         // х©О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ж╬О©╫О©╫О©╫
         // О©╫О©╫О©╫О©╫ф╝О©╫О©╫ О©╫ж╬О©╫О©╫О©╫
-        // О©╫О©╫О©?О©╫О©╫О©?
-        // О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©?
+        // О©╫О©╫О©╫?О©╫О©╫О©╫?
+        // О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫?
         // О©╫О©╫е╘ О©╫ц╫О©╫О©╫О©╫
 
         // О©╫О©╫ О©╫й╠О©╫х╜
@@ -352,7 +352,7 @@ public class MainGame : MonoBehaviour
             chart[235] = new float[3] { 105.642f, -3, 20 };
         }
 
-        // О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫л╦О©?О©╫ы╥О©╫ О©╫О©╫О©╫О©╫
+        // О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫л╦О©╫?О©╫ы╥О©╫ О©╫О©╫О©╫О©╫
         if(stageMode)
         {
             StageStart();
@@ -387,7 +387,7 @@ public class MainGame : MonoBehaviour
         if (!isGame)
             return;
 
-        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫л╦О©╫ О©╫О©╫О©╫О©╫О©╫д?О©╫О©╫О©╫О©╫
+        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫л╦О©╫ О©╫О©╫О©╫О©╫О©╫О©╫?О©╫О©╫О©╫О©╫
         if (isGame)
         {
             gameTime += Time.deltaTime;
@@ -413,7 +413,7 @@ public class MainGame : MonoBehaviour
         }
 
         // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
-        // О©╫О©╫О©?О©╫О©╫ф╝ О©╫О©╫О©╫О©╫О©╫о╦О©╫
+        // О©╫О©╫О©╫?О©╫О©╫ф╝ О©╫О©╫О©╫О©╫О©╫о╦О©╫
         if (noteIndex > chart.Length - 1 && !isEnd)
         {
             // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
@@ -470,7 +470,7 @@ public class MainGame : MonoBehaviour
         yield return new WaitForSeconds(1);
         bgm.Play();
         yield return new WaitForSeconds(3);
-        Settable(true);        // О©╫О©╫О©╫О©╫ц╒ О©╫О©╫К╟║О©╫О©?
+        Settable(true);        // О©╫О©╫О©╫О©╫ц╒ О©╫О©╫К╟║О©╫О©╫?
     }
 
 
@@ -509,9 +509,9 @@ public class MainGame : MonoBehaviour
 
         // О©╫О©╫О©╫Д╦╝ О©╫О©╫О©╫О©╫
 
-        // О©╫О©╫О©?х╜О©╫О©╫ О©╫О©╫О©╫О©╫
+        // О©╫О©╫О©╫?х╜О©╫О©╫ О©╫О©╫О©╫О©╫
 
-        // О©╫О©╫О©?х╜О©╫О©╫ О©╫О©╫О©?
+        // О©╫О©╫О©╫?х╜О©╫О©╫ О©╫О©╫О©╫?
     }
 
     IEnumerator GameEndCo()
@@ -529,7 +529,7 @@ public class MainGame : MonoBehaviour
         // О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
         GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
-        // 5О©╫О©╫ О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©?
+        // 5О©╫О©╫ О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫?
         yield return new WaitForSeconds(5);
 
         // ui О©╫й╠О©╫х╜
@@ -542,7 +542,7 @@ public class MainGame : MonoBehaviour
         bgm.Stop();
     }
 
-    // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©?
+    // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫?
     // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
     public void GameOver()
     {
@@ -554,7 +554,7 @@ public class MainGame : MonoBehaviour
         // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
         yield return StartCoroutine(GameEndCo());
 
-        // О©╫О©╫О©?х╜О©╫О©╫ О©╫О©╫х╞
+        // О©╫О©╫О©╫?х╜О©╫О©╫ О©╫О©╫х╞
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -569,7 +569,7 @@ public class MainGame : MonoBehaviour
         // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
         yield return StartCoroutine(GameEndCo());
 
-        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫Д╦╝ О©╫О©╫О©?
+        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫Д╦╝ О©╫О©╫О©╫?
         yield return new WaitForSeconds(1);
         storyManager.storyID = stageNum - 1;
         if(collection > 3)
@@ -582,7 +582,7 @@ public class MainGame : MonoBehaviour
         }
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
-        // О©╫О©╫О©?х╜О©╫О©╫ О©╫О©╫х╞
+        // О©╫О©╫О©╫?х╜О©╫О©╫ О©╫О©╫х╞
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -685,7 +685,7 @@ public class MainGame : MonoBehaviour
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
-                else                                                                             // О©╫О©╫г╔О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ц╟О©╫О©╫О©╫ О©╫х╦б╬О©╫ О©╫О©╫О©╫О©╫XО©╫О©╫ О©╫О©╫О©?
+                else                                                                             // О©╫О©╫г╔О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ц╟О©╫О©╫О©╫ О©╫х╦б╬О©╫ О©╫О©╫О©╫О©╫XО©╫О©╫ О©╫О©╫О©╫?
                 {
                     break; 
                 }
@@ -712,7 +712,7 @@ public class MainGame : MonoBehaviour
     }
     public void Continue()
     {
-        // О©╫О©╫О©╫О©╫ О©╫О©╫О©?
+        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫?
         // О©╫О©╫О©╫О©╫ О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫
         if (isStart)
         {
@@ -791,6 +791,7 @@ public class MainGame : MonoBehaviour
                 chart[noteIndex][1],
                 chart[noteIndex][2]);
 
+        print(firstNote + "aaaaaaaa");
         player.CurPos = firstNote;
 
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
@@ -829,7 +830,7 @@ public class MainGame : MonoBehaviour
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // О©╫О©╫О©╫О©╫ц╒ О©╫О©╫О©?
+        Settable(false);     // О©╫О©╫О©╫О©╫ц╒ О©╫О©╫О©╫?
 
         // О©╫ц╟О©╫ О©╫й╠О©╫х╜
         gameTime = 0;
@@ -885,7 +886,7 @@ public class MainGame : MonoBehaviour
             stageNum = DataObject.stageNum;
         }
 
-        // ╥ндц ╣╔юлем ╨р╥╞©ю╠Б
+        // О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫р╥О©╫О©╫О©╫О©╫О©╫
         Connector connector = GetComponent<Connector>();
         connector.UpdateData();
         userRange = connector.maingamedata.judge;
