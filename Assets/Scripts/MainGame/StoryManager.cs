@@ -173,7 +173,7 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(players, Vector3.left));
 
         yield return new WaitForSeconds(1);
-        Talk(players, "안녕~ 나는 00이야");
+        Talk(players, "안녕~ 나는 시운이야");
         yield return new WaitForSeconds(chatSpeed);
         Talk(players, "다들 잘 부탁해!");
         yield return new WaitForSeconds(chatSpeed);
@@ -295,6 +295,7 @@ public class StoryManager : MonoBehaviour
 
         // 화면 전환
         yield return StartCoroutine(Fade(black));
+        Destroy(minji);
         storyCamera.transform.position = new Vector3(0, 0, -10);
         GameObject players = NPC(student, 0, 0);
         yield return StartCoroutine(Fade(black, false));
