@@ -23,9 +23,9 @@ public class Fadeinout : MonoBehaviour
     {
         anim.clip = anim.GetClip("fadeout");
         anim.Play();
-        yield return new WaitForSeconds(0.8f);
-        scene.ToMainGameScene();
         yield return new WaitForSeconds(0.5f);
+        scene.ToMainGameScene();
+        yield return new WaitForSeconds(0.3f);
         anim.clip = anim.GetClip("fadein");
         anim.Play();
     }
