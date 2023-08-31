@@ -828,7 +828,7 @@ public class MainGame : MonoBehaviour
         // soundmanager 불러오기
         if (GameObject.Find("mainBGM"))
         {
-            GameObject total = GameObject.Find("SoundManager");
+            GameObject total = GameObject.Find("mainBGM");
             soundMan = total.GetComponent<SoundManager>();
             bgm = soundMan.bgm;
             effect = soundMan.effect;
