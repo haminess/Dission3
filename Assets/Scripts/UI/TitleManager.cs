@@ -125,22 +125,28 @@ public class TitleManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ShowNoteSynk()
+    public void ShowNoteSynk()
     {
+        StartCoroutine(ShowNoteSynkCo());
+    }
+
+    public IEnumerator ShowNoteSynkCo()
+    {
+        soundmanager.bgm.Stop();
+
         float sec = soundmanager.GetBeatTime(0);
         yield return new WaitForSeconds(soundmanager.bgmStartTime[0] + GetComponent<Connector>().maingamedata.synk);
         StartCoroutine(ShowBeat(sec));
         
         yield return new WaitForSeconds(1);
-        soundmanager.bgm.Stop();
         soundmanager.SetBgm(0);
         soundmanager.bgm.Play();
     }
 
     public IEnumerator ShowBeat(float _sec)
     {
-        Instantiate(synkNote);
-        Destroy(synkNote, 1.5f);
+        GameObject _synkNote = Instantiate(synkNote, GameObject.Find("SynkUI").transform);
+        Destroy(_synkNote, 1.5f);
         yield return new WaitForSeconds(_sec);
         StartCoroutine(ShowBeat(_sec));
     }
