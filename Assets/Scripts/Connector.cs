@@ -75,10 +75,10 @@ public class Connector : MonoBehaviour
                 _text.text = (sounddata.effect * 100).ToString("0");
                 break;
             case "synk":
-                _text.text = maingamedata.synk.ToString("0.00") + " sec";
+                _text.text = (maingamedata.synk * 100).ToString("0") + " ms";
                 break;
             case "judge":
-                _text.text = maingamedata.judge.ToString("0.00") + " sec";
+                _text.text = (maingamedata.judge * 100).ToString("0") + " ms";
                 break;
         }
     }
