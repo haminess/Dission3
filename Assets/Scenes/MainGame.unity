@@ -58875,7 +58875,7 @@ MonoBehaviour:
   noteIndex: 0
   startButton: 0
   stageNum: 0
-  stageMode: 0
+  stageMode: 1
   isStart: 0
   isGame: 0
   isEnd: 0

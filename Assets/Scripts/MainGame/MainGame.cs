@@ -89,7 +89,6 @@ public class MainGame : MonoBehaviour
         // 경로 기능
         // 라이프 기능
         // 싱크 시스템
-        // 설정 기능 연결
 
         // 값 초기화
         MainGame.instance = this;
@@ -99,6 +98,13 @@ public class MainGame : MonoBehaviour
         sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
+        if (GameObject.Find("mainBGM"))
+        {
+            GameObject total = GameObject.Find("SoundManager");
+            soundMan = total.GetComponent<SoundManager>();
+            bgm = soundMan.bgm;
+            effect = soundMan.effect;
+        }
 
         if (GameObject.Find("SoundManager"))
         {
@@ -356,38 +362,12 @@ public class MainGame : MonoBehaviour
         chart[234] = new float[3] { 104.96f, -3, 19 };
         chart[235] = new float[3] { 105.642f, -3, 20 };
 
-        // 게임 초기화
-        isStart = false;
-        isGame = false;
-        isEnd = false;
-        bgm.Stop();
-        Settable(false);     // 설정창 잠금
+        ResetMain();
 
-        // 시간 초기화
-        gameTime = 0;
-        musicTime = 0;
-        startTime = 0;
-
-        // 게임 점수 초기화
-        perfect = 0;
-        good = 0;
-        bad = 0;
-        miss = 0;
-        score = 0;
-        if (stageNum >= 1 && stageNum <= 4)
+        if(stageMode)
         {
-            score = 0;
+            StageStart();
         }
-        combo = 0;
-        curCombo = 0;
-        collection = 0;
-        if (stageNum >= 1 && stageNum <= 4)
-        {
-            collection = 0;
-        }
-
-        // UI 세팅
-        gameCanvas.SetActive(false);
     }
 
     
@@ -409,6 +389,9 @@ public class MainGame : MonoBehaviour
             startButton = false;
         }
 
+
+        if (!isGame)
+            return;
 
         // 게임 중이면 스톱워치 설정
         if (isGame)
@@ -455,7 +438,7 @@ public class MainGame : MonoBehaviour
     // 게임 시작
     public void GameStart()
     {
-        Start();
+        ResetMain();
         gameCanvas.SetActive(true);
         StartCoroutine(GameStartCo());
     }
@@ -513,7 +496,8 @@ public class MainGame : MonoBehaviour
         //progressUI.value = BGM.time / BGM.clip.length;
 
         // 채보 기준 진행도
-        progressUI.value = bgm.time / chart[chart.Length - 1][0];
+        if(bgm.time > 0)
+            progressUI.value = bgm.time / chart[chart.Length - 1][0];
     }
 
     // 게임 종료
@@ -807,5 +791,43 @@ public class MainGame : MonoBehaviour
     {
         gameCanvas.transform.GetChild(0).gameObject.SetActive(_isCan);
         player.GetComponent<Player>().Settable = _isCan;
+    }
+
+
+    public void ResetMain()
+    {
+        // 데이터 초기화함수
+        // //게임 초기화
+        isStart = false;
+        isGame = false;
+        isEnd = false;
+        bgm.Stop();
+        Settable(false);     // 설정창 잠금
+
+        // 시간 초기화
+        gameTime = 0;
+        musicTime = 0;
+        startTime = 0;
+
+        // 게임 점수 초기화
+        perfect = 0;
+        good = 0;
+        bad = 0;
+        miss = 0;
+        score = 0;
+        if (stageNum >= 1 && stageNum <= 4)
+        {
+            score = 0;
+        }
+        combo = 0;
+        curCombo = 0;
+        collection = 0;
+        if (stageNum >= 1 && stageNum <= 4)
+        {
+            collection = 0;
+        }
+
+        // UI 세팅
+        gameCanvas.SetActive(false);
     }
 }
