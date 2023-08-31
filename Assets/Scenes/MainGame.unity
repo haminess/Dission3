@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5375586}
   - component: {fileID: 5375587}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 37692068}
   - component: {fileID: 37692069}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1103,7 +1103,7 @@ GameObject:
   - component: {fileID: 126258385}
   - component: {fileID: 126258384}
   - component: {fileID: 126258383}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: trash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1576,7 +1576,7 @@ GameObject:
   m_Component:
   - component: {fileID: 242641739}
   - component: {fileID: 242641740}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3001,7 +3001,7 @@ GameObject:
   m_Component:
   - component: {fileID: 384827806}
   - component: {fileID: 384827807}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: OutWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3618,7 +3618,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 418522632}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MusicClass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3946,7 +3946,7 @@ GameObject:
   - component: {fileID: 439135729}
   - component: {fileID: 439135728}
   - component: {fileID: 439135727}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: notebook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4829,7 +4829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 541971145}
   - component: {fileID: 541971146}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: art
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5255,7 +5255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 574427445}
   - component: {fileID: 574427446}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5936,7 +5936,7 @@ GameObject:
   - component: {fileID: 696237295}
   - component: {fileID: 696237294}
   - component: {fileID: 696237293}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: rabbit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6260,7 +6260,7 @@ GameObject:
   m_Component:
   - component: {fileID: 704387951}
   - component: {fileID: 704387952}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6477,7 +6477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 751996952}
   - component: {fileID: 751996953}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: clean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6561,7 +6561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 760941424}
   - component: {fileID: 760941425}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12888,7 +12888,7 @@ GameObject:
   m_Component:
   - component: {fileID: 976653967}
   - component: {fileID: 976653968}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sky
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13867,7 +13867,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1031829461}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ArtClass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63525,7 +63525,7 @@ GameObject:
   - component: {fileID: 1310132818}
   - component: {fileID: 1310132817}
   - component: {fileID: 1310132816}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: class_front_desk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63655,7 +63655,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1314553892}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Garden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63898,7 +63898,7 @@ MonoBehaviour:
   noteIndex: 0
   startButton: 0
   stageNum: 0
-  stageMode: 0
+  stageMode: 1
   isStart: 0
   isGame: 0
   isEnd: 0
@@ -64122,7 +64122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1405044877}
   - component: {fileID: 1405044878}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: fullcolor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65663,9 +65663,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1639908324}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Objects
-  m_TagString: Untagged
+  m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73481,7 +73481,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1666815120}
   - component: {fileID: 1666815121}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: musicMemo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73565,7 +73565,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1689203369}
   - component: {fileID: 1689203370}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 3color01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74134,7 +74134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1738727277}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74178,7 +74178,7 @@ GameObject:
   - component: {fileID: 1740885009}
   - component: {fileID: 1740885008}
   - component: {fileID: 1740885007}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: class_front_desk (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74315,7 +74315,7 @@ GameObject:
   - component: {fileID: 1770110034}
   - component: {fileID: 1770110033}
   - component: {fileID: 1770110035}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: waterTank_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74424,7 +74424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1775944651}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Class
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74603,7 +74603,7 @@ GameObject:
   - component: {fileID: 1802970939}
   - component: {fileID: 1802970938}
   - component: {fileID: 1802970937}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: class_front_desk (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76226,7 +76226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2013259534}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: RestRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77495,9 +77495,33 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1314553892}
     m_Modifications:
+    - target: {fileID: 1665137032, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 300777513475682360, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581096895470807, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581097203408607, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581097674821437, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3062581098227626851, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_Name
       value: PlayerPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581098227626851, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3062581098227626851, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_IsActive
@@ -77546,6 +77570,22 @@ PrefabInstance:
     - target: {fileID: 3062581098227626877, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581098526849817, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581098880202693, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534223025505842580, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475685598778127582, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
@@ -77643,7 +77683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2063796633}
   - component: {fileID: 2063796634}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leaf_0 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
