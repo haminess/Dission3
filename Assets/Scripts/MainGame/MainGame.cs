@@ -435,13 +435,13 @@ public class MainGame : MonoBehaviour
     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void GameStart()
     {
-        ResetMain();
-        gameCanvas.SetActive(true);
         StartCoroutine(GameStartCo());
     }
 
     IEnumerator GameStartCo()
     {
+        ResetMain();
+        gameCanvas.SetActive(true);
         print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         scoreUI.text = "";
         judgeUI.text = "";
@@ -486,7 +486,8 @@ public class MainGame : MonoBehaviour
     public IEnumerator StageStartCo()
     {
         yield return StartCoroutine(storyManager.ShowStoryCo());
-        GameStart();
+        PlayerReposition();
+        yield return StartCoroutine(GameStartCo());
     }
 
     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ
@@ -785,9 +786,10 @@ public class MainGame : MonoBehaviour
     {
         // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 
+        print("½ÃÀÛÀ§Ä¡Á¶Á¤");
         Vector2 firstNote = new Vector2(
-                MainGame.instance.chart[MainGame.instance.noteIndex][1],
-                MainGame.instance.chart[MainGame.instance.noteIndex][2]);
+                chart[noteIndex][1],
+                chart[noteIndex][2]);
 
         player.CurPos = firstNote;
 

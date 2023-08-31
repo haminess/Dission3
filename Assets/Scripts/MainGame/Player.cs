@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         switch(MainGame.instance.stageNum)
         {
             case 1:
-                CurPos = new Vector3(0, 0, 0);
+                MainGame.instance.PlayerReposition();
                 break;
             case 2:
                 CurPos = new Vector3(0, 0, 0);
