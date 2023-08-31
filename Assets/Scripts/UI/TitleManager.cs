@@ -16,7 +16,7 @@ public class TitleManager : MonoBehaviour
     public Animator titleLogo;
     public Animator titleUI;
 
-    // synk ¿ÀºêÁ§Æ®
+    // synk ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     public GameObject synkNote;
     float time;
 
@@ -83,6 +83,7 @@ public class TitleManager : MonoBehaviour
             case 3:
                 // synk mode
                 SynkControl();
+                break;
 
             case 99:
                 // none mode
@@ -109,8 +110,8 @@ public class TitleManager : MonoBehaviour
     
     public void MoveArrow(GameObject _button)
     {
-        // ¹Ì¿Ï¼º
-        // arrowpoint °ªµµ º¯°æµÇ°Ô ÇÏ±â
+        // ï¿½Ì¿Ï¼ï¿½
+        // arrowpoint ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½Ï±ï¿½
         arrow.transform.position = _button.transform.position;
     }
 
