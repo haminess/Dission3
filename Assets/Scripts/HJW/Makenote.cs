@@ -24,6 +24,10 @@ public class Makenote : MonoBehaviour
     }
     private void Update()
     {
+        if(makemadi.is_smallmadi)
+        {
+            return;
+        }
         if(Maketile.instance.mode == 0)
         {
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
@@ -120,27 +124,27 @@ public class Makenote : MonoBehaviour
     {
         if (mode == 0) //4
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.zabun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.zabun * 2)) * Maketile.instance.curpos);
         }
         else if (mode == 1) //8
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.palbun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.palbun * 2)) * Maketile.instance.curpos);
         }
         else if (mode == 2) //16
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.sipukbun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.sipukbun * 2)) * Maketile.instance.curpos);
         }
         else if (mode == 3) //32
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.samsipebun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.samsipebun * 2)) * Maketile.instance.curpos);
         }
         else if (mode == 4) //1
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.unmun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.unmun * 2)) * Maketile.instance.curpos);
         }
         else if (mode == 5) //2
         {
-            data = makemadi.starttime + (Maketile.instance.curmadi * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.ebun * 2)) * Maketile.instance.curpos);
+            data = makemadi.starttime + ((Maketile.instance.curmadi - 1) * madi_sec) + ((madi_sec / (Maketile.instance.divide * Maketile.instance.ebun * 2)) * Maketile.instance.curpos);
         }
     }
     #region switch

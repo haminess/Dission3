@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Maketile : MonoBehaviour
 {
@@ -92,8 +93,16 @@ public class Maketile : MonoBehaviour
                 {
                     c = curmadi;
                 }
-                //                                                                                              mouse     madi                 page
-                fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 370 - (505.5f * c) + (makemadi.page * 69f) - makemadi.length, 0);
+                if(c == 0) //small madi
+                {
+                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 1200, 0);
+                   
+                }
+                else
+                {
+                    //                                                                                              mouse     madi                 page
+                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x + 120 - (505.5f * c) + (makemadi.page * 69f) - makemadi.length, 0);
+                }
                 backjapyo();
                 switch (Makenote.mode) 
                 {
@@ -287,6 +296,10 @@ public class Maketile : MonoBehaviour
     public void fuck(float note)
     {
         float a = (float)492 / (note * 2);
+        if (curmadi == 0)
+        {
+            return;
+        }
         is_fucking = true;
         for (int i = 0; i < note * 2 - 1; i += 2)
         {
@@ -299,7 +312,11 @@ public class Maketile : MonoBehaviour
     }
     public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감
     {
-        float a = (float)492 / (note * 4);
+        float a = (float)492 / (note * 2);
+        if (curmadi == 0)
+        {
+            return;
+        }
         is_fucking = true;
         for (int i = 0; i < note * 2 + MathF.Floor( note); i += 2)
         {

@@ -19,20 +19,19 @@ public class Makemadi : MonoBehaviour
     public int bpm;
     public double sec; //total sec
     public int what_four;
+    public double madi;
     [Header("Backjapyo")]
     public int up;
     public int down;
     [Space(20)]
-    public double madi;
+    public GameObject endmadi;
     public int page;
-    public uint endcount;
     public string curmadi = "0";
     public bool chart; //마디 범위 내에 들어와 있습니다.
-    int c;
+    public bool is_smallmadi;
     // Start is called before the first frame update
     void Start()
     {
-        endcount = 0;
         instance = this;
         madi = bpm / what_four * (sec / 60);
         if(starttime != 0)
@@ -58,21 +57,37 @@ public class Makemadi : MonoBehaviour
             total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -477);
             total.transform.SetParent(charts.transform);
         }
-        for (int i = 0; i < madi; i++) //make madi
+        for (int i = 0; i <= Mathf.Floor((float)madi); i++) //make madi
         {
-            var a = Instantiate(prefab, canvas);
-            if(starttime == 0)
+            if(i == Mathf.Floor((float)madi))
             {
-                a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+                var b = Instantiate(endmadi, canvas);
+                if (starttime == 0)
+                {
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+                }
+                else
+                {
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+                }
+                b.transform.SetParent(charts);
+                b.name = "End";
             }
             else
             {
-                a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+                var a = Instantiate(prefab, canvas);
+                if(starttime == 0)
+                {
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+                }
+                else
+                {
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+                }
+                a.transform.SetParent(charts);
+                a.name = (i + 1).ToString();
             }
-            a.transform.SetParent(charts);
-            a.name = i.ToString();
         }
-        c = charts.transform.childCount;
     }
 
     // Update is called once per frame
@@ -81,6 +96,7 @@ public class Makemadi : MonoBehaviour
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Chart"));
         var b = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Charts"));
+        var c = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Smallmadi"));
         if (b)
         {
             curmadi = b.collider.name;
@@ -88,9 +104,15 @@ public class Makemadi : MonoBehaviour
         if (a)
         {
             chart = true;
-            if (Makenote.chartmode && Mouseevent.nopointer == false)
+            if(c)
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                is_smallmadi = true;
+            }
+            else if (Makenote.chartmode && Mouseevent.nopointer == false)
             {
                 Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                is_smallmadi = false;
 
             }
         }
@@ -100,19 +122,11 @@ public class Makemadi : MonoBehaviour
         }
         if (chart && !Audio.playing)
         {
-            if(end.endmadi != (int)madi)
-            {
-                endcount = 0;
-            }
             if (Input.mouseScrollDelta.y > 0) //back
             {
                 if (charts.GetComponent<RectTransform>().anchoredPosition.y >= -16)
                 {
                     return;
-                }
-                if (end.endmadi == c - 1)
-                {
-                    endcount--;
                 }
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
                 charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y + 3);
@@ -120,19 +134,14 @@ public class Makemadi : MonoBehaviour
             }
             if (Input.mouseScrollDelta.y < 0) //for
             {
-                if(end.endmadi == c - 1)
+                if(end.isend)
                 {
-                    if(endcount >= 7)
-                    {
-                        return;
-                    }
-                    endcount++;
+                    return;
                 }
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
                 charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y - 3);
                 page++;
             }
-
         }
     }
 }
