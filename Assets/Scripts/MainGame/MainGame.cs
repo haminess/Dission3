@@ -822,16 +822,17 @@ public class MainGame : MonoBehaviour
 
     public void ResetMain()
     {
-        // 占쏙옙占쏙옙占쏙옙 占십깍옙화占쌉쇽옙
-        // //占쏙옙占쏙옙 占십깍옙화
+        // 게임 정보 초기화
+        // 게임
         noteIndex = 0;
         isStart = false;
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
+        Settable(false);     // 설정창 가능
+        GetComponent<NoteGenerator>().noteIndex = 0;
 
-        // 占시곤옙 占십깍옙화
+        // 게임 시간 초기화
         gameTime = 0;
         musicTime = 0;
         startTime = 0;
