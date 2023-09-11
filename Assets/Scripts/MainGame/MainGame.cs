@@ -792,6 +792,7 @@ public class MainGame : MonoBehaviour
 
         print(firstNote + "aaaaaaaa");
         player.CurPos = firstNote;
+        player.transform.position = firstNote;
 
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
