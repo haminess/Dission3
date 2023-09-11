@@ -10,31 +10,30 @@ public class StoryManager : MonoBehaviour
 
     public bool showButton;
 
-    // ë§µ ì˜¤ë¸Œì íŠ¸
+    // ¸Ê ¿ÀºêÁ§Æ®
     public GameObject player;
     public GameObject playerCam;
     public GameObject storyCamera;
     public GameObject gameCanvas;
     public GameObject playerPrefab;
-    public GameObject ChatPrefab;
     public GameObject npcPrefab;
-    public Animator black;
+    public GameObject stage1;     // ÀÏ¹İ
+    public GameObject stage2;     // ÃàÁ¦
+    public GameObject stage3;     // ¹°°Ç
+    public GameObject stage4;     // Á¹¾÷
 
-    public GameObject stage1;     // ì¼ë°˜
-    public GameObject stage2;     // ì¶•ì œ
-    public GameObject stage3;     // ë¬¼ê±´
-    public GameObject stage4;     // ì¡¸ì—…
-
-    // ìºë¦­í„° ì´ë¯¸ì§€ ìŠ¤í”„ë¼ì´íŠ¸
+    // Ä³¸¯ÅÍ ÀÌ¹ÌÁö ½ºÇÁ¶óÀÌÆ®
     public Sprite baby;
     public Sprite student;
     public Sprite friend1;
 
+    public GameObject ChatPrefab;
+    public Image black;
 
-    // ìŠ¤í¬ë¦½íŠ¸ ê´€ë¦¬
+    // ½ºÅ©¸³Æ® °ü¸®
     public float chatSpeed = 2;
 
-    // ìŠ¤í¬ë¦½íŠ¸ ì°¸ì¡°
+    // ½ºÅ©¸³Æ® ÂüÁ¶
 
     // Start is called before the first frame update
     void Start()
@@ -43,8 +42,8 @@ public class StoryManager : MonoBehaviour
         storyCamera.SetActive(false);
         gameCanvas.SetActive(false);
 
-        // ìŠ¤í…Œì´ì§€ ë³„
-        // ë§µ ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
+        // ½ºÅ×ÀÌÁö º°
+        // ¸Ê ¿ÀºêÁ§Æ® È°¼ºÈ­
     }
 
     // Update is called once per frame
@@ -65,14 +64,14 @@ public class StoryManager : MonoBehaviour
 
     public IEnumerator ShowStoryCo()
     {
-        // í”Œë ˆì´ì–´ ì›€ì§ì„ Off
+        // ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ Off
         player.GetComponent<Player>().enabled = false;
         player.GetComponentInChildren<SpriteRenderer>().enabled = false;
 
-        // ê²Œì„ UI Off
+        // °ÔÀÓ UI Off
         gameCanvas.SetActive(false);
 
-        // ìŠ¤í† ë¦¬ ì‹œì‘
+        // ½ºÅä¸® ½ÃÀÛ
         switch (this.storyID)
         {
             case 0000:
@@ -109,15 +108,15 @@ public class StoryManager : MonoBehaviour
 
 
 
-        // í”Œë ˆì´ì–´ ì›€ì§ì„ On
+        // ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ On
         player.GetComponent<Player>().enabled = true;
         player.GetComponentInChildren<SpriteRenderer>().enabled = true;
 
-        // ê²Œì„ UI On
+        // °ÔÀÓ UI On
         gameCanvas.SetActive(true);
     }
 
-    // ìŠ¤í† ë¦¬ ìŠ¤í‚µ
+    // ½ºÅä¸® ½ºÅµ
     public void Skip()
     {
         storyCamera.SetActive(false);
@@ -132,13 +131,11 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Story1()
     {
-        // í™”ë©´ ì „í™˜
-        black.Play("anim_fade");
-        yield return new WaitForSeconds(1);
-        black.Play("anim_fade_out");
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
+        StartCoroutine(Fade(black, false));
 
-
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(0, 0, -10);
@@ -147,35 +144,38 @@ public class StoryManager : MonoBehaviour
 
         // # 1
         GameObject teacher = NPC(baby, 6, 0);
-        teacher.GetComponentInChildren<Animator>().Play("anim_fade");
+        yield return StartCoroutine(Fade(teacher));
 
         yield return new WaitForSeconds(1);
 
-        for (int i = 0; i < 6; i++)
-        {
-            yield return StartCoroutine(Move(teacher, Vector3.left));
-        }
+        yield return StartCoroutine(Move(teacher, Vector3.left));
+        yield return StartCoroutine(Move(teacher, Vector3.left));
+        yield return StartCoroutine(Move(teacher, Vector3.left));
+        yield return StartCoroutine(Move(teacher, Vector3.left));
+        yield return StartCoroutine(Move(teacher, Vector3.left));
+        yield return StartCoroutine(Move(teacher, Vector3.left));
 
         yield return new WaitForSeconds(1);
-        Talk(teacher, "ìš°ë¦¬ ë°˜ì— ì „í•™ìƒì´ ì™”ì–´ìš”");
+        Talk(teacher, "¿ì¸® ¹İ¿¡ ÀüÇĞ»ıÀÌ ¿Ô¾î¿ä");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(teacher, "ëª¨ë‘ ì „í•™ìƒì—ê²Œ ì§‘ì¤‘~");
+        Talk(teacher, "¸ğµÎ ÀüÇĞ»ı¿¡°Ô ÁıÁß~");
         yield return new WaitForSeconds(chatSpeed);
 
-        GameObject players = NPC(student, 6, 0);
-        players.GetComponentInChildren<Animator>().Play("anim_fade");
+        GameObject players = NPC(student, 6, 0); 
+        yield return StartCoroutine(Fade(players));
 
         yield return new WaitForSeconds(1);
 
-        for (int i = 0; i < 5; i++)
-        {
-            yield return StartCoroutine(Move(players, Vector3.left));
-        }
+        yield return StartCoroutine(Move(players, Vector3.left));
+        yield return StartCoroutine(Move(players, Vector3.left));
+        yield return StartCoroutine(Move(players, Vector3.left));
+        yield return StartCoroutine(Move(players, Vector3.left));
+        yield return StartCoroutine(Move(players, Vector3.left));
 
         yield return new WaitForSeconds(1);
-        Talk(players, "ì•ˆë…•~ ë‚˜ëŠ” ìˆœì´ì•¼");
+        Talk(players, "¾È³ç~ ³ª´Â ½Ã¿îÀÌ¾ß");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ë‹¤ë“¤ ì˜ ë¶€íƒí•´!");
+        Talk(players, "´Ùµé Àß ºÎÅ¹ÇØ!");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return StartCoroutine(Move(players, Vector3.down));
@@ -188,17 +188,16 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(players, Vector3.down));
         yield return StartCoroutine(Move(players, Vector3.left));
 
-        // í™”ë©´ ì „í™˜
-        black.Play("anim_fade");
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
         Destroy(teacher);
         Destroy(players);
-        yield return new WaitForSeconds(1);
-        black.Play("anim_fade_out");
 
         // # 2
         storyCamera.transform.position = new Vector3(0, -7, -10);
         GameObject minji = NPC(friend1, 0, 0);
         players = NPC(student, -1, -8);
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
@@ -212,223 +211,247 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(minji, Vector3.down));
 
         yield return new WaitForSeconds(1);
-        Talk(minji, "ì•ˆë…•! ë‚˜ëŠ” ì´ ë°˜ íšŒì¥ ë¯¼ì§€ì•¼");
+        Talk(minji, "¾È³ç! ³ª´Â ÀÌ ¹İ È¸Àå ¹ÎÁö¾ß");
         yield return new WaitForSeconds(chatSpeed);
         players.GetComponentInChildren<SpriteRenderer>().flipX = true;
-        Talk(minji, "ì§€ê¸ˆë¶€í„° ë„ˆì—ê²Œ í•™êµë¥¼ ì†Œê°œì‹œì¼œì¤„ê²Œ!");
+        Talk(minji, "Áö±İºÎÅÍ ³Ê¿¡°Ô ÇĞ±³¸¦ ¼Ò°³½ÃÄÑÁÙ°Ô!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ê·¸ë˜!");
+        Talk(players, "±×·¡!");
         yield return new WaitForSeconds(chatSpeed);
 
         // Story Off
-        black.Play("anim_fade");
-        yield return new WaitForSeconds(1);
+        yield return StartCoroutine(Fade(black));
         Destroy(players);
         Destroy(minji);
 
-        // ì¹´ë©”ë¼ ë˜ëŒë¦¬ê¸°
-        black.Play("anim_fade_out");
+        // Ä«¸Ş¶ó µÇµ¹¸®±â
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
 
     IEnumerator Story1_1()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(2, 18, -10);
 
-        // í™”ë©´ ì„¸íŒ…
+        // È­¸é ¼¼ÆÃ
         GameObject players = NPC(student, 0, 17);
         GameObject minji = NPC(friend1, 4, 17);
         players.GetComponentInChildren<SpriteRenderer>().flipX = true;
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
-        Talk(minji, "ëŒ€í™”í•˜ë‹¤ ë³´ë‹ˆ ìš°ë¦¬ ê½¤ë‚˜ ê³µí†µì ì´ ë§ì€ ê²ƒ ê°™ì•„!");
+        Talk(minji, "´ëÈ­ÇÏ´Ù º¸´Ï ¿ì¸® ²Ï³ª °øÅëÁ¡ÀÌ ¸¹Àº °Í °°¾Æ!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(minji, "ì•ìœ¼ë¡œë„ ì¹œí•˜ê²Œ ì§€ë‚´ì~");
+        Talk(minji, "¾ÕÀ¸·Îµµ Ä£ÇÏ°Ô Áö³»ÀÚ~");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ì‘! í•™êµë¥¼ ì†Œê°œì‹œì¼œ ì¤˜ì„œ ê³ ë§ˆì›Œ~");
+        Talk(players, "ÀÀ! ÇĞ±³¸¦ ¼Ò°³½ÃÄÑ Áà¼­ °í¸¶¿ö~");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ë‚˜ë„ ì˜ ë¶€íƒí•´!");
+        Talk(players, "³ªµµ Àß ºÎÅ¹ÇØ!");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(minji);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
 
     IEnumerator Story1_2()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(2, 18, -10);
 
-        // í™”ë©´ ì„¸íŒ…
+        // È­¸é ¼¼ÆÃ
         GameObject minji = NPC(friend1, 4, 17);
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
-        Talk(minji, "ì–´? 00ì´ê°€ ì–´ë””ë¡œ ê°„ ê±°ì§€?");
+        Talk(minji, "¾î? 00ÀÌ°¡ ¾îµğ·Î °£ °ÅÁö?");
         yield return new WaitForSeconds(chatSpeed);
 
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
         Destroy(minji);
         storyCamera.transform.position = new Vector3(0, 0, -10);
         GameObject players = NPC(student, 0, 0);
+        yield return StartCoroutine(Fade(black, false));
 
-        Talk(players, "ì—¬ê¸°ê°€ ì–´ë””ì§€?");
+        Talk(players, "¿©±â°¡ ¾îµğÁö?");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ì ì‹œ í•œëˆˆ íŒŒëŠ” ì‚¬ì´ì— ë¯¼ì§€ê°€ ì‚¬ë¼ì¡Œì–´..");
+        Talk(players, "Àá½Ã ÇÑ´« ÆÄ´Â »çÀÌ¿¡ ¹ÎÁö°¡ »ç¶óÁ³¾î..");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(minji);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
 
     IEnumerator Story2()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(11, -68, -10);
 
-        // ìŠ¤í† ë¦¬ ì„¸íŒ…
+        // ½ºÅä¸® ¼¼ÆÃ
         GameObject hanni = NPC(friend1, 5, -70);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
         GameObject players = NPC(student, 7, -72);
+        yield return StartCoroutine(Fade(players));
         yield return StartCoroutine(Move(players, Vector2.up));
         yield return StartCoroutine(Move(players, Vector2.up));
 
-        Talk(hanni, "ì™œ ì´ë ‡ê²Œ ëŠ¦ê²Œ ì™”ì–´!!");
+        Talk(hanni, "¿Ö ÀÌ·¸°Ô ´Ê°Ô ¿Ô¾î!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(hanni, "ì˜¤ëŠ˜ ì¶•ì œì¸ê±´ ì•Œì§€?!");
+        Talk(hanni, "¿À´Ã ÃàÁ¦ÀÎ°Ç ¾ËÁö?!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ì‘ ëŠ¦ì–´ì„œ ë¯¸ì•ˆ, ë¹¨ë¦¬ ê°€ì!!");
+        Talk(players, "ÀÀ ´Ê¾î¼­ ¹Ì¾È, »¡¸® °¡ÀÚ!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ì¶•ì œ ë„ˆë¬´ ì¬ë°Œê² ë‹¤ ã…ã…");
+        Talk(players, "ÃàÁ¦ ³Ê¹« Àç¹Õ°Ú´Ù ¤¾¤¾");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(hanni);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
     IEnumerator Story2_1()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(40, -53, -10);
 
-        // ìŠ¤í† ë¦¬ ì„¸íŒ…
+        // ½ºÅä¸® ¼¼ÆÃ
         GameObject hanni = NPC(friend1, 39, -55);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 41, -55);
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
-        Talk(hanni, "ìš°ë¦¬ ì˜¤ëŠ˜ ì™„ì „ ë©‹ì¡Œì–´!!");
+        Talk(hanni, "¿ì¸® ¿À´Ã ¿ÏÀü ¸ÚÁ³¾î!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(hanni, "ë‹¤ë“¤ ìˆ˜ê³ í–ˆì–´~");
+        Talk(hanni, "´Ùµé ¼ö°íÇß¾î~");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ë‹¤ë“¤ ìˆ˜ê³  ë§ì•˜ì–´! ë‚´ì¼ë³´ì!!");
+        Talk(players, "´Ùµé ¼ö°í ¸¹¾Ò¾î! ³»ÀÏº¸ÀÚ!!");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(hanni);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
     IEnumerator Story2_2()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(40, -53, -10);
 
-        // ìŠ¤í† ë¦¬ ì„¸íŒ…
+        // ½ºÅä¸® ¼¼ÆÃ
         GameObject hanni = NPC(friend1, 39, -55);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 41, -55);
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
-        Talk(hanni, "ë¬´ëŒ€ ì˜ìƒì„ ëª» ì°¾ì•„ì„œ ê²°êµ­ ë¬´ëŒ€ì— ëª» ì˜¬ë¼ê°€ë‹¤ë‹ˆ..");
+        Talk(hanni, "¹«´ë ÀÇ»óÀ» ¸ø Ã£¾Æ¼­ °á±¹ ¹«´ë¿¡ ¸ø ¿Ã¶ó°¡´Ù´Ï..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ê·¸ëŸ¬ê²Œ.. ë„ˆë¬´ ì•„ì‰¬ì›Œ...");
+        Talk(players, "±×·¯°Ô.. ³Ê¹« ¾Æ½¬¿ö...");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(hanni);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
-
+        yield return StartCoroutine(Fade(black, false));
     }
 
     IEnumerator Story3()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(43, 0, -10);
         GameObject players = NPC(student, 46, -2);
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
         GameObject diniel = NPC(friend1, 34, -2);
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        yield return StartCoroutine(Fade(diniel));
         yield return StartCoroutine(Move(diniel, Vector3.right));
         yield return StartCoroutine(Move(diniel, Vector3.right));
         yield return StartCoroutine(Move(diniel, Vector3.right));
@@ -439,33 +462,36 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(diniel, Vector3.right));
         yield return StartCoroutine(Move(diniel, Vector3.right));
 
-        Talk(diniel, "í°ì¼ë‚¬ì–´..!!");
+        Talk(diniel, "Å«ÀÏ³µ¾î..!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ìš°ë¦¬ ë°˜í‹° ì‚¬ë ¤ê³  ëª¨ì•˜ë˜..");
+        Talk(diniel, "¿ì¸® ¹İÆ¼ »ç·Á°í ¸ğ¾Ò´ø..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "í•™ê¸‰ë¹„ê°€ ì‚¬ë¼ì¡Œì–´..!!");
+        Talk(diniel, "ÇĞ±Şºñ°¡ »ç¶óÁ³¾î..!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ì´ë™ìˆ˜ì—… í•˜ë©´ì„œ ì–´ë”” ë–¨ì–´ëœ¨ë¦° ê²ƒ ê°™ì•„..");
+        Talk(diniel, "ÀÌµ¿¼ö¾÷ ÇÏ¸é¼­ ¾îµğ ¶³¾î¶ß¸° °Í °°¾Æ..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "í˜¹ì‹œ ê´œì°®ìœ¼ë©´ ë‚˜ë‘ ê°™ì´ ì°¾ì•„ì¤„ë˜..?");
+        Talk(diniel, "È¤½Ã ±¦ÂúÀ¸¸é ³ª¶û °°ÀÌ Ã£¾ÆÁÙ·¡..?");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(diniel);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
 
     IEnumerator Story3_1()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(7, -18, -10);
@@ -473,32 +499,36 @@ public class StoryManager : MonoBehaviour
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 10, -20);
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
-        Talk(diniel, "ë„ˆ ì•„ë‹ˆì˜€ìœ¼ë©´ ì •ë§ í°ì¼ë‚  ë»”í–ˆì–´..");
+        Talk(diniel, "³Ê ¾Æ´Ï¿´À¸¸é Á¤¸» Å«ÀÏ³¯ »·Çß¾î..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ë„Œ ì •ë§ ìµœê³ ì˜ ì¹œêµ¬ì•¼..");
+        Talk(diniel, "³Í Á¤¸» ÃÖ°íÀÇ Ä£±¸¾ß..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ì •ë§ ê³ ë§ˆì›Œ!!");
+        Talk(diniel, "Á¤¸» °í¸¶¿ö!!");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(players, "ì¹œêµ¬ë¼ë©´ ë‹¹ì—°íˆ ë„ì™€ì•¼ì§€~");
+        Talk(players, "Ä£±¸¶ó¸é ´ç¿¬È÷ µµ¿Í¾ßÁö~");
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(diniel);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
     IEnumerator Story3_2()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(43, 0, -10);
@@ -506,41 +536,46 @@ public class StoryManager : MonoBehaviour
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 44, -2);
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
 
-        Talk(players, "ì–´ë–¡í•˜ì§€.. ì•„ë¬´ë¦¬ ì°¾ì•„ë„ ì•ˆë³´ì—¬");
+        Talk(players, "¾î¶±ÇÏÁö.. ¾Æ¹«¸® Ã£¾Æµµ ¾Èº¸¿©");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ê·¸ëŸ¬ê²Œ.. ì–´ì©” ìˆ˜ ì—†ì§€..");
+        Talk(diniel, "±×·¯°Ô.. ¾îÂ¿ ¼ö ¾øÁö..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ë‚´ ì‚¬ë¹„ë¡œ ì±„ì›Œì•¼ í•  ê²ƒ ê°™ì•„..");
+        Talk(diniel, "³» »çºñ·Î Ã¤¿ö¾ß ÇÒ °Í °°¾Æ..");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ì´ ë§ì€ ëˆì„ ì–´ë””ì„œ êµ¬í•˜ì§€..?");
+        Talk(diniel, "ÀÌ ¸¹Àº µ·À» ¾îµğ¼­ ±¸ÇÏÁö..?");
         yield return new WaitForSeconds(chatSpeed);
-        Talk(diniel, "ã… _ã… ");
+        Talk(diniel, "¤Ğ_¤Ğ");
         yield return new WaitForSeconds(chatSpeed);
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         Destroy(diniel);
         Destroy(players);
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
     IEnumerator Story4()
     {
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(40, -53, -10);
         GameObject players = NPC(student, 38, -55);
         
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
@@ -548,33 +583,115 @@ public class StoryManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
     }
     IEnumerator Story()
     {
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(0, 0, -10);
 
+        yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
 
 
         yield return new WaitForSeconds(1);
 
-        // í™”ë©´ ì „í™˜
+        // È­¸é ÀüÈ¯
+        yield return StartCoroutine(Fade(black));
 
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
 
+        yield return StartCoroutine(Fade(black, false));
+    }
+
+    // Åõ¸íÇÑ »óÅÂ¿¡¼­ ³ªÅ¸³ª°Ô ÇÏ´Â È¿°ú ¸Ş¼­µå
+    IEnumerator Fade(GameObject obj, bool IsShowing = true)
+    {
+        // timeÀº ¿¬¼ÓÀûÀ¸·Î ¿Ã¶ó°¡´Â °ª
+        float time = 0f;
+
+        // ÀÌ¹ÌÁö ¹Ş¾Æ¿À±â
+        SpriteRenderer sprite = obj.GetComponentInChildren<SpriteRenderer>();
+
+        // ÄÃ·¯ ¹Ş¾Æ¿À±â
+        Color color = sprite.color;
+
+        if(IsShowing)
+        {
+            color.a = 0f;
+            sprite.color = color;
+
+            // 1µÉ ¶§±îÁö »ó½ÂµÇ´Â Åõ¸íµµ ´ëÀÔ
+            while (color.a < 1f)
+            {
+                time += 0.02f;
+                color.a = Mathf.Lerp(0, 1, time);
+                sprite.color = color;
+                yield return null;
+            }
+        }
+        else if(!IsShowing)
+        {
+            // Åõ¸íÇØÁú ¶§±îÁö °¨¼ÒµÇ´Â Åõ¸íµµ °ª ´ëÀÔ
+            while (color.a > 0f)
+            {
+                time += Time.deltaTime;
+                color.a = Mathf.Lerp(1, 0, time);
+                sprite.color = color;
+                yield return null;
+            }
+        }
+    }
+    IEnumerator Fade(Image obj, bool IsShowing = true)
+    {
+        // timeÀº ¿¬¼ÓÀûÀ¸·Î ¿Ã¶ó°¡´Â °ª
+        float time = 0f;
+
+        // ÀÌ¹ÌÁö ¹Ş¾Æ¿À±â
+        Image sprite = obj.GetComponentInChildren<Image>();
+
+        // ÄÃ·¯ ¹Ş¾Æ¿À±â
+        Color color = sprite.color;
+
+        if (IsShowing)
+        {
+            color.a = 0f;
+            sprite.color = color;
+
+            // 1µÉ ¶§±îÁö »ó½ÂµÇ´Â Åõ¸íµµ ´ëÀÔ
+            while (color.a < 1f)
+            {
+                time += 0.02f;
+                color.a = Mathf.Lerp(0, 1, time);
+                sprite.color = color;
+                yield return null;
+            }
+        }
+        else if (!IsShowing)
+        {
+            // Åõ¸íÇØÁú ¶§±îÁö °¨¼ÒµÇ´Â Åõ¸íµµ °ª ´ëÀÔ
+            while (color.a > 0f)
+            {
+                time += Time.deltaTime;
+                color.a = Mathf.Lerp(1, 0, time);
+                sprite.color = color;
+                yield return null;
+            }
+        }
     }
 
     public void Talk(GameObject talker, string chat, float tDestroy = 2)
@@ -590,7 +707,7 @@ public class StoryManager : MonoBehaviour
     {
         Vector3 curPos = npc.transform.localPosition;
         Vector3 headPos = curPos + head;
-        // ìºë¦­í„° ì¢Œí‘œ ì´ë™
+        // Ä³¸¯ÅÍ ÁÂÇ¥ ÀÌµ¿
         while(true)
         {
             npc.transform.Translate(head * speed);
@@ -606,7 +723,7 @@ public class StoryManager : MonoBehaviour
 
 
 
-    // npc ìºë¦­í„° ìƒì„±
+    // npc Ä³¸¯ÅÍ »ı¼º
     public GameObject NPC(Sprite _sprite, float _x, float _y)
     {
         GameObject npc = Instantiate(npcPrefab);
@@ -619,7 +736,7 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Tutorial()
     {
-        // ì¹´ë©”ë¼ ì„¸íŒ…
+        // Ä«¸Ş¶ó ¼¼ÆÃ
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(0, 0, -10);

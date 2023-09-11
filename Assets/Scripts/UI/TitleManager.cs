@@ -84,6 +84,10 @@ public class TitleManager : MonoBehaviour
                 // synk mode
                 SynkControl();
                 break;
+            case 4:
+                GameObject.Find("CharacterManager").GetComponent<CharacterManager_SJY>().CharacterControl();
+                break;
+
 
             case 99:
                 // none mode
