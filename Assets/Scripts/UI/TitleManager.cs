@@ -16,6 +16,11 @@ public class TitleManager : MonoBehaviour
     public Animator titleLogo;
     public Animator titleUI;
 
+    // synk ������Ʈ
+    public GameObject synkNote;
+    float time;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,12 +73,24 @@ public class TitleManager : MonoBehaviour
                 }
                 break;
             case 1:
+                // title mode
                 ArrowControl(TitleButton);
                 break;
             case 2:
+                // option mode
                 ArrowControl(OptionButton);
                 break;
+            case 3:
+                // synk mode
+                SynkControl();
+                break;
+            case 4:
+                GameObject.Find("CharacterManager").GetComponent<CharacterManager_SJY>().CharacterControl();
+                break;
+
+
             case 99:
+                // none mode
                 break;
         }
     }
@@ -89,9 +106,30 @@ public class TitleManager : MonoBehaviour
                 break;
             case 2:
                 arrow.transform.position = OptionButton[0].transform.position;
+                OptionButton[arrowPoint].GetComponent<Button>().onClick.Invoke();
                 break;
           
         }
+    }
+    
+    public void MoveArrow(GameObject _button)
+    {
+        // �̿ϼ�
+        // arrowpoint ���� ����ǰ� �ϱ�
+        arrow.transform.position = _button.transform.position;
+    }
+
+    public void SynkControl()
+    {
+        if(Input.anyKey)
+        {
+            
+        }
+    }
+
+    public void ShowSynkNote()
+    {
+
     }
 
 }

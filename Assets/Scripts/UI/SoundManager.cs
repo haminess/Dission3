@@ -15,12 +15,16 @@ public class SoundManager : MonoBehaviour
     // bgm 관리
     public AudioClip[] bgmClip;
     public float[] bgmHookTime; // 스테이지에서 bgm 훅부분부터 출력
+    public float[] bgmBpm;
+    public float[] bgmStartTime;
 
     // effect 관리
     public AudioClip[] effectClip;
 
     public Slider bgmslider;    // 설정창 값 슬라이더
     public Slider effectslider;
+    public float tempo1 = 4;
+    public float tempo2 = 4;
 
     public void Start()
     {
@@ -201,5 +205,12 @@ public class SoundManager : MonoBehaviour
             bgm = sm.bgm;
             effect = sm.effect;
         }
+    }
+
+    public float GetBeatTime(int _bgm)
+    {
+        float sec = (60f / bgmBpm[_bgm]) * (tempo1 / tempo2);
+        
+        return sec;
     }
 }

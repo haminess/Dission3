@@ -25,6 +25,7 @@ public class StoryManager : MonoBehaviour
     // 캐릭터 이미지 스프라이트
     public Sprite baby;
     public Sprite student;
+    public Sprite friend1;
 
     public GameObject ChatPrefab;
     public Image black;
@@ -172,7 +173,7 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(players, Vector3.left));
 
         yield return new WaitForSeconds(1);
-        Talk(players, "안녕~ 나는 00이야");
+        Talk(players, "안녕~ 나는 시운이야");
         yield return new WaitForSeconds(chatSpeed);
         Talk(players, "다들 잘 부탁해!");
         yield return new WaitForSeconds(chatSpeed);
@@ -194,7 +195,7 @@ public class StoryManager : MonoBehaviour
 
         // # 2
         storyCamera.transform.position = new Vector3(0, -7, -10);
-        GameObject minji = NPC(student, 0, 0);
+        GameObject minji = NPC(friend1, 0, 0);
         players = NPC(student, -1, -8);
         yield return StartCoroutine(Fade(black, false));
 
@@ -242,7 +243,7 @@ public class StoryManager : MonoBehaviour
 
         // 화면 세팅
         GameObject players = NPC(student, 0, 17);
-        GameObject minji = NPC(student, 4, 17);
+        GameObject minji = NPC(friend1, 4, 17);
         players.GetComponentInChildren<SpriteRenderer>().flipX = true;
 
         yield return StartCoroutine(Fade(black, false));
@@ -282,7 +283,7 @@ public class StoryManager : MonoBehaviour
         storyCamera.transform.position = new Vector3(2, 18, -10);
 
         // 화면 세팅
-        GameObject minji = NPC(student, 4, 17);
+        GameObject minji = NPC(friend1, 4, 17);
 
         yield return StartCoroutine(Fade(black, false));
 
@@ -294,6 +295,7 @@ public class StoryManager : MonoBehaviour
 
         // 화면 전환
         yield return StartCoroutine(Fade(black));
+        Destroy(minji);
         storyCamera.transform.position = new Vector3(0, 0, -10);
         GameObject players = NPC(student, 0, 0);
         yield return StartCoroutine(Fade(black, false));
@@ -327,7 +329,7 @@ public class StoryManager : MonoBehaviour
         storyCamera.transform.position = new Vector3(11, -68, -10);
 
         // 스토리 세팅
-        GameObject hanni = NPC(student, 5, -70);
+        GameObject hanni = NPC(friend1, 5, -70);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
         yield return StartCoroutine(Fade(black, false));
 
@@ -370,7 +372,7 @@ public class StoryManager : MonoBehaviour
         storyCamera.transform.position = new Vector3(40, -53, -10);
 
         // 스토리 세팅
-        GameObject hanni = NPC(student, 39, -55);
+        GameObject hanni = NPC(friend1, 39, -55);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 41, -55);
         yield return StartCoroutine(Fade(black, false));
@@ -407,7 +409,7 @@ public class StoryManager : MonoBehaviour
         storyCamera.transform.position = new Vector3(40, -53, -10);
 
         // 스토리 세팅
-        GameObject hanni = NPC(student, 39, -55);
+        GameObject hanni = NPC(friend1, 39, -55);
         hanni.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 41, -55);
         yield return StartCoroutine(Fade(black, false));
@@ -447,7 +449,7 @@ public class StoryManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        GameObject diniel = NPC(student, 34, -2);
+        GameObject diniel = NPC(friend1, 34, -2);
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
         yield return StartCoroutine(Fade(diniel));
         yield return StartCoroutine(Move(diniel, Vector3.right));
@@ -493,7 +495,7 @@ public class StoryManager : MonoBehaviour
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(7, -18, -10);
-        GameObject diniel = NPC(student, 8, -20);
+        GameObject diniel = NPC(friend1, 8, -20);
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 10, -20);
 
@@ -530,7 +532,7 @@ public class StoryManager : MonoBehaviour
         playerCam.SetActive(false);
         storyCamera.SetActive(true);
         storyCamera.transform.position = new Vector3(43, 0, -10);
-        GameObject diniel = NPC(student, 42, -2);
+        GameObject diniel = NPC(friend1, 42, -2);
         diniel.GetComponentInChildren<SpriteRenderer>().flipX = true;
         GameObject players = NPC(student, 44, -2);
 

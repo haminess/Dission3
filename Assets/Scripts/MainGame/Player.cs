@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         switch(MainGame.instance.stageNum)
         {
             case 1:
-                CurPos = new Vector3(0, 0, 0);
+                MainGame.instance.PlayerReposition();
                 break;
             case 2:
                 CurPos = new Vector3(0, 0, 0);
@@ -82,16 +82,23 @@ public class Player : MonoBehaviour
             Move();
         }
 
+
+
+        // 메인게임 아닐 때 리턴
+        if (SceneManager.GetActiveScene().name != "MainGame") return;
+
         // 시작 후 설정창
         if (Input.GetKeyDown(KeyCode.Escape) && MainGame.instance.isStart)
         {
             OnSetting();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            print(MainGame.instance.bgm.time);
-        }
+
+        //// 채보 찍는 용도 
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    print(MainGame.instance.bgm.time);
+        //}
 
     }
 
