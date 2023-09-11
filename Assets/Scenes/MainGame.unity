@@ -15137,17 +15137,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1047482549 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3062581097203408601, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
-  m_PrefabInstance: {fileID: 3062581097374010988}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1052992059
 GameObject:
   m_ObjectHideFlags: 0
@@ -15955,6 +15944,31 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1108252316 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3062581097203408607, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+  m_PrefabInstance: {fileID: 3062581097374010988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1108252319
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108252316}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f6fb745f591afe8499f2082205dcc60a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &1120446925
 GameObject:
   m_ObjectHideFlags: 0
@@ -65543,7 +65557,9 @@ MonoBehaviour:
   storyCamera: {fileID: 318093146}
   gameCanvas: {fileID: 1806376970}
   playerPrefab: {fileID: 3062581098227626851, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+  ChatPrefab: {fileID: 3513154823587895963, guid: 869a3117692f50f4f9215e13038c7219, type: 3}
   npcPrefab: {fileID: 4511227839948802166, guid: 58eee952abe81904083a55e2c5af08f2, type: 3}
+  black: {fileID: 1108252319}
   stage1: {fileID: 0}
   stage2: {fileID: 0}
   stage3: {fileID: 0}
@@ -65551,8 +65567,6 @@ MonoBehaviour:
   baby: {fileID: 21300000, guid: 7a34c794dda29a94fb3b849f9cc7bf68, type: 3}
   student: {fileID: 266029082, guid: d6eec7b2a4eed2945964076ceae7e035, type: 3}
   friend1: {fileID: 1030080636, guid: a9152704da597554d9634a5f7858a4f8, type: 3}
-  ChatPrefab: {fileID: 3513154823587895963, guid: 869a3117692f50f4f9215e13038c7219, type: 3}
-  black: {fileID: 1047482549}
   chatSpeed: 2
 --- !u!114 &1385423845
 MonoBehaviour:
@@ -97945,6 +97959,14 @@ PrefabInstance:
     - target: {fileID: 1665137034, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_RenderPostProcessing
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581097203408600, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062581097203408601, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
+      propertyPath: m_Color.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3062581097674821439, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
       propertyPath: m_sharedMaterial
