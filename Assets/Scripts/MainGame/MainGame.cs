@@ -435,6 +435,11 @@ public class MainGame : MonoBehaviour
             }
             isEnd = true;
         }
+        
+        if(life <= 0)
+        {
+            GameOver();
+        }
 
         // 占쏙옙占쏙옙 占쏙옙占썅도
         MusicProgress();
@@ -525,7 +530,7 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameEndCo()
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 게임 종료
         isStart = false;
         isGame = false;
 
@@ -554,13 +559,35 @@ public class MainGame : MonoBehaviour
     // 게임 오버
     public void GameOver()
     {
-        StartCoroutine(GameEndCo());
+        StartCoroutine(GameOverCo());
 
     }
     IEnumerator GameOverCo()
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
-        yield return StartCoroutine(GameEndCo());
+        // 게임 종료
+        isStart = false;
+        isGame = false;
+
+        Settable(true);     // 占쏙옙占쏙옙창 占쏙옙占쏙옙
+
+        // score ui 占쏙옙占쏙옙
+        judgeUI.text = "Game Over..";
+        judgeUI.color = Color.gray;
+
+        // 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+        GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
+
+        // 5占쏙옙 占쏙옙 占쏙옙占쏙옙 占쏙옙占?
+        yield return new WaitForSeconds(5);
+
+        // ui 占십깍옙화
+        judgeUI.text = "";
+        comboUI.text = "";
+        combotext.text = "";
+        judgeUI.color = Color.white;
+
+        // 배경음악 정지
+        bgm.Stop();
 
         // 占쏙옙占?화占쏙옙 占쏙옙환
         yield return new WaitForSeconds(1);
