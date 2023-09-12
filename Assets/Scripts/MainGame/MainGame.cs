@@ -8,43 +8,42 @@ using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
-    // 메인게임 인스턴스화
-    // 메인게임 정보 및 전체 관리 스크립트
+    // 占쏙옙占?占쏙옙크占쏙옙트占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占싹곤옙 占싹깍옙
     public static MainGame instance;
 
-    // 컴포넌트 연결
+    // 占쏙옙占쏙옙占쏙옙트 占쏙옙占쏙옙
     public AudioSource bgm;
     public AudioSource effect;
     public SoundManager soundMan;
     StoryManager storyManager;
     ChangeScene sceneManager;
 
-    // 플레이어 연결
+    // 占쏙옙占쏙옙占쏙옙트 占쏙옙占쏙옙
     public Player player;
     public GameObject note;
     public GameObject judgeEffect;
     public Animation comboeff;
     public Animation judgeeff;
 
-    // 로컬 데이터
+    // 占쏙옙占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
     DataManager DataObject;
 
-    // 채보 정보
-    public float[][] chart;              // 채보
-    public int noteIndex;                // 채보 몇번째 노트인지
+    // 채占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙
+    public float[][] chart;              // 채占쏙옙, 占쏙옙: 채占쏙옙 占쏙옙트 占싸쏙옙占싹쏙옙, 占쏙옙: {time, x, y}
+    public int noteIndex;                // 채占쏙옙 占쏙옙占쏙옙占쏙옙
 
-    // 게임 상태
-    public bool startButton = false;      // 시작버튼
+    // 占시곤옙 占쏙옙占쏙옙
+    public bool startButton = false;      // true占쏙옙 占쏙옙占쌈쏙옙占쏙옙
     public int stageNum = 1;
-    public bool stageMode = false;       // 시작버튼 누르면 스테이지 시작
-    public bool isStart = false;         // 게임 시작됨
-    public bool isGame = false;          // 현재 게임 중
-    public bool isEnd = false;           // 게임 종료됨
-    public float gameTime;               // 게임 시간
-    public float musicTime;              // 배경음악 시간
-    public float startTime;              // 게임 시작한 시간
+    public bool stageMode = false;      // true占쏙옙 占쏙옙占쌈쏙옙占쏙옙
+    public bool isStart = false;         // true占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+    public bool isGame = false;          // true占쏙옙 占쏙옙占쏙옙占쏙옙?占쏙옙占쏙옙
+    public bool isEnd = false;           // true占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙
+    public float gameTime;               // 占쏙옙占쏙옙占쏙옙?
+    public float musicTime;              // 占쏙옙占쏙옙 占시곤옙
+    public float startTime;              // 占쏙옙占쌈쏙옙占쏙옙 占시곤옙
 
-    // 게임 점수 관리
+    // 占쏙옙占쌘억옙 占쏙옙占쏙옙
     public int score;
     public int combo;
     public int curCombo;
@@ -53,10 +52,9 @@ public class MainGame : MonoBehaviour
     public int bad;    
     public int miss;
     public int collection;
-    public int life;
     public Color[] color;
 
-    // 판정 범위 관리
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
     public float perfectRange = 0.05f;
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
@@ -64,27 +62,25 @@ public class MainGame : MonoBehaviour
     public float userRange = 0f;
     public float userRangePlus = 0.1f;
 
-    // 판정 점수 관리
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
     public int perfectScore = 500;
     public int goodScore = 300;
     public int badScore = 100;
     public int missScore = 0;
     public int comboScore = 10;
-    public int maxlife = 10;
 
 
-    // 플레이어UI 연결
+    // 占쏙옙占쏙옙 UI
     public int uiHideTime = 5;
     public TextMeshProUGUI judgeUI;
     public TextMeshProUGUI comboUI;
     public TextMeshProUGUI combotext;
 
-    // 게임UI 연결
+    // 占쏙옙占쏙옙 UI
     public GameObject gameCanvas;
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI countUI;
     public Slider progressUI;
-    public Slider lifeUI;
 
 
 
@@ -107,14 +103,15 @@ public class MainGame : MonoBehaviour
         sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
-        // 메인 데이터 초기화
+        // 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占십깍옙화
         ResetMain();
 
-        // 로컬데이터 불러오기
+        // 占쏙옙占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
         GetMainData();
 
-        // 더미 채보 불러오기
-        // 나중에 로컬 연결
+
+
+        // 채占쏙옙 占쏙옙占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙(chart 채占쏙옙 占쏙옙占쏙옙占쏙옙占썼열 占쏙옙, 占쏙옙트 占쏙옙占쏙옙)
         {
             chart = new float[236][];
             chart[0] = new float[3] { 1, 7, -27 };
@@ -365,9 +362,6 @@ public class MainGame : MonoBehaviour
         isStart = false;
         isGame = false;
         isEnd = false;
-
-        // 게임 캔버스 꺼놓기
-        gameCanvas.SetActive(false);
     }
 
     
@@ -400,14 +394,13 @@ public class MainGame : MonoBehaviour
             musicTime = bgm.time;
         }
 
-        // miss 처리
-        // 시간 지났을 때
-        if (isGame && noteIndex < chart.Length - 1 &&                   
-            bgm.time > (chart[noteIndex][0] + badRange + userRange))    
+        // miss 처占쏙옙
+        // **占쏙옙占쏙옙占쏙옙占쏙옙
+        if (isGame && noteIndex < chart.Length - 1 &&                   // 占쏙옙占쏙옙占쏙옙占쏙옙占썽서 占쏙옙占쏙옙占쏙옙 占쏙옙트占쏙옙 占쏙옙占쏙옙占쌍곤옙
+            bgm.time > (chart[noteIndex][0] + badRange + userRange))    // 占쏙옙占쏙옙 占시곤옙占쏙옙 占쏙옙占쏙옙占시곤옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 (占쏙옙占쏙옙占시곤옙 + 占쏙옙占쏙옙占쏙옙占쏙옙 + 占쏙옙占쏙옙占시곤옙 1占쏙옙)
         {
             noteIndex++;
             miss++;
-            life--;
             combo = curCombo;
             curCombo = 0;
             score += missScore;
@@ -416,7 +409,6 @@ public class MainGame : MonoBehaviour
             judgeUI.text = "MISS";
             comboUI.text = "";
             combotext.text = "";
-            lifeUI.value = life;
             scoreUI.text = "SCORE\n" + score.ToString();
         }
 
@@ -435,17 +427,12 @@ public class MainGame : MonoBehaviour
             }
             isEnd = true;
         }
-        
-        if(life <= 0)
-        {
-            GameOver();
-        }
 
         // 占쏙옙占쏙옙 占쏙옙占썅도
         MusicProgress();
     }
 
-    // 리듬게임 시작
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙
     public void GameStart()
     {
         StartCoroutine(GameStartCo());
@@ -455,6 +442,7 @@ public class MainGame : MonoBehaviour
     {
         ResetMain();
         gameCanvas.SetActive(true);
+        print("占쏙옙占쏙옙 占쏙옙占쏙옙");
         scoreUI.text = "";
         judgeUI.text = "";
         comboUI.text = "";
@@ -485,13 +473,10 @@ public class MainGame : MonoBehaviour
     }
 
 
-    // 스테이지 시작 
-    // 흐름
-    // 1. 시작 스토리
-    // 2. 리듬게임
-    // 3. 엔딩 스토리
+    // 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
     public void StageStart()
     {
+        print("占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙");
         ResetMain();
         gameCanvas.SetActive(true);
         StartCoroutine(StageStartCo());
@@ -504,18 +489,18 @@ public class MainGame : MonoBehaviour
         yield return StartCoroutine(GameStartCo());
     }
 
-    // 배경음악 진행도
+    // 占쏙옙占쏙옙 占쏙옙占썅도
     public void MusicProgress()
     {
-        // 배경음악 기준 진행도
+        // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占썅도
         //progressUI.value = BGM.time / BGM.clip.length;
 
-        // 채보 노트 기준 진행도
+        // 채占쏙옙 占쏙옙占쏙옙 占쏙옙占썅도
         if(bgm.time > 0)
             progressUI.value = bgm.time / chart[chart.Length - 1][0];
     }
 
-    // 리듬게임 종료
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙
     public void GameEnd()
     {
         StartCoroutine(GameEndCo());
@@ -530,7 +515,7 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameEndCo()
     {
-        // 게임 종료
+        // 占쏙옙占쏙옙 占쏙옙占쏙옙
         isStart = false;
         isGame = false;
 
@@ -556,46 +541,23 @@ public class MainGame : MonoBehaviour
         bgm.Stop();
     }
 
-    // 게임 오버
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占?
+    // 占쏙옙占쏙옙 占쏙옙占쏙옙
     public void GameOver()
     {
-        StartCoroutine(GameOverCo());
+        StartCoroutine(GameEndCo());
 
     }
     IEnumerator GameOverCo()
     {
-        // 게임 종료
-        isStart = false;
-        isGame = false;
-
-        Settable(true);     // 占쏙옙占쏙옙창 占쏙옙占쏙옙
-
-        // score ui 占쏙옙占쏙옙
-        judgeUI.text = "Game Over..";
-        judgeUI.color = Color.gray;
-
-        // 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
-        GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
-
-        // 5占쏙옙 占쏙옙 占쏙옙占쏙옙 占쏙옙占?
-        yield return new WaitForSeconds(5);
-
-        // ui 占십깍옙화
-        judgeUI.text = "";
-        comboUI.text = "";
-        combotext.text = "";
-        judgeUI.color = Color.white;
-
-        // 배경음악 정지
-        bgm.Stop();
+        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        yield return StartCoroutine(GameEndCo());
 
         // 占쏙옙占?화占쏙옙 占쏙옙환
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
 
-    // 스테이지 종류
-    // 엔딩 스토리 출력 후 결과 화면 이동
     public void StageEnd()
     {
         StartCoroutine(StageEndCo());
@@ -624,19 +586,36 @@ public class MainGame : MonoBehaviour
         sceneManager.ToScoreScene();
     }
 
-    // 판정 함수
+    // 占쏙옙占쏙옙 占쌉쇽옙
+    // 占싱듸옙占쏙옙 占쏙옙占쏙옙占쏙옙 호占쏙옙
     public void Judge(float time, float x, float y)
     {
-        // 게임 중 아니면 리턴
+        // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
         if (!isGame) return;
 
-        // 채보에서 현재 ~ 추가 10개 노트에서 판정 노트 있는지 확인
+        // 占쏙옙占쏙옙 占쌉쇽옙 *****
+        // 占쏙옙占쏙옙
+        // time: player 占싱듸옙 占시곤옙,
+        // x: player x占쏙옙표,
+        // y: player y占쏙옙표
+        // chart[i][0]: note 占쏙옙占쏙옙 占시곤옙,
+        // chart[i][1]: note x占쏙옙표,
+        // chart[i][2]: note y占쏙옙표,
+        // i: chartCount(0 ~ 占쏙옙트 占쏙옙占쏙옙)
+
+        // 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙占시곤옙 1占쏙옙 占쏙옙占쌍깍옙
+        //time -= 1;
+
+        // 占쏙옙占쏙옙 占쏙옙占식뤄옙 10占쏙옙占쏙옙 占쏙옙표 占승댐옙 占쏙옙占쏙옙占싶배열 찾占쏙옙
+        // **占쏙옙占쏙옙占쏙옙占쏙옙: 占쏙옙占쏙옙 占싫듸옙 10占쏙옙 占쏙옙트占쏙옙 占쏙옙占쏙옙占싹댐옙 占시쏙옙占쏙옙
+
         for (int i = noteIndex; i < noteIndex + 10; i++)
         {
-            if (i > chart.Length - 1) return; // 채보 끝나면 리턴
-            if (x == chart[i][1] && y == chart[i][2]) // 캐릭터 위치랑 노트 위치랑 같고
+            if (i > chart.Length - 1) break; // 占쏙옙占쏙옙占쏙옙 占쏙옙트占쏙옙占쏙옙 크占쏙옙 break
+            if (x == chart[i][1] && y == chart[i][2]) // 占쏙옙표 占쏙옙치占싹몌옙
             {
-                // 판정 시간 범위 안에 있으면 판정
+
+                // 占시곤옙 占쏙옙占쏙옙 占승댐옙占쏙옙 확占쏙옙
                 if (time < (chart[i][0] + perfectRange + userRange) && time > (chart[i][0] - perfectRange + userRange))  // PERFECT
                 {
                     perfect++;
@@ -693,7 +672,6 @@ public class MainGame : MonoBehaviour
                 else if (time < (chart[i][0] + missRange + userRange) && time > (chart[i][0] - missRange + userRange))  // MISS
                 {
                     miss++;
-                    life--;
                     combo = curCombo;
                     curCombo = 0;
                     score += missScore;
@@ -703,14 +681,12 @@ public class MainGame : MonoBehaviour
                     judgeeff.Play();
                     comboUI.text = "";
                     combotext.text = "";
-                    lifeUI.value = life;
                     scoreUI.text = "SCORE\n" + score.ToString();
                     break;
                 }
                 else                                                                             // 占쏙옙표占쏙옙 占쏙옙占쏙옙占쏙옙 占시곤옙占쏙옙 占싫맞억옙 占쏙옙占쏙옙X占쏙옙 占쏙옙占?
                 {
-                    // 판정 일정 범위에서 벗어나면 리턴
-                    break;
+                    break; 
                 }
             }
         }
@@ -809,12 +785,13 @@ public class MainGame : MonoBehaviour
     {
         // 占시뤄옙占싱억옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙치
 
+        print("시작위치조정");
         Vector2 firstNote = new Vector2(
                 chart[noteIndex][1],
                 chart[noteIndex][2]);
 
+        print(firstNote + "aaaaaaaa");
         player.CurPos = firstNote;
-        player.transform.position = firstNote;
 
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
@@ -845,16 +822,16 @@ public class MainGame : MonoBehaviour
 
     public void ResetMain()
     {
-        // 게임 정보 초기화
+        // 占쏙옙占쏙옙占쏙옙 占십깍옙화占쌉쇽옙
+        // //占쏙옙占쏙옙 占십깍옙화
         noteIndex = 0;
         isStart = false;
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // 설정창 가능
-        GetComponent<NoteGenerator>().noteIndex = 0;
+        Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
 
-        // 게임 시간 초기화
+        // 占시곤옙 占십깍옙화
         gameTime = 0;
         musicTime = 0;
         startTime = 0;
@@ -865,13 +842,20 @@ public class MainGame : MonoBehaviour
         bad = 0;
         miss = 0;
         score = 0;
+        if (stageNum >= 1 && stageNum <= 4)
+        {
+            score = 0;
+        }
         combo = 0;
         curCombo = 0;
         collection = 0;
-        life = maxlife;
-        lifeUI.maxValue = maxlife;
-        lifeUI.value = maxlife;
+        if (stageNum >= 1 && stageNum <= 4)
+        {
+            collection = 0;
+        }
 
+        // UI 占쏙옙占쏙옙
+        gameCanvas.SetActive(false);
     }
 
     public void GetMainData()

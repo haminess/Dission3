@@ -22,6 +22,7 @@ public class ResultManager : MonoBehaviour
     public int good;
     public int bad;
     public int miss;
+    //public int collection;
     public int collection;
 
     private void Awake()
