@@ -61,6 +61,10 @@ public class Metronome : MonoBehaviour
     {
         sec = (stdBPM / musicBPM) * (tempo1 / tempo2);
 
+        // 
+        // 마디 개수
+        // 마디 초
+
         // 메트로놈
         if (isMetroPlaying)
         {
