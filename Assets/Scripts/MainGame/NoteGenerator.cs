@@ -319,10 +319,10 @@ public class NoteGenerator : MonoBehaviour
         if (!MainGame.instance.bgm.isPlaying)
         {
             if (GameObject.Find("route")) return;
-            MakeRoute(noteIndex + 0).name = "route";
+            MakeRoute(noteIndex + 0);
             MakeRoute(noteIndex + 1);
             MakeRoute(noteIndex + 2);
-            MakeRoute(noteIndex + 3);
+            MakeRoute(noteIndex + 3).name = "route";
         }
 
         // 노트가 1초 내인 경우만 따로 처리

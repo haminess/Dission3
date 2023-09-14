@@ -140,8 +140,9 @@ public class ResultManager : MonoBehaviour
 
     public void ShowResult()
     {
-        GameObject collectPanel = GameObject.Find("CollectPanel");
-        GameObject scorePanel = GameObject.Find("ScorePanel");
+        GameObject canvas = GameObject.Find("Canvas");
+        GameObject scorePanel = canvas.transform.GetChild(1).gameObject;
+        GameObject collectPanel = canvas.transform.GetChild(2).gameObject;
 
         // score 패널
         TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
@@ -177,6 +178,7 @@ public class ResultManager : MonoBehaviour
         contents[6].text = miss.ToString();
 
         // collect 패널
+        collectPanel.SetActive(true);
         Button[] collects = collectPanel.GetComponentsInChildren<Button>();
 
         if(collection > 2)
