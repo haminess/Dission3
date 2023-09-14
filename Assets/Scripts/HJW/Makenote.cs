@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Makenote : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Makenote : MonoBehaviour
     }
     private void Update()
     {
-        if(makemadi.is_smallmadi)
+        if(makemadi.is_smallmadi || Audio.playing)
         {
             return;
         }
@@ -74,7 +75,7 @@ public class Makenote : MonoBehaviour
                     Maketile.instance.curpointer = notesobj[noteindex];
                     notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
                     notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
-                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
                     switch(Maketile.instance.curpointer.name)
                     {
                         case "note1(Clone)":
@@ -102,6 +103,10 @@ public class Makenote : MonoBehaviour
                 else if(holding && Maketile.instance.is_fucking) //place
                 {
                     Datacal();
+                    if (Array.Exists(notedata, x => x == data))
+                    {
+                        return;
+                    }
                     var n = Instantiate(notes[mode], Maketile.instance.curmadiobj.transform);
                     n.GetComponent<RectTransform>().localPosition = new Vector2(Maketile.instance.curpointer.transform.localPosition.x, Maketile.instance.curpointer.transform.localPosition.y);
 
@@ -110,6 +115,9 @@ public class Makenote : MonoBehaviour
 
                     Array.Resize(ref notedata, notedata.Length + 1);
                     notedata[notedata.Length - 1] = data;
+
+                    Array.Sort(notedata);
+
                     Destroy(Maketile.instance.curpointer);
                     Maketile.instance.curpointer = Maketile.instance.note;
                     Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;

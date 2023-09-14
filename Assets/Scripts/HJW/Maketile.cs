@@ -176,7 +176,7 @@ public class Maketile : MonoBehaviour
             }
             else
             {
-                curpointer.transform.position = mospos;
+                curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1069.49f, -279.01f);
                 is_fucking = false;
             }
         }
@@ -296,7 +296,7 @@ public class Maketile : MonoBehaviour
     public void fuck(float note)
     {
         float a = (float)492 / (note * 2);
-        if (curmadi == 0)
+        if (curmadi == 0 || Audio.playing)
         {
             return;
         }
@@ -313,7 +313,7 @@ public class Maketile : MonoBehaviour
     public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감
     {
         float a = (float)492 / (note * 2);
-        if (curmadi == 0)
+        if (curmadi == 0 || Audio.playing)
         {
             return;
         }

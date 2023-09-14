@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ public class Audio : MonoBehaviour
     public float time_length;
     public float length;
     float stoppos;
-    int index;
+    public int index;
     public int[] intlist;
     private void Start()
     {
@@ -25,39 +26,56 @@ public class Audio : MonoBehaviour
     }
     public void playmus()
     {
-        if (playing == true)
+        if (playing == true) //stop
         {
+            Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
             gameObject.GetComponent<Image>().sprite = play;
             stoppos = Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition.y;
             audiosourse.Pause();
+            repaint();
             playing = false;
         }
         else
         {
             if (audiosourse.time == 0)
             {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
                 gameObject.GetComponent<Image>().sprite = resume;
                 Makemadi.instance.page = 0;
+                repaint();
                 audiosourse.Play();
+                playing = true;
             }
-            else
+            else //resume
             {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
                 gameObject.GetComponent<Image>().sprite = resume;
                 time_length = time_length + (stoppos - Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition.y);
                 audiosourse.time = Mathf.Abs(time_length / (length / (float)Makemadi.instance.sec));
-                repaint();
                 audiosourse.UnPause();
+                playing = true;
+                repaint();
             }
-            playing = true;
         }
     }
     private void Update()
     {
+        if(Endstamp.isend)
+        {
+            audiosourse.Stop();
+            gameObject.GetComponent<Image>().sprite = play;
+            Makemadi.instance.page = 0;
+            audiosourse.time = 0;
+            time_length = 0;
+            index = 0;
+            playing = false;
+            Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y - time_length);
+        }
         if (playing)
         {
             time = audiosourse.time;
             time_length = (length / (float)Makemadi.instance.sec) * audiosourse.time;
-            Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y - time_length);
+            Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y - time_length);
             if((int)time_length == index)
             {
                 Makemadi.instance.page++;
@@ -78,11 +96,13 @@ public class Audio : MonoBehaviour
         if(mostnear == 0)
         {
             index = 3;
+            Makemadi.instance.page = 0;
             return;
         }
         else if(mostnear == intlist.Length - 1)
         {
-            index = (mostnear) * 3;
+            index = (intlist.Length - 1) * 3;
+            Makemadi.instance.page = intlist.Length - 1;
             return;
         }
         var next = MathF.Abs( (int)time_length - (3 * (mostnear + 1)));
@@ -95,6 +115,11 @@ public class Audio : MonoBehaviour
         {
             index = (mostnear) * 3;
         }
+        Makemadi.instance.page = index / 3;
         Array.Resize(ref intlist, 0);
+        if(index > length)
+        {
+            repaint();
+        }
     }
 }

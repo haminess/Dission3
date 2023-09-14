@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Endstamp : MonoBehaviour
 {
-    public bool isend;
+    public static bool isend;
     // Start is called before the first frame update
     void Start()
     {

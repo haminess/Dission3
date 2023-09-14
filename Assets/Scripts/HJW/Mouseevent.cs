@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Mouseevent : MonoBehaviour
 {
@@ -11,16 +12,30 @@ public class Mouseevent : MonoBehaviour
     {
         if (simplepointer)
         {
-            if (nopointer)
+            if (nopointer || Audio.playing)
             {
-                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                if (Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                }
+                else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                }
                 return;
             }
             if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
             {
                 return;
             }
-            Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+            if (Maketile.instance.curpointer.GetComponent<Image>())
+            {
+                Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+            }
+            else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+            }
 
         }
         if (anim)
@@ -33,17 +48,30 @@ public class Mouseevent : MonoBehaviour
     {
         if (simplepointer)
         {
-            if(nopointer)
+            if(nopointer || Audio.playing)
             {
-                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                if(Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                }
+                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                }
                 return;
             }
             if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
             {
                 return;
             }
-            Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
-
+                if(Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
+                }
+                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                }
         }
         if (anim)
         {

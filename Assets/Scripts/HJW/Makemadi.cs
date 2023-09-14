@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Makemadi : MonoBehaviour
 {
     public static Makemadi instance;
-    public Endstamp end;
+    public Audio audio_;
     public Transform canvas;
     public Transform charts;
     public GameObject prefab;
@@ -106,12 +107,26 @@ public class Makemadi : MonoBehaviour
             chart = true;
             if(c)
             {
-                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                if (Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                }
+                else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                }
                 is_smallmadi = true;
             }
-            else if (Makenote.chartmode && Mouseevent.nopointer == false)
+            else if (Makenote.chartmode && Mouseevent.nopointer == false && !Audio.playing)
             {
-                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                if (Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
+                }
+                else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                }
                 is_smallmadi = false;
 
             }
@@ -122,24 +137,30 @@ public class Makemadi : MonoBehaviour
         }
         if (chart && !Audio.playing)
         {
-            if (Input.mouseScrollDelta.y > 0) //back
+            if (Input.mouseScrollDelta.y > 0 && charts.GetComponent<RectTransform>().anchoredPosition.y < -16) //back
             {
-                if (charts.GetComponent<RectTransform>().anchoredPosition.y >= -16)
-                {
-                    return;
-                }
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
-                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y + 3);
-                page--;
+                if(charts.GetComponent<RectTransform>().anchoredPosition.y > -19)
+                {
+                    charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -16);
+                    page = 0;
+                }
+                else
+                {
+                    charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y + 3);
+                    audio_.index -= 3;
+                    page--;
+                }
             }
             if (Input.mouseScrollDelta.y < 0) //for
             {
-                if(end.isend)
+                if(Endstamp.isend)
                 {
                     return;
                 }
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
-                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y - 3);
+                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y - 3);
+                audio_.index += 3;
                 page++;
             }
         }
