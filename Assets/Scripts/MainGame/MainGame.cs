@@ -26,7 +26,7 @@ public class MainGame : MonoBehaviour
     public Animation judgeeff;
 
     // 로컬 데이터
-    DataManager DataObject;
+    DataManager dataMan;
 
     // 채보 관련 데이터
     public float[][] chart;            
@@ -853,59 +853,47 @@ public class MainGame : MonoBehaviour
         Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
         GetComponent<NoteGenerator>().noteIndex = 0;
 
-        // 占시곤옙 占십깍옙화
+        // 게임 시간
         gameTime = 0;
         musicTime = 0;
         startTime = 0;
 
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙 占십깍옙화
+        // 게임 점수
         perfect = 0;
         good = 0;
         bad = 0;
         miss = 0;
         score = 0;
 
+        // life
         life = maxLife;
         lifeUI.value = life;
 
+        // combo
         combo = 0;
         curCombo = 0;
         collection = 0;
 
-        // UI 占쏙옙占쏙옙
+        // 게임 캔버스
         gameCanvas.SetActive(false);
     }
 
     public void GetMainData()
     {
-        // soundmanager 占쌀뤄옙占쏙옙占쏙옙
-        if (GameObject.Find("mainBGM"))
-        {
-            GameObject total = GameObject.Find("mainBGM");
-            soundMan = total.GetComponent<SoundManager>();
-            bgm = soundMan.bgm;
-            effect = soundMan.effect;
-        }
 
-        if (GameObject.Find("SoundManager"))
-        {
-            GameObject total = GameObject.Find("SoundManager");
-            soundMan = total.GetComponent<SoundManager>();
-            bgm = soundMan.bgm;
-            effect = soundMan.effect;
-        }
-
-        // 占쏙옙占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
-        var data = GameObject.Find("Data");
-        if (data)
-        {
-            DataObject = GameObject.Find("Data").GetComponent<DataManager>();
-            stageNum = DataObject.stageNum;
-        }
-
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
+        // 커넥터 연결하기
         Connector connector = GetComponent<Connector>();
         connector.UpdateData();
         userRange = connector.maingamedata.judge;
+
+        // 사운드 연결
+        soundMan = connector.soundMan;
+        bgm = soundMan.bgm;
+        effect = soundMan.effect;
+
+        // 데이터 연결
+        dataMan = connector.dataMan;
+        stageNum = dataMan.stageNum;
+
     }
 }

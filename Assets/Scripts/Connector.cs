@@ -10,11 +10,13 @@ public class Connector : MonoBehaviour
     public SoundData sounddata  => DataManager.Instance.sounddata;
 
     public SoundManager soundMan;
+    public DataManager dataMan;
 
     private void Start()
     {
         UpdateData();
         FindSounManager();
+        FindDataManager();
     }
 
     public void FindSounManager()
@@ -24,6 +26,15 @@ public class Connector : MonoBehaviour
         if(GameObject.Find("SoundManager"))
         {
             soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+        }
+    }
+    public void FindDataManager()
+    {
+        dataMan = GameObject.FindObjectOfType<DataManager>();
+
+        if (GameObject.Find("Data"))
+        {
+            dataMan = GameObject.Find("Data").GetComponent<DataManager>();
         }
     }
 
