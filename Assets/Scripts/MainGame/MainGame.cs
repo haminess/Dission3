@@ -422,11 +422,9 @@ public class MainGame : MonoBehaviour
             judgeeff.Play();
         }
 
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
-        // 占쏙옙占?占쏙옙트 占쏙옙占쏙옙占싹몌옙
-        if (noteIndex > chart.Length - 1 && !isEnd)
+        // 게임 종료
+        if ((noteIndex > chart.Length - 1 && !isEnd) || (life < 0 && !isEnd))
         {
-            // 占쏙옙占쏙옙 占쏙옙占쏙옙
             if (stageMode)
             {
                 StageEnd();
@@ -437,6 +435,7 @@ public class MainGame : MonoBehaviour
             }
             isEnd = true;
         }
+
 
         // 占쏙옙占쏙옙 占쏙옙占썅도
         MusicProgress();
@@ -514,13 +513,6 @@ public class MainGame : MonoBehaviour
     public void GameEnd()
     {
         StartCoroutine(GameEndCo());
-
-
-        // 占쏙옙占썰리 占쏙옙占쏙옙
-
-        // 占쏙옙占?화占쏙옙 占쏙옙占쏙옙
-
-        // 占쏙옙占?화占쏙옙 占쏙옙占?
     }
 
     IEnumerator GameEndCo()
@@ -596,87 +588,93 @@ public class MainGame : MonoBehaviour
         sceneManager.ToScoreScene();
     }
 
-    // 占쏙옙占쏙옙 占쌉쇽옙
-    // 占싱듸옙占쏙옙 占쏙옙占쏙옙占쏙옙 호占쏙옙
     public void Judge(float time, float x, float y)
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 판정 함수
         if (!isGame) return;
 
-        // 占쏙옙占쏙옙 占쌉쇽옙 *****
-        // 占쏙옙占쏙옙
-        // time: player 占싱듸옙 占시곤옙,
-        // x: player x占쏙옙표,
-        // y: player y占쏙옙표
-        // chart[i][0]: note 占쏙옙占쏙옙 占시곤옙,
-        // chart[i][1]: note x占쏙옙표,
-        // chart[i][2]: note y占쏙옙표,
-        // i: chartCount(0 ~ 占쏙옙트 占쏙옙占쏙옙)
-
-        // 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙트 占쏙옙占쏙옙占시곤옙 1占쏙옙 占쏙옙占쌍깍옙
-        //time -= 1;
-
-        // 占쏙옙占쏙옙 占쏙옙占식뤄옙 10占쏙옙占쏙옙 占쏙옙표 占승댐옙 占쏙옙占쏙옙占싶배열 찾占쏙옙
-        // **占쏙옙占쏙옙占쏙옙占쏙옙: 占쏙옙占쏙옙 占싫듸옙 10占쏙옙 占쏙옙트占쏙옙 占쏙옙占쏙옙占싹댐옙 占시쏙옙占쏙옙
-
+        // 현재 ~ 10개 노트 판정 검사
         for (int i = noteIndex; i < noteIndex + 10; i++)
         {
-            if (i > chart.Length - 1) break; // 占쏙옙占쏙옙占쏙옙 占쏙옙트占쏙옙占쏙옙 크占쏙옙 break
-            if (x == chart[i][1] && y == chart[i][2]) // 占쏙옙표 占쏙옙치占싹몌옙
+            if (i > chart.Length - 1) break; // 채보 끝이면 리턴
+            if (x == chart[i][1] && y == chart[i][2]) // 좌표 일치 확인
             {
 
-                // 占시곤옙 占쏙옙占쏙옙 占승댐옙占쏙옙 확占쏙옙
+                // 판정시간 일치 확인
                 if (time < (chart[i][0] + perfectRange + userRange) && time > (chart[i][0] - perfectRange + userRange))  // PERFECT
                 {
-                    perfect++;
-                    curCombo++;
-                    comboeff.Play();
-                    score = score + perfectScore + comboScore * curCombo;
                     noteIndex++;
+
+                    // judge
+                    perfect++;
                     judgeUI.text = "PERFECT!";
                     judgeUI.color = color[0];
                     judgeeff.Play();
+
+                    // combo
+                    curCombo++;
                     comboUI.text = curCombo.ToString();
                     combotext.text = "Combo";
+                    comboeff.Play();
+
+                    // score
+                    score = score + perfectScore + comboScore * curCombo;
                     scoreUI.text = "SCORE\n" + score.ToString();
 
+                    // effect
                     GameObject effect = Instantiate(judgeEffect);
                     effect.transform.localPosition = new Vector3(chart[i][1], chart[i][2]);
                     Destroy(effect, 0.5f);
+
                     break;
                 }
                 else if (time < (chart[i][0] + goodRange + userRange) && time > (chart[i][0] - goodRange + userRange))   // GOOD
                 {
-                    good++;
-                    curCombo++;
-                    comboeff.Play();
-                    score = score + goodScore + comboScore * curCombo;
                     noteIndex++;
+
+                    // judge
+                    good++;
                     judgeUI.text = "GOOD";
                     judgeUI.color = color[1];
                     judgeeff.Play();
+
+                    // combo
+                    curCombo++;
                     comboUI.text = curCombo.ToString();
                     combotext.text = "Combo";
+                    comboeff.Play();
+
+                    // score
+                    score = score + goodScore + comboScore * curCombo;
                     scoreUI.text = "SCORE\n" + score.ToString();
 
+                    // effect
                     GameObject effect = Instantiate(judgeEffect);
                     effect.transform.localPosition = new Vector3(chart[i][1], chart[i][2]);
                     Destroy(effect, 0.5f);
+
                     break;
                 }
                 else if (time < (chart[i][0] + badRange + userRange) && time > (chart[i][0] - badRange + userRange))    // BAD
                 {
-                    bad++;
-                    combo = curCombo;
-                    curCombo = 0;
-                    score += badScore;
                     noteIndex++;
+
+                    // judge
+                    bad++;
                     judgeUI.text = "BAD";
                     judgeUI.color = color[2];
                     judgeeff.Play();
+
+                    // combo
+                    combo = curCombo;
+                    curCombo = 0;
                     comboUI.text = "";
                     combotext.text = "";
+
+                    // score
+                    score += badScore;
                     scoreUI.text = "SCORE\n" + score.ToString();
+
                     break;
                 }
                 else if (time < (chart[i][0] + missRange + userRange) && time > (chart[i][0] - missRange + userRange))  // MISS
@@ -706,8 +704,9 @@ public class MainGame : MonoBehaviour
                     judgeeff.Play();
                     break;
                 }
-                else                                                                             // 占쏙옙표占쏙옙 占쏙옙占쏙옙占쏙옙 占시곤옙占쏙옙 占싫맞억옙 占쏙옙占쏙옙X占쏙옙 占쏙옙占?
+                else
                 {
+                    // 좌표는 일치하나 시간 범위에 맞지 않음
                     break; 
                 }
             }
@@ -718,23 +717,22 @@ public class MainGame : MonoBehaviour
     {
         if (!isGame) return;
 
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 게임 중단
         isGame = false;
 
-        // 占쏙옙占쏙옙 占시곤옙占쏙옙 占쏙옙占쏙옙 占쏙옙트占쏙옙 占시곤옙占쏙옙占쏙옙 占쏙옙占쏙옙(占쌕쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙)
+        // 게임 시간 다음 판정 노트 시간으로 변경
         gameTime = chart[noteIndex][0];
 
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 배경음악 중단
         bgm.Pause();
         
-        // 占쏙옙占쏙옙 占시곤옙 占쏙옙占쏙옙 
-        if (chart[noteIndex][0] < 1) return;
-        bgm.time = chart[noteIndex][0] - 1;
+        // 게임 시간에 맞게 bgm 시간도 변경
+        if (chart[noteIndex][0] > 1)
+            bgm.time = chart[noteIndex][0] - 1;
     }
     public void Continue()
     {
-        // 占쏙옙占쏙옙 占쏙옙占?
-        // 占쏙옙占쏙옙 占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 계속하기
         if (isStart)
         {
             StartCoroutine(ContinueCo());
@@ -743,28 +741,30 @@ public class MainGame : MonoBehaviour
 
     IEnumerator ContinueCo()
     {
-        // 占시뤄옙占싱억옙 占쏙옙트 占쏙옙占쏙옙占쏙옙 占쏙옙치
+        // 시작 전 첫 노트 앞으로 위치 이동
         PlayerReposition();
 
+        // 시작 전 첫 노트 위치 보여주기
         yield return StartCoroutine(ShowNextNoteCo());
+
+        // 시작 카운트
         yield return StartCoroutine(TimeCountCo());
 
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙(占쏙옙트 占쏙옙占쏙옙)
+        // 게임 시작
         isGame = true;
 
-        // 1占쏙옙 占식울옙 占쏙옙占쏙옙 占쏙옙占쏙옙
-        // 占쏙옙트 占쏙옙占쏙옙 占시곤옙 占쏙옙占쏙옙占쏙옙
+        // 노트 뜨는 시간 1초 필요하기 때문에
+        // 1초 후에 음악 재생
         yield return new WaitForSeconds(1);
         bgm.Play();
-    }
-
-    public void TimeCount()
-    {
-        StartCoroutine(TimeCountCo());
     }
     public void TimeCount(TextMeshProUGUI textUI)
     {
         StartCoroutine(TimeCountCo(textUI));
+    }
+    public void TimeCount()
+    {
+        StartCoroutine(TimeCountCo());
     }
 
     IEnumerator TimeCountCo(TextMeshProUGUI textUI)
@@ -805,7 +805,7 @@ public class MainGame : MonoBehaviour
 
     public void PlayerReposition()
     {
-        // 占시뤄옙占싱억옙 占쏙옙트 占쏙옙占쏙옙 占쏙옙치
+        // 시작 위치 조정
 
         print("시작위치조정");
         Vector2 firstNote = new Vector2(
