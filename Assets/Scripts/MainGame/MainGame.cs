@@ -183,7 +183,7 @@ public class MainGame : MonoBehaviour
         }
 
         // 게임 종료
-        if ((noteIndex > chart.Length - 1 && !isEnd) || (life < 0 && !isEnd))
+        if ((noteIndex > chart.Length - 1 && !isEnd) || (life <= 0 && !isEnd))
         {
             if (stageMode)
             {
