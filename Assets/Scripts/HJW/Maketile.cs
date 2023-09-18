@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class Maketile : MonoBehaviour
 {
     public static Maketile instance;
+    public Makenote makenote;
     public Makemadi makemadi;
     public GameObject curpointer;
     public GameObject fakepointer;
@@ -342,6 +343,7 @@ public class Maketile : MonoBehaviour
         mode = 1;
         if (Makenote.chartmode)
         {
+            makenote.makemodeanimf();
             Mouseevent.nopointer = true;
         }
     }
@@ -350,6 +352,7 @@ public class Maketile : MonoBehaviour
         mode = 0;
         if (Makenote.chartmode)
         {
+            makenote.makemodeanimt();
             Makenote.mode = 0;
             note.GetComponent<SpriteRenderer>().sprite = defaultnoteimg;
             Mouseevent.nopointer = false;
@@ -361,6 +364,7 @@ public class Maketile : MonoBehaviour
         mode = 2;
         if (Makenote.chartmode)
         {
+            makenote.makemodeanimf();
             Mouseevent.nopointer = true;
         }
     }
@@ -370,7 +374,12 @@ public class Maketile : MonoBehaviour
         note.GetComponent<SpriteRenderer>().enabled = false;
         tile.GetComponent<SpriteRenderer>().enabled = true;
         Makenote.chartmode = false;
-        Maketile.instance.mode = 0;
+        makenote.makemodeanimf();
+        mode = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            makenote.noteanim[i].enabled = false;
+        }
         curpointer = tile;
     }
     #endregion

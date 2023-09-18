@@ -3,16 +3,29 @@ using UnityEngine.UI;
 
 public class Mouseevent : MonoBehaviour
 {
+    public Makenote note;
     public bool simplepointer;
-    public bool anim;
-    public bool clickanim;
-    public Animator target;
+    public bool isnote;
+    public Sprite high;
+    public Sprite nor;
     public static bool nopointer;
+    private void Start()
+    {
+        note = GameObject.Find("note").GetComponent<Makenote>();
+    }
+
+    private void OnMouseOver()
+    {
+        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
+        {
+            gameObject.GetComponent<Image>().sprite = high;
+        }
+    }
     private void OnMouseEnter()
     {
         if (simplepointer)
         {
-            if (nopointer || Audio.playing)
+            if (nopointer)
             {
                 if (Maketile.instance.curpointer.GetComponent<Image>())
                 {
@@ -38,17 +51,18 @@ public class Mouseevent : MonoBehaviour
             }
 
         }
-        if (anim)
-        {
-            target.SetInteger("a", 1);
-        }
     }
 
     private void OnMouseExit()
     {
+        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
+        {
+            note.init();
+            return;
+        }
         if (simplepointer)
         {
-            if(nopointer || Audio.playing)
+            if(nopointer)
             {
                 if(Maketile.instance.curpointer.GetComponent<Image>())
                 {
@@ -72,26 +86,6 @@ public class Mouseevent : MonoBehaviour
                 {
                     Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
                 }
-        }
-        if (anim)
-        {
-            target.SetInteger("a", 0);
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        if (clickanim)
-        {
-            target.SetInteger("c", 1);
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        if (clickanim)
-        {
-            target.SetInteger("c", 0);
         }
     }
 }

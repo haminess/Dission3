@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Makemadi : MonoBehaviour
 {
+    public Makenote note;
     public static Makemadi instance;
     public Audio audio_;
     public Transform canvas;
@@ -28,7 +29,22 @@ public class Makemadi : MonoBehaviour
     public GameObject endmadi;
     public int page;
     public string curmadi = "0";
-    public bool chart; //마디 범위 내에 들어와 있습니다.
+    bool chart_;
+    public bool chart //마디 범위 내에 들어와 있습니다.
+    {
+        get
+        {
+            return chart_;
+        }
+        set
+        {
+            if(chart_ = !value)
+            {
+                note.init();
+            }
+            chart_ = value;
+        }
+    }
     public bool is_smallmadi;
     // Start is called before the first frame update
     void Start()

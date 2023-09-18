@@ -11,7 +11,9 @@ public class Makenote : MonoBehaviour
     public static bool chartmode; //현재 음표를 수정하고 있습니다.
     public TextMeshProUGUI transitionbuttontext;
     public Sprite[] noteimg;
+    public Sprite[] noteimg_high;
     public GameObject[] notes;
+    public Animator[] noteanim;
     [Space(20)]
     public double[] notedata;
     public GameObject[] notesobj;
@@ -19,6 +21,7 @@ public class Makenote : MonoBehaviour
     private double data;
     double madi_sec;
     bool holding;
+    public static bool hold;
     private void Start()
     {
         madi_sec = makemadi.sec / makemadi.madi; //how long is one madi
@@ -29,7 +32,9 @@ public class Makenote : MonoBehaviour
         {
             return;
         }
-        if(Maketile.instance.mode == 0)
+        var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
+        var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
+        if (Maketile.instance.mode == 0)
         {
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
             {
@@ -52,8 +57,6 @@ public class Makenote : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode) //erase note
             {
-                var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-                var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
                 if (a)
                 {
                     var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
@@ -67,8 +70,6 @@ public class Makenote : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode)
             {
-                var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-                var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
                 if(a && !holding) //hold
                 {
                     var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
@@ -98,6 +99,7 @@ public class Makenote : MonoBehaviour
                             break;
                     }
                     Mouseevent.nopointer = false;
+                    hold = true;
                     holding = true;
                 }
                 else if(holding && Maketile.instance.is_fucking) //place
@@ -116,18 +118,72 @@ public class Makenote : MonoBehaviour
                     Array.Resize(ref notedata, notedata.Length + 1);
                     notedata[notedata.Length - 1] = data;
 
-                    Array.Sort(notedata);
+                    Array.Sort(notedata, notesobj);
 
                     Destroy(Maketile.instance.curpointer);
                     Maketile.instance.curpointer = Maketile.instance.note;
                     Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
                     Mouseevent.nopointer = true;
+                    hold = false;
                     holding = false;
                 }
             }
         }
     }
 
+    public void init()
+    {
+        for (int i = 0; i < notesobj.Length; i++)
+        {
+            switch (notesobj[i].name)
+            {
+                case "note1(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[0];
+                    break;
+                case "note2(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[1];
+                    break;
+                case "note3(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[2];
+                    break;
+                case "note4(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[3];
+                    break;
+                case "note5(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[4];
+                    break;
+                case "note6(Clone)":
+                    notesobj[i].GetComponent<Image>().sprite = noteimg[5];
+                    break;
+            }
+        }
+    }
+    public void makemodeanimt()
+    {
+        for(int i = 0; i < noteanim.Length; i++)
+        {
+            noteanim[i].SetBool("make", true);
+        }
+    }
+
+    public void makemodeanimf()
+    {
+        for (int i = 0; i < noteanim.Length; i++)
+        {
+            noteanim[i].SetBool("make", false);
+        }
+    }
+
+    public void makemodeanim(int a)
+    {
+        for (int i = 0; i < noteanim.Length; i++)
+        {
+            if(i != a)
+            {
+                noteanim[i].Play("Normal");
+            }
+        }
+    }
     void Datacal()
     {
         if (mode == 0) //4
@@ -159,6 +215,7 @@ public class Makenote : MonoBehaviour
 
     public void mode0()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.zabun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 1)
         {
@@ -169,10 +226,12 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[0];
+        makemodeanim(0);
         mode = 0;
     }
     public void mode1()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.palbun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 0.5f)
         {
@@ -183,10 +242,12 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[1];
+        makemodeanim(1);
         mode = 1;
     }
     public void mode2()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.sipukbun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 0.25f)
         {
@@ -197,11 +258,13 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[2];
+        makemodeanim(2);
         mode = 2;
 
     }
     public void mode3()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.samsipebun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 0.125f)
         {
@@ -212,10 +275,12 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[3];
+        makemodeanim(3);
         mode = 3;
     }
     public void mode4()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.unmun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 4)
         {
@@ -226,10 +291,12 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[4];
+        makemodeanim(4);
         mode = 4;
     }
     public void mode5()
     {
+        Maketile.instance.make();
         var data = Maketile.instance.divide * Maketile.instance.ebun;
         if (Maketile.instance.fuckkkk == true && Maketile.instance.totalbak < 2)
         {
@@ -240,6 +307,7 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[5];
+        makemodeanim(5);
         mode = 5;
     }
     public void transition()
@@ -266,6 +334,11 @@ public class Makenote : MonoBehaviour
         mode = 0;
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[0];
         chartmode = true;
+        for(int i = 0; i < 6; i++)
+        {
+            noteanim[i].enabled = true;
+        }
+        makemodeanimt();
     }
     #endregion
 }
