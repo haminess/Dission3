@@ -107,19 +107,12 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-
-
-
-        // 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙見占?占쌕뤄옙 占쏙옙占쏙옙
+        // 스테이지(실행) 모드이면 바로 시작
         if(stageMode)
         {
             StageStart();
         }
 
-        noteIndex = 0;
-        isStart = false;
-        isGame = false;
-        isEnd = false;
     }
 
     
@@ -127,7 +120,6 @@ public class MainGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // startButton == true 占실몌옙 占쏙옙占쌈쏙옙占쏙옙
         if (startButton)
         {
             if(stageMode)
@@ -145,17 +137,16 @@ public class MainGame : MonoBehaviour
         if (!isGame)
             return;
 
-        // 占쏙옙占쏙옙 占쏙옙占싱몌옙 占쏙옙占쏙옙占쏙옙?占쏙옙占쏙옙
+        // 게임 시간 동작
         if (isGame)
         {
             gameTime += Time.deltaTime;
             musicTime = bgm.time;
         }
 
-        // miss 처占쏙옙
-        // **占쏙옙占쏙옙占쏙옙占쏙옙
-        if (isGame && noteIndex < chart.Length - 1 &&                   // 占쏙옙占쏙옙占쏙옙占쏙옙占썽서 占쏙옙占쏙옙占쏙옙 占쏙옙트占쏙옙 占쏙옙占쏙옙占쌍곤옙
-            bgm.time > (chart[noteIndex][0] + badRange + userRange))    // 占쏙옙占쏙옙 占시곤옙占쏙옙 占쏙옙占쏙옙占시곤옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 (占쏙옙占쏙옙占시곤옙 + 占쏙옙占쏙옙占쏙옙占쏙옙 + 占쏙옙占쏙옙占시곤옙 1占쏙옙)
+        // miss 처리
+        if (isGame && noteIndex < chart.Length - 1 &&                   
+            bgm.time > (chart[noteIndex][0] + badRange + userRange))    
         {
             noteIndex++;
 
@@ -197,11 +188,11 @@ public class MainGame : MonoBehaviour
         }
 
 
-        // 占쏙옙占쏙옙 占쏙옙占썅도
+        // 배경음악 진행바
         MusicProgress();
     }
 
-    // 占쏙옙占쏙옙 占쏙옙占쏙옙
+    // 메인게임 시작
     public void GameStart()
     {
         StartCoroutine(GameStartCo());
@@ -209,9 +200,9 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameStartCo()
     {
-        ResetMain();
+        Start();
+        bgm.Stop();
         gameCanvas.SetActive(true);
-        print("占쏙옙占쏙옙 占쏙옙占쏙옙");
         scoreUI.text = "";
         judgeUI.text = "";
         comboUI.text = "";
@@ -895,6 +886,7 @@ public class MainGame : MonoBehaviour
         soundMan = connector.soundMan;
         connector.soundMan.bgm.Stop();
         soundMan.bgm.Stop();
+        bgm.Stop();
         bgm = soundMan.bgm;
         effect = soundMan.effect;
 

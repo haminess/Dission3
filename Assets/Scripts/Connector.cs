@@ -27,6 +27,12 @@ public class Connector : MonoBehaviour
         {
             soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
         }
+        if (GameObject.Find("Data"))
+        {
+            soundMan = GameObject.Find("Data").GetComponentInChildren<SoundManager>();
+        }
+
+        soundMan.bgm.Stop();
     }
     public void FindDataManager()
     {
