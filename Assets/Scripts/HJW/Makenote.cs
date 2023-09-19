@@ -9,6 +9,7 @@ public class Makenote : MonoBehaviour
     public Makemadi makemadi;
     public static int mode;
     public static bool chartmode; //현재 음표를 수정하고 있습니다.
+    public GameObject previewbox;
     public TextMeshProUGUI transitionbuttontext;
     public Sprite[] noteimg;
     public Sprite[] noteimg_high;
@@ -34,6 +35,28 @@ public class Makenote : MonoBehaviour
         }
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Noteonchart"));
+        if(a)
+        {
+            previewbox.GetComponent<SpriteRenderer>().enabled = true;
+            if (Maketile.instance.curpointer.GetComponent<Image>())
+            {
+                Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+            }
+            else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+            }
+            var b = Array.IndexOf(notesobj, a.collider.gameObject);
+            if(Maketile.instance.boxpos.Length > b)
+            {
+                previewbox.transform.position = Maketile.instance.boxpos[b];
+            }
+;        }
+        else
+        {
+            previewbox.GetComponent<SpriteRenderer>().enabled = false;
+            previewbox.transform.position = new Vector2(-11.09f, -6.46f);
+        }
         if (Maketile.instance.mode == 0)
         {
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
@@ -51,6 +74,8 @@ public class Makenote : MonoBehaviour
 
                 Array.Resize(ref notedata, notedata.Length + 1);
                 notedata[notedata.Length - 1] = data;
+
+                Array.Sort(notedata, notesobj);
             }
         }
         else if(Maketile.instance.mode == 1)
@@ -63,6 +88,8 @@ public class Makenote : MonoBehaviour
                     notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
                     notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
                     Destroy(a.collider.gameObject);
+
+                    Array.Sort(notedata, notesobj);
                 }
             }
         }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Audio : MonoBehaviour
 {
     public static bool playing;
+    public Makenote note;
     Vector2 pos;
     public AudioSource audiosourse;
     public Sprite play; //stopping
@@ -37,7 +38,7 @@ public class Audio : MonoBehaviour
         }
         else
         {
-            if (audiosourse.time == 0)
+            if (audiosourse.time == 0) //first play
             {
                 Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
                 gameObject.GetComponent<Image>().sprite = resume;
