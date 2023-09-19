@@ -891,6 +891,7 @@ public class MainGame : MonoBehaviour
         effect = soundMan.effect;
 
         // 데이터 연결
+        if (!connector.dataMan) return;
         dataMan = connector.dataMan;
         stageNum = dataMan.stageNum;
 

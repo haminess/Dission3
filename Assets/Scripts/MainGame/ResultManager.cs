@@ -141,11 +141,11 @@ public class ResultManager : MonoBehaviour
     public void ShowResult()
     {
         GameObject canvas = GameObject.Find("Canvas");
-        GameObject scorePanel = canvas.transform.GetChild(1).gameObject;
-        GameObject collectPanel = canvas.transform.GetChild(2).gameObject;
+        GameObject collectPanel = canvas.transform.GetChild(1).gameObject;
+        GameObject scorePanel = canvas.transform.GetChild(2).gameObject;
 
         // score ÆÐ³Î
-        TextMeshProUGUI[] contents = GameObject.Find("Content").GetComponentsInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI[] contents = scorePanel.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>();
 
         string rank = "";
         if (score > 10000)
