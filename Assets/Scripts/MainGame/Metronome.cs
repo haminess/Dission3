@@ -5,7 +5,7 @@ using UnityEngine;
 public class Metronome : MonoBehaviour
 {
 
-    AudioSource metro;
+    AudioSource metAudio;
 
     public float stdBPM = 60f;
     public float musicBPM = 60f;
@@ -22,10 +22,12 @@ public class Metronome : MonoBehaviour
     public GameObject canvas;
     public int tic = 0;
 
+    public SoundManager soundManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        metro = GetComponent<AudioSource>();
+        metAudio = GetComponent<AudioSource>();
         tic = 0;
         sec = (stdBPM / musicBPM) * (tempo1 / tempo2);
     }
@@ -68,7 +70,7 @@ public class Metronome : MonoBehaviour
         // ¸ÞÆ®·Î³ð
         if (isMetroPlaying)
         {
-            metro.Play();
+            metAudio.Play();
             MakeTic();
             yield return new WaitForSeconds(sec);
             StartCoroutine(Play());
@@ -77,6 +79,16 @@ public class Metronome : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    public void PlayBeat()
+    {
+        if (!soundManager.bgm.isPlaying)
+        {
+            CancelInvoke("PlayBeat");
+        }
+        metAudio.Play();
+        Invoke("PlayBeat", sec);
     }
 
     void MakeTic()
@@ -105,5 +117,9 @@ public class Metronome : MonoBehaviour
         {
             tic = 0;
         }
+    }
+    public void MakeBeat()
+    {
+        sec = (stdBPM / musicBPM) * (tempo1 / tempo2);
     }
 }

@@ -13,10 +13,16 @@ public class SoundManager : MonoBehaviour
     public AudioSource effect;
 
     // bgm 관리
+    public int bgmId = 0;
     public AudioClip[] bgmClip;
     public float[] bgmHookTime; // 스테이지에서 bgm 훅부분부터 출력
     public float[] bgmBpm;
+    public float[] bgmTempo;
     public float[] bgmStartTime;
+
+    // metronome
+    public Metronome metro;
+    public Connector connector;
 
     // effect 관리
     public AudioClip[] effectClip;
@@ -25,6 +31,7 @@ public class SoundManager : MonoBehaviour
     public Slider effectslider;
     public float tempo1 = 4;
     public float tempo2 = 4;
+    public float tempo = 1;
 
     public void Start()
     {
@@ -51,8 +58,14 @@ public class SoundManager : MonoBehaviour
         bgmslider.value = bgm.volume;
         effectslider.value = effect.volume;
     }
+
+    private void Update()
+    {
+        PlayMetronome();
+    }
     public void SetBgm(int _num)
     {
+        bgmId = _num;
         bgm.clip = bgmClip[_num];
     }
     public void SetBgm(string _name)
@@ -61,12 +74,23 @@ public class SoundManager : MonoBehaviour
         {
             if(bgmClip[i].name == _name)
             {
+                bgmId = i;
                 bgm.clip = bgmClip[i];
+                return;
             }
         }
+        print("SoundManager : 해당 오디오 클립이 없습니다.");
     }
     public void SetBgm(AudioClip _clip)
     {
+        for (int i = 0; i < bgmClip.Length; i++)
+        {
+            if (bgmClip[i].name == _clip.name)
+            {
+                bgmId = i;
+                return;
+            }
+        }
         bgm.clip = _clip;
     }
 
@@ -80,9 +104,11 @@ public class SoundManager : MonoBehaviour
         {
             if (effectClip[i].name == _name)
             {
-                effect.clip = bgmClip[i];
+                effect.clip = effectClip[i];
+                return;
             }
         }
+        print("SoundManager : 해당 오디오 클립이 없습니다.");
     }
     public void SetEffect(AudioClip _clip)
     {
@@ -199,12 +225,18 @@ public class SoundManager : MonoBehaviour
 
     public void ConnectSoundManager()
     {
-        if(GameObject.Find("SoundManager"))
-        {
-            SoundManager sm = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-            bgm = sm.bgm;
-            effect = sm.effect;
-        }
+        // 현재 오디오소스 중지
+        bgm.Stop();
+        effect.Stop();
+
+        // 연결
+        connector.FindManager();
+        bgm = connector.soundMan.bgm;
+        effect = connector.soundMan.effect;
+
+        // 연결 후 오디오소스 중지
+        bgm.Stop();
+        effect.Stop();
     }
 
     public float GetBeatTime(int _bgm)
@@ -212,5 +244,17 @@ public class SoundManager : MonoBehaviour
         float sec = (60f / bgmBpm[_bgm]) * (tempo1 / tempo2);
         
         return sec;
+    }
+
+    public void PlayMetronome()
+    {
+        if(!bgm.isPlaying || bgm.time < bgmStartTime[bgmId] || metro.isMetroPlaying)
+        {
+            return;
+        }
+        metro.musicBPM = bgmBpm[bgmId];
+        metro.MakeBeat();
+        metro.PlayBeat();
+        metro.isMetroPlaying = true;
     }
 }

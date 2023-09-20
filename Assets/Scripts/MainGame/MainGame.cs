@@ -97,8 +97,6 @@ public class MainGame : MonoBehaviour
         MainGame.instance = this;
 
         // 컴포넌트 연결
-        player = GameObject.Find("Player").GetComponent<Player>();
-        sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
         // 게임 데이터 초기화

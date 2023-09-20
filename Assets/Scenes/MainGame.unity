@@ -3760,6 +3760,7 @@ MonoBehaviour:
   ticPrefab: {fileID: 7957695975838580959, guid: 9fa5f81b411e5d2419f2d0af4a159ab8, type: 3}
   canvas: {fileID: 1513664776}
   tic: 0
+  soundManager: {fileID: 1232927423}
 --- !u!1 &426686295
 GameObject:
   m_ObjectHideFlags: 0
@@ -17626,6 +17627,34 @@ PrefabInstance:
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: metro
+      value: 
+      objectReference: {fileID: 423504238}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: connector
+      value: 
+      objectReference: {fileID: 1385423845}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: game.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmTempo.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmTempo.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmStartTime.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmStartTime.Array.data[0]
+      value: 1.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}

@@ -14,47 +14,48 @@ public class Connector : MonoBehaviour
 
     private void Start()
     {
+        // 로컬 데이터 연결
         UpdateData();
-        FindSounManager();
-        FindDataManager();
+
+        // 씬 내부 매니저 연결
+        FindManager();
     }
 
-    public void FindSounManager()
+    public void FindManager()
     {
+        // manager 연결
         soundMan = GameObject.FindObjectOfType<SoundManager>();
-
-        if(GameObject.Find("SoundManager"))
-        {
-            soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-        }
-        if (GameObject.Find("Data"))
-        {
-            soundMan = GameObject.Find("Data").GetComponentInChildren<SoundManager>();
-        }
-
-        soundMan.bgm.Stop();
-    }
-    public void FindDataManager()
-    {
         dataMan = GameObject.FindObjectOfType<DataManager>();
 
-        if (GameObject.Find("Data"))
+        // 씬 전체 매니저 오브젝트 있으면 변경해서
+        GameObject smobj = GameObject.Find("SoundManager");
+        GameObject dataobj = GameObject.Find("Data");
+
+        if (dataobj)
         {
-            dataMan = GameObject.Find("Data").GetComponent<DataManager>();
+            soundMan = dataobj.GetComponentInChildren<SoundManager>();
+            dataMan = dataobj.GetComponent<DataManager>();
+            print("데이터 오브젝트의 사운드매니저로 연결되었습니다.");
         }
+        else if (smobj)
+        {
+            soundMan = smobj.GetComponent<SoundManager>();
+            print("사운드매니저로 연결되었습니다.");
+        }
+
+        // 배경음악 멈춤
+        soundMan.bgm.Stop();
     }
 
     public void UpdateData()
     {
         DataManager.Instance.LoadMainGameData();
         DataManager.Instance.LoadSoundData();
-        print("로드됨" + maingamedata.synk);
     }
     public void SaveData()
     {
         DataManager.Instance.SaveMainGameData();
         DataManager.Instance.SaveSoundData();
-        print("저장됨" + maingamedata.synk);
     }
 
     public void SetSynk(float _synk)
