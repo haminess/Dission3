@@ -113,8 +113,6 @@ public class MainGame : MonoBehaviour
 
     }
 
-    
-
     // Update is called once per frame
     void Update()
     {
@@ -172,7 +170,7 @@ public class MainGame : MonoBehaviour
         }
 
         // 게임 종료
-        if ((noteIndex > chart.Length - 1 && !isEnd) || (life <= 0 && !isEnd))
+        if ((noteIndex > chart.Length - 1 && !isEnd) /*|| (life <= 0 && !isEnd)*/)  // 편의 위해 생명 시스템 off
         {
             if (stageMode)
             {
