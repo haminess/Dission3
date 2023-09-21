@@ -97,6 +97,7 @@ public class MainGame : MonoBehaviour
         MainGame.instance = this;
 
         // 컴포넌트 연결
+        sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
         storyManager = GetComponent<StoryManager>();
 
         // 게임 데이터 초기화
@@ -196,7 +197,13 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameStartCo()
     {
-        Start();
+        // 게임 데이터 초기화
+        ResetMain();
+
+        // 로컬데이터 불러오기
+        GetMainData();
+
+
         bgm.Stop();
         gameCanvas.SetActive(true);
         scoreUI.text = "";

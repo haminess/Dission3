@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -61,7 +62,7 @@ public class SoundManager : MonoBehaviour
 
     private void Update()
     {
-        PlayMetronome();
+        //PlayMetronome();
     }
     public void SetBgm(int _num)
     {
@@ -248,6 +249,15 @@ public class SoundManager : MonoBehaviour
 
     public void PlayMetronome()
     {
+        if (SceneManager.GetActiveScene().name != "MainGame")
+        {
+            return;
+        }
+        else
+        {
+
+        }
+        print(bgmId + " " + bgmStartTime.Length);
         if(!bgm.isPlaying || bgm.time < bgmStartTime[bgmId] || metro.isMetroPlaying)
         {
             return;
