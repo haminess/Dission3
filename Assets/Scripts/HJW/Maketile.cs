@@ -2,11 +2,15 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Maketile : MonoBehaviour
 {
     public static Maketile instance;
+    public Makenote makenote;
     public Makemadi makemadi;
+    public Image[] buttons;
+    public Sprite[] buttonimg;
     public GameObject curpointer;
     public GameObject fakepointer;
     public GameObject tile;
@@ -14,11 +18,15 @@ public class Maketile : MonoBehaviour
     public GameObject prefeb;
     public Vector3 mospos;
     public int index;
+    public int mode;
     [Space(20)]
     public Vector2[] boxpos;
-    public int mode;
     private bool holding;
+    [Space(20)]
+    [Header("Note")]
+    public Sprite defaultnoteimg;
     public GameObject curmadiobj;
+    public int curmadi;
     public float curpos;
     [Space(20)]
     public float unmun = 0;
@@ -29,8 +37,9 @@ public class Maketile : MonoBehaviour
     public float samsipebun = 0;
     [Space(20)]
     public int divide;
-    public bool fuckkkk;
     public float totalbak;
+    public bool fuckkkk;
+    public bool is_fucking;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +56,7 @@ public class Maketile : MonoBehaviour
             fuckkkk = true;
         }
 
-        switch (makemadi.down)
+        switch (makemadi.down) 
         {
             case 32:
                 totalbak = 0.125f * makemadi.up;
@@ -67,31 +76,38 @@ public class Maketile : MonoBehaviour
             case 1:
                 totalbak = 4 * makemadi.up;
                 break;
-        }
-
+        }//calculate total bak
+        rebutton();
     }
 
     // Update is called once per frame
     void Update()
     {
         mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-        if (Makenote.chartmode)
+        if (Makenote.chartmode && !Settings.popup)
         {
             if (makemadi.chart)
             {
-                int result;
                 int c = 0;
                 curmadiobj = GameObject.Find(makemadi.curmadi);
                 fakepointer.transform.SetParent(curmadiobj.transform);
                 curpointer.transform.SetParent(curmadiobj.transform);
-                if(int.TryParse(makemadi.curmadi, out result))
+                if(int.TryParse(makemadi.curmadi, out curmadi))
                 {
-                    c = result;
+                    c = curmadi;
                 }
-                //                                                                                             mouse   madi                 page
-                fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 380 - (505.5f * c) + (makemadi.page * 69f), 0);
+                if(c == 0) //small madi
+                {
+                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 1200, 0);
+                   
+                }
+                else
+                {
+                    //                                                                                              mouse     madi                 page
+                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x + 120 - (505.5f * c) + (makemadi.page * 69f) - makemadi.length, 0);
+                }
                 backjapyo();
-                switch (Makenote.mode)
+                switch (Makenote.mode) 
                 {
                     case 0: //4 
                         if(fuckkkk & MathF.Floor( divide * zabun) != divide * zabun)
@@ -159,15 +175,20 @@ public class Maketile : MonoBehaviour
 
                         }
                         break;
-                }
+                }//note move
             }
             else
             {
-                curpointer.transform.position = mospos;
+                curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1069.49f, -279.01f);
+                is_fucking = false;
             }
         }
         else
         {
+            if(Settings.popup)
+            {
+                return;
+            }
             if (mospos.y < 0 && mospos.x > 0)
             {
                 curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y - 0.5f);
@@ -184,10 +205,10 @@ public class Maketile : MonoBehaviour
             {
                 curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y + 0.5f);
             }
-        }
+        }//box move
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) //box
         {
             if (makemadi.chart || Makenote.chartmode)
             {
@@ -236,7 +257,7 @@ public class Maketile : MonoBehaviour
                     }
                     break;
             };
-        }
+        } //box edit
         repaint();
     }
     public void backjapyo()
@@ -282,6 +303,11 @@ public class Maketile : MonoBehaviour
     public void fuck(float note)
     {
         float a = (float)492 / (note * 2);
+        if (curmadi == 0 || Audio.playing)
+        {
+            return;
+        }
+        is_fucking = true;
         for (int i = 0; i < note * 2 - 1; i += 2)
         {
             if (-246 + a * i <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + a * (i + 2))
@@ -291,9 +317,14 @@ public class Maketile : MonoBehaviour
             }
         }
     }
-    public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감, note = 3.5, note = 1.5
+    public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감
     {
-        float a = (float)492 / (note * 4);
+        float a = (float)492 / (note * 2);
+        if (curmadi == 0 || Audio.playing)
+        {
+            return;
+        }
+        is_fucking = true;
         for (int i = 0; i < note * 2 + MathF.Floor( note); i += 2)
         {
             if (-246 + (a * (i + 1)) <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + (a * (i + 3)))
@@ -303,7 +334,7 @@ public class Maketile : MonoBehaviour
             }
         }
     }
-    void repaint()
+    void repaint() //box
     {
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {
@@ -312,36 +343,104 @@ public class Maketile : MonoBehaviour
             boxpos[i] = gameObject.transform.GetChild(i).position;
         }
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(mospos, new Vector3(mospos.x, mospos.y, mospos.z + 2));
-    }
-
     #region switch
+    //make 0 erase 1 edit 2
+    //nor 0, sel 1
+    public void nol(int a)
+    {
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            if(i != a)
+            {
+                buttons[i].sprite = buttonimg[0];
+            }
+        }
+    }
     public void erase()
     {
-        exitchart();
+        if(Settings.popup)
+        {
+            return;
+        }
         mode = 1;
+        buttons[1].sprite = buttonimg[1];
+        nol(1);
+        if (Makenote.chartmode)
+        {
+            makenote.makemodeanimf();
+            Mouseevent.nopointer = true;
+        }
     }
     public void make()
     {
-        exitchart();
+        if (Settings.popup)
+        {
+            return;
+        }
         mode = 0;
+        buttons[0].sprite = buttonimg[1];
+        nol(0);
+        if (Makenote.chartmode)
+        {
+            makenote.makemodeanimt();
+            Makenote.mode = 0;
+            note.GetComponent<SpriteRenderer>().sprite = defaultnoteimg;
+            Mouseevent.nopointer = false;
+        }
     }
 
     public void edit()
     {
-        exitchart();
+        if (Settings.popup)
+        {
+            return;
+        }
         mode = 2;
+        buttons[2].sprite = buttonimg[1];
+        nol(2);
+        if (Makenote.chartmode)
+        {
+            makenote.makemodeanimf();
+            Mouseevent.nopointer = true;
+        }
     }
 
-    void exitchart()
+    public void exitchart()
     {
+        Makenote.chartmode = false;
+        Mouseevent.nopointer = false;
+        rebutton();
         note.GetComponent<SpriteRenderer>().enabled = false;
         tile.GetComponent<SpriteRenderer>().enabled = true;
-        Makenote.chartmode = false;
+        makenote.makemodeanimf();
+        for (int i = 0; i < 6; i++)
+        {
+            makenote.noteanim[i].Play("Normal");
+            makenote.noteanim[i].SetBool("boxmode", true);
+        }
         curpointer = tile;
+    }
+
+    public void rebutton()
+    {
+        switch (mode)
+        {
+            case 0:
+                buttons[0].sprite = buttonimg[1];
+                nol(0);
+                make();
+                break;
+            case 1:
+                buttons[1].sprite = buttonimg[1];
+                nol(1);
+                erase();
+                break;
+            case 2:
+                buttons[2].sprite = buttonimg[1];
+                nol(2);
+                edit();
+                break;
+        }
     }
     #endregion
 }

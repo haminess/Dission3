@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3387621442106076369}
-  - component: {fileID: 907877773217252823}
-  - component: {fileID: 4778237573823211893}
-  - component: {fileID: -4524049530451296763}
-  - component: {fileID: 5616691362871615801}
+  - component: {fileID: 8885318101524394933}
+  - component: {fileID: 4952289813427262560}
+  - component: {fileID: 8708504026071237559}
+  - component: {fileID: 8461870097769573346}
   m_Layer: 14
-  m_Name: note2
+  m_Name: note5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,10 +37,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1064.1992, y: -284.70792}
-  m_SizeDelta: {x: 1.1714, y: 2.3299}
+  m_AnchoredPosition: {x: -1069.49, y: -279.01}
+  m_SizeDelta: {x: 1.1145, y: 2.56}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!61 &907877773217252823
+--- !u!61 &8885318101524394933
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,20 +53,20 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.003869325, y: -0.00000047683716}
+  m_Offset: {x: 0.028900057, y: -0.0043951273}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.36, y: 2.56}
-    newSize: {x: 1.36, y: 2.56}
+    oldSize: {x: 1.1, y: 0.7}
+    newSize: {x: 1.1, y: 0.7}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1914189, y: 2.7901616}
+  m_Size: {x: 1.8045757, y: 2.57188}
   m_EdgeRadius: 0
---- !u!222 &4778237573823211893
+--- !u!222 &4952289813427262560
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +74,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3387621442106076370}
   m_CullTransparentMesh: 1
---- !u!114 &-4524049530451296763
+--- !u!114 &8708504026071237559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,9 +94,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1347098328, guid: 3308db2a25e9d6a46af02d4d06b0d5bb, type: 3}
+  m_Sprite: {fileID: -532796, guid: 3308db2a25e9d6a46af02d4d06b0d5bb, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 1
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5616691362871615801
+--- !u!114 &8461870097769573346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,5 +119,5 @@ MonoBehaviour:
   note: {fileID: 0}
   simplepointer: 0
   isnote: 1
-  high: {fileID: -20816679, guid: d61713773ce83024e98e0ee7c0e47f72, type: 3}
-  nor: {fileID: -1347098328, guid: 3308db2a25e9d6a46af02d4d06b0d5bb, type: 3}
+  high: {fileID: 860036804, guid: d61713773ce83024e98e0ee7c0e47f72, type: 3}
+  nor: {fileID: -532796, guid: 3308db2a25e9d6a46af02d4d06b0d5bb, type: 3}

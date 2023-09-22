@@ -1,54 +1,103 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Mouseevent : MonoBehaviour
 {
+    public Makenote note;
     public bool simplepointer;
-    public bool anim;
-    public bool clickanim;
-    public Animator target;
+    public bool isnote;
+    public Sprite high;
+    public Sprite nor;
+    public static bool nopointer;
+    private void Start()
+    {
+        note = GameObject.Find("note").GetComponent<Makenote>();
+    }
+
+    private void OnMouseOver()
+    {
+        if (Settings.popup)
+        {
+            return;
+        }
+        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
+        {
+            gameObject.GetComponent<Image>().sprite = high;
+        }
+    }
     private void OnMouseEnter()
     {
+        if (Settings.popup)
+        {
+            return;
+        }
         if (simplepointer)
         {
-            if (Makemadi.instance.chart && Makenote.chartmode)
+            if (nopointer)
+            {
+                if (Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                }
+                else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                }
+                return;
+            }
+            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
             {
                 return;
             }
-            Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+            if (Maketile.instance.curpointer.GetComponent<Image>())
+            {
+                Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+            }
+            else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+            {
+                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+            }
 
-        }
-        if (anim)
-        {
-            target.SetInteger("a", 1);
         }
     }
 
     private void OnMouseExit()
     {
+        if(Settings.popup)
+        {
+            return;
+        }
+        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false )
+        {
+            note.init();
+            return;
+        }
         if (simplepointer)
         {
-            Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
-
-        }
-        if (anim)
-        {
-            target.SetInteger("a", 0);
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        if (clickanim)
-        {
-            target.SetInteger("c", 1);
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        if (clickanim)
-        {
-            target.SetInteger("c", 0);
+            if(nopointer)
+            {
+                if(Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                }
+                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                }
+                return;
+            }
+            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
+            {
+                return;
+            }
+                if(Maketile.instance.curpointer.GetComponent<Image>())
+                {
+                    Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
+                }
+                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                {
+                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                }
         }
     }
 }
