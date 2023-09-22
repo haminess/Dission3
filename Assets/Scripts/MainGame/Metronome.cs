@@ -5,7 +5,7 @@ using UnityEngine;
 public class Metronome : MonoBehaviour
 {
 
-    AudioSource metAudio;
+    public AudioSource metAudio;
 
     public float stdBPM = 60f;
     public float musicBPM = 60f;

@@ -47,5 +47,9 @@ public class ChangeScene : MonoBehaviour
     {
         SceneManager.LoadScene("Editor_HJW");
     }
+    public void ToTutorialScene()
+    {
+        SceneManager.LoadScene("TutorialScene");
+    }
 
 }
