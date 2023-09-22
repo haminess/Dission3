@@ -16,6 +16,10 @@ public class Mouseevent : MonoBehaviour
 
     private void OnMouseOver()
     {
+        if (Settings.popup)
+        {
+            return;
+        }
         if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
         {
             gameObject.GetComponent<Image>().sprite = high;
@@ -23,6 +27,10 @@ public class Mouseevent : MonoBehaviour
     }
     private void OnMouseEnter()
     {
+        if (Settings.popup)
+        {
+            return;
+        }
         if (simplepointer)
         {
             if (nopointer)
@@ -55,7 +63,11 @@ public class Mouseevent : MonoBehaviour
 
     private void OnMouseExit()
     {
-        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
+        if(Settings.popup)
+        {
+            return;
+        }
+        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false )
         {
             note.init();
             return;

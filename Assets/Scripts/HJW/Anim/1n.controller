@@ -114,6 +114,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Selected
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4026702352994968671}
   m_Solo: 0
@@ -862,6 +865,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Highlighted
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7135716019601496424}
   m_Solo: 0
@@ -890,37 +896,43 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Highlighted
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Pressed
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Selected
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Disabled
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: make
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
+  - m_Name: boxmode
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1155,6 +1167,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Pressed
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5154857379643577639}
   m_Solo: 0
@@ -1275,6 +1290,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: make
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2387154039483915666}
   m_Solo: 0
@@ -1297,6 +1315,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: Disabled
     m_EventTreshold: 0

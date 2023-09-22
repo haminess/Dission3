@@ -20,7 +20,6 @@ public class Makemadi : MonoBehaviour
     [Space(20)]
     public int bpm;
     public double sec; //total sec
-    public int what_four;
     public double madi;
     [Header("Backjapyo")]
     public int up;
@@ -50,7 +49,7 @@ public class Makemadi : MonoBehaviour
     void Start()
     {
         instance = this;
-        madi = bpm / what_four * (sec / 60);
+        madi = bpm / up * (sec / 60);
         if(starttime != 0)
         {
             var onemadilength = sec / madi; //how long is one madi 2.3
@@ -71,7 +70,7 @@ public class Makemadi : MonoBehaviour
                 End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x + ((length - 519) / 2), endpos.y);
             }
 
-            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -477);
+            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -450);
             total.transform.SetParent(charts.transform);
         }
         for (int i = 0; i <= Mathf.Floor((float)madi); i++) //make madi
@@ -81,11 +80,11 @@ public class Makemadi : MonoBehaviour
                 var b = Instantiate(endmadi, canvas);
                 if (starttime == 0)
                 {
-                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -450);
                 }
                 else
                 {
-                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -450);
                 }
                 b.transform.SetParent(charts);
                 b.name = "End";
@@ -95,11 +94,11 @@ public class Makemadi : MonoBehaviour
                 var a = Instantiate(prefab, canvas);
                 if(starttime == 0)
                 {
-                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -477);
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -450);
                 }
                 else
                 {
-                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -477);
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -450);
                 }
                 a.transform.SetParent(charts);
                 a.name = (i + 1).ToString();

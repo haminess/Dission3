@@ -10,7 +10,8 @@ public class Makenote : MonoBehaviour
     public static int mode;
     public static bool chartmode; //현재 음표를 수정하고 있습니다.
     public GameObject previewbox;
-    public TextMeshProUGUI transitionbuttontext;
+    public SpriteRenderer transitionicon;
+    public Sprite[] transicon;
     public Sprite[] noteimg;
     public Sprite[] noteimg_high;
     public GameObject[] notes;
@@ -29,7 +30,7 @@ public class Makenote : MonoBehaviour
     }
     private void Update()
     {
-        if(makemadi.is_smallmadi || Audio.playing)
+        if(makemadi.is_smallmadi || Audio.playing || Settings.popup)
         {
             return;
         }
@@ -47,7 +48,7 @@ public class Makenote : MonoBehaviour
                 Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
             }
             var b = Array.IndexOf(notesobj, a.collider.gameObject);
-            if(Maketile.instance.boxpos.Length > b)
+            if(Maketile.instance.boxpos.Length > b && !hold)
             {
                 previewbox.transform.position = Maketile.instance.boxpos[b];
             }
@@ -185,7 +186,7 @@ public class Makenote : MonoBehaviour
             }
         }
     }
-    public void makemodeanimt()
+    public void makemodeanimt() //deactivate all
     {
         for(int i = 0; i < noteanim.Length; i++)
         {
@@ -193,22 +194,65 @@ public class Makenote : MonoBehaviour
         }
     }
 
-    public void makemodeanimf()
+    public void makemodeanimf() //activate all
     {
         for (int i = 0; i < noteanim.Length; i++)
         {
             noteanim[i].SetBool("make", false);
         }
     }
-
-    public void makemodeanim(int a)
+    public void makemoderepaintanim()
     {
-        for (int i = 0; i < noteanim.Length; i++)
+        switch(mode)
         {
-            if(i != a)
-            {
-                noteanim[i].Play("Normal");
-            }
+            case 0:
+                noteanim[0].Play("Normal");
+                noteanim[1].Play("Normal");
+                noteanim[2].Play("Selected");
+                noteanim[3].Play("Normal");
+                noteanim[4].Play("Normal");
+                noteanim[5].Play("Normal");
+                break;
+            case 1:
+                noteanim[1].Play("Normal");
+                noteanim[0].Play("Normal");
+                noteanim[2].Play("Normal");
+                noteanim[3].Play("Selected");
+                noteanim[4].Play("Normal");
+                noteanim[5].Play("Normal");
+                break;
+            case 2:
+                noteanim[2].Play("Normal");
+                noteanim[1].Play("Normal");
+                noteanim[0].Play("Normal");
+                noteanim[3].Play("Normal");
+                noteanim[4].Play("Selected");
+                noteanim[5].Play("Normal");
+                break;
+            case 3:
+                noteanim[3].Play("Normal");
+                noteanim[1].Play("Normal");
+                noteanim[2].Play("Normal");
+                noteanim[0].Play("Normal");
+                noteanim[4].Play("Normal");
+                noteanim[5].Play("Selected");
+                break;
+            case 4:
+                noteanim[4].Play("Normal");
+                noteanim[1].Play("Normal");
+                noteanim[2].Play("Normal");
+                noteanim[3].Play("Normal");
+                noteanim[0].Play("Selected");
+                noteanim[5].Play("Normal");
+                break;
+            case 5:
+                noteanim[5].Play("Normal");
+                noteanim[1].Play("Selected");
+                noteanim[2].Play("Normal");
+                noteanim[3].Play("Normal");
+                noteanim[4].Play("Normal");
+                noteanim[0].Play("Normal");
+                break;
         }
     }
     void Datacal()
@@ -253,8 +297,8 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[0];
-        makemodeanim(0);
         mode = 0;
+        makemoderepaintanim();
     }
     public void mode1()
     {
@@ -269,8 +313,8 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[1];
-        makemodeanim(1);
         mode = 1;
+        makemoderepaintanim();
     }
     public void mode2()
     {
@@ -285,8 +329,8 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[2];
-        makemodeanim(2);
         mode = 2;
+        makemoderepaintanim();
 
     }
     public void mode3()
@@ -302,8 +346,8 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[3];
-        makemodeanim(3);
         mode = 3;
+        makemoderepaintanim();
     }
     public void mode4()
     {
@@ -318,8 +362,8 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[4];
-        makemodeanim(4);
         mode = 4;
+        makemoderepaintanim();
     }
     public void mode5()
     {
@@ -334,20 +378,20 @@ public class Makenote : MonoBehaviour
             return;
         }
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[5];
-        makemodeanim(5);
         mode = 5;
+        makemoderepaintanim();
     }
     public void transition()
     {
         Mouseevent.nopointer = false;
         if(chartmode)
         {
-            transitionbuttontext.text = "Chart";
+            transitionicon.sprite = transicon[0];
             Maketile.instance.exitchart();
         }
         else if(chartmode == false)
         {
-            transitionbuttontext.text = "Box";
+            transitionicon.sprite = transicon[1];
             tochart();
         }
     }
@@ -357,15 +401,17 @@ public class Makenote : MonoBehaviour
         Maketile.instance.curpointer = Maketile.instance.note;
         Maketile.instance.tile.GetComponent<SpriteRenderer>().enabled = false;
         Maketile.instance.note.GetComponent<SpriteRenderer>().enabled = true;
-        Maketile.instance.mode = 0;
-        mode = 0;
+        Maketile.instance.rebutton();
         Maketile.instance.note.GetComponent<SpriteRenderer>().sprite = noteimg[0];
+        mode = 0;
         chartmode = true;
         for(int i = 0; i < 6; i++)
         {
+            noteanim[i].SetBool("boxmode", false);
             noteanim[i].enabled = true;
         }
-        makemodeanimt();
+        mode0();
+        Maketile.instance.rebutton();
     }
     #endregion
 }

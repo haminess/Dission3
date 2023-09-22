@@ -2,13 +2,15 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Maketile : MonoBehaviour
 {
     public static Maketile instance;
     public Makenote makenote;
     public Makemadi makemadi;
+    public Image[] buttons;
+    public Sprite[] buttonimg;
     public GameObject curpointer;
     public GameObject fakepointer;
     public GameObject tile;
@@ -75,14 +77,14 @@ public class Maketile : MonoBehaviour
                 totalbak = 4 * makemadi.up;
                 break;
         }//calculate total bak
-
+        rebutton();
     }
 
     // Update is called once per frame
     void Update()
     {
         mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-        if (Makenote.chartmode)
+        if (Makenote.chartmode && !Settings.popup)
         {
             if (makemadi.chart)
             {
@@ -183,6 +185,10 @@ public class Maketile : MonoBehaviour
         }
         else
         {
+            if(Settings.popup)
+            {
+                return;
+            }
             if (mospos.y < 0 && mospos.x > 0)
             {
                 curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y - 0.5f);
@@ -338,9 +344,27 @@ public class Maketile : MonoBehaviour
         }
     }
     #region switch
+    //make 0 erase 1 edit 2
+    //nor 0, sel 1
+    public void nol(int a)
+    {
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            if(i != a)
+            {
+                buttons[i].sprite = buttonimg[0];
+            }
+        }
+    }
     public void erase()
     {
+        if(Settings.popup)
+        {
+            return;
+        }
         mode = 1;
+        buttons[1].sprite = buttonimg[1];
+        nol(1);
         if (Makenote.chartmode)
         {
             makenote.makemodeanimf();
@@ -349,7 +373,13 @@ public class Maketile : MonoBehaviour
     }
     public void make()
     {
+        if (Settings.popup)
+        {
+            return;
+        }
         mode = 0;
+        buttons[0].sprite = buttonimg[1];
+        nol(0);
         if (Makenote.chartmode)
         {
             makenote.makemodeanimt();
@@ -361,7 +391,13 @@ public class Maketile : MonoBehaviour
 
     public void edit()
     {
+        if (Settings.popup)
+        {
+            return;
+        }
         mode = 2;
+        buttons[2].sprite = buttonimg[1];
+        nol(2);
         if (Makenote.chartmode)
         {
             makenote.makemodeanimf();
@@ -371,16 +407,40 @@ public class Maketile : MonoBehaviour
 
     public void exitchart()
     {
+        Makenote.chartmode = false;
+        Mouseevent.nopointer = false;
+        rebutton();
         note.GetComponent<SpriteRenderer>().enabled = false;
         tile.GetComponent<SpriteRenderer>().enabled = true;
-        Makenote.chartmode = false;
         makenote.makemodeanimf();
-        mode = 0;
         for (int i = 0; i < 6; i++)
         {
-            makenote.noteanim[i].enabled = false;
+            makenote.noteanim[i].Play("Normal");
+            makenote.noteanim[i].SetBool("boxmode", true);
         }
         curpointer = tile;
+    }
+
+    public void rebutton()
+    {
+        switch (mode)
+        {
+            case 0:
+                buttons[0].sprite = buttonimg[1];
+                nol(0);
+                make();
+                break;
+            case 1:
+                buttons[1].sprite = buttonimg[1];
+                nol(1);
+                erase();
+                break;
+            case 2:
+                buttons[2].sprite = buttonimg[1];
+                nol(2);
+                edit();
+                break;
+        }
     }
     #endregion
 }

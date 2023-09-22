@@ -11,13 +11,16 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Selected
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6977332685458449671}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 0
   m_HasExitTime: 0
@@ -94,7 +97,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -295,7 +298,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -430,7 +433,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -631,7 +634,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -766,7 +769,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -863,7 +866,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 132.3
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -891,6 +894,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Pressed
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -718609578942841203}
@@ -967,6 +973,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Disabled
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8155052970461535601}
@@ -1104,6 +1113,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: boxmode
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1157,6 +1172,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: make
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1149017773297927954}
   m_Solo: 0
@@ -1208,6 +1226,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Highlighted
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3060296636243002004}

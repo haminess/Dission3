@@ -11,6 +11,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Pressed
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1851979376209739064}
   m_Solo: 0
@@ -116,6 +119,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Disabled
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6084151700600684028}
   m_Solo: 0
@@ -195,6 +201,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: make
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -820516547918638247}
   m_Solo: 0
@@ -219,6 +228,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Highlighted
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 482198832338466488}
@@ -356,6 +368,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: boxmode
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -463,7 +481,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -664,7 +682,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -838,7 +856,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1039,7 +1057,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1144,6 +1162,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Selected
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: boxmode
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4157044137056737991}
   m_Solo: 0
@@ -1199,7 +1220,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1296,7 +1317,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 122
+        value: 112.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
