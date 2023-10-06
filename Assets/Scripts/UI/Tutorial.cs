@@ -184,6 +184,7 @@ public class Tutorial : MonoBehaviour
         
                 if (Input.anyKeyDown)
                 {
+                    connector.UpdateData();
                     Judge(time);
                 }
                 break;
@@ -195,6 +196,7 @@ public class Tutorial : MonoBehaviour
                 ShowNote(1, transform);
                 if (Input.anyKeyDown)
                 {
+                    connector.UpdateData();
                     Judge(time);
                 }
                 break;
@@ -479,6 +481,7 @@ public class Tutorial : MonoBehaviour
     }
     public void Judge(float _time)
     {
+        if (tJudgeValue) tJudgeValue.text = ((time - (chart[curNote][0] + userRange)) * 1000).ToString("0") + "ms";
         // 판정시간 일치 확인
         if (time < (chart[curNote][0] + perfectRange + userRange) && time > (chart[curNote][0] - perfectRange + userRange))  // PERFECT
         {
@@ -516,7 +519,6 @@ public class Tutorial : MonoBehaviour
             // 좌표는 일치하나 시간 범위에 맞지 않음
             print("좌표만 일치");
         }
-        if (tJudgeValue) tJudgeValue.text = ((time - (chart[curNote][0] + userRange)) * 100).ToString("00") + "ms";
     }
 
     public void PlayerReposition()
@@ -529,7 +531,7 @@ public class Tutorial : MonoBehaviour
             curNote = 0;
             time = 0;
         }
-        else if (step == Step.Synk || step == Step.Judge)
+        if (step == Step.Synk || step == Step.Judge)
         {
             return;
         }

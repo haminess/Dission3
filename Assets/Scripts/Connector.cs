@@ -66,7 +66,7 @@ public class Connector : MonoBehaviour
 
     public float GetSynk()
     {
-        return maingamedata.synk; ;
+        return maingamedata.synk;
     }
     public float GetJudge()
     {
@@ -106,26 +106,24 @@ public class Connector : MonoBehaviour
     }
     public void ShowValue(TextMeshProUGUI _text)
     {
-        UpdateData();
         switch(_text.name)
         {
             case "bgm":
-                _text.text = (sounddata.bgm * 100).ToString("0");
+                _text.text = (sounddata.bgm * 1000).ToString("0");
                 break;
             case "effect":
-                _text.text = (sounddata.effect * 100).ToString("0");
+                _text.text = (sounddata.effect * 1000).ToString("0");
                 break;
             case "synk":
-                _text.text = (maingamedata.synk * 100).ToString("0") + " ms";
+                _text.text = (maingamedata.synk * 1000).ToString("0") + " ms";
                 break;
             case "judge":
-                _text.text = (maingamedata.judge * 100).ToString("0") + " ms";
+                _text.text = (maingamedata.judge * 1000).ToString("0") + " ms";
                 break;
         }
     }
     public void ShowValue(Slider _slider)
     {
-        UpdateData();
         switch (_slider.name)
         {
             case "bgmslider":
@@ -144,11 +142,11 @@ public class Connector : MonoBehaviour
     }
     public void AddValue01(Slider _slider)
     {
-        _slider.value += 0.01f;
+        _slider.value += 0.001f;
     }
     public void SubValue01(Slider _slider)
     {
-        _slider.value -= 0.01f;
+        _slider.value -= 0.001f;
     }
     public void AddValue1(Slider _slider)
     {
