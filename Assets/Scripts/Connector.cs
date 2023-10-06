@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 public class Connector : MonoBehaviour
 {
@@ -44,7 +45,12 @@ public class Connector : MonoBehaviour
         }
 
         // πË∞Ê¿Ωæ« ∏ÿ√„
-        soundMan.bgm.Stop();
+        // Ω√¿€»≠∏È πË∞Ê¿Ωæ«
+        if(SceneManager.GetActiveScene().name != "TitleScene")
+        {
+            soundMan.bgm.Stop();
+        }
+        //soundMan.bgm.Play();
     }
 
     public void UpdateData()
@@ -56,6 +62,23 @@ public class Connector : MonoBehaviour
     {
         DataManager.Instance.SaveMainGameData();
         DataManager.Instance.SaveSoundData();
+    }
+
+    public float GetSynk()
+    {
+        return maingamedata.synk; ;
+    }
+    public float GetJudge()
+    {
+        return maingamedata.judge;
+    }
+    public float GetBGMVol()
+    {
+        return sounddata.bgm;
+    }
+    public float GetEffectVol()
+    {
+        return sounddata.effect;
     }
 
     public void SetSynk(float _synk)

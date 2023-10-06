@@ -6,9 +6,9 @@ using TMPro;
 
 public class Tutorial : MonoBehaviour
 {
-    // 이건 딕셔너리로 했엉 튜토리얼은 만든지 얼마 안돼서
     Dictionary<int, string[]> explain = new Dictionary<int, string[]>();
     public TextMeshProUGUI tJudge;
+    public TextMeshProUGUI tJudgeValue;
     public TextMeshProUGUI tExplain;
 
     public TutorialMove player;
@@ -16,6 +16,7 @@ public class Tutorial : MonoBehaviour
     public Metronome metronome;
     public GameObject note;
     public GameObject preNote;
+    public Connector connector;
 
     float[][] chart = new float[100][];
     public float time;
@@ -41,23 +42,10 @@ public class Tutorial : MonoBehaviour
         Note1,
         Note2,
         Note3,
-        Note4
-        // 안녕, 학교에 입학하기 전에 조작법에 대해 소개할게!
-        // Move
-        // 먼저 키보드의 화살표 키를 누르면 상, 하, 좌, 우로 이동할 수 있어.
-        // 한번 이동해볼래?
-        // Note1
-        // 잘했어! 다음으로 '노트'를 보여줄게!
-        // '노트'는 우리가 맞춰야 할 리듬 박자에 해당하고, 박자에 맞춰 노트로 이동하면 연주할 수 있어.
-        // 연주는 먼저 첫 노트 위치를 보여준 다음, 3초 카운트 후에 시작해.
-        // 생성된 노트가 다 채워지고 노란색으로 바뀌는 타이밍에 노트로 이동하면 돼.
-        // 한번 연주해볼래?
-        // Note2
-        // 더 빠르게 이동 해 볼까?
-        // Note3
-        // 잘했어! 이제 일정한 박자의 노트를 따라 이동해보자.
-        // Note4
-        // 잘했어! 이제 다양한 박자에 맞춰 노트를 따라 이동해보자.
+        Note4,
+        Synk,
+        Judge,
+        None
     }
 
     public Step step = Step.Wait;
@@ -66,9 +54,12 @@ public class Tutorial : MonoBehaviour
     void Start()
     {
         ResetTotal();
+        ResetChart();
+        chart[0] = new float[3] { 1.5f, 1, 0 };
 
         // 튜토리얼 시작
-        StartCoroutine(StartTutorial());
+        if (step == Step.Wait)
+            StartCoroutine(StartTutorial());
     }
 
     // Update is called once per frame
@@ -113,7 +104,8 @@ public class Tutorial : MonoBehaviour
 
             case Step.Note1:
                 RunTime();
-                ShowNote();
+                PlayerReposition();
+                ShowNote(1);
                 if (Input.anyKeyDown)
                 {
                     Judge(time, player.CurPos.x, player.CurPos.y);
@@ -131,7 +123,8 @@ public class Tutorial : MonoBehaviour
 
             case Step.Note2:
                 RunTime();
-                ShowNote();
+                PlayerReposition();
+                ShowNote(1);
                 if (Input.anyKeyDown)
                 {
                     Judge(time, player.CurPos.x, player.CurPos.y);
@@ -149,7 +142,8 @@ public class Tutorial : MonoBehaviour
 
             case Step.Note3:
                 RunTime();
-                ShowNote();
+                PlayerReposition();
+                ShowNote(0.5f);
                 if (Input.anyKeyDown)
                 {
                     Judge(time, player.CurPos.x, player.CurPos.y);
@@ -167,7 +161,8 @@ public class Tutorial : MonoBehaviour
 
             case Step.Note4:
                 RunTime();
-                ShowNote();
+                PlayerReposition();
+                ShowNote(1);
                 if (Input.anyKeyDown)
                 {
                     Judge(time, player.CurPos.x, player.CurPos.y);
@@ -180,7 +175,36 @@ public class Tutorial : MonoBehaviour
                 }
 
                 break;
+
+            case Step.Synk:
+                userRange = connector.maingamedata.synk;
+                RunTime();
+                PlayerReposition();
+                ShowNote(1, transform);
+        
+                if (Input.anyKeyDown)
+                {
+                    Judge(time);
+                }
+                break;
+
+            case Step.Judge:
+                userRange = connector.maingamedata.judge;
+                RunTime();
+                PlayerReposition();
+                ShowNote(1, transform);
+                if (Input.anyKeyDown)
+                {
+                    Judge(time);
+                }
+                break;
+
         }
+    }
+
+    public void SetStep(int _step)
+    {
+        step = (Step)_step;
     }
 
     void CreateExplain()
@@ -188,14 +212,14 @@ public class Tutorial : MonoBehaviour
         explain.Add(0, new string[] { "안녕, 학교에 입학하기 전에 조작법에 대해 소개할게!",
                                       "먼저 키보드의 화살표 키를 누르면 상, 하, 좌, 우로 이동할 수 있어.",
                                       "한번 이동해볼래?"});
-        explain.Add(1, new string[] { "잘했어! 다음으로 '노트'를 보여줄게!",
+        explain.Add(1, new string[] { "잘했어! 다음으로 '노트'에 대해 알려줄게!",
                                       "'노트'는 우리가 맞춰야 할 리듬 박자에 해당하고, 박자에 맞춰 노트로 이동하면 연주할 수 있어.",
                                       "연주는 먼저 첫 노트 위치를 보여준 다음, 3초 카운트 후에 시작해.",
                                       "생성된 노트가 다 채워지고 노란색으로 바뀌는 타이밍에 노트로 이동하면 돼.",
                                       "한번 연주해볼래?"});
-        explain.Add(2, new string[] { "잘했어! 더 빠르게 이동 해 볼까?" });
-        explain.Add(3, new string[] { "잘했어! 이제 일정한 박자의 노트를 따라 이동해보자." });
-        explain.Add(4, new string[] { "잘했어! 이제 다양한 박자에 맞춰 노트를 따라 이동해보자." });
+        explain.Add(2, new string[] { "잘했어! 이제 일정한 박자의 노트를 따라 이동해보자." });
+        explain.Add(3, new string[] { "잘했어! 더 빠르게 이동 해 볼까?" });
+        explain.Add(4, new string[] { "잘했어! 이제 다양한 위치의 노트를 따라 이동해보자." });
         explain.Add(5, new string[] { "훌륭해! 이제 혼자서도 충분히 돌아다닐 수 있겠는걸?" ,
                                       "실제 연주할 때는 노트를 놓치거나 틀릴 때마다 생명 LIFE가 하나씩 줄어들어.",
                                       "LIFE가 0으로 줄어들면 즉시 게임 오버되니 조심해!",
@@ -380,22 +404,43 @@ public class Tutorial : MonoBehaviour
         tJudge.text = "";
     }
 
-    public void ShowNote()
+    public void ShowNote(float _time, Transform _parent)
     {
         // 튜토리얼 채보는 1초 이상으로만 구성할 것.
         if (noteIndex < chart.Length - 1 && time > chart[noteIndex][0] - 1)
         {
             if (chart[noteIndex][0] == 0) return;
-            if(step == Step.Note1) PlayerReposition();
+            if (step == Step.Note1) PlayerReposition();
             // 노트 생성
-            GameObject note1 = Instantiate(note);
-            note1.transform.position = new Vector3(chart[noteIndex][1], chart[noteIndex][2], 0);
+            GameObject note1 = Instantiate(note, _parent);
+            note1.transform.localPosition = Vector3.zero;
             noteIndex++;
 
             // 박자 소리 출력
-            Invoke("PlayBeat", 1f);
+            Invoke("PlayBeat", _time);
         }
     }
+    public void ShowNote(float _time, Vector3 _pos)
+    {
+        // 튜토리얼 채보는 1초 이상으로만 구성할 것.
+        if (noteIndex < chart.Length - 1 && time > chart[noteIndex][0] - 1)
+        {
+            if (chart[noteIndex][0] == 0) return;
+            if (step == Step.Note1) PlayerReposition();
+            // 노트 생성
+            GameObject note1 = Instantiate(note);
+            note1.transform.position = _pos;
+            noteIndex++;
+
+            // 박자 소리 출력
+            Invoke("PlayBeat", _time);  
+        }
+    }
+    public void ShowNote(float _time)
+    {
+        ShowNote(_time, new Vector3(chart[noteIndex][1], chart[noteIndex][2], 0));
+    }
+
     public void RunTime()
     {
         // 튜토리얼 시간
@@ -412,13 +457,6 @@ public class Tutorial : MonoBehaviour
             tJudge.text = "MISS";
             isNext = 0;
         }
-        if(chart[curNote][0] == 0)
-        {
-            noteIndex = 0;
-            curNote = 0;
-            time = 0;
-            PlayerReposition();
-        }
     }
 
     public void PlayBeat()
@@ -432,54 +470,69 @@ public class Tutorial : MonoBehaviour
         if (chart[curNote][0] == 0) return; // 채보 끝이면 리턴
         if (player.CurPos.x == chart[curNote][1] && player.CurPos.y == chart[curNote][2]) // 좌표 일치 확인
         {
-
-            // 판정시간 일치 확인
-            if (time < (chart[curNote][0] + perfectRange + userRange) && time > (chart[curNote][0] - perfectRange + userRange))  // PERFECT
-            {
-                curNote++;
-                isNext++;
-
-                // judge
-                tJudge.text = "PERFECT!";
-            }
-            else if (time < (chart[curNote][0] + goodRange + userRange) && time > (chart[curNote][0] - goodRange + userRange))   // GOOD
-            {
-                curNote++;
-                isNext++;
-
-                // judge
-                tJudge.text = "GOOD";
-            }
-            else if (time < (chart[curNote][0] + badRange + userRange) && time > (chart[curNote][0] - badRange + userRange))    // BAD
-            {
-                curNote++;
-
-                // judge
-                tJudge.text = "BAD";
-            }
-            else if (time < (chart[curNote][0] + missRange + userRange) && time > (chart[curNote][0] - missRange + userRange))  // MISS
-            {
-                curNote++;
-                isNext = 0;
-
-                // judge
-                tJudge.text = "MISS";
-            }
-            else
-            {
-                // 좌표는 일치하나 시간 범위에 맞지 않음
-                print("좌표만 일치");
-            }
+            Judge(_time);
         }
         else
         {
             print("좌표 불일치");
         }
     }
+    public void Judge(float _time)
+    {
+        // 판정시간 일치 확인
+        if (time < (chart[curNote][0] + perfectRange + userRange) && time > (chart[curNote][0] - perfectRange + userRange))  // PERFECT
+        {
+            curNote++;
+            isNext++;
+
+            // judge
+            tJudge.text = "PERFECT!";
+        }
+        else if (time < (chart[curNote][0] + goodRange + userRange) && time > (chart[curNote][0] - goodRange + userRange))   // GOOD
+        {
+            curNote++;
+            isNext++;
+
+            // judge
+            tJudge.text = "GOOD";
+        }
+        else if (time < (chart[curNote][0] + badRange + userRange) && time > (chart[curNote][0] - badRange + userRange))    // BAD
+        {
+            curNote++;
+
+            // judge
+            tJudge.text = "BAD";
+        }
+        else if (time < (chart[curNote][0] + missRange + userRange) && time > (chart[curNote][0] - missRange + userRange))  // MISS
+        {
+            curNote++;
+            isNext = 0;
+
+            // judge
+            tJudge.text = "MISS";
+        }
+        else
+        {
+            // 좌표는 일치하나 시간 범위에 맞지 않음
+            print("좌표만 일치");
+        }
+        if (tJudgeValue) tJudgeValue.text = ((time - (chart[curNote][0] + userRange)) * 100).ToString("00") + "ms";
+    }
 
     public void PlayerReposition()
     {
         // 시작 위치 조정
+        if (chart[curNote][0] != 0) return;
+        else if (chart[curNote][0] == 0 && noteIndex != 0 && curNote == noteIndex && time > 3)
+        {
+            noteIndex = 0;
+            curNote = 0;
+            time = 0;
+        }
+        else if (step == Step.Synk || step == Step.Judge)
+        {
+            return;
+        }
 
         Vector3 firstNote = new Vector3(
                 chart[0][1],
@@ -527,12 +580,11 @@ public class Tutorial : MonoBehaviour
     }
     public void ResetTotal()
     {
-        step = Step.Wait;
         time = 0;
         noteIndex = 0;
         curNote = 0;
         isNext = 0;
-        player.enabled = false;
+        if(player != null) player.enabled = false;
         CreateExplain();
     }
 }

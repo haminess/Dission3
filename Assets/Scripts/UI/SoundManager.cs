@@ -227,8 +227,8 @@ public class SoundManager : MonoBehaviour
     public void ConnectSoundManager()
     {
         // 현재 오디오소스 중지
-        bgm.Stop();
-        effect.Stop();
+        //bgm.Stop();
+        //effect.Stop();
 
         // 연결
         connector.FindManager();
@@ -236,8 +236,9 @@ public class SoundManager : MonoBehaviour
         effect = connector.soundMan.effect;
 
         // 연결 후 오디오소스 중지
-        bgm.Stop();
-        effect.Stop();
+        //bgm.Stop();
+        //effect.Stop();
+
     }
 
     public float GetBeatTime(int _bgm)
