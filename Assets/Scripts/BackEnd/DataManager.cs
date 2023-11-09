@@ -6,6 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms.Impl;
 using Unity.Burst.Intrinsics;
+using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour
 {
@@ -77,7 +78,7 @@ public class DataManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void LoadMainGameData()

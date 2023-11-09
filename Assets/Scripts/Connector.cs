@@ -43,14 +43,6 @@ public class Connector : MonoBehaviour
             soundMan = smobj.GetComponent<SoundManager>();
             print("사운드매니저로 연결되었습니다.");
         }
-
-        // 배경음악 멈춤
-        // 시작화면 배경음악
-        if(SceneManager.GetActiveScene().name != "TitleScene")
-        {
-            soundMan.bgm.Stop();
-        }
-        //soundMan.bgm.Play();
     }
 
     public void UpdateData()

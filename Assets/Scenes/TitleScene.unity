@@ -713,7 +713,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114721588
 MonoBehaviour:
@@ -1404,7 +1404,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &218752656
 GameObject:
@@ -1488,7 +1488,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &221668949
 GameObject:
@@ -1997,7 +1997,7 @@ Transform:
   - {fileID: 924340490}
   - {fileID: 760603426}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &305839933
 GameObject:
@@ -3776,7 +3776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7115696228671164030, guid: 16b65e121b44834409dbacbd0444cf71, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7115696228671164030, guid: 16b65e121b44834409dbacbd0444cf71, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5244,11 +5244,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 810063868}
   m_CullTransparentMesh: 1
---- !u!4 &831898586 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
-  m_PrefabInstance: {fileID: 8405086926924700020}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &831898587 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
@@ -8098,7 +8093,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10571,10 +10566,9 @@ Transform:
   m_LocalPosition: {x: -0.11490171, y: 0.63769174, z: 362.06747}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 831898586}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1351845223
 MonoBehaviour:
@@ -12068,7 +12062,7 @@ Transform:
   - {fileID: 232956976}
   - {fileID: 584385221}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1587712228
 GameObject:
@@ -17612,7 +17606,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1351845221}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4152625803934422686, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_PlayOnAwake
@@ -17624,19 +17618,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6553044
+      value: -0.7702061
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4026432
+      value: 0.23504853
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -361.92285
+      value: 0.1446228
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491694, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17674,6 +17668,10 @@ PrefabInstance:
       propertyPath: bgmslider
       value: 
       objectReference: {fileID: 1143904271}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: connector
+      value: 
+      objectReference: {fileID: 114721588}
     - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: effectslider
       value: 
