@@ -36,11 +36,6 @@ public class SoundManager : MonoBehaviour
 
     public void Start()
     {
-        // 컴포넌트 참조
-        AudioSource[] audioSources = GetComponentsInChildren<AudioSource>();
-        bgm = audioSources[0];
-        effect = audioSources[1];
-
         // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
 
@@ -49,7 +44,6 @@ public class SoundManager : MonoBehaviour
         effect.volume = sounddata.effect;
 
         // 설정창
-        GameObject settingui = GameObject.Find("SettingUI");
         bgmslider.value = bgm.volume;
         effectslider.value = effect.volume;
     }
@@ -58,6 +52,7 @@ public class SoundManager : MonoBehaviour
     {
 
     }
+
     public void SetBgm(int _num)
     {
         bgmId = _num;

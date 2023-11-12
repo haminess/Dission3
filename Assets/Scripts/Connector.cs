@@ -19,7 +19,7 @@ public class Connector : MonoBehaviour
         UpdateData();
 
         // 씬 내부 매니저 연결
-        FindManager();
+        //FindManager();
     }
 
     public void FindManager()
