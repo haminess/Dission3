@@ -41,9 +41,6 @@ public class SoundManager : MonoBehaviour
         bgm = audioSources[0];
         effect = audioSources[1];
 
-        if (gameObject.name != "SoundManager")
-            return;
-
         // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
 
@@ -53,16 +50,13 @@ public class SoundManager : MonoBehaviour
 
         // 설정창
         GameObject settingui = GameObject.Find("SettingUI");
-        Slider[] slider = settingui.GetComponentsInChildren<Slider>();
-        bgmslider = slider[0];
-        effectslider = slider[1];
         bgmslider.value = bgm.volume;
         effectslider.value = effect.volume;
     }
 
     private void Update()
     {
-        //PlayMetronome();
+
     }
     public void SetBgm(int _num)
     {
@@ -118,38 +112,15 @@ public class SoundManager : MonoBehaviour
 
     public void PlayEffect()
     {
-        if(GameObject.Find("SoundManager"))
-        {
-            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-            soundMan.effect.Play();
-            return;
-        }
-
         effect.Play();
     }
     public void PlayEffect(int _num)
     {
-        if (GameObject.Find("SoundManager"))
-        {
-            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-            soundMan.SetEffect(_num);
-            soundMan.effect.Play();
-            return;
-        }
-
         SetEffect(_num);
         effect.Play();
     }
     public void PlayEffect(AudioClip _clip)
     {
-        if (GameObject.Find("SoundManager"))
-        {
-            SoundManager soundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-            soundMan.SetEffect(_clip);
-            soundMan.effect.Play();
-            return;
-        }
-
         SetEffect(_clip);
         effect.Play();
     }
@@ -267,5 +238,17 @@ public class SoundManager : MonoBehaviour
         metro.MakeBeat();
         metro.PlayBeat();
         metro.isMetroPlaying = true;
+    }
+
+    public void StopBGM()
+    {
+        if (bgm.isPlaying)
+        {
+            bgm.Stop();
+        }
+        else
+        {
+            bgm.Play();
+        }
     }
 }

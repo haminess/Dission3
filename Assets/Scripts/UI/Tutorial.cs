@@ -29,7 +29,8 @@ public class Tutorial : MonoBehaviour
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
     public float missRange = 0.5f;
-    public float userRange = 0f;
+    public float synkRange = 0f;
+    public float judgeRange = 0f;
 
 
     // tutorial 조건 달성
@@ -177,36 +178,35 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case Step.Synk:
-                userRange = connector.maingamedata.synk;
+                synkRange = connector.maingamedata.synk;
+                judgeRange = connector.maingamedata.judge;
                 RunTime();
                 PlayerReposition();
-                ShowNote(1, transform);
+                ShowNote(1 + synkRange, transform);
         
                 if (Input.anyKeyDown)
                 {
                     connector.UpdateData();
-                    Judge(time);
+                    Judge(time + judgeRange);
                 }
                 break;
-
-            case Step.Judge:
-                userRange = connector.maingamedata.judge;
-                RunTime();
-                PlayerReposition();
-                ShowNote(1, transform);
-                if (Input.anyKeyDown)
-                {
-                    connector.UpdateData();
-                    Judge(time);
-                }
-                break;
-
         }
     }
 
     public void SetStep(int _step)
     {
-        step = (Step)_step;
+        if(step == (Step)_step)
+        {
+            step = Step.Wait;
+        }
+        else
+        {
+            step = (Step)_step;
+        }
+    }
+    public void SetStep(Step _step)
+    {
+        step = _step;
     }
 
     void CreateExplain()
@@ -451,7 +451,7 @@ public class Tutorial : MonoBehaviour
 
         // miss 처리
         if (chart[curNote][0] != 0 &&
-            time > (chart[curNote][0] + badRange + userRange))
+            time > (chart[curNote][0] + badRange + judgeRange))
         {
             curNote++;
 
@@ -481,9 +481,9 @@ public class Tutorial : MonoBehaviour
     }
     public void Judge(float _time)
     {
-        if (tJudgeValue) tJudgeValue.text = ((time - (chart[curNote][0] + userRange)) * 1000).ToString("0") + "ms";
+        if (tJudgeValue) tJudgeValue.text = ((time - (chart[curNote][0] + judgeRange)) * 1000).ToString("0") + "ms";
         // 판정시간 일치 확인
-        if (time < (chart[curNote][0] + perfectRange + userRange) && time > (chart[curNote][0] - perfectRange + userRange))  // PERFECT
+        if (time < (chart[curNote][0] + perfectRange + judgeRange) && time > (chart[curNote][0] - perfectRange + judgeRange))  // PERFECT
         {
             curNote++;
             isNext++;
@@ -491,7 +491,7 @@ public class Tutorial : MonoBehaviour
             // judge
             tJudge.text = "PERFECT!";
         }
-        else if (time < (chart[curNote][0] + goodRange + userRange) && time > (chart[curNote][0] - goodRange + userRange))   // GOOD
+        else if (time < (chart[curNote][0] + goodRange + judgeRange) && time > (chart[curNote][0] - goodRange + judgeRange))   // GOOD
         {
             curNote++;
             isNext++;
@@ -499,14 +499,14 @@ public class Tutorial : MonoBehaviour
             // judge
             tJudge.text = "GOOD";
         }
-        else if (time < (chart[curNote][0] + badRange + userRange) && time > (chart[curNote][0] - badRange + userRange))    // BAD
+        else if (time < (chart[curNote][0] + badRange + judgeRange) && time > (chart[curNote][0] - badRange + judgeRange))    // BAD
         {
             curNote++;
 
             // judge
             tJudge.text = "BAD";
         }
-        else if (time < (chart[curNote][0] + missRange + userRange) && time > (chart[curNote][0] - missRange + userRange))  // MISS
+        else if (time < (chart[curNote][0] + missRange + judgeRange) && time > (chart[curNote][0] - missRange + judgeRange))  // MISS
         {
             curNote++;
             isNext = 0;
