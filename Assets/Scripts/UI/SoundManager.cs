@@ -44,8 +44,11 @@ public class SoundManager : MonoBehaviour
         effect.volume = sounddata.effect;
 
         // ¼³Á¤Ã¢
-        bgmslider.value = bgm.volume;
-        effectslider.value = effect.volume;
+        if (bgmslider)
+        {
+            bgmslider.value = bgm.volume;
+            effectslider.value = effect.volume;
+        }
     }
 
     private void Update()
