@@ -239,7 +239,7 @@ public class Tutorial : MonoBehaviour
         for (int i = 0; i < explain[_id].Length; i++)
         {
             tExplain.text = explain[_id][i];
-            yield return new WaitForSeconds(4);
+            yield return new WaitForSeconds(3.5f);
         }
         tExplain.text = "";
     }

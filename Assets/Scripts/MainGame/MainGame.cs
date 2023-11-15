@@ -635,8 +635,6 @@ public class MainGame : MonoBehaviour
 
     public void GetMainData()
     {
-
-
         // 채보 불러오기
 
         // 임시 채보, 추후 삭제
