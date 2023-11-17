@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
     public SpriteRenderer sprite;
     Animator animator;
     public SoundManager soundMan;
-    AudioSource bgm;
-    AudioSource effect;
+    public AudioSource bgm;
+    public AudioSource effect;
 
     // 오브젝트 참조
     public GameObject settingUI;
@@ -35,14 +35,8 @@ public class Player : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
 
-
-        if (GameObject.Find("SoundManager"))
-        {
-            GameObject total = GameObject.Find("SoundManager");
-            soundMan = total.GetComponent<SoundManager>();
-            bgm = soundMan.bgm;
-            effect = soundMan.effect;
-        }
+        bgm = MainGame.instance.bgm;
+        effect = MainGame.instance.effect;
 
 
         // 메인게임 아닐 때 리턴
@@ -152,6 +146,8 @@ public class Player : MonoBehaviour
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
+            print(bgm.time);
+            print(CurPos.x);
             if (MainGame.instance.isGame)
                 MainGame.instance.Judge(bgm.time, CurPos.x, CurPos.y);
         }

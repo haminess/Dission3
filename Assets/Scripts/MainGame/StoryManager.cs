@@ -247,15 +247,29 @@ public class StoryManager : MonoBehaviour
     // Ω∫≈‰∏Æ Ω∫≈µ
     public void Skip()
     {
+        StopAllCoroutines();
+        StartCoroutine(SkipCo());
+    }
+
+    public IEnumerator SkipCo()
+    {
+        yield return StartCoroutine(Fade(black));
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
-
-        StopAllCoroutines();
-
         player.SetActive(true);
         player.GetComponent<Player>().enabled = true;
         player.GetComponentInChildren<SpriteRenderer>().enabled = true;
+        yield return StartCoroutine(Fade(black, false));
 
+
+        if (!MainGame.instance.isEnd)
+        {
+            MainGame.instance.GameStart();
+        }
+        else
+        {
+            MainGame.instance.GameEnd();
+        }
     }
 
 
