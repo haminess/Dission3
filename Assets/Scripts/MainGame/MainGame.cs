@@ -297,19 +297,15 @@ public class MainGame : MonoBehaviour
         bgm.Stop();
     }
 
-    // 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占?
-    // 占쏙옙占쏙옙 占쏙옙占쏙옙
+    // life 0돼서 게임 오버됐을 때
     public void GameOver()
     {
-        StartCoroutine(GameEndCo());
-
+        StartCoroutine(GameOverCo());
     }
     IEnumerator GameOverCo()
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
         yield return StartCoroutine(GameEndCo());
 
-        // 占쏙옙占?화占쏙옙 占쏙옙환
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
@@ -317,7 +313,6 @@ public class MainGame : MonoBehaviour
     public void StageEnd()
     {
         StartCoroutine(StageEndCo());
-
     }
     IEnumerator StageEndCo()
     {
@@ -326,14 +321,14 @@ public class MainGame : MonoBehaviour
 
         // 占쏙옙占쏙옙 占쏙옙占썰리 占쏙옙占?
         yield return new WaitForSeconds(1);
-        storyManager.storyID = stageNum - 1;
+        storyManager.sID = stageNum - 1;
         if(collection > 3)
         {
-            storyManager.storyID += 1;
+            storyManager.sID += 1;
         }
         else
         {
-            storyManager.storyID += 2;
+            storyManager.sID += 2;
         }
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
@@ -640,13 +635,13 @@ public class MainGame : MonoBehaviour
         // 임시 채보, 추후 삭제
         {
             chart = new float[236][];
-            chart[0] = new float[3] { 1, 7, -27 };
-            chart[1] = new float[3] { 1.770f, 8, -27 };
+            chart[0] = new float[3] { 1, 7, -28 };
+            chart[1] = new float[3] { 1.770f, 8, -28 };
             chart[2] = new float[3] { 2.474f, 9, -27 };
             chart[3] = new float[3] { 3.029f, 10, -27 };
             chart[4] = new float[3] { 3.690f, 11, -27 };
             chart[5] = new float[3] { 5.696f, 12, -27 };
-            chart[6] = new float[3] { 6.464f, 12, -28 };
+            chart[6] = new float[3] { 6.464f, 12, -27 };
             chart[7] = new float[3] { 6.997f, 13, -28 };
             chart[8] = new float[3] { 7.744f, 14, -28 };
             chart[9] = new float[3] { 8.085f, 14, -27 };

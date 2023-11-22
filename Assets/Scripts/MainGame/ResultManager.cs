@@ -65,27 +65,6 @@ public class ResultManager : MonoBehaviour
             // 결과 화면 출력(왼쪽)
             ShowResult();
 
-            // (오른쪽)
-            if (GameObject.Find("rightpanel"))
-            {
-                Animator right = GameObject.Find("rightpanel").GetComponent<Animator>();
-
-                string animName = StageNum.ToString() + "_";
-
-                if (collection > 2)
-                {
-                    soundmanager.SetEffect(3);
-                    soundmanager.PlayEffect();
-                    animName += "happy";
-                }
-                else
-                {
-                    soundmanager.SetEffect(4);
-                    soundmanager.PlayEffect();
-                    animName += "sad";
-                }
-                right.Play(animName);
-            }
 
             // 로컬 데이터 저장
             SaveResult();
@@ -140,6 +119,7 @@ public class ResultManager : MonoBehaviour
 
     public void ShowResult()
     {
+        // 왼쪽 패널 결과
         GameObject canvas = GameObject.Find("Canvas");
         GameObject collectPanel = canvas.transform.GetChild(1).gameObject;
         GameObject scorePanel = canvas.transform.GetChild(2).gameObject;
@@ -148,21 +128,29 @@ public class ResultManager : MonoBehaviour
         TextMeshProUGUI[] contents = scorePanel.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>();
 
         string rank = "";
-        if (score > 10000)
+        if (miss == 0)
+        {
+            rank = "SSS";
+        }
+        else if (miss < 2)
         {
             rank = "SS";
         }
-        else if (score > 5000)
+        else if (miss < 5)
         {
             rank = "S";
         }
-        else if (score > 1000)
+        else if (miss < 10)
         {
             rank = "A";
         }
-        else if (score > 100)
+        else if (miss < 30)
         {
             rank = "B";
+        }
+        else if (miss < 50)
+        {
+            rank = "C";
         }
         else
         {
@@ -200,5 +188,28 @@ public class ResultManager : MonoBehaviour
 
         Destroy(contents[2].gameObject);
         collectPanel.SetActive(false);
+
+
+        // 오른쪽 패널 결과
+        if (GameObject.Find("rightpanel"))
+        {
+            Animator right = GameObject.Find("rightpanel").GetComponent<Animator>();
+
+            string animName = StageNum.ToString() + "_";
+
+            if (miss < 10)
+            {
+                soundmanager.SetEffect(3);
+                soundmanager.PlayEffect();
+                animName += "happy";
+            }
+            else
+            {
+                soundmanager.SetEffect(4);
+                soundmanager.PlayEffect();
+                animName += "sad";
+            }
+            right.Play(animName);
+        }
     }
 }

@@ -79,5 +79,6 @@ public class Guide : MonoBehaviour
         anim.Play("ExplainDown");
         yield return new WaitForSeconds(anim.GetClip("ExplainDown").length);
         count = 0;
+        Destroy(gameObject);
     }
 }
