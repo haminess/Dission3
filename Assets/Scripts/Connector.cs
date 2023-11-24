@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 public class Connector : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class Connector : MonoBehaviour
         UpdateData();
 
         // 씬 내부 매니저 연결
-        FindManager();
+        //FindManager();
     }
 
     public void FindManager()
@@ -42,9 +43,6 @@ public class Connector : MonoBehaviour
             soundMan = smobj.GetComponent<SoundManager>();
             print("사운드매니저로 연결되었습니다.");
         }
-
-        // 배경음악 멈춤
-        soundMan.bgm.Stop();
     }
 
     public void UpdateData()
@@ -56,6 +54,23 @@ public class Connector : MonoBehaviour
     {
         DataManager.Instance.SaveMainGameData();
         DataManager.Instance.SaveSoundData();
+    }
+
+    public float GetSynk()
+    {
+        return maingamedata.synk;
+    }
+    public float GetJudge()
+    {
+        return maingamedata.judge;
+    }
+    public float GetBGMVol()
+    {
+        return sounddata.bgm;
+    }
+    public float GetEffectVol()
+    {
+        return sounddata.effect;
     }
 
     public void SetSynk(float _synk)
@@ -83,26 +98,24 @@ public class Connector : MonoBehaviour
     }
     public void ShowValue(TextMeshProUGUI _text)
     {
-        UpdateData();
         switch(_text.name)
         {
             case "bgm":
-                _text.text = (sounddata.bgm * 100).ToString("0");
+                _text.text = (sounddata.bgm * 1000).ToString("0");
                 break;
             case "effect":
-                _text.text = (sounddata.effect * 100).ToString("0");
+                _text.text = (sounddata.effect * 1000).ToString("0");
                 break;
             case "synk":
-                _text.text = (maingamedata.synk * 100).ToString("0") + " ms";
+                _text.text = (maingamedata.synk * 1000).ToString("0") + " ms";
                 break;
             case "judge":
-                _text.text = (maingamedata.judge * 100).ToString("0") + " ms";
+                _text.text = (maingamedata.judge * 1000).ToString("0") + " ms";
                 break;
         }
     }
     public void ShowValue(Slider _slider)
     {
-        UpdateData();
         switch (_slider.name)
         {
             case "bgmslider":
@@ -121,11 +134,11 @@ public class Connector : MonoBehaviour
     }
     public void AddValue01(Slider _slider)
     {
-        _slider.value += 0.01f;
+        _slider.value += 0.001f;
     }
     public void SubValue01(Slider _slider)
     {
-        _slider.value -= 0.01f;
+        _slider.value -= 0.001f;
     }
     public void AddValue1(Slider _slider)
     {

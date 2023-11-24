@@ -2700,12 +2700,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tJudge: {fileID: 3062581098142598519}
+  tJudgeValue: {fileID: 0}
   tExplain: {fileID: 1134450249}
+  guidePrefab: {fileID: 8503126124538823111, guid: 99bc34a7aae95314c98fbbc9c0aec106, type: 3}
+  canvas: {fileID: 1758764747}
   player: {fileID: 3062581097621141816}
   bgm: {fileID: 140140765}
   metronome: {fileID: 579837650}
   note: {fileID: 8050529851532700380, guid: 9207586f028f08a4e93d3605a4a64292, type: 3}
   preNote: {fileID: 2464535124320205488, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
+  connector: {fileID: 0}
   time: 0
   noteIndex: 0
   curNote: 0
@@ -2713,7 +2717,8 @@ MonoBehaviour:
   goodRange: 0.1
   badRange: 0.2
   missRange: 0.5
-  userRange: 0
+  synkRange: 0
+  judgeRange: 0
   isNext: 0
   step: 0
 --- !u!4 &361523108
@@ -3105,7 +3110,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC548\uB155\uD558\uC138\uC694"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: df54484d5bd820d46a2ccf68f392c090, type: 2}
   m_sharedMaterial: {fileID: -1364451527433821539, guid: df54484d5bd820d46a2ccf68f392c090, type: 2}
@@ -5516,7 +5521,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3062581097621141813}
-  - component: {fileID: 3062581097621141814}
   - component: {fileID: 3062581097621141808}
   - component: {fileID: 3062581097621141815}
   - component: {fileID: 3062581097621141816}
@@ -5566,27 +5570,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3062581097621141814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3062581097621141803}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d269b142c79d34e4bad6068f95cbfa01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
-  soundMan: {fileID: 0}
-  settingUI: {fileID: 0}
-  CurPos: {x: 0, y: 0, z: 0}
-  moveDistance: 1
-  Movable: 1
-  Settable: 0
-  speed: 0.2
-  setTime: 10
 --- !u!58 &3062581097621141815
 CircleCollider2D:
   m_ObjectHideFlags: 0

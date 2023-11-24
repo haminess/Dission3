@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
     public SpriteRenderer sprite;
     Animator animator;
     public SoundManager soundMan;
-    AudioSource bgm;
-    AudioSource effect;
+    public AudioSource bgm;
+    public AudioSource effect;
 
     // 오브젝트 참조
     public GameObject settingUI;
@@ -34,14 +34,10 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-
-
-        if (GameObject.Find("SoundManager"))
+        if (MainGame.instance)
         {
-            GameObject total = GameObject.Find("SoundManager");
-            soundMan = total.GetComponent<SoundManager>();
-            bgm = soundMan.bgm;
-            effect = soundMan.effect;
+            bgm = MainGame.instance.bgm;
+            effect = MainGame.instance.effect;
         }
 
 
@@ -92,14 +88,6 @@ public class Player : MonoBehaviour
         {
             OnSetting();
         }
-
-
-        //// 채보 찍는 용도 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    print(MainGame.instance.bgm.time);
-        //}
-
     }
 
     public void Move()

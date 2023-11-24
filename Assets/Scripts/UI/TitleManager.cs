@@ -30,6 +30,8 @@ public class TitleManager : MonoBehaviour
 
         arrow = GameObject.Find("Arrow");
         arrow.transform.position = TitleButton[0].transform.position;
+
+        soundmanager.bgm.Play();
     }
 
     // Update is called once per frame
@@ -82,7 +84,6 @@ public class TitleManager : MonoBehaviour
                 break;
             case 3:
                 // synk mode
-                SynkControl();
                 break;
             case 4:
                 GameObject.Find("CharacterManager").GetComponent<CharacterManager_SJY>().CharacterControl();
@@ -117,19 +118,6 @@ public class TitleManager : MonoBehaviour
         // �̿ϼ�
         // arrowpoint ���� ����ǰ� �ϱ�
         arrow.transform.position = _button.transform.position;
-    }
-
-    public void SynkControl()
-    {
-        if(Input.anyKey)
-        {
-            
-        }
-    }
-
-    public void ShowSynkNote()
-    {
-
     }
 
 }

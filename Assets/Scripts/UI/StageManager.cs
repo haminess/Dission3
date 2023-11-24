@@ -39,66 +39,26 @@ public class StageManager : MonoBehaviour
         stageInfo = GameObject.Find("StagePanel").GetComponentsInChildren<TextMeshProUGUI>();
 
         // 초기값 세팅
-        curStage = 2;
+        //curStage = 2;
 
-        // 데이터 불러오기
-        if (GameObject.Find("Data"))
-        {
-            find = true;
-            data = GameObject.Find("Data").GetComponent<DataManager>();
-        }
-
-        if(GameObject.Find("SoundManager"))
-        {
-            GameObject total = GameObject.Find("SoundManager");
-            soundMan = total.GetComponent<SoundManager>();
-            this.bgm = soundMan.bgm;
-            this.effect = soundMan.effect;
-        }
-
-        // 로컬 데이터 불러오기
-        DataManager.Instance.LoadSoundData();
-        bgm.volume = sounddata.bgm;
-
-        DataManager.Instance.LoadMainGameData();
-        for(int i = 0; i < maingamedata.score.Length; i++)
-        {
-
-            stageScore[i] = maingamedata.score[i];
-        }
 
         isUnlock[0] = true;
+
+        ConnectData();
 
         // 해금기능
         SetStageLock();
 
-        isUnlock[1] = false;
-        isUnlock[2] = false;
-        isUnlock[3] = false;
         ShowStage();
 
-    }
-    void Awake()
-    {
-        // 씬 매니저의 sceneLoaded에 체인을 건다.
-        //SceneManager.sceneLoaded += OnStageLoaded;
-    }
-
-    void OnStageLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // 체인을 걸어서 이 함수는 매 씬마다 호출된다.
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        SetStage(2);
     }
 
     public void SetStage(int _stage)
     {
         curStage = _stage;
+        if(data)
+            data.stageNum = _stage;
     }
     public void SetHighLight(float _highlight)
     {
@@ -189,19 +149,21 @@ public class StageManager : MonoBehaviour
     
     public void SetStageLock()
     {
+        isUnlock[0] = true;
         // 스테이지 기록에 따라 해금 기능 구현
-        for (int i = 1; i < stageScore.Length; i++)
+        for (int i = 0; i < stageScore.Length; i++)
         {
-
-            if (stageScore[i] > 1000)
+            if (stageScore[i] > 10000)
             {
-                isUnlock[i] = true;
-            }
-            else
-            {
-                isUnlock[i] = false;
+                isUnlock[i + 1] = true;
             }
         }
+
+        // 임시로 해제 해 놓기
+        isUnlock[1] = true;
+        isUnlock[2] = true;
+        isUnlock[3] = true;
+        isUnlock[4] = true;
     }
 
     public void LockPlayButton()
@@ -212,18 +174,37 @@ public class StageManager : MonoBehaviour
         if (isUnlock[curStage - 1])
         {
             stage[curStage - 1].GetComponent<Button>().enabled = true;
-            playButton.GetComponent<Button>().enabled = true;
-            playButton.GetComponent<Image>().color = Color.white;
+            playButton.GetComponent<Button>().interactable = true;
+            //playButton.GetComponent<Image>().color = Color.white;
             playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
-            playButton.GetComponentInChildren<TextMeshProUGUI>().fontSize = 24;
         }
         else
         {
             stage[curStage - 1].GetComponent<Button>().enabled = false;
-            playButton.GetComponent<Button>().enabled = false;
-            playButton.GetComponent<Image>().color = Color.gray;
-            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Coming Soon..";
-            playButton.GetComponentInChildren<TextMeshProUGUI>().fontSize = 16;
+            playButton.GetComponent<Button>().interactable = false;
+            //playButton.GetComponent<Image>().color = Color.gray;
+            playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
+        }
+    }
+
+    public void ConnectData()
+    {
+        // 데이터 불러오기
+        if (GameObject.Find("Data"))
+        {
+            find = true;
+            data = GameObject.Find("Data").GetComponent<DataManager>();
+        }
+
+        // 로컬 데이터 불러오기
+        DataManager.Instance.LoadSoundData();
+        bgm.volume = sounddata.bgm;
+
+        DataManager.Instance.LoadMainGameData();
+        for (int i = 0; i < maingamedata.score.Length; i++)
+        {
+            stageScore[i] = maingamedata.score[i];
+            print(maingamedata.score[i] + "점수");
         }
     }
 
