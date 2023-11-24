@@ -1,27 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using System.IO;
-using UnityEngine.Playables;
-using UnityEngine.UI;
-using UnityEngine.SocialPlatforms.Impl;
-using Unity.Burst.Intrinsics;
+using System;
+using TMPro;
+using System.Linq;
 
 public class DataManager : MonoBehaviour
 {
     static GameObject container;
 
-    //½Ì±ÛÅæÀ¸·Î ¼±¾ð
+    //ï¿½Ì±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     static DataManager instance;
 
-    // °ÔÀÓ ÁøÇàÁß dontdestroy Á¤º¸
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ dontdestroy ï¿½ï¿½ï¿½ï¿½
     public int characterNum;
     public int stageNum;
     public int difficulty;
 
-    //ÀúÀå¿ë Å¬·¡½º º¯¼ö
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public MainGameData maingamedata = new MainGameData();
     public SoundData sounddata = new SoundData();
+    public EditorData editordata = new EditorData();
 
     public static DataManager Instance
     {
@@ -43,10 +42,12 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    //ÆÄÀÏ ÀÌ¸§ ¼³Á¤
-    string MainGameDataFileName = "MainGameData.json"; //Áö±ÝÀº ÁöÁ¤ÀÎµ¥ Ã¤º¸ ¿Ã¸®°Å³ª ÇÒ ¶© »ç¿ëÀÚ°¡ ÀÔ·ÂÇÒ ¼ö ÀÖ°Ô
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+    string MainGameDataFileName = "MainGameData.json"; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½ Ã¤ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½
     string SoundDataFileName = "SoundData.json";
+    string EditorDataFileName = "EditorData.json";
 
+    public string[] editorfilelist;
 
     private void Awake()
     {
@@ -60,12 +61,13 @@ public class DataManager : MonoBehaviour
         }
         maingamedata = new MainGameData();
         sounddata = new SoundData();
+        editordata = new EditorData();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        // Á¤º¸ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         characterNum = 0;
         stageNum = 1;
         difficulty = 0;
@@ -87,29 +89,29 @@ public class DataManager : MonoBehaviour
 
         if(File.Exists(filePath))
         {
-            //ºÒ·¯¿À±â
+            //ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
             string FromJsonData = File.ReadAllText(filePath);
             maingamedata = JsonUtility.FromJson<MainGameData>(FromJsonData);
-            Debug.Log("LoadMainGameData() ½ÇÇà"); //(È®ÀÎ¿ë)
-            print("·ÎÄÃ ½ÌÅ© " + maingamedata.synk + "ÆÇÁ¤" + maingamedata.judge);
+            Debug.Log("LoadMainGameData() ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
+            print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å© " + maingamedata.synk + "ï¿½ï¿½ï¿½ï¿½" + maingamedata.judge);
 
             if (maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
             {
-                // µ¥ÀÌÅÍ °ª Á¤»óÀÌ¸é ¸®ÅÏ
-                print("ÀúÀåµÈ ÆÄÀÏ Á¤»ó ·Îµå");
-                print("ÆÄÀÏ Á¡¼ö 1: " + maingamedata.score[0] + "2: " + maingamedata.score[1] + "3: " + maingamedata.score[2] + "4: " + maingamedata.score[3]);
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+                print("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½");
+                print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 1: " + maingamedata.score[0] + "2: " + maingamedata.score[1] + "3: " + maingamedata.score[2] + "4: " + maingamedata.score[3]);
 
-                print("·ÎÄÃ ½ÌÅ© " + maingamedata.synk + "ÆÇÁ¤" + maingamedata.judge);
+                print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å© " + maingamedata.synk + "ï¿½ï¿½ï¿½ï¿½" + maingamedata.judge);
                 return;
             }
 
         }
 
-        print("·Îµå ÃÊ±âÈ­");
-        // ±â¸ó°ª ÃÊ±âÈ­ ÄÚµå
-        maingamedata = new MainGameData(); // ¶Ç´Â ´Ù¸¥ ÃÊ±â°ªÀ¸·Î ¼³Á¤ÇÒ ¼ö ÀÖÀ½
+        print("ï¿½Îµï¿½ ï¿½Ê±ï¿½È­");
+        // ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Úµï¿½
+        maingamedata = new MainGameData(); // ï¿½Ç´ï¿½ ï¿½Ù¸ï¿½ ï¿½Ê±â°ªï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // ÃÊ±âÈ­
+        // ï¿½Ê±ï¿½È­
         for (int i = 0; i < 4; i++)
         {
             maingamedata.stageNum[i] = i + 1;
@@ -124,7 +126,7 @@ public class DataManager : MonoBehaviour
 
         SaveMainGameData();
 
-        Debug.Log("LoadMainGameData().else ÃÊ±âÈ­ ½ÇÇà"); //(È®ÀÎ¿ë)
+        Debug.Log("LoadMainGameData().else ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
     }
 
     public void LoadSoundData()
@@ -134,14 +136,14 @@ public class DataManager : MonoBehaviour
 
         if (File.Exists(filePath))
         {
-            //ºÒ·¯¿À±â
+            //ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
             string FromJsonData = File.ReadAllText(filePath);
             sounddata = JsonUtility.FromJson<SoundData>(FromJsonData);
-            Debug.Log("LoadSoundData() ½ÇÇà"); //(È®ÀÎ¿ë)
+            Debug.Log("LoadSoundData() ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
         }
         else
         {
-            //±âº»°ª ÃÊ±âÈ­ ÄÚµå
+            //ï¿½âº»ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Úµï¿½
             sounddata = new SoundData();
 
             sounddata.bgm = 1;
@@ -149,53 +151,184 @@ public class DataManager : MonoBehaviour
 
             SaveSoundData();       
 
-            Debug.Log("LoadSoundData().else ÃÊ±âÈ­ ½ÇÇà"); //(È®ÀÎ¿ë)
+            Debug.Log("LoadSoundData().else ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
         }
 
-        //Debug.Log(sounddata.bgm); //(È®ÀÎ¿ë)
-        //Debug.Log(sounddata.effect); //(È®ÀÎ¿ë)
+        //Debug.Log(sounddata.bgm); //(È®ï¿½Î¿ï¿½)
+        //Debug.Log(sounddata.effect); //(È®ï¿½Î¿ï¿½)
         if (sounddata != null)
         {
-            //Debug.Log(sounddata.bgm); //(È®ÀÎ¿ë)
-            //Debug.Log(sounddata.effect); //(È®ÀÎ¿ë)
+            //Debug.Log(sounddata.bgm); //(È®ï¿½Î¿ï¿½)
+            //Debug.Log(sounddata.effect); //(È®ï¿½Î¿ï¿½)
         }
     }
 
+    public void LoadEditorData(string i)
+    {
+        //Load
+        string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
+
+        if (File.Exists(filePath))
+        {
+            Makemadi.instance.audio_.resetmusic();
+            //ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+            string FromJsonData = File.ReadAllText(filePath);
+            editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
+
+            Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
+            Array.Resize(ref Makemadi.instance.note.noteorder, editordata.noteorder.Length);
+            Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
+            Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
+            Array.Resize(ref Makemadi.instance.note.notegroup, editordata.notegroup.Length);
+            Array.Resize(ref Makemadi.instance.note.notetype, editordata.notetype.Length);
+
+            for (int a = 0; a < editordata.notedata.Length; a++)
+            {
+                Makemadi.instance.note.notedata[a] = editordata.notedata[a];
+            }
+            for (int a = 0; a < editordata.noteorder.Length; a++)
+            {
+                Makemadi.instance.note.noteorder[a] = editordata.noteorder[a];
+            }
+            for (int a = 0; a < editordata.boxpos.Length; a++)
+            {
+                Maketile.instance.boxpos[a] = editordata.boxpos[a];
+            }
+            for (int a = 0; a < editordata.notepos.Length; a++)
+            {
+                Makemadi.instance.note.notepos[a] = editordata.notepos[a];
+            }
+            for (int a = 0; a < editordata.notegroup.Length; a++)
+            {
+                Makemadi.instance.note.notegroup[a] = editordata.notegroup[a];
+            }
+            for (int a = 0; a < editordata.notetype.Length; a++)
+            {
+                Makemadi.instance.note.notetype[a] = editordata.notetype[a];
+            }
+
+
+            Maketile.instance.boxposload();
+            Makemadi.instance.Loadinfo();
+        }
+    }
+
+
     public void SaveMainGameData()
     {
-        print("ÀúÀåÇÏ±â " + maingamedata.synk);
+        print("ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ " + maingamedata.synk);
 
-        //Å¬·¡½º->Json ÀüÈ¯
+        //Å¬ï¿½ï¿½ï¿½ï¿½->Json ï¿½ï¿½È¯
         string ToJsonData = JsonUtility.ToJson(maingamedata, true);
         string filePath = Application.persistentDataPath+ "/" + MainGameDataFileName;
-        Debug.Log(Application.persistentDataPath); //ÀúÀå À§Ä¡ Ãâ·Â (È®ÀÎ¿ë)
+        Debug.Log(Application.persistentDataPath); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ (È®ï¿½Î¿ï¿½)
 
         //Write
         File.WriteAllText(filePath, ToJsonData);
 
-        Debug.Log("SaveMainGameData() ½ÇÇà"); //(È®ÀÎ¿ë)
+        Debug.Log("SaveMainGameData() ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
 
-        //Debug.Log(maingamedata.stageNum); //(È®ÀÎ¿ë)
+        //Debug.Log(maingamedata.stageNum); //(È®ï¿½Î¿ï¿½)
 
-        print("ÀúÀåÇÏ±â " + maingamedata.synk);
+        print("ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ " + maingamedata.synk);
     }
 
     public void SaveSoundData()
     {
-        //Å¬·¡½º->Json ÀüÈ¯
+        //Å¬ï¿½ï¿½ï¿½ï¿½->Json ï¿½ï¿½È¯
         string ToJsonData = JsonUtility.ToJson(sounddata, true);
         string filePath = Application.persistentDataPath + "/" + SoundDataFileName;
-        Debug.Log(Application.persistentDataPath); //ÀúÀå À§Ä¡ Ãâ·Â (È®ÀÎ¿ë)
+        Debug.Log(Application.persistentDataPath); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ (È®ï¿½Î¿ï¿½)
 
         //Write
         File.WriteAllText(filePath, ToJsonData);
 
-        Debug.Log("SaveSoundData() ½ÇÇà"); //(È®ÀÎ¿ë)
+        Debug.Log("SaveSoundData() ï¿½ï¿½ï¿½ï¿½"); //(È®ï¿½Î¿ï¿½)
 
         if (sounddata != null)
         {
-            //Debug.Log(sounddata.bgm); //(È®ÀÎ¿ë)
-            //Debug.Log(sounddata.effect); //(È®ÀÎ¿ë)
+            //Debug.Log(sounddata.bgm); //(È®ï¿½Î¿ï¿½)
+            //Debug.Log(sounddata.effect); //(È®ï¿½Î¿ï¿½)
         }
+    }
+
+    public void SaveEditorData()
+    {
+        //Å¬ï¿½ï¿½ï¿½ï¿½->Json ï¿½ï¿½È¯
+        string ToJsonData = JsonUtility.ToJson(editordata, true);
+        EditorDataFileName = Makemadi.instance.projectname + ".json";
+        string filePath = Application.persistentDataPath + "/" + EditorDataFileName;
+        Debug.Log(Application.persistentDataPath); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ (È®ï¿½Î¿ï¿½)
+
+        //Write
+        File.WriteAllText(filePath, ToJsonData);
+
+        //file list contrl
+        bool list = true;
+        for(int i = 0; i < editorfilelist.Length; i++)
+        {
+            if (editorfilelist[i] == Makemadi.instance.projectname)
+            {
+                list = false;
+            }
+        }
+        if(list)
+        {
+            Array.Resize(ref editorfilelist, editorfilelist.Length + 1);
+            editorfilelist[editorfilelist.Length - 1] = Makemadi.instance.projectname;
+        }
+
+        reloadeditorlist();
+    }
+    public void listload()
+    {
+        for(int i = 0; i < Makemadi.instance.filepar.childCount; i++)
+        {
+            Destroy(Makemadi.instance.filepar.GetChild(i).gameObject);
+        }
+        string filepath = Application.persistentDataPath + "/" + "Editorlist.json";
+        if (File.Exists(filepath))
+        {
+            var read = File.ReadAllLines(filepath);
+            Array.Resize(ref editorfilelist, read.Length);
+            for(int i = 0; i < read.Length; i++)
+            {
+                editorfilelist[i] = read[i];
+            }
+        }
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            var a = Instantiate(Makemadi.instance.fileprefeb, Makemadi.instance.filepar);
+            a.name = i.ToString();
+            a.GetComponentInChildren<TextMeshProUGUI>().text = editorfilelist[i];
+        }
+    }
+
+    public void deleteeditordata(string i)
+    {
+        int index = Convert.ToInt32(i);
+        string EditorDataFileName = editorfilelist[index] + ".json";
+        string filePath = Application.persistentDataPath + "/" + EditorDataFileName;
+        File.Delete(filePath);
+        editorfilelist[index] = "";
+        editorfilelist = Array.FindAll(editorfilelist, str => str != "").ToArray();
+        reloadeditorlist();
+        listload();
+    }
+
+    public void reloadeditorlist()
+    {
+        string listfilePath = Application.persistentDataPath + "/" + "Editorlist.json";
+        string editorlistcon = "";
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            editorlistcon = editorlistcon + editorfilelist[i] + "\n";
+        }
+        File.WriteAllText(listfilePath, editorlistcon);
+    }
+
+    public void opensettingfolder()
+    {
+        System.Diagnostics.Process.Start(Application.persistentDataPath);
     }
 }
