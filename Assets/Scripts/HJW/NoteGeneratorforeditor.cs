@@ -14,6 +14,7 @@ public class NoteGeneratorforeditor : MonoBehaviour
     public bool refreshok;
 
     public float offset;
+    public float firstoffset;
 
     // Start is called before the first frame update
     void Start()
@@ -54,15 +55,6 @@ public class NoteGeneratorforeditor : MonoBehaviour
     {
         if (noteIndex > chart.Length - 1) return;
         if (chart[noteIndex][0] == 0) return;
-        // ��Ʈ�� 1�� ���� ��츸 ���� ó��
-        //if (chart[noteIndex][0] < 1f)
-        //{
-        //    if (Makemadi.instance.audio_.audiosourse.time > chart[noteIndex][0])
-        //    {
-        //        MakeNote();
-        //    }
-        //    return;
-        //}
         if (Makemadi.instance.audio_.audiosourse.time > chart[noteIndex][0] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
         {
             // 4ĭ �� ��� ����

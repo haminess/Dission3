@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - ui
   - tile
+  - previewnote
   layers:
   - Default
   - TransparentFX

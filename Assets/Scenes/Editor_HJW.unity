@@ -32121,7 +32121,8 @@ MonoBehaviour:
   note: {fileID: 8050529851532700380, guid: 9207586f028f08a4e93d3605a4a64292, type: 3}
   routeNote: {fileID: 8027535564401315907, guid: bdd1b26cc4581d147bf8df8692fe4d1c, type: 3}
   refreshok: 0
-  offset: 0
+  offset: 0.2
+  firstoffset: -1
 --- !u!4 &1257875982
 Transform:
   m_ObjectHideFlags: 0
@@ -79883,6 +79884,8 @@ MonoBehaviour:
   characterNum: 0
   stageNum: 0
   difficulty: 0
+  guideKey: GuideLooked
+  GuideLooked: 0
   editorfilelist: []
 --- !u!4 &1418073209
 Transform:
@@ -88915,7 +88918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audio_: {fileID: 2022973600}
   notegen: {fileID: 1257875981}
-  offset: 0.1
+  offset: 0
 --- !u!50 &2100175482
 Rigidbody2D:
   serializedVersion: 4
