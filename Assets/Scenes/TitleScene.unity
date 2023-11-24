@@ -6011,6 +6011,8 @@ MonoBehaviour:
   tJudge: {fileID: 772489827}
   tJudgeValue: {fileID: 1727280375}
   tExplain: {fileID: 0}
+  guidePrefab: {fileID: 0}
+  canvas: {fileID: 0}
   player: {fileID: 0}
   bgm: {fileID: 2075304688}
   metronome: {fileID: 760603424}
@@ -10718,6 +10720,8 @@ MonoBehaviour:
   characterNum: 0
   stageNum: 0
   difficulty: 0
+  guideKey: GuideLooked
+  GuideLooked: 0
 --- !u!1 &1357681778
 GameObject:
   m_ObjectHideFlags: 0
@@ -16117,7 +16121,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 90}
   m_LocalScale: {x: 0.022222223, y: 0.022222223, z: 0.022222223}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 587569309}
   - {fileID: 1923400530}

@@ -12,10 +12,18 @@ public class Guide : MonoBehaviour
     bool isPlaying = false;
     Coroutine curCo;
 
+    public Player player;
+
+    // 로컬 확인
+    public string guideKey = "GuideLooked";
+    public int GuideLooked;
+
     // Start is called before the first frame update
     void Start()
     {
-        count = 0;
+        player = GameObject.FindFirstObjectByType<Player>();
+        if(player)
+            player.enabled = false;
         StartCoroutine(Show());
     }
 
@@ -27,7 +35,7 @@ public class Guide : MonoBehaviour
 
     IEnumerator Show()
     {
-        print("애니메이션 시작" + Time.time);
+        count = 0;
         anim.Play("ExplainUp");
         yield return new WaitForSeconds(anim.GetClip("ExplainUp").length);
         curCo = StartCoroutine(ShowExplain(explain[count]));
@@ -56,6 +64,7 @@ public class Guide : MonoBehaviour
     {
         if (isPlaying)
         {
+            isPlaying = false;
             StopCoroutine(curCo);
             text.text = explain[count];
             count++;
@@ -72,6 +81,8 @@ public class Guide : MonoBehaviour
 
     public void End()
     {
+        if (player)
+            player.enabled = true;
         curCo = StartCoroutine(EndCo());
     }
     IEnumerator EndCo()
@@ -81,4 +92,29 @@ public class Guide : MonoBehaviour
         count = 0;
         Destroy(gameObject);
     }
+
+    public int GetGuide()
+    {
+        GuideLooked = PlayerPrefs.GetInt(guideKey, 0);
+        return GuideLooked;
+    }
+
+    public void SetGuide(int _state)
+    {
+        GuideLooked |= _state;
+        PlayerPrefs.SetInt(guideKey, GuideLooked);
+    }
+
+    public bool isLookGuide(int _state)
+    {
+        if ((GetGuide() & _state) > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }

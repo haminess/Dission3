@@ -19,6 +19,8 @@ public class DataManager : MonoBehaviour
     public int characterNum;
     public int stageNum;
     public int difficulty;
+    public string guideKey = "GuideLooked";
+    public int GuideLooked;
 
     //저장용 클래스 변수
     public MainGameData maingamedata = new MainGameData();
@@ -61,6 +63,8 @@ public class DataManager : MonoBehaviour
         }
         maingamedata = new MainGameData();
         sounddata = new SoundData();
+
+        GuideLooked = PlayerPrefs.GetInt(guideKey, 0);
     }
 
     // Start is called before the first frame update
@@ -197,6 +201,30 @@ public class DataManager : MonoBehaviour
         {
             //Debug.Log(sounddata.bgm); //(확인용)
             //Debug.Log(sounddata.effect); //(확인용)
+        }
+    }
+
+    public int GetGuide()
+    {
+        GuideLooked = PlayerPrefs.GetInt(guideKey, 0);
+        return GuideLooked;
+    }
+
+    public void SetGuide(int _state)
+    {
+        GuideLooked |= _state;
+        PlayerPrefs.SetInt(guideKey, GuideLooked);
+    }
+
+    public bool isLookGuide(int _state)
+    {
+        if((GetGuide() & _state) > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

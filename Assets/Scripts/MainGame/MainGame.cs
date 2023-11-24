@@ -33,26 +33,27 @@ public class MainGame : MonoBehaviour
     public int noteIndex;              
 
     // 메인 상태 데이터
-    public bool startButton = false;   
+    public bool startButton = false;
     public int stageNum = 1;
-    public bool stageMode = false;     
-    public bool isStart = false;       
-    public bool isGame = false;        
-    public bool isEnd = false;         
-    public float gameTime;             
-    public float musicTime;            
-    public float startTime;            
+    public bool stageMode = false;
+    public bool isStart = false;
+    public bool isGame = false;
+    public bool isEnd = false;
+    public float gameTime;
+    public float musicTime;
+    public float startTime;
 
     // 메인 유저점수 데이터
     public int score;
     public int combo;
     public int curCombo;
     public int perfect;
-    public int good;   
-    public int bad;    
+    public int good;
+    public int bad;
     public int miss;
     public int collection;
     public Color[] color;
+    public List<string[]> collections = new List<string[]>();
 
     // life
     public int life;
@@ -82,17 +83,18 @@ public class MainGame : MonoBehaviour
 
     // 게임 UI
     public GameObject gameCanvas;
+    public GameObject screenCanvas;
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI countUI;
     public Slider progressUI;
     public Slider lifeUI;
 
-
+    // 가이드 오브젝트
+    public GameObject guidePrefab;
 
     // Start is called before the first frame update
     public void Start()
     {
-
         // 메인게임 스크립트 싱글톤
         MainGame.instance = this;
 
@@ -111,7 +113,6 @@ public class MainGame : MonoBehaviour
         {
             StageStart();
         }
-
     }
 
     // Update is called once per frame
@@ -203,7 +204,6 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-
         bgm.Stop();
         gameCanvas.SetActive(true);
         scoreUI.text = "";
@@ -236,10 +236,8 @@ public class MainGame : MonoBehaviour
     }
 
 
-    // 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
     public void StageStart()
     {
-        print("占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙");
         ResetMain();
         gameCanvas.SetActive(true);
         StartCoroutine(StageStartCo());
@@ -247,6 +245,7 @@ public class MainGame : MonoBehaviour
 
     public IEnumerator StageStartCo()
     {
+        storyManager.sID = (stageNum - 1) * 3;
         yield return StartCoroutine(storyManager.ShowStoryCo());
         PlayerReposition();
         yield return StartCoroutine(GameStartCo());
@@ -256,7 +255,7 @@ public class MainGame : MonoBehaviour
     public void MusicProgress()
     {
         // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占썅도
-        //progressUI.value = BGM.time / BGM.clip.length;
+        // progressUI.value = BGM.time / BGM.clip.length;
 
         // 채占쏙옙 占쏙옙占쏙옙 占쏙옙占썅도
         if(bgm.time > 0)
@@ -321,20 +320,41 @@ public class MainGame : MonoBehaviour
 
         // 占쏙옙占쏙옙 占쏙옙占썰리 占쏙옙占?
         yield return new WaitForSeconds(1);
-        storyManager.sID = stageNum - 1;
-        if(collection > 3)
+        storyManager.sID = (stageNum - 1) * 3;
+        if(miss < 10)
         {
             storyManager.sID += 1;
+            storyManager.sId += 1;
         }
         else
         {
             storyManager.sID += 2;
+            storyManager.sId += 2;
         }
         yield return StartCoroutine(storyManager.ShowStoryCo());
+
+        for(int i = 0; i < collections.Count; i++)
+        {
+            yield return StartCoroutine(ShowGuide(collections[i]));
+        }
 
         // 占쏙옙占?화占쏙옙 占쏙옙환
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
+    }
+
+    IEnumerator ShowGuide(string[] _content)
+    {
+        GameObject guide = Instantiate(guidePrefab, screenCanvas.transform);
+        guide.GetComponent<Guide>().explain = _content;
+        while (true)
+        {
+            if (guide == null)
+            {
+                break;
+            }
+            yield return null;
+        }
     }
 
     public void Judge(float time, float x, float y)
@@ -590,7 +610,6 @@ public class MainGame : MonoBehaviour
         player.GetComponent<Player>().Settable = _isCan;
     }
 
-
     public void ResetMain()
     {
 
@@ -602,6 +621,7 @@ public class MainGame : MonoBehaviour
         bgm.Stop();
         Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
         GetComponent<NoteGenerator>().noteIndex = 0;
+        collections.Clear();
 
         // 게임 시간
         gameTime = 0;
@@ -628,8 +648,23 @@ public class MainGame : MonoBehaviour
         gameCanvas.SetActive(false);
     }
 
+    public void SetStage()
+    {
+        bgm.clip = soundMan.bgmClip[stageNum - 1];
+        // 채보 정보 가져오기
+        // chart = 
+    }
+
     public void GetMainData()
     {
+
+        // 씬 데이터 연결
+        if (GameObject.Find("Data"))
+        {
+            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
+            stageNum = dm.stageNum;
+        }
+
         // 채보 불러오기
 
         // 임시 채보, 추후 삭제
@@ -890,6 +925,6 @@ public class MainGame : MonoBehaviour
         if (!connector.dataMan) return;
         dataMan = connector.dataMan;
         stageNum = dataMan.stageNum;
-
     }
+
 }

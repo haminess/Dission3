@@ -61,7 +61,6 @@ public class StoryManager : MonoBehaviour
     // 스크립트 관리
     public float chatSpeed = 2;
     Dictionary<int, string[]> scripts = new Dictionary<int, string[]>();
-    GameObject[] storyNpc;
     int[][] npcNum;
 
     // 스크립트 참조
@@ -231,6 +230,7 @@ public class StoryManager : MonoBehaviour
 
     public IEnumerator ShowStoryCo()
     {
+        this.sId = (StoryNum)this.sID;
         // 플레이어 움직임 Off
         player.GetComponent<Player>().enabled = false;
         player.GetComponentInChildren<SpriteRenderer>().enabled = false;
@@ -289,11 +289,7 @@ public class StoryManager : MonoBehaviour
             case 0015:
                 yield return StartCoroutine(Story5Sad());
                 break;
-            case 9999:
-                yield return StartCoroutine(Tutorial());
-                break;
         }
-
 
 
         // 플레이어 움직임 On
@@ -381,7 +377,6 @@ public class StoryManager : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
     }
-
 
     IEnumerator Story1()
     {
@@ -628,7 +623,6 @@ public class StoryManager : MonoBehaviour
         // 카메라 되돌리기
         yield return StartCoroutine(SetCam(false));
     }
-
     IEnumerator Story3()
     {
         // Story On
@@ -663,7 +657,6 @@ public class StoryManager : MonoBehaviour
         // 카메라 되돌리기
         yield return StartCoroutine(SetCam(false));
     }
-
     IEnumerator Story3Happy()
     {
         // Story On
@@ -997,8 +990,6 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-
-
     // npc 캐릭터 생성
     public GameObject NPC(Sprite _sprite, float _x, float _y)
     {
@@ -1009,21 +1000,4 @@ public class StoryManager : MonoBehaviour
 
         return npc;
     }
-
-    IEnumerator Tutorial()
-    {
-        // 카메라 세팅
-        playerCam.SetActive(false);
-        storyCamera.SetActive(true);
-        storyCamera.transform.position = new Vector3(0, 0, -10);
-
-        yield return new WaitForSeconds(1);
-
-
-        yield return new WaitForSeconds(1);
-
-        storyCamera.SetActive(false);
-        playerCam.SetActive(true);
-    }
-
 }

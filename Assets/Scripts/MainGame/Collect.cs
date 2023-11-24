@@ -6,9 +6,9 @@ public class Collect : MonoBehaviour
 {
     public int CNum = 1;
     public string Cname;
+    public string[] content;
 
     //클래스 불러오기
-    //private MainGameData maingamedata => DataManager.Instance.maingamedata;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +25,7 @@ public class Collect : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         MainGame.instance.collection += CNum;
+        MainGame.instance.collections.Add(content);
         Destroy(gameObject);
     }
 }

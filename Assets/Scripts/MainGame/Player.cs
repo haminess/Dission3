@@ -34,9 +34,11 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-
-        bgm = MainGame.instance.bgm;
-        effect = MainGame.instance.effect;
+        if (MainGame.instance)
+        {
+            bgm = MainGame.instance.bgm;
+            effect = MainGame.instance.effect;
+        }
 
 
         // 메인게임 아닐 때 리턴
@@ -86,14 +88,6 @@ public class Player : MonoBehaviour
         {
             OnSetting();
         }
-
-
-        //// 채보 찍는 용도 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    print(MainGame.instance.bgm.time);
-        //}
-
     }
 
     public void Move()
@@ -146,8 +140,6 @@ public class Player : MonoBehaviour
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
-            print(bgm.time);
-            print(CurPos.x);
             if (MainGame.instance.isGame)
                 MainGame.instance.Judge(bgm.time, CurPos.x, CurPos.y);
         }

@@ -11,6 +11,9 @@ public class Tutorial : MonoBehaviour
     public TextMeshProUGUI tJudgeValue;
     public TextMeshProUGUI tExplain;
 
+    public GameObject guidePrefab;
+    public GameObject canvas;
+
     public TutorialMove player;
     public AudioSource bgm;
     public Metronome metronome;
@@ -22,7 +25,6 @@ public class Tutorial : MonoBehaviour
     public float time;
     public int noteIndex;
     public int curNote;
-
 
     // 판정범위
     public float perfectRange = 0.05f;
@@ -243,18 +245,31 @@ public class Tutorial : MonoBehaviour
         }
         tExplain.text = "";
     }
+    IEnumerator ShowGuide(int _id)
+    {
+        GameObject guide = Instantiate(guidePrefab, canvas.transform);
+        guide.GetComponent<Guide>().explain = explain[_id];
+        while (true)
+        {
+            if(guide == null)
+            {
+                break;
+            }
+            yield return null;
+        }
+    }
 
     // 튜토리얼 흐름
     IEnumerator StartTutorial()
     {
-        yield return StartCoroutine(ShowExplain(0));
+        yield return StartCoroutine(ShowGuide(0));
         tExplain.text = "상, 하, 좌, 우로 이동해보자";
         step = Step.Move;
         player.enabled = true;
     }
     IEnumerator StepNote1()
     {
-        yield return StartCoroutine(ShowExplain(1));
+        yield return StartCoroutine(ShowGuide(1));
         tExplain.text = "박자에 맞춰 이동해보자";
 
         // 플레이
@@ -278,7 +293,7 @@ public class Tutorial : MonoBehaviour
     }
     IEnumerator StepNote2()
     {
-        yield return StartCoroutine(ShowExplain(2));
+        yield return StartCoroutine(ShowGuide(2));
         tExplain.text = "박자에 맞춰 이동해보자";
 
         // 플레이
@@ -311,7 +326,7 @@ public class Tutorial : MonoBehaviour
     }
     IEnumerator StepNote3()
     {
-        yield return StartCoroutine(ShowExplain(3));
+        yield return StartCoroutine(ShowGuide(3));
 
         // 플레이
         // 채보3
@@ -343,7 +358,7 @@ public class Tutorial : MonoBehaviour
     }
     IEnumerator StepNote4()
     {
-        yield return StartCoroutine(ShowExplain(4));
+        yield return StartCoroutine(ShowGuide(4));
         tExplain.text = "박자에 맞춰 이동해보자";
 
         // 플레이
@@ -387,7 +402,7 @@ public class Tutorial : MonoBehaviour
     IEnumerator FinishTutorial()
     {
         step = Step.Wait;
-        yield return StartCoroutine(ShowExplain(5));
+        yield return StartCoroutine(ShowGuide(5));
         step = Step.Wait;
         player.enabled = true;
         yield return new WaitForSeconds(5);
