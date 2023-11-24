@@ -5,10 +5,12 @@ public class Camaracontrol : MonoBehaviour
 {
     public Camera cam;
 
+    public Sprite high;
     public Sprite nor;
-    public Sprite hightlight;
 
-    GameObject temp;
+    Sprite a;
+    Image a_;
+    public Vector3 real_mospos;
     private void Update()
     {
         if(Settings.popup)
@@ -16,19 +18,16 @@ public class Camaracontrol : MonoBehaviour
             return;
         }
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-        var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("UI"));
-        if(e && (e.collider.name == "up" || e.collider.name == "down" || e.collider.name == "left" || e.collider.name == "right"))
+        real_mospos = new Vector2( cam.transform.position.x - mospos.x, cam.transform.position.y - mospos.y);
+        var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Camctr"));
+        if(e && e.collider.gameObject.GetComponent<Image>().sprite == nor)
         {
-            if(e.collider.gameObject.GetComponent<Image>().sprite == nor)
-            {
-                 e.collider.gameObject.GetComponent<Image>().sprite = hightlight;
-                 temp =  e.collider.gameObject;
-            }
+            a = e.collider.gameObject.GetComponent<Image>().sprite = high;
+            a_ = e.collider.gameObject.GetComponent<Image>();
         }
-        else if(temp != null)
+        else if (e == false && a == high)
         {
-            temp.GetComponent<Image>().sprite = nor;
-            temp = null;
+            a_.sprite = nor;
         }
         if (e && Input.GetMouseButton(0))
         {
@@ -46,6 +45,24 @@ public class Camaracontrol : MonoBehaviour
                 case "right":
                     right();
                     break;
+            }
+        }
+        if (Input.GetMouseButton(2))
+        {
+            cam.transform.position = new Vector3(cam.transform.position.x - (real_mospos.x * 0.1f), cam.transform.position.y - (real_mospos.y * 0.1f), -10);
+        }
+        if(Input.mouseScrollDelta.y < 0 && !Makemadi.instance.chart)
+        {
+            if (cam.orthographicSize > 1)
+            {
+                cam.orthographicSize -= 1;
+            }
+        }
+        if (Input.mouseScrollDelta.y > 0 && !Makemadi.instance.chart)
+        {
+            if(cam.orthographicSize < 45)
+            {
+                cam.orthographicSize += 1;
             }
         }
 

@@ -1,14 +1,35 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Makemadi : MonoBehaviour
 {
+    EditorData editordata => DataManager.Instance.editordata;
+
     public Makenote note;
+    public Settings settings;
     public static Makemadi instance;
     public Audio audio_;
     public Transform canvas;
     public Transform charts;
     public GameObject prefab;
+    [Space(20)]
+    [Header("Settings")]
+    public GameObject ui;
+    public GameObject err;
+    public GameObject delete_ui;
+    public GameObject delete_obj;
+    public TMP_InputField name_ui;
+    public TMP_InputField bpm_ui;
+    public TMP_InputField length_ui;
+    public TMP_InputField starttime_ui;
+    public TMP_InputField bakjapyoup_ui;
+    public TextMeshProUGUI musicname;
+    public TextMeshProUGUI noteidx;
+    public TextMeshProUGUI boxidx;
+    public GameObject fileprefeb;
+    public Transform filepar;
     [Space(20)]
     [Header("For fucking small madi")]
     public GameObject total;
@@ -18,9 +39,12 @@ public class Makemadi : MonoBehaviour
     public float starttime;
     public float length;
     [Space(20)]
+    [Header("Info")]
+    public string projectname;
     public int bpm;
     public double sec; //total sec
     public double madi;
+    public float madilength;
     [Header("Backjapyo")]
     public int up;
     public int down;
@@ -29,37 +53,49 @@ public class Makemadi : MonoBehaviour
     public int page;
     public string curmadi = "0";
     bool chart_;
-    public bool chart //마디 범위 내에 들어와 있습니다.
-    {
-        get
-        {
-            return chart_;
-        }
-        set
-        {
-            if(chart_ = !value)
-            {
-                note.init();
-            }
-            chart_ = value;
-        }
-    }
+    public bool chart; //마디 범위 내에 들어와 있습니다.
     public bool is_smallmadi;
+    [Space(20)]
+    public TextMeshProUGUI scrollpowert;
+    public int scrollpower;
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
-        madi = bpm / up * (sec / 60);
-        if(starttime != 0)
+        madiset();
+        projectname = "New Project";
+        scrollpower = 1;
+        scrollpowert.text = scrollpower.ToString();
+    }
+
+    void madiset()
+    {
+        for(int i = 0; i < charts.childCount; i++)
         {
-            var onemadilength = sec / madi; //how long is one madi 2.3
-            length = (float)(starttime / onemadilength) * 519; //total length of madi
-            Middle.GetComponent<RectTransform>().sizeDelta = new Vector2( length , Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
+            if(charts.GetChild(i).name != "0")
+            {
+                Destroy(charts.GetChild(i).gameObject);
+            }
+        }
+        //init
+        madilength = 0;
+        total.transform.SetParent(canvas.transform);
+        total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-708.0013f, 645.9995f);
+        start.GetComponent<RectTransform>().anchoredPosition = new Vector2(-251, 0);
+        End.GetComponent<RectTransform>().anchoredPosition = new Vector2(253.3f, 0);
+        Middle.GetComponent<RectTransform>().anchoredPosition = new Vector2(1.100006f, 0.5999985f);
+        //init
+        madi = bpm / up * (sec / 60);
+        if (starttime != 0)
+        {
+            var onemadilength = sec / madi; //how long is one madi 2.3(time)
+            length = (float)(starttime / onemadilength) * 505; //total length of startmadi  *startime : sec = length : madilength*
+            Middle.GetComponent<RectTransform>().sizeDelta = new Vector2(length, Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
             total.GetComponent<BoxCollider2D>().size = new Vector2(length, total.GetComponent<RectTransform>().sizeDelta.y); //collider
 
             var startpos = start.GetComponent<RectTransform>().anchoredPosition;
             var endpos = End.GetComponent<RectTransform>().anchoredPosition;
-            if(starttime < onemadilength)
+            if (starttime < onemadilength)
             {
                 start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x + ((515 - length) / 2), startpos.y);
                 End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x - ((519 - length) / 2), endpos.y);
@@ -73,35 +109,43 @@ public class Makemadi : MonoBehaviour
             total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -450);
             total.transform.SetParent(charts.transform);
         }
-        for (int i = 0; i <= Mathf.Floor((float)madi); i++) //make madi
+        else if(starttime == 0)
         {
-            if(i == Mathf.Floor((float)madi))
+            length = 0;
+            total.transform.SetParent(canvas.transform);
+            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-708.0013f, 645.9995f);
+        }
+        for (int i = 0; i <= Mathf.Ceil((float)madi); i++) //make madi
+        {
+            if (i == Mathf.Ceil((float)madi)) //endmadi
             {
                 var b = Instantiate(endmadi, canvas);
                 if (starttime == 0)
                 {
-                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -450);
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575, -450);
                 }
                 else
                 {
-                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -450);
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575 + (length - 16), -450);
                 }
                 b.transform.SetParent(charts);
                 b.name = "End";
+                madilength += 22.4f;
             }
             else
             {
                 var a = Instantiate(prefab, canvas);
-                if(starttime == 0)
+                if (starttime == 0)
                 {
-                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575, -450);
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575, -450);
                 }
                 else
                 {
-                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((505 * i) - 575 + (length - 16), -450);
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575 + (length - 16), -450);
                 }
                 a.transform.SetParent(charts);
                 a.name = (i + 1).ToString();
+                madilength += 22;
             }
         }
     }
@@ -109,6 +153,8 @@ public class Makemadi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        noteidx.text = Maketile.instance.makenote.notedata.Length.ToString();
+        boxidx.text = Maketile.instance.boxpos.Length.ToString();
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Chart"));
         var b = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Charts"));
@@ -152,6 +198,12 @@ public class Makemadi : MonoBehaviour
         }
         if (chart && !Audio.playing)
         {
+            if (charts.GetComponent<RectTransform>().anchoredPosition.y > -19)
+            {
+                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -16);
+                audio_.index = 3;
+                page = 0;
+            }
             if (Input.mouseScrollDelta.y > 0 && charts.GetComponent<RectTransform>().anchoredPosition.y < -16) //back
             {
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
@@ -162,8 +214,8 @@ public class Makemadi : MonoBehaviour
                 }
                 else
                 {
-                    charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y + 3);
-                    audio_.index -= 3;
+                    charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x - 0.004f * scrollpower, pos.y + 3 * scrollpower);
+                    audio_.index -= 3 * scrollpower;
                     page--;
                 }
             }
@@ -174,10 +226,197 @@ public class Makemadi : MonoBehaviour
                     return;
                 }
                 var pos = charts.GetComponent<RectTransform>().anchoredPosition;
-                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, pos.y - 3);
-                audio_.index += 3;
+                charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x + 0.004f * scrollpower, pos.y - 3 * scrollpower);
+                audio_.index += 3 * scrollpower;
                 page++;
             }
         }
+    }
+    public void powerup()
+    {
+        if (scrollpower > 8)
+        {
+            return;
+        }
+        scrollpower++;
+        scrollpowert.text = scrollpower.ToString();
+    }
+    public void powerdown()
+    {
+        if (scrollpower <= 1)
+        {
+            return;
+        }
+        scrollpower--;
+        scrollpowert.text = scrollpower.ToString();
+    }
+    int temp_b;
+    float temp_starttime;
+    double temp_sec;
+    int temp_up;
+    int temp_down;
+    public void uiset()
+    {
+        musicname.text = audio_.audiosourse.clip.ToString();
+        bpm_ui.text = bpm.ToString();
+        starttime_ui.text = starttime.ToString();
+        length_ui.text = sec.ToString();
+        bakjapyoup_ui.text = up.ToString();
+        name_ui.text = projectname.ToString();
+        temp_b = bpm;
+        temp_starttime = starttime;
+        temp_sec = sec;
+        temp_up = up;
+        temp_down = down;
+    }
+
+    public void uitodata()
+    {        
+        bpm = Convert.ToInt32(bpm_ui.text);
+        starttime = (float)Convert.ToDouble(starttime_ui.text);
+        sec = Convert.ToInt64(length_ui.text);
+        up = Convert.ToInt32(bakjapyoup_ui.text);
+        projectname = name_ui.text;
+        if(bpm != temp_b || starttime != temp_starttime || sec != temp_sec || up != temp_up || down != temp_down)
+        {
+            Maketile.instance.note.transform.SetParent(canvas);
+            Maketile.instance.curpointer.transform.SetParent(canvas);
+            Maketile.instance.fakepointer.transform.SetParent(canvas);
+            Maketile.instance.bakjapyoset();
+            Array.Resize(ref note.notedata, 0);
+            Array.Resize(ref note.notesobj, 0);
+            madiset();
+        }
+    }
+
+    public void check()
+    {
+        int result;
+        if(!int.TryParse(bpm_ui.text, out result) || !int.TryParse(length_ui.text, out result) || !int.TryParse(bakjapyoup_ui.text, out result))
+        {
+            err.SetActive(true);
+            return;
+        }
+        uitodata();
+    }
+
+    public void Saveinfo()
+    {
+        editordata.starttime = starttime;
+        editordata.length = length;
+        editordata.projectname = projectname;
+        editordata.bpm = bpm;
+        editordata.sec = sec;
+        editordata.up = up;
+        editordata.down = down;
+        editordata.music = audio_.audiosourse.clip;
+    }
+    public void Loadinfo()
+    {
+        Maketile.instance.makenote.madi_sec = sec / madi;
+        starttime = editordata.starttime;
+        length = editordata.length;
+        projectname = editordata.projectname;   
+        bpm = editordata.bpm;
+        sec = editordata.sec;
+        up = editordata.up;
+        down = editordata.down;
+        settings.downsel(down);
+        musicname.text = editordata.music.name;
+        audio_.audiosourse.clip = editordata.music;
+
+        uiset();
+        madisetforload();
+    }
+
+    void madisetforload()
+    {
+        madilength = 0;
+        Maketile.instance.curpointer.transform.SetParent(null);
+        Maketile.instance.fakepointer.transform.SetParent(null);
+        Maketile.instance.tile.transform.SetParent(null);
+        Maketile.instance.note.transform.SetParent(null);
+        for (int i = 0; i < charts.childCount; i++)
+        {
+            if (charts.GetChild(i).name != "0")
+            {
+                Destroy(charts.GetChild(i).gameObject);
+            }
+        }
+        //init
+        total.transform.SetParent(canvas.transform);
+        total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-708.0013f, 645.9995f);
+        start.GetComponent<RectTransform>().anchoredPosition = new Vector2(-251, 0);
+        End.GetComponent<RectTransform>().anchoredPosition = new Vector2(253.3f, 0);
+        Middle.GetComponent<RectTransform>().anchoredPosition = new Vector2(1.100006f, 0.5999985f);
+        //init
+        madi = bpm / up * (sec / 60);
+        if (starttime != 0)
+        {
+            var onemadilength = sec / madi; //how long is one madi 2.3
+            length = (float)(starttime / onemadilength) * 505; //total length of madi  *startime : sec = length : madilength*
+            Middle.GetComponent<RectTransform>().sizeDelta = new Vector2(length, Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
+            total.GetComponent<BoxCollider2D>().size = new Vector2(length, total.GetComponent<RectTransform>().sizeDelta.y); //collider
+
+            var startpos = start.GetComponent<RectTransform>().anchoredPosition;
+            var endpos = End.GetComponent<RectTransform>().anchoredPosition;
+            if (starttime < onemadilength)
+            {
+                start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x + ((515 - length) / 2), startpos.y);
+                End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x - ((519 - length) / 2), endpos.y);
+            }
+            else
+            {
+                start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x - ((length - 515) / 2), startpos.y);
+                End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x + ((length - 519) / 2), endpos.y);
+            }
+
+            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-575 + ((length - 519) / 2), -450);
+            total.transform.SetParent(charts.transform);
+        }
+        else if (starttime == 0)
+        {
+            length = 0;
+            total.transform.SetParent(canvas.transform);
+            total.GetComponent<RectTransform>().anchoredPosition = new Vector2(-708.0013f, 645.9995f);
+        }
+        for (int i = 0; i <= Mathf.Ceil((float)madi); i++) //make madi
+        {
+            if (i == Mathf.Ceil((float)madi)) //endmadi
+            {
+                var b = Instantiate(endmadi, canvas);
+                if (starttime == 0)
+                {
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575, -450);
+                }
+                else
+                {
+                    b.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575 + (length - 16), -450);
+                }
+                b.transform.SetParent(charts);
+                b.name = "End";
+                madilength += 22.4f;
+            }
+            else
+            {
+                var a = Instantiate(prefab, canvas);
+                if (starttime == 0)
+                {
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575, -450);
+                }
+                else
+                {
+                    a.GetComponent<RectTransform>().anchoredPosition = new Vector2((504 * i) - 575 + (length - 16), -450);
+                }
+                a.transform.SetParent(charts);
+                a.name = (i + 1).ToString();
+                madilength += 22;
+            }
+        }
+        note.noteload();
+    }
+    public void deletee()
+    {
+        DataManager.Instance.deleteeditordata(delete_obj.name);
     }
 }

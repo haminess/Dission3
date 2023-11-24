@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using UnityEngine.Playables;
-using UnityEngine.UI;
-using UnityEngine.SocialPlatforms.Impl;
-using Unity.Burst.Intrinsics;
-using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
+using TMPro;
 
 public class DataManager : MonoBehaviour
 {
@@ -25,6 +21,7 @@ public class DataManager : MonoBehaviour
     //저장용 클래스 변수
     public MainGameData maingamedata = new MainGameData();
     public SoundData sounddata = new SoundData();
+    public EditorData editordata = new EditorData();
 
     public static DataManager Instance
     {
@@ -49,6 +46,9 @@ public class DataManager : MonoBehaviour
     //파일 이름 설정
     string MainGameDataFileName = "MainGameData.json"; //지금은 지정인데 채보 올리거나 할 땐 사용자가 입력할 수 있게
     string SoundDataFileName = "SoundData.json";
+    string EditorDataFileName = "EditorData.json";
+
+    public string[] editorfilelist;
 
 
     private void Awake()
@@ -227,4 +227,136 @@ public class DataManager : MonoBehaviour
             return false;
         }
     }
+
+    public void LoadEditorData(string i)
+    {
+        //Load
+        string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
+
+        if (File.Exists(filePath))
+        {
+            Makemadi.instance.audio_.resetmusic();
+            // ?     
+            string FromJsonData = File.ReadAllText(filePath);
+            editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
+
+            Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
+            Array.Resize(ref Makemadi.instance.note.noteorder, editordata.noteorder.Length);
+            Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
+            Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
+            Array.Resize(ref Makemadi.instance.note.notegroup, editordata.notegroup.Length);
+            Array.Resize(ref Makemadi.instance.note.notetype, editordata.notetype.Length);
+
+            for (int a = 0; a < editordata.notedata.Length; a++)
+            {
+                Makemadi.instance.note.notedata[a] = editordata.notedata[a];
+            }
+            for (int a = 0; a < editordata.noteorder.Length; a++)
+            {
+                Makemadi.instance.note.noteorder[a] = editordata.noteorder[a];
+            }
+            for (int a = 0; a < editordata.boxpos.Length; a++)
+            {
+                Maketile.instance.boxpos[a] = editordata.boxpos[a];
+            }
+            for (int a = 0; a < editordata.notepos.Length; a++)
+            {
+                Makemadi.instance.note.notepos[a] = editordata.notepos[a];
+            }
+            for (int a = 0; a < editordata.notegroup.Length; a++)
+            {
+                Makemadi.instance.note.notegroup[a] = editordata.notegroup[a];
+            }
+            for (int a = 0; a < editordata.notetype.Length; a++)
+            {
+                Makemadi.instance.note.notetype[a] = editordata.notetype[a];
+            }
+
+
+            Maketile.instance.boxposload();
+            Makemadi.instance.Loadinfo();
+        }
+    }
+
+
+    public void SaveEditorData()
+    {
+        //?    ->Json   ?
+        string ToJsonData = JsonUtility.ToJson(editordata, true);
+        EditorDataFileName = Makemadi.instance.projectname + ".json";
+        string filePath = Application.persistentDataPath + "/" + EditorDataFileName;
+        Debug.Log(Application.persistentDataPath); //       ?     (? ο )
+
+        //Write
+        File.WriteAllText(filePath, ToJsonData);
+
+        //file list contrl
+        bool list = true;
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            if (editorfilelist[i] == Makemadi.instance.projectname)
+            {
+                list = false;
+            }
+        }
+        if (list)
+        {
+            Array.Resize(ref editorfilelist, editorfilelist.Length + 1);
+            editorfilelist[editorfilelist.Length - 1] = Makemadi.instance.projectname;
+        }
+
+        reloadeditorlist();
+    }
+    public void listload()
+    {
+        for (int i = 0; i < Makemadi.instance.filepar.childCount; i++)
+        {
+            Destroy(Makemadi.instance.filepar.GetChild(i).gameObject);
+        }
+        string filepath = Application.persistentDataPath + "/" + "Editorlist.json";
+        if (File.Exists(filepath))
+        {
+            var read = File.ReadAllLines(filepath);
+            Array.Resize(ref editorfilelist, read.Length);
+            for (int i = 0; i < read.Length; i++)
+            {
+                editorfilelist[i] = read[i];
+            }
+        }
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            var a = Instantiate(Makemadi.instance.fileprefeb, Makemadi.instance.filepar);
+            a.name = i.ToString();
+            a.GetComponentInChildren<TextMeshProUGUI>().text = editorfilelist[i];
+        }
+    }
+
+    public void deleteeditordata(string i)
+    {
+        int index = Convert.ToInt32(i);
+        string EditorDataFileName = editorfilelist[index] + ".json";
+        string filePath = Application.persistentDataPath + "/" + EditorDataFileName;
+        File.Delete(filePath);
+        editorfilelist[index] = "";
+        editorfilelist = Array.FindAll(editorfilelist, str => str != "").ToArray();
+        reloadeditorlist();
+        listload();
+    }
+
+    public void reloadeditorlist()
+    {
+        string listfilePath = Application.persistentDataPath + "/" + "Editorlist.json";
+        string editorlistcon = "";
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            editorlistcon = editorlistcon + editorfilelist[i] + "\n";
+        }
+        File.WriteAllText(listfilePath, editorlistcon);
+    }
+
+    public void opensettingfolder()
+    {
+        System.Diagnostics.Process.Start(Application.persistentDataPath);
+    }
 }
+
