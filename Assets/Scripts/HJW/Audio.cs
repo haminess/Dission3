@@ -11,6 +11,7 @@ public class Audio : MonoBehaviour
     public NoteGeneratorforeditor notegen;
     public Makenote note;
     Vector2 pos;
+    Vector2 testpos;
     public AudioSource audiosourse;
     public Sprite play; //stopping
     public Sprite resume; //playing
@@ -20,9 +21,14 @@ public class Audio : MonoBehaviour
     float stoppos;
     public int index;
     public int[] intlist;
+    [Space(20)]
+    public GameObject testmadi;
+    public static bool testing;
+    public GameObject testingpopup;
     private void Start()
     {
         pos = Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition;
+        testpos = testmadi.GetComponent<RectTransform>().anchoredPosition;
         index = 3;
     }
     public void playmus()
@@ -65,6 +71,26 @@ public class Audio : MonoBehaviour
     }
     private void Update()
     {
+        if(testing)
+        {
+            if(testmadi.GetComponent<RectTransform>().anchoredPosition.y < -50.1f)
+            {
+                Maketile.instance.makenote.madi_sec = audiosourse.time;
+                audiosourse.Stop();
+                audiosourse.volume = 100;
+                time = 0;
+                time_length = 0;
+                testmadi.GetComponent<RectTransform>().anchoredPosition = testpos;
+                testmadi.SetActive(false);
+                testing = false;
+                testingpopup.SetActive(false);
+            }
+
+            time = audiosourse.time;
+            time_length = (time / (float)Makemadi.instance.sec) * Makemadi.instance.madilength;
+            testmadi.GetComponent<RectTransform>().anchoredPosition = new Vector2(time_length * 0.0013f, testpos.y - time_length * offset);
+
+        }
         if(Endstamp.isend && playing || Settings.popup && playing || time >= Makemadi.instance.sec)
         {
             print("reset");
@@ -73,7 +99,7 @@ public class Audio : MonoBehaviour
         if (playing)
         {
             time = audiosourse.time;
-            time_length = (time / (float)Makemadi.instance.sec) * Makemadi.instance.madilength;
+            time_length = (time / (float)Makemadi.instance.sec) * Makemadi.instance.madilength; //madilength = total madilength(X)
             Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition = new Vector2(time_length * 0.0013f, pos.y - time_length * offset);
             if((int)time_length * offset == index)
             {
@@ -81,6 +107,16 @@ public class Audio : MonoBehaviour
                 index += 3;
             }
         }
+    }
+
+    public void maditest()
+    {
+        resetmusic();
+        audiosourse.volume = 0;
+        audiosourse.Play();
+        testmadi.SetActive(true);
+        testingpopup.SetActive(true);
+        testing = true;
     }
 
     public void resetmusic()

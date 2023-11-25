@@ -72,7 +72,7 @@ public class Makemadi : MonoBehaviour
     {
         for(int i = 0; i < charts.childCount; i++)
         {
-            if(charts.GetChild(i).name != "0")
+            if(charts.GetChild(i).name != "0" && charts.GetChild(i).name != "maditest")
             {
                 Destroy(charts.GetChild(i).gameObject);
             }
@@ -88,14 +88,14 @@ public class Makemadi : MonoBehaviour
         madi = bpm / up * (sec / 60);
         if (starttime != 0)
         {
-            var onemadilength = sec / madi; //how long is one madi 2.3(time)
-            length = (float)(starttime / onemadilength) * 505; //total length of startmadi  *startime : sec = length : madilength*
+            
+            length = (float)(starttime / Maketile.instance.makenote.madi_sec) * 505; //total length of startmadi  *startime : sec = length : madilength*
             Middle.GetComponent<RectTransform>().sizeDelta = new Vector2(length, Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
             total.GetComponent<BoxCollider2D>().size = new Vector2(length, total.GetComponent<RectTransform>().sizeDelta.y); //collider
 
             var startpos = start.GetComponent<RectTransform>().anchoredPosition;
             var endpos = End.GetComponent<RectTransform>().anchoredPosition;
-            if (starttime < onemadilength)
+            if (starttime < Maketile.instance.makenote.madi_sec)
             {
                 start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x + ((515 - length) / 2), startpos.y);
                 End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x - ((519 - length) / 2), endpos.y);
@@ -338,7 +338,7 @@ public class Makemadi : MonoBehaviour
         Maketile.instance.note.transform.SetParent(null);
         for (int i = 0; i < charts.childCount; i++)
         {
-            if (charts.GetChild(i).name != "0")
+            if (charts.GetChild(i).name != "0" && charts.GetChild(i).name != "maditest")
             {
                 Destroy(charts.GetChild(i).gameObject);
             }
@@ -353,14 +353,13 @@ public class Makemadi : MonoBehaviour
         madi = bpm / up * (sec / 60);
         if (starttime != 0)
         {
-            var onemadilength = sec / madi; //how long is one madi 2.3
-            length = (float)(starttime / onemadilength) * 505; //total length of madi  *startime : sec = length : madilength*
+            length = (float)(starttime / Maketile.instance.makenote.madi_sec) * 505; //total length of madi  *startime : sec = length : madilength*
             Middle.GetComponent<RectTransform>().sizeDelta = new Vector2(length, Middle.GetComponent<RectTransform>().sizeDelta.y); //midddle madi
             total.GetComponent<BoxCollider2D>().size = new Vector2(length, total.GetComponent<RectTransform>().sizeDelta.y); //collider
 
             var startpos = start.GetComponent<RectTransform>().anchoredPosition;
             var endpos = End.GetComponent<RectTransform>().anchoredPosition;
-            if (starttime < onemadilength)
+            if (starttime < Maketile.instance.makenote.madi_sec)
             {
                 start.GetComponent<RectTransform>().anchoredPosition = new Vector2(startpos.x + ((515 - length) / 2), startpos.y);
                 End.GetComponent<RectTransform>().anchoredPosition = new Vector2(endpos.x - ((519 - length) / 2), endpos.y);

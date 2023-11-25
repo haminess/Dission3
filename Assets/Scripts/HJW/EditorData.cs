@@ -6,7 +6,6 @@ public class EditorData //: MonoBehaviour
 {
     public Vector2[] boxpos;
     public double[] notedata;
-    public double[] noteorder;
     public Vector2[] notepos;
     public int[] notegroup;
     public int[] notetype;
@@ -20,6 +19,7 @@ public class EditorData //: MonoBehaviour
     public int down;
 
     public AudioClip music;
+    public double madi_sec;
     // Start is called before the first frame update
     void Start()
     {

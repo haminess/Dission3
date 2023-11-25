@@ -14,7 +14,6 @@ public class NoteGeneratorforeditor : MonoBehaviour
     public bool refreshok;
 
     public float offset;
-    public float firstoffset;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +37,17 @@ public class NoteGeneratorforeditor : MonoBehaviour
         {
             noteIndex = 0;
         }
+        else
+        {
+            for(int i = 0; i < makenote.notedata.Length; i++)
+            {
+                if(chart[i][0] - Makemadi.instance.audio_.audiosourse.time > 1)
+                {
+                    noteIndex = i;
+                    break;
+                }
+            }
+        }
     }
     // Update is called once per frame
     void Update()
@@ -54,8 +64,17 @@ public class NoteGeneratorforeditor : MonoBehaviour
     void ShowNote()
     {
         if (noteIndex > chart.Length - 1) return;
-        if (chart[noteIndex][0] == 0) return;
-        if (Makemadi.instance.audio_.audiosourse.time > chart[noteIndex][0] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
+        if (chart[noteIndex][0] - 1 + offset < 0)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
+        {
+            // 4ĭ �� ��� ����
+            if (noteIndex < chart.Length - 4)
+            {
+                MakeRoute(noteIndex + 4).name = "route";
+            }
+            // ���� ��Ʈ �Ѹ���
+            MakeNote();
+        }
+        else if (Makemadi.instance.audio_.audiosourse.time > chart[noteIndex][0] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
         {
             // 4ĭ �� ��� ����
             if (noteIndex < chart.Length - 4)

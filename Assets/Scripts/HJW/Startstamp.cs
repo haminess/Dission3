@@ -10,20 +10,9 @@ public class Startstamp : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer == 14 && Audio.playing)
+        if (collision.gameObject.layer == 14 && Audio.playing)
         {
-            StartCoroutine(delay(collision));
+            audio_.Play();
         }
-    }
-    IEnumerator delay(Collision2D collision)
-    {
-        if (collision.gameObject.GetComponent<Noteindex>().verifyed == false)
-        {
-            Maketile.instance.makenote.notedata[collision.gameObject.GetComponent<Noteindex>().index] = Maketile.instance.audio_.time;
-            collision.gameObject.GetComponent<Noteindex>().verifyed = true;
-            notegen.refresh();
-        }
-        yield return new WaitForSeconds(offset);
-        audio_.Play();
     }
 }

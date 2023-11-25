@@ -21,7 +21,6 @@ public class Makenote : MonoBehaviour
     public Animator[] noteanim;
     [Space(20)]
     public double[] notedata;
-    public double[] noteorder;
     public GameObject[] notesobj;
     public Vector2[] notepos;
     public int[] notegroup;
@@ -36,7 +35,6 @@ public class Makenote : MonoBehaviour
     public bool test;
     private void Start()
     {
-        madi_sec = makemadi.sec / makemadi.madi; //how long is one madi
         chartmode = false;
         previewbox.GetComponent<SpriteRenderer>().enabled = false;
         for (int i = 0; i < 6; i++)
@@ -97,7 +95,7 @@ public class Makenote : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
             {
                 Datacal();
-                if (Array.Exists(noteorder, x => x == data))
+                if (Array.Exists(notedata, x => x == data))
                 {
                     return;
                 }
@@ -108,9 +106,7 @@ public class Makenote : MonoBehaviour
                 notesobj[notesobj.Length - 1] = n;
 
                 Array.Resize(ref notedata, notedata.Length + 1);
-
-                Array.Resize(ref noteorder, noteorder.Length + 1);
-                noteorder[noteorder.Length - 1] = data;
+                notedata[notedata.Length - 1] = data;
 
                 Array.Resize(ref notepos, notepos.Length + 1);
                 notepos[notepos.Length - 1] = n.transform.localPosition;
@@ -134,9 +130,7 @@ public class Makenote : MonoBehaviour
                 {
                     var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
                     notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
-                    notedata[noteindex] = 10000;
                     notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
-                    noteorder = Array.FindAll(noteorder, num => num != noteorder[noteindex]).ToArray();
                     notepos[noteindex] = new Vector2(0,0);
                     notepos = Array.FindAll(notepos, num => num != notepos[noteindex]).ToArray();
                     notegroup[noteindex] = 0;
@@ -158,9 +152,7 @@ public class Makenote : MonoBehaviour
                     var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
                     Maketile.instance.curpointer = notesobj[noteindex];
                     notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
-                    notedata[noteindex] = 10000;
                     notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
-                    noteorder = Array.FindAll(noteorder, num => num != noteorder[noteindex]).ToArray();
                     notepos[noteindex] = new Vector2(0, 0);
                     notepos = Array.FindAll(notepos, num => num != notepos[noteindex]).ToArray();
                     notegroup[noteindex] = 0;
@@ -197,7 +189,7 @@ public class Makenote : MonoBehaviour
                 else if (holding && Maketile.instance.is_fucking) //place
                 {
                     Datacal();
-                    if (Array.Exists(noteorder, x => x == data))
+                    if (Array.Exists(notedata, x => x == data))
                     {
                         return;
                     }
@@ -208,9 +200,7 @@ public class Makenote : MonoBehaviour
                     notesobj[notesobj.Length - 1] = n;
 
                     Array.Resize(ref notedata, notedata.Length + 1);
-
-                    Array.Resize(ref noteorder, noteorder.Length + 1);
-                    noteorder[noteorder.Length - 1] = data;
+                    notedata[notedata.Length - 1] = data;
 
                     Array.Resize(ref notepos, notepos.Length + 1);
                     notepos[notepos.Length - 1] = n.transform.localPosition;
@@ -241,7 +231,7 @@ public class Makenote : MonoBehaviour
         if (holding && Maketile.instance.is_fucking)
         {
             Datacal();
-            if (Array.Exists(noteorder, x => x == data))
+            if (Array.Exists(notedata, x => x == data))
             {
                 return;
             }
@@ -252,9 +242,7 @@ public class Makenote : MonoBehaviour
             notesobj[notesobj.Length - 1] = n;
 
             Array.Resize(ref notedata, notedata.Length + 1);
-
-            Array.Resize(ref noteorder, noteorder.Length + 1);
-            noteorder[noteorder.Length - 1] = data;
+            notedata[notedata.Length - 1] = data;
 
             Array.Resize(ref notepos, notepos.Length + 1);
             notepos[notepos.Length - 1] = n.transform.localPosition;
@@ -296,6 +284,7 @@ public class Makenote : MonoBehaviour
             notesobj[i] = n;
             notesobj[i].GetComponent<Noteindex>().index = i;
         }
+        madi_sec = editordata.madi_sec;
     }
 
     public void Savenotepos()
@@ -304,11 +293,6 @@ public class Makenote : MonoBehaviour
         for (int i = 0; i < notedata.Length; i++)
         {
             editordata.notedata[i] = notedata[i];
-        }
-        Array.Resize(ref editordata.noteorder, noteorder.Length);
-        for (int i = 0; i < noteorder.Length; i++)
-        {
-            editordata.noteorder[i] = noteorder[i];
         }
         Array.Resize(ref editordata.notepos, notepos.Length);
         for (int i = 0; i < notepos.Length; i++)
@@ -325,17 +309,17 @@ public class Makenote : MonoBehaviour
         {
             editordata.notetype[i] = notetype[i];
         }
+        editordata.madi_sec = madi_sec;
     }
 
     void sort()
     {
-        for (int i = 0; i < noteorder.Length - 1; i++)   //i = 0 to N - 1
+        for (int i = 0; i < notedata.Length - 1; i++)   //i = 0 to N - 1
         {
-            for (int j = i + 1; j < noteorder.Length; j++)  //j = i + 1 to N
+            for (int j = i + 1; j < notedata.Length; j++)  //j = i + 1 to N
             {
-                if (noteorder[i] > noteorder[j])       //부등호 방향: 오름차순(>), 내림차순(<)
+                if (notedata[i] > notedata[j])       //부등호 방향: 오름차순(>), 내림차순(<)
                 {
-                    var temp = noteorder[i]; noteorder[i] = noteorder[j]; noteorder[j] = temp; //SWAP
                     var temp1 = notegroup[i]; notegroup[i] = notegroup[j]; notegroup[j] = temp1; //SWAP
                     var temp2 = notesobj[i]; notesobj[i] = notesobj[j]; notesobj[j] = temp2; //SWAP
                     var temp3 = notepos[i]; notepos[i] = notepos[j]; notepos[j] = temp3; //SWAP
