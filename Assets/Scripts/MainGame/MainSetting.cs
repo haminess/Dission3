@@ -34,7 +34,7 @@ public class MainSetting : MonoBehaviour
 // Update Hp Bar
     private void OnRangeChanged()
     {
-        MainGame.instance.userRange = judgeRange.value;
+        MainGame.instance.judgeRange = judgeRange.value;
         tJudgeRange.text = judgeRange.value.ToString("0.00");
 
         // 로컬 저장

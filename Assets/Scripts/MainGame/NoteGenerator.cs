@@ -299,7 +299,7 @@ public class NoteGenerator : MonoBehaviour
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (chart[noteIndex][0] < 1f)
+        if (chart[noteIndex][0] - 1 - MainGame.instance.notesynkRange < 0)
         {
             if(MainGame.instance.gameTime > chart[noteIndex][0])
             {
@@ -307,7 +307,7 @@ public class NoteGenerator : MonoBehaviour
             }
             return;
         }
-        else if (MainGame.instance.bgm.time > chart[noteIndex][0] - 1)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (MainGame.instance.bgm.time > chart[noteIndex][0] - 1 - MainGame.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)

@@ -65,8 +65,8 @@ public class MainGame : MonoBehaviour
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
     public float missRange = 0.5f;
-    public float userRange = 0f;
-    public float userRangePlus = 0.1f;
+    public float notesynkRange = 0f;
+    public float judgeRange = 0f;
 
     // 메인 점수범위 관리
     public int perfectScore = 500;
@@ -147,7 +147,7 @@ public class MainGame : MonoBehaviour
 
         // miss 처리
         if (isGame && noteIndex < chart.Length - 1 &&                   
-            bgm.time > (chart[noteIndex][0] + badRange + userRange))    
+            bgm.time > (chart[noteIndex][0] + badRange + judgeRange))    
         {
             noteIndex++;
 
@@ -407,7 +407,7 @@ public class MainGame : MonoBehaviour
             {
 
                 // 판정시간 일치 확인
-                if (time < (chart[i][0] + perfectRange + userRange) && time > (chart[i][0] - perfectRange + userRange))  // PERFECT
+                if (time < (chart[i][0] + perfectRange + judgeRange) && time > (chart[i][0] - perfectRange + judgeRange))  // PERFECT
                 {
                     noteIndex++;
 
@@ -434,7 +434,7 @@ public class MainGame : MonoBehaviour
 
                     break;
                 }
-                else if (time < (chart[i][0] + goodRange + userRange) && time > (chart[i][0] - goodRange + userRange))   // GOOD
+                else if (time < (chart[i][0] + goodRange + judgeRange) && time > (chart[i][0] - goodRange + judgeRange))   // GOOD
                 {
                     noteIndex++;
 
@@ -461,7 +461,7 @@ public class MainGame : MonoBehaviour
 
                     break;
                 }
-                else if (time < (chart[i][0] + badRange + userRange) && time > (chart[i][0] - badRange + userRange))    // BAD
+                else if (time < (chart[i][0] + badRange + judgeRange) && time > (chart[i][0] - badRange + judgeRange))    // BAD
                 {
                     noteIndex++;
 
@@ -483,7 +483,7 @@ public class MainGame : MonoBehaviour
 
                     break;
                 }
-                else if (time < (chart[i][0] + missRange + userRange) && time > (chart[i][0] - missRange + userRange))  // MISS
+                else if (time < (chart[i][0] + missRange + judgeRange) && time > (chart[i][0] - missRange + judgeRange))  // MISS
                 {
                     noteIndex++;
 
@@ -958,8 +958,11 @@ public class MainGame : MonoBehaviour
         connector.UpdateData();
         bgm.volume = connector.sounddata.bgm;
         effect.volume = connector.sounddata.effect;
+        notesynkRange = connector.maingamedata.synk;
+        judgeRange = connector.maingamedata.judge;
+        
         print("커넥터 연결 완료");
-        userRange = connector.maingamedata.judge;
+        judgeRange = connector.maingamedata.judge;
 
 
         // 데이터 연결

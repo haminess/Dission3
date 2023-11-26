@@ -184,7 +184,7 @@ public class Tutorial : MonoBehaviour
                 judgeRange = connector.maingamedata.judge;
                 RunTime();
                 PlayerReposition();
-                ShowNote(1 + synkRange, transform);
+                ShowNote(1 - synkRange, transform);
         
                 if (Input.anyKeyDown)
                 {
