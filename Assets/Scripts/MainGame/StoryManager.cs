@@ -48,6 +48,7 @@ public class StoryManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject npcPrefab;
     public GameObject[] stageObject;     // 스테이지 전용 오브젝트
+    public Transform storyObject;
 
     // 캐릭터 이미지 스프라이트
     public Sprite[] character;
@@ -310,6 +311,7 @@ public class StoryManager : MonoBehaviour
     public IEnumerator SkipCo()
     {
         yield return StartCoroutine(Fade(black));
+
         storyCamera.SetActive(false);
         playerCam.SetActive(true);
         player.SetActive(true);
@@ -317,6 +319,13 @@ public class StoryManager : MonoBehaviour
         player.GetComponentInChildren<SpriteRenderer>().enabled = true;
         yield return StartCoroutine(Fade(black, false));
 
+        for(int i = 0; i < storyObject.childCount; i++)
+        {
+            Destroy(storyObject.GetChild(0));
+        }
+
+        if (!MainGame.instance.stageMode)
+            yield break;
 
         if (!MainGame.instance.isEnd)
         {
@@ -381,12 +390,10 @@ public class StoryManager : MonoBehaviour
     IEnumerator Story1()
     {
         // 화면 전환
-        yield return StartCoroutine(SetCam(true, 0, 0));
-
+        yield return StartCoroutine(SetCam(true, 8, -27));
 
         // # 1
-
-        GameObject teacher = NPC(character[(int)SpriteNum.teacher], 6, 0);
+        GameObject teacher = NPC(character[(int)SpriteNum.teacher], 14, -27);
         yield return StartCoroutine(Fade(teacher));
 
         yield return new WaitForSeconds(1);
@@ -398,30 +405,30 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Typing(teacher, scripts[sID][1]));
         yield return StartCoroutine(Typing(teacher, scripts[sID][2]));
 
-        GameObject players = NPC(character[(int)SpriteNum.student], 6, 0);
-        yield return StartCoroutine(Fade(players));
+        GameObject player = NPC(character[(int)SpriteNum.student], 14, -27);
+        yield return StartCoroutine(Fade(player));
 
         yield return new WaitForSeconds(1);
 
-        yield return StartCoroutine(Move(players, Vector3.left, 5));
+        yield return StartCoroutine(Move(player, Vector3.left, 5));
 
         yield return new WaitForSeconds(1);
-        yield return StartCoroutine(Typing(players, scripts[sID][3]));
-        yield return StartCoroutine(Typing(players, scripts[sID][4]));
+        yield return StartCoroutine(Typing(player, scripts[sID][3]));
+        yield return StartCoroutine(Typing(player, scripts[sID][4]));
 
-        yield return StartCoroutine(Move(players, Vector3.down, 8));
-        yield return StartCoroutine(Move(players, Vector3.left));
+        yield return StartCoroutine(Move(player, Vector3.down, 8));
+        yield return StartCoroutine(Move(player, Vector3.left));
 
         // 화면 전환
         yield return StartCoroutine(Fade(black));
         Destroy(teacher);
-        Destroy(players);
+        Destroy(player);
 
         // # 2
         // 화면 전환
-        yield return StartCoroutine(SetCam(true, 0, -7));
-        GameObject minji = NPC(character[(int)SpriteNum.friend1], 0, 0);
-        players = NPC(student, -1, -8);
+        yield return StartCoroutine(SetCam(true, 8, -34));
+        GameObject minji = NPC(character[(int)SpriteNum.friend1], 9, -27);
+        player = NPC(character[(int)SpriteNum.student], 8, -35);
         yield return StartCoroutine(Fade(black, false));
 
         yield return new WaitForSeconds(1);
@@ -430,13 +437,16 @@ public class StoryManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
         yield return StartCoroutine(Typing(minji, scripts[sID][5]));
-        players.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
         yield return StartCoroutine(Typing(minji, scripts[sID][6]));
-        yield return StartCoroutine(Typing(players, scripts[sID][7]));
+        yield return StartCoroutine(Typing(player, scripts[sID][7]));
+
+        yield return StartCoroutine(Move(player, Vector3.down));
+        yield return StartCoroutine(Move(player, Vector3.right, 10));
 
         // Story Off
         yield return StartCoroutine(Fade(black));
-        Destroy(players);
+        Destroy(player);
         Destroy(minji);
 
         yield return StartCoroutine(SetCam(false));
@@ -446,13 +456,13 @@ public class StoryManager : MonoBehaviour
 
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 2, 18));
+        yield return StartCoroutine(SetCam(true, 56, -8));
 
         // 캐릭터 생성
-        GameObject friend = NPC(character[(int)SpriteNum.friend1], 3, 18);
-        GameObject player = NPC(character[(int)SpriteNum.student], 1, 18);
-        yield return StartCoroutine(Fade(friend));
-        yield return StartCoroutine(Fade(player));
+        GameObject player = NPC(character[(int)SpriteNum.student], 55, -11);
+        GameObject friend = NPC(character[(int)SpriteNum.friend1], 57, -11);
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
 
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend, scripts[sID][0]));
@@ -460,6 +470,15 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Typing(friend, scripts[sID][2]));
         yield return StartCoroutine(Typing(friend, scripts[sID][3]));
         yield return StartCoroutine(Typing(player, scripts[sID][4]));
+
+        // 첨벙..!
+        // 하지마...!!
+        // 깔깔 얘 변기 물 젖은 꼴 좀 봐
+        // 이제부터 변기라고 부르자 오변기~~
+        // ...
+        // 무슨 냄새가 나는 것 같은데?
+        // 이거 화장실 냄새 아니야? 화장실 락스 냄새인데?
+        // 헐 누구야.. 민폐
 
         // Story Off
         yield return StartCoroutine(Fade(black));
@@ -476,16 +495,15 @@ public class StoryManager : MonoBehaviour
     }
     IEnumerator Story1Sad()
     {
-
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 2, 18));
+        yield return StartCoroutine(SetCam(true, 56, -8));
 
         // 캐릭터 생성
-        GameObject friend = NPC(character[(int)SpriteNum.friend1], 3, 18);
+        GameObject friend = NPC(character[(int)SpriteNum.friend1], 57, -11);
         yield return StartCoroutine(Fade(friend));
         // 캐릭터 이동
-        yield return StartCoroutine(Move(friend, Vector3.left, 1));
+        yield return StartCoroutine(Move(friend, Vector3.left, 3));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend, scripts[sID][0]));
 
@@ -495,13 +513,13 @@ public class StoryManager : MonoBehaviour
 
 
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 0, 0));
+        yield return StartCoroutine(SetCam(true, 2, 18));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 0, 0);
+        GameObject player = NPC(character[(int)SpriteNum.student], 3, 18);
         yield return StartCoroutine(Fade(player));
         // 캐릭터 이동
-        yield return StartCoroutine(Move(player, Vector3.left, 1));
+        yield return StartCoroutine(Move(player, Vector3.left, 2));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(player, scripts[sID][1]));
         yield return StartCoroutine(Typing(player, scripts[sID][2]));
@@ -520,13 +538,15 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 11, -68));
+        yield return StartCoroutine(SetCam(true, 8, -34));
 
 
         // 캐릭터 생성
-        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 10, -67);
-        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 12, -67);
-        GameObject player = NPC(character[(int)SpriteNum.student], 11, -68);
+        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 8, -34);
+        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 8, -35);
+        GameObject player = NPC(character[(int)SpriteNum.student], 7, -35);
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
         friend1.SetActive(false);
         friend2.SetActive(false);
         yield return StartCoroutine(Fade(player));
@@ -561,14 +581,15 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 40, -53));
+        yield return StartCoroutine(SetCam(true, 27, -4));
 
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 39, -53);
-        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 39, -54);
-        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 41, -54);
-        GameObject friend3 = NPC(character[(int)SpriteNum.friend1], 41, -53);
+        GameObject player = NPC(character[(int)SpriteNum.student], 27, -1);
+        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 27, -2);
+        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 28, -2);
+        GameObject friend3 = NPC(character[(int)SpriteNum.friend1], 30, -1);
+        friend3.GetComponentInChildren<SpriteRenderer>().flipX = true;
         friend1.SetActive(false);
         friend2.SetActive(false);
         friend3.SetActive(false);
@@ -581,7 +602,7 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Fade(friend2));
 
         // 캐릭터 이동
-        yield return StartCoroutine(Move(player, Vector3.left, 1));
+        yield return StartCoroutine(Move(friend3, Vector3.left, 1));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend3, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend3, scripts[sID][1]));
@@ -607,14 +628,16 @@ public class StoryManager : MonoBehaviour
     {
 
         yield return StartCoroutine(Fade(black));
-        GameObject player = NPC(character[(int)SpriteNum.student], 39, -53);
+        GameObject player = NPC(character[(int)SpriteNum.student], 18, -39);
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 40, -53));
+        yield return StartCoroutine(SetCam(true, 18, -39));
 
         // 캐릭터 대사
         yield return StartCoroutine(Typing(player, scripts[sID][0]));
         yield return StartCoroutine(Typing(player, scripts[sID][1]));
+
+        yield return StartCoroutine(Move(player, Vector3.left, 10));
 
         // Story Off
         yield return StartCoroutine(Fade(black));
@@ -627,11 +650,12 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // #1
-        // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 0, 0));
-
         // 캐릭터 생성
-        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 0, 0);
+        yield return StartCoroutine(Fade(black));
+        GameObject friend1 = NPC(character[(int)SpriteNum.friend1], 8, -27);
+        // 카메라 세팅
+        yield return StartCoroutine(SetCam(true, 8, -27));
+
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend1, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend1, scripts[sID][1]));
@@ -642,9 +666,13 @@ public class StoryManager : MonoBehaviour
         Destroy(friend1);
 
         // #2
-        yield return StartCoroutine(SetCam(true, 0, -7));
-        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 0, -8);
-        GameObject player = NPC(character[(int)SpriteNum.student], -1, -8);
+        yield return StartCoroutine(SetCam(true, 8, -34));
+        GameObject friend2 = NPC(character[(int)SpriteNum.friend2], 15, -36);
+        GameObject player = NPC(character[(int)SpriteNum.student], 7, -35);
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
+        yield return StartCoroutine(Move(friend2, Vector2.left, 7));
+        yield return StartCoroutine(Move(friend2, Vector2.up, 1));
 
         yield return StartCoroutine(Typing(friend2, scripts[sID][3]));
         yield return StartCoroutine(Typing(player, scripts[sID][4]));
@@ -661,11 +689,15 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 7, -18));
+        yield return StartCoroutine(Fade(black));
+        GameObject player = NPC(character[(int)SpriteNum.student], 79, -20);
+        yield return StartCoroutine(SetCam(true, 76, -21));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 6, -18);
-        GameObject friend = NPC(character[(int)SpriteNum.friend2], 7, -18);
+        GameObject friend = NPC(character[(int)SpriteNum.friend2], 71, -22);
+        yield return StartCoroutine(Fade(friend));
+        yield return StartCoroutine(Move(friend, Vector3.right, 7));
+        yield return StartCoroutine(Move(friend, Vector3.up, 1));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend, scripts[sID][1]));
@@ -686,11 +718,15 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 7, -18));
+        yield return StartCoroutine(Fade(black));
+        GameObject player = NPC(character[(int)SpriteNum.student], 79, -20);
+        yield return StartCoroutine(SetCam(true, 76, -21));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 6, -18);
-        GameObject friend = NPC(character[(int)SpriteNum.friend2], 7, -18);
+        GameObject friend = NPC(character[(int)SpriteNum.friend2], 71, -22);
+        yield return StartCoroutine(Fade(friend));
+        yield return StartCoroutine(Move(friend, Vector3.right, 7));
+        yield return StartCoroutine(Move(friend, Vector3.up, 1));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(friend, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend, scripts[sID][1]));
@@ -708,10 +744,14 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 40, -53));
+        yield return StartCoroutine(SetCam(true, 2, 18));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 40, -53);
+        GameObject player = NPC(character[(int)SpriteNum.student], 9, 12);
+        yield return StartCoroutine(Fade(player));
+        yield return StartCoroutine(Move(player, Vector2.up, 3));
+        yield return StartCoroutine(Move(player, Vector2.left, 14));
+        yield return StartCoroutine(Move(player, Vector2.up, 2));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(player, scripts[sID][0]));
         yield return StartCoroutine(Typing(player, scripts[sID][1]));
@@ -730,19 +770,41 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 0, 0));
+        // # 1
+        yield return StartCoroutine(SetCam(true, 9, 12));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 0, 0);
-        GameObject mom = NPC(character[(int)SpriteNum.mom], -1, 1);
-        GameObject doctor = NPC(character[(int)SpriteNum.doctor], 1, 1);
+        GameObject player = NPC(character[(int)SpriteNum.student], 9, 12);
+        yield return StartCoroutine(Fade(player));
+
+        // 문열림
+        GameObject door = GameObject.Find("Door");
+        door.transform.GetChild(0).gameObject.SetActive(false);
+        yield return StartCoroutine(Fade(door, false));
+
+        yield return StartCoroutine(Move(player, Vector2.up, 1));
+        yield return StartCoroutine(Fade(player, false));
+
+        yield return StartCoroutine(Fade(black));
+        Destroy(player);
+
+
+        // # 2
+        yield return StartCoroutine(SetCam(true, -5, 69));
+
+        player = NPC(character[(int)SpriteNum.student], -5, 63);
+        yield return StartCoroutine(Fade(player));
+        yield return StartCoroutine(Move(player, Vector2.up, 9));
+
+        GameObject mirror = NPC(character[(int)SpriteNum.mom], -5, 75);
+        mirror.GetComponentInChildren<SpriteRenderer>().color = Color.clear;
         // 캐릭터 대사
-        yield return StartCoroutine(Typing(doctor, scripts[sID][0]));
-        yield return StartCoroutine(Typing(doctor, scripts[sID][1]));
-        yield return StartCoroutine(Typing(mom, scripts[sID][2]));
-        yield return StartCoroutine(Typing(mom, scripts[sID][3]));
-        yield return StartCoroutine(Typing(mom, scripts[sID][4]));
-        yield return StartCoroutine(Typing(mom, scripts[sID][5]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][0]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][1]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][2]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][3]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][4]));
+        yield return StartCoroutine(Typing(mirror, scripts[sID][5]));
         yield return StartCoroutine(Typing(player, scripts[sID][6]));
         yield return StartCoroutine(Typing(player, scripts[sID][7]));
         yield return StartCoroutine(Typing(player, scripts[sID][8]));
@@ -751,8 +813,7 @@ public class StoryManager : MonoBehaviour
         // Story Off
         yield return StartCoroutine(Fade(black));
         Destroy(player);
-        Destroy(mom);
-        Destroy(doctor);
+        Destroy(mirror);
 
         // 카메라 되돌리기
         yield return StartCoroutine(SetCam(false));
@@ -761,10 +822,11 @@ public class StoryManager : MonoBehaviour
     {
         // Story On
         // 카메라 세팅
-        yield return StartCoroutine(SetCam(true, 0, 0));
+        yield return StartCoroutine(SetCam(true, 9, 12));
 
         // 캐릭터 생성
-        GameObject player = NPC(character[(int)SpriteNum.student], 0, 0);
+        GameObject player = NPC(character[(int)SpriteNum.student], 9, 12);
+        yield return StartCoroutine(Fade(player));
         // 캐릭터 대사
         yield return StartCoroutine(Typing(player, scripts[sID][0]));
         yield return StartCoroutine(Typing(player, scripts[sID][1]));
@@ -996,7 +1058,7 @@ public class StoryManager : MonoBehaviour
         GameObject npc = Instantiate(npcPrefab);
         npc.GetComponentInChildren<SpriteRenderer>().sprite = _sprite;
         npc.transform.position = new Vector2(_x, _y);
-        npc.transform.SetParent(storyCamera.transform);
+        npc.transform.SetParent(storyObject);
 
         return npc;
     }

@@ -163,7 +163,6 @@ public class StageManager : MonoBehaviour
         isUnlock[1] = true;
         isUnlock[2] = true;
         isUnlock[3] = true;
-        isUnlock[4] = true;
     }
 
     public void LockPlayButton()

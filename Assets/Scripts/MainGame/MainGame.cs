@@ -24,6 +24,7 @@ public class MainGame : MonoBehaviour
     public GameObject judgeEffect;
     public Animation comboeff;
     public Animation judgeeff;
+    public GameObject[] stageObject;
 
     // 로컬 데이터
     DataManager dataMan;
@@ -108,8 +109,10 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
+        SetStage();
+
         // 스테이지(실행) 모드이면 바로 시작
-        if(stageMode)
+        if (stageMode)
         {
             StageStart();
         }
@@ -204,7 +207,8 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-        bgm.Stop();
+        SetStage();
+
         gameCanvas.SetActive(true);
         scoreUI.text = "";
         judgeUI.text = "";
@@ -245,9 +249,40 @@ public class MainGame : MonoBehaviour
 
     public IEnumerator StageStartCo()
     {
+        // 스토리 노래 틀어주기
+        float curVolume = bgm.volume;
+        //bgm.time = soundMan.bgmHookTime[stageNum - 1];
+        bgm.volume = 0;
+        bgm.Play();
         storyManager.sID = (stageNum - 1) * 3;
+        while (true)
+        {
+            bgm.volume += 0.001f;
+            yield return new WaitForSeconds(0.01f);
+            if (bgm.volume > curVolume)
+            {
+                break;
+            }
+        }
+
+        // 스토리 출력
         yield return StartCoroutine(storyManager.ShowStoryCo());
+
+        // 리듬게임 시작 전 플레이어 위치 변경
         PlayerReposition();
+
+        // 스토리 노래 페이드아웃
+        while (true)
+        {
+            bgm.volume -= 0.001f;
+            yield return new WaitForSeconds(0.01f);
+            if(bgm.volume < 0.01f)
+            {
+                break;
+            }
+        }
+
+        // 게임 시작
         yield return StartCoroutine(GameStartCo());
     }
 
@@ -333,6 +368,7 @@ public class MainGame : MonoBehaviour
         }
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
+        print(collections.Count + "개 수집");
         for(int i = 0; i < collections.Count; i++)
         {
             yield return StartCoroutine(ShowGuide(collections[i]));
@@ -345,6 +381,7 @@ public class MainGame : MonoBehaviour
 
     IEnumerator ShowGuide(string[] _content)
     {
+        print("가이드 생성");
         GameObject guide = Instantiate(guidePrefab, screenCanvas.transform);
         guide.GetComponent<Guide>().explain = _content;
         while (true)
@@ -575,13 +612,9 @@ public class MainGame : MonoBehaviour
     public void PlayerReposition()
     {
         // 시작 위치 조정
-
-        print("시작위치조정");
         Vector2 firstNote = new Vector2(
                 chart[noteIndex][1],
                 chart[noteIndex][2]);
-
-        print(firstNote + "aaaaaaaa");
         player.CurPos = firstNote;
 
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
@@ -650,20 +683,32 @@ public class MainGame : MonoBehaviour
 
     public void SetStage()
     {
+        // 스테이지 데이터 세팅
+        stageNum = 1;
+
+        if (GameObject.Find("Data"))
+        {
+            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
+            stageNum = dm.stageNum;
+        }
+
+        // 스테이지 음악 세팅
         bgm.clip = soundMan.bgmClip[stageNum - 1];
+
+        // 스테이지 오브젝트 활성화
+        for(int i = 0; i < stageObject.Length; i++)
+        {
+            stageObject[i].SetActive(false);
+        }
+        stageObject[stageNum - 1].SetActive(true);
+
+
         // 채보 정보 가져오기
         // chart = 
     }
 
     public void GetMainData()
     {
-
-        // 씬 데이터 연결
-        if (GameObject.Find("Data"))
-        {
-            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
-            stageNum = dm.stageNum;
-        }
 
         // 채보 불러오기
 
@@ -911,15 +956,11 @@ public class MainGame : MonoBehaviour
         // 커넥터 연결하기
         Connector connector = GetComponent<Connector>();
         connector.UpdateData();
+        bgm.volume = connector.sounddata.bgm;
+        effect.volume = connector.sounddata.effect;
+        print("커넥터 연결 완료");
         userRange = connector.maingamedata.judge;
 
-        // 사운드 연결
-        soundMan = connector.soundMan;
-        connector.soundMan.bgm.Stop();
-        soundMan.bgm.Stop();
-        bgm.Stop();
-        bgm = soundMan.bgm;
-        effect = soundMan.effect;
 
         // 데이터 연결
         if (!connector.dataMan) return;
