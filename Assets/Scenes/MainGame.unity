@@ -33774,6 +33774,10 @@ PrefabInstance:
       value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmClip.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f1c6f92a7db9d644b5368d43836829e, type: 3}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: bgmTempo.Array.data[0]
       value: 1
       objectReference: {fileID: 0}
@@ -86810,8 +86814,8 @@ MonoBehaviour:
   goodRange: 0.1
   badRange: 0.3
   missRange: 0.5
-  userRange: 0
-  userRangePlus: 0.1
+  notesynkRange: 0
+  judgeRange: 0
   perfectScore: 500
   goodScore: 300
   badScore: 100
