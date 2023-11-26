@@ -12,6 +12,7 @@ public class MainGame : MonoBehaviour
     public static MainGame instance;
 
     // 컴포넌트
+    [Header("Component")]
     public AudioSource bgm;
     public AudioSource effect;
     public SoundManager soundMan;
@@ -19,6 +20,7 @@ public class MainGame : MonoBehaviour
     ChangeScene sceneManager;
 
     // 게임 오브젝트
+    [Header("GameObject")]
     public Player player;
     public GameObject note;
     public GameObject judgeEffect;
@@ -30,10 +32,12 @@ public class MainGame : MonoBehaviour
     DataManager dataMan;
 
     // 채보 관련 데이터
+    [Header("Chart")]
     public float[][] chart;            
-    public int noteIndex;              
+    public int noteIndex;
 
     // 메인 상태 데이터
+    [Header("Game State")]
     public bool startButton = false;
     public int stageNum = 1;
     public bool stageMode = false;
@@ -45,6 +49,7 @@ public class MainGame : MonoBehaviour
     public float startTime;
 
     // 메인 유저점수 데이터
+    [Header("Score")]
     public int score;
     public int combo;
     public int curCombo;
@@ -61,6 +66,7 @@ public class MainGame : MonoBehaviour
     public int maxLife = 10;
 
     // 메인 판정범위 관리
+    [Header("Range")]
     public float perfectRange = 0.05f;
     public float goodRange = 0.1f;
     public float badRange = 0.2f;
@@ -77,6 +83,7 @@ public class MainGame : MonoBehaviour
 
 
     // 유저 UI
+    [Header("UI")]
     public int uiHideTime = 5;
     public TextMeshProUGUI judgeUI;
     public TextMeshProUGUI comboUI;
@@ -90,6 +97,7 @@ public class MainGame : MonoBehaviour
     public Slider progressUI;
     public Slider lifeUI;
 
+    [Header("Prefab")]
     // 가이드 오브젝트
     public GameObject guidePrefab;
 
