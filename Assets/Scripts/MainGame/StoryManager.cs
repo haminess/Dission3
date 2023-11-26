@@ -321,7 +321,7 @@ public class StoryManager : MonoBehaviour
 
         for(int i = 0; i < storyObject.childCount; i++)
         {
-            Destroy(storyObject.GetChild(0));
+            Destroy(storyObject.GetChild(i).gameObject);
         }
 
         if (!MainGame.instance.stageMode)
@@ -363,10 +363,14 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator SetCam(bool _isOn, float _x = 0, float _y = 0)
     {
-        if (_isOn)
+        print(black.GetComponent<Image>().color.a);
+        if (black.GetComponent<Image>().color.a < 0.1f)
         {
             yield return StartCoroutine(Fade(black));
+        }
 
+        if (_isOn)
+        {
             // 카메라 세팅
             playerCam.SetActive(false);
             storyCamera.SetActive(true);

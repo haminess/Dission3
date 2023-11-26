@@ -67,10 +67,10 @@ public class NoteGeneratorforeditor : MonoBehaviour
         if (chart[noteIndex][0] - 1 + offset < 0)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
         {
             // 4ĭ �� ��� ����
-            if (noteIndex < chart.Length - 4)
-            {
-                MakeRoute(noteIndex + 4).name = "route";
-            }
+            //if (noteIndex < chart.Length - 4)
+            //{
+            //    MakeRoute(noteIndex + 4).name = "route";
+            //}
             // ���� ��Ʈ �Ѹ���
             MakeNote();
         }
@@ -79,7 +79,7 @@ public class NoteGeneratorforeditor : MonoBehaviour
             // 4ĭ �� ��� ����
             if (noteIndex < chart.Length - 4)
             {
-                MakeRoute(noteIndex + 4).name = "route";
+                //MakeRoute(noteIndex + 4).name = "route";
             }
                 // ���� ��Ʈ �Ѹ���
             MakeNote();
@@ -89,10 +89,10 @@ public class NoteGeneratorforeditor : MonoBehaviour
         if (!Audio.playing)
         {
             if (GameObject.Find("route")) return;
-            MakeRoute(noteIndex + 0);
-            MakeRoute(noteIndex + 1);
-            MakeRoute(noteIndex + 2);
-            MakeRoute(noteIndex + 3).name = "route";
+            //MakeRoute(noteIndex + 0);
+            //MakeRoute(noteIndex + 1);
+            //MakeRoute(noteIndex + 2);
+            //MakeRoute(noteIndex + 3).name = "route";
         }
     }
     void MakeNote()
