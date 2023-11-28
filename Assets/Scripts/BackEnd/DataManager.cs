@@ -348,10 +348,5 @@ public class DataManager : MonoBehaviour
         }
         File.WriteAllText(listfilePath, editorlistcon);
     }
-
-    public void opensettingfolder()
-    {
-        System.Diagnostics.Process.Start(Application.persistentDataPath);
-    }
 }
 

@@ -162,4 +162,17 @@ public class Settings : MonoBehaviour
             }
         }
     }
+
+    public void opensettingfolder()
+    {
+        System.Diagnostics.Process.Start(Application.persistentDataPath);
+    }
+    public void Saveeditordatadele()
+    {
+        DataManager.Instance.SaveEditorData();
+    }
+    public void listloaddele()
+    {
+        DataManager.Instance.listload();
+    }
 }
