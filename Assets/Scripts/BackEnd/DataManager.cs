@@ -325,7 +325,74 @@ public class DataManager : MonoBehaviour
             a.GetComponentInChildren<TextMeshProUGUI>().text = editorfilelist[i];
         }
     }
+    public void Playmodelistload()
+    {
+        for (int i = 0; i < PlayManager.instance.fileparent.childCount; i++)
+        {
+            Destroy(PlayManager.instance.fileparent.GetChild(i).gameObject);
+        }
+        string filepath = Application.persistentDataPath + "/" + "Editorlist.json";
+        if (File.Exists(filepath))
+        {
+            var read = File.ReadAllLines(filepath);
+            Array.Resize(ref editorfilelist, read.Length);
+            for (int i = 0; i < read.Length; i++)
+            {
+                editorfilelist[i] = read[i];
+            }
+        }
+        for (int i = 0; i < editorfilelist.Length; i++)
+        {
+            var a = Instantiate(PlayManager.instance.fileprefeb, PlayManager.instance.fileparent);
+            a.name = i.ToString();
+            a.GetComponentsInChildren<TextMeshProUGUI>()[0].text = editorfilelist[i];
 
+            string filePath = Application.persistentDataPath + "/" + editorfilelist[i] + ".json";
+            string FromJsonData = File.ReadAllText(filePath);
+            editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
+
+            char[] musicname = editordata.music.ToString().ToCharArray(); //24
+            for (int j = musicname.Length - 1; j > musicname.Length - 24; j--)
+            {
+                musicname[j] = ' ';
+            }
+            a.GetComponentsInChildren<TextMeshProUGUI>()[1].text = String.Join("", musicname);
+            a.GetComponentsInChildren<TextMeshProUGUI>()[2].text = editordata.creator;
+        }
+    }
+    public void Loadplaymodedata(string i)
+    {
+        PlayManager.instance.infopannal.SetActive(true);
+        //Load
+        string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
+
+        if (File.Exists(filePath))
+        {
+            string FromJsonData = File.ReadAllText(filePath);
+            editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
+
+            PlayManager.instance.projectname.text = editordata.projectname;
+            char[] musicname = editordata.music.ToString().ToCharArray(); //24
+            for (int j = musicname.Length - 1; j > musicname.Length - 24; j--)
+            {
+                musicname[j] = ' ';
+            }
+            PlayManager.instance.bgmname.text = String.Join("", musicname);
+            PlayManager.instance.bpm.text = editordata.bpm + " Bpm".ToString();
+            PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
+            string min = (editordata.sec / 60).ToString();
+            string sec = (editordata.sec % 60).ToString();
+            if((editordata.sec / 60) < 10)
+            {
+                min = "0" + (editordata.sec / 60).ToString();
+            }
+            if((editordata.sec % 60)  < 10)
+            {
+                sec = "0" + (editordata.sec %60).ToString();
+            }
+            PlayManager.instance.sec.text = min + ":" + sec.ToString();
+        }
+    }
     public void deleteeditordata(string i)
     {
         int index = Convert.ToInt32(i);

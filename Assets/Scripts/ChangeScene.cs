@@ -52,4 +52,9 @@ public class ChangeScene : MonoBehaviour
         SceneManager.LoadScene("TutorialScene");
     }
 
+    public void ToPlayScene()
+    {
+        SceneManager.LoadScene("PlayScene");
+    }
+
 }

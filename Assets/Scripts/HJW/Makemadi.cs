@@ -25,6 +25,7 @@ public class Makemadi : MonoBehaviour
     public TMP_InputField length_ui;
     public TMP_InputField starttime_ui;
     public TMP_InputField bakjapyoup_ui;
+    public TMP_InputField creator_ui;
     public TextMeshProUGUI musicname;
     public TextMeshProUGUI noteidx;
     public TextMeshProUGUI boxidx;
@@ -268,6 +269,7 @@ public class Makemadi : MonoBehaviour
         temp_sec = sec;
         temp_up = up;
         temp_down = down;
+        creator_ui.text = editordata.creator;
     }
 
     public void uitodata()
@@ -310,6 +312,7 @@ public class Makemadi : MonoBehaviour
         editordata.up = up;
         editordata.down = down;
         editordata.music = audio_.audiosourse.clip;
+        editordata.creator = creator_ui.text; 
     }
     public void Loadinfo()
     {
@@ -324,6 +327,7 @@ public class Makemadi : MonoBehaviour
         settings.downsel(down);
         musicname.text = editordata.music.name;
         audio_.audiosourse.clip = editordata.music;
+        creator_ui.text = editordata.creator;
 
         uiset();
         madisetforload();

@@ -18,6 +18,7 @@ public class EditorData //: MonoBehaviour
     public int up;
     public int down;
 
+    public string creator;
     public AudioClip music;
     public double madi_sec;
     // Start is called before the first frame update

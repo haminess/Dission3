@@ -13,7 +13,10 @@ public class Filedataconvey : MonoBehaviour
     {
         dataManager.LoadEditorData(gameObject.name);
     }
-
+    public void dataconveyplaymode()
+    {
+        dataManager.Loadplaymodedata(gameObject.name);
+    }
     public void deletewarn()
     {
         Makemadi.instance.delete_ui.SetActive(true);

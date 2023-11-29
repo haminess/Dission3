@@ -418,7 +418,22 @@ public class Maketile : MonoBehaviour
         {
             gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
             Array.Resize(ref boxpos, gameObject.transform.childCount);
-            boxpos[i] = gameObject.transform.GetChild(i).position;            
+            if (gameObject.transform.GetChild(i).position.x > 0)
+            {
+                boxpos[i].x = MathF.Ceiling(gameObject.transform.GetChild(i).position.x);
+            }
+            else if (gameObject.transform.GetChild(i).position.x < 0)
+            {
+                boxpos[i].x = MathF.Floor(gameObject.transform.GetChild(i).position.x);
+            }
+            if (gameObject.transform.GetChild(i).position.y > 0)
+            {
+                boxpos[i].y = MathF.Ceiling(gameObject.transform.GetChild(i).position.y);
+            }
+            else if (gameObject.transform.GetChild(i).position.y < 0)
+            {
+                boxpos[i].y = MathF.Floor(gameObject.transform.GetChild(i).position.y);
+            }
         }
     }
 
