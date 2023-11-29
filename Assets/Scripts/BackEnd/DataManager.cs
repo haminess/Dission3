@@ -380,11 +380,11 @@ public class DataManager : MonoBehaviour
             PlayManager.instance.bgmname.text = String.Join("", musicname);
             PlayManager.instance.bpm.text = editordata.bpm + " Bpm".ToString();
             PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
-            string min = (editordata.sec / 60).ToString();
+            string min = (Mathf.Floor((float)editordata.sec / 60)).ToString();
             string sec = (editordata.sec % 60).ToString();
             if((editordata.sec / 60) < 10)
             {
-                min = "0" + (editordata.sec / 60).ToString();
+                min = "0" + (Mathf.Floor((float)editordata.sec / 60)).ToString();
             }
             if((editordata.sec % 60)  < 10)
             {
