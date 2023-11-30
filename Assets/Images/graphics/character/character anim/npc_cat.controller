@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 1d56302e1203de94a921378a75ba1ba7, type: 2}
+  m_Motion: {fileID: 7400000, guid: c77eb31dd0cc59d45a9b29de14a15761, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -60,7 +60,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: npc_doctor
+  m_Name: npc_cat
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Walk
