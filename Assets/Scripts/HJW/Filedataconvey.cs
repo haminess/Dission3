@@ -7,7 +7,8 @@ public class Filedataconvey : MonoBehaviour
     public DataManager dataManager;
     private void Start()
     {
-        dataManager = GameObject.Find("Data").GetComponent<DataManager>();
+        if(GameObject.Find("Data"))
+            dataManager = GameObject.Find("Data").GetComponent<DataManager>();
     }
     public void dataconvey()
     {
