@@ -87224,6 +87224,7 @@ MonoBehaviour:
   judgeEffect: {fileID: 1715814828434402506, guid: 64c0c8f791163324b850a94bb129619f, type: 3}
   comboeff: {fileID: 1515246108}
   judgeeff: {fileID: 1438096405}
+  cameff: {fileID: 1665137037}
   stageObject:
   - {fileID: 1001919712}
   - {fileID: 278369095}
@@ -100201,6 +100202,22 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 1665137036, guid: 66a97f90b181221469b4ed9bdbd3b6f0, type: 3}
   m_PrefabInstance: {fileID: 3062581097374010988}
   m_PrefabAsset: {fileID: 0}
+--- !u!111 &1665137037
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665137032}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 802916c9dc6b54945b2d8f64aca756b9, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 802916c9dc6b54945b2d8f64aca756b9, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1666815119
 GameObject:
   m_ObjectHideFlags: 0
