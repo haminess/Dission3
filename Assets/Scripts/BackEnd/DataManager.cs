@@ -71,7 +71,6 @@ public class DataManager : MonoBehaviour
         maingamedata = new MainGameData();
         sounddata = new SoundData();
 
-        GuideLooked = PlayerPrefs.GetInt(guideKey, 0);
     }
 
     // Start is called before the first frame update
@@ -211,29 +210,6 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public int GetGuide()
-    {
-        GuideLooked = PlayerPrefs.GetInt(guideKey, 0);
-        return GuideLooked;
-    }
-
-    public void SetGuide(int _state)
-    {
-        GuideLooked |= _state;
-        PlayerPrefs.SetInt(guideKey, GuideLooked);
-    }
-
-    public bool isLookGuide(int _state)
-    {
-        if((GetGuide() & _state) > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     public void LoadEditorData(string i)
     {
