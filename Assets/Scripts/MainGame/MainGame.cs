@@ -26,6 +26,7 @@ public class MainGame : MonoBehaviour
     public GameObject judgeEffect;
     public Animation comboeff;
     public Animation judgeeff;
+    public Animation cameff;
     public GameObject[] stageObject;
 
     // 로컬 데이터
@@ -424,6 +425,7 @@ public class MainGame : MonoBehaviour
                     judgeUI.text = "PERFECT!";
                     judgeUI.color = color[0];
                     judgeeff.Play();
+                    cameff.Play();
 
                     // combo
                     curCombo++;
