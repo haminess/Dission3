@@ -898,7 +898,12 @@ MonoBehaviour:
   notecount: {fileID: 68514928}
   creator: {fileID: 1328488690}
   timesig: {fileID: 752169152}
-  music: {fileID: 1500753715}
+  music: {fileID: 537877535}
+--- !u!82 &537877535 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4152625803934422686, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+  m_PrefabInstance: {fileID: 778801063}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &564067545
 GameObject:
   m_ObjectHideFlags: 0
