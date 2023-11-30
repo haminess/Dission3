@@ -363,6 +363,7 @@ public class DataManager : MonoBehaviour
     public void Loadplaymodedata(string i)
     {
         PlayManager.instance.infopannal.SetActive(true);
+        PlayManager.instance.music.Stop();
         //Load
         string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
 
@@ -391,6 +392,10 @@ public class DataManager : MonoBehaviour
                 sec = "0" + (editordata.sec %60).ToString();
             }
             PlayManager.instance.sec.text = min + ":" + sec.ToString();
+            PlayManager.instance.creator.text = editordata.creator;
+            PlayManager.instance.timesig.text = editordata.up + "/" + editordata.down;
+            PlayManager.instance.music.clip = editordata.music;
+            PlayManager.instance.music.Play();
         }
     }
     public void deleteeditordata(string i)

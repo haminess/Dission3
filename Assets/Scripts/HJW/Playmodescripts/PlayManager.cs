@@ -13,7 +13,9 @@ public class PlayManager : MonoBehaviour
     public TextMeshProUGUI sec;
     public TextMeshProUGUI bpm;
     public TextMeshProUGUI notecount;
-
+    public TextMeshProUGUI creator;
+    public TextMeshProUGUI timesig;
+    public AudioSource music;
     private void Awake()
     {
         PlayManager.instance = this;

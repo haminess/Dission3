@@ -325,8 +325,8 @@ public class Makemadi : MonoBehaviour
         up = editordata.up;
         down = editordata.down;
         settings.downsel(down);
-        musicname.text = editordata.music.name;
         audio_.audiosourse.clip = editordata.music;
+        musicname.text = editordata.music.name;
         creator_ui.text = editordata.creator;
 
         uiset();
