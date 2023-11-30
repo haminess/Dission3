@@ -9,6 +9,7 @@ public class Connector : MonoBehaviour
     // 로컬데이터와 연결해주는 스크립트
     public MainGameData maingamedata => DataManager.Instance.maingamedata;
     public SoundData sounddata  => DataManager.Instance.sounddata;
+    public EditorData editordata => DataManager.Instance.editordata;
 
     public SoundManager soundMan;
     public DataManager dataMan;

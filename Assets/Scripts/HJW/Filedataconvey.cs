@@ -23,4 +23,10 @@ public class Filedataconvey : MonoBehaviour
         Makemadi.instance.delete_ui.SetActive(true);
         Makemadi.instance.delete_obj = gameObject;
     }
+
+    public void OnSelected()
+    {
+        PlayManager pm = GameObject.FindObjectOfType<PlayManager>();
+        pm.selectedFile = this.gameObject;
+    }
 }

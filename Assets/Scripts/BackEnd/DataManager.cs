@@ -6,6 +6,13 @@ using TMPro;
 
 public class DataManager : MonoBehaviour
 {
+    public enum Mode
+    {
+        Debug,
+        Stage,
+        Play
+    }
+
     static GameObject container;
 
     //�̱������� ����
@@ -15,8 +22,8 @@ public class DataManager : MonoBehaviour
     public int characterNum;
     public int stageNum;
     public int difficulty;
-    public string guideKey = "GuideLooked";
-    public int GuideLooked;
+    public Mode mode = Mode.Debug;
+    public string chartNum;
 
     //����� Ŭ���� ����
     public MainGameData maingamedata = new MainGameData();
@@ -273,6 +280,17 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public void LoadEditorDataToMain(string i)
+    {
+        string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
+
+        if (File.Exists(filePath))
+        {
+            string FromJsonData = File.ReadAllText(filePath);
+            editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
+        }
+    }
+
 
     public void SaveEditorData()
     {
@@ -362,11 +380,12 @@ public class DataManager : MonoBehaviour
     }
     public void Loadplaymodedata(string i)
     {
+        // Play Scene Init
         PlayManager.instance.infopannal.SetActive(true);
         PlayManager.instance.music.Stop();
+
         //Load
         string filePath = Application.persistentDataPath + "/" + editorfilelist[Convert.ToInt32(i)] + ".json";
-
         if (File.Exists(filePath))
         {
             string FromJsonData = File.ReadAllText(filePath);

@@ -16,6 +16,7 @@ public class PlayManager : MonoBehaviour
     public TextMeshProUGUI creator;
     public TextMeshProUGUI timesig;
     public AudioSource music;
+    public GameObject selectedFile;
     private void Awake()
     {
         PlayManager.instance = this;

@@ -8,6 +8,14 @@ using UnityEngine.Rendering.Universal;
 
 public class MainGame : MonoBehaviour
 {
+    public enum Mode
+    {
+        Debug,
+        Stage,
+        Play
+    }
+
+
     // 메인게임 싱글톤
     public static MainGame instance;
 
@@ -40,6 +48,7 @@ public class MainGame : MonoBehaviour
     // 메인 상태 데이터
     [Header("Game State")]
     public bool startButton = false;
+    public Mode mode = Mode.Debug;
     public int stageNum = 1;
     public bool stageMode = false;
     public bool isStart = false;
@@ -216,7 +225,10 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
+
         SetStage();
+
+
 
         gameCanvas.SetActive(true);
         scoreUI.text = "";
@@ -1331,15 +1343,27 @@ public class MainGame : MonoBehaviour
         effect.volume = connector.sounddata.effect;
         notesynkRange = connector.maingamedata.synk;
         judgeRange = connector.maingamedata.judge;
-        
-        print("커넥터 연결 완료");
-        judgeRange = connector.maingamedata.judge;
 
 
-        // 데이터 연결
+        // Connect Data
         if (!connector.dataMan) return;
         dataMan = connector.dataMan;
         stageNum = dataMan.stageNum;
+    }
+
+    public void SetChart()
+    {
+        // Load Chart
+        dataMan.LoadEditorDataToMain(dataMan.chartNum);
+        for(int i = 0; i < dataMan.editordata.notedata.Length; i++)
+        {
+            chart[i][0] = (float)dataMan.editordata.notedata[i];
+            chart[i][1] = dataMan.editordata.boxpos[i].x;
+            chart[i][2] = dataMan.editordata.boxpos[i].y;
+        }
+
+        // Load Music
+        bgm.clip = dataMan.editordata.music;
     }
 
 }
