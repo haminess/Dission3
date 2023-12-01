@@ -120,4 +120,8 @@ public class TitleManager : MonoBehaviour
         arrow.transform.position = _button.transform.position;
     }
 
+    public void SetDataMode(int _mode)
+    {
+        GameObject.Find("Data").GetComponent<DataManager>().mode = (DataManager.Mode)_mode;
+    }
 }
