@@ -750,6 +750,9 @@ public class MainGame : MonoBehaviour
             stageObject[i].SetActive(false);
         }
         stageObject[stageNum - 1].SetActive(true);
+
+        // 차트
+        GetComponent<NoteGenerator>().SetChart(chart);
     }
 
     public void GetMainData()
