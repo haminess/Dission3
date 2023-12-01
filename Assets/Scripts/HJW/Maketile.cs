@@ -450,6 +450,7 @@ public class Maketile : MonoBehaviour
             editordata.boxpos[i] = boxpos[i];
             editordata.editorboxpos[i] = editorboxpos[i];
         }
+        showtile();
     }
 
     public void boxposload()

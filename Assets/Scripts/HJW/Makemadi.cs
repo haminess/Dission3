@@ -42,7 +42,7 @@ public class Makemadi : MonoBehaviour
     [Space(20)]
     [Header("Info")]
     public string projectname;
-    public int bpm;
+    public double bpm;
     public double sec; //total sec
     public double madi;
     public float madilength;
@@ -251,7 +251,7 @@ public class Makemadi : MonoBehaviour
         scrollpower--;
         scrollpowert.text = scrollpower.ToString();
     }
-    int temp_b;
+    double temp_b;
     float temp_starttime;
     double temp_sec;
     int temp_up;
@@ -274,7 +274,7 @@ public class Makemadi : MonoBehaviour
 
     public void uitodata()
     {        
-        bpm = Convert.ToInt32(bpm_ui.text);
+        bpm = Convert.ToDouble(bpm_ui.text);
         starttime = (float)Convert.ToDouble(starttime_ui.text);
         sec = Convert.ToInt64(length_ui.text);
         up = Convert.ToInt32(bakjapyoup_ui.text);
@@ -294,7 +294,7 @@ public class Makemadi : MonoBehaviour
     public void check()
     {
         int result;
-        if(!int.TryParse(bpm_ui.text, out result) || !int.TryParse(length_ui.text, out result) || !int.TryParse(bakjapyoup_ui.text, out result))
+        if(!int.TryParse(length_ui.text, out result) || !int.TryParse(bakjapyoup_ui.text, out result))
         {
             err.SetActive(true);
             return;

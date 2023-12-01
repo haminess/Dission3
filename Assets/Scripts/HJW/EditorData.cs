@@ -14,7 +14,7 @@ public class EditorData //: MonoBehaviour
     public float starttime;
     public float length;
     public string projectname;
-    public int bpm;
+    public double bpm;
     public double sec; //total sec
     public int up;
     public int down;
