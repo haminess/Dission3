@@ -173,7 +173,7 @@ public class Audio : MonoBehaviour
     int a = 0;
     public void musicchange()
     {
-        if(a == 4)
+        if(a > 4)
         {
             a = 0;
         }
