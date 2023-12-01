@@ -31,7 +31,7 @@ public class NoteGeneratorforeditor : MonoBehaviour
         //time, x, y
         for (int i = 0; i < makenote.notedata.Length; i++)
         {
-            chart[i] = new float[3] { (float)makenote.notedata[i], Maketile.instance.boxpos[i].x, Maketile.instance.boxpos[i].y };
+            chart[i] = new float[3] { (float)makenote.notedata[i], Maketile.instance.editorboxpos[i].x, Maketile.instance.editorboxpos[i].y };
         }
         if(Makemadi.instance.page == 0)
         {

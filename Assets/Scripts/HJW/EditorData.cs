@@ -5,6 +5,7 @@ using UnityEngine;
 public class EditorData //: MonoBehaviour
 {
     public Vector2[] boxpos;
+    public Vector2[] editorboxpos;
     public double[] notedata;
     public Vector2[] notepos;
     public int[] notegroup;
