@@ -409,7 +409,6 @@ public class DataManager : MonoBehaviour
         reloadeditorlist();
         listload();
     }
-
     public void reloadeditorlist()
     {
         string listfilePath = Application.persistentDataPath + "/" + "Editorlist.json";
@@ -419,6 +418,12 @@ public class DataManager : MonoBehaviour
             editorlistcon = editorlistcon + editorfilelist[i] + "\n";
         }
         File.WriteAllText(listfilePath, editorlistcon);
+    }
+
+    public void SetMode(int _mode)
+    {
+        GameObject.Find("Data").GetComponent<DataManager>().mode = (Mode)_mode;
+        mode = (Mode)_mode;
     }
 }
 

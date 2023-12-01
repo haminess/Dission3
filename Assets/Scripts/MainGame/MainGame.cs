@@ -15,7 +15,6 @@ public class MainGame : MonoBehaviour
         Play
     }
 
-
     // 메인게임 싱글톤
     public static MainGame instance;
 
@@ -127,12 +126,14 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-        SetStage();
-
         // 스테이지(실행) 모드이면 바로 시작
-        if (stageMode)
+        if (mode == Mode.Stage)
         {
             StageStart();
+        }
+        else if(mode == Mode.Play)
+        {
+            GameStart();
         }
     }
 
@@ -141,7 +142,7 @@ public class MainGame : MonoBehaviour
     {
         if (startButton)
         {
-            if(stageMode)
+            if(mode == Mode.Stage)
             {
                 StageStart();
             }
@@ -163,41 +164,18 @@ public class MainGame : MonoBehaviour
             musicTime = bgm.time;
         }
 
-        // miss 처리
-        if (isGame && noteIndex < chart.Length - 1 &&                   
-            bgm.time > (chart[noteIndex][0] + badRange + judgeRange))    
-        {
-            noteIndex++;
-
-            // miss 처리
-            miss++;
-            judgeUI.color = color[3];
-            judgeUI.text = "MISS";
-
-            // combo 처리
-            combo = curCombo;
-            curCombo = 0;
-            comboUI.text = "";
-            combotext.text = "";
-
-            // score 처리
-            score += missScore;
-            scoreUI.text = "SCORE\n" + score.ToString();
-
-            // life 감소
-            life--;
-            lifeUI.value = life;
-
-            // 이펙트 처리
-            judgeeff.Play();
-        }
+        MissTimer();
 
         // 게임 종료
         if ((noteIndex > chart.Length - 1 && !isEnd) /*|| (life <= 0 && !isEnd)*/)  // 편의 위해 생명 시스템 off
         {
-            if (stageMode)
+            if (mode == Mode.Stage)
             {
                 StageEnd();
+            }
+            else if ( mode == Mode.Play)
+            {
+
             }
             else
             {
@@ -225,10 +203,14 @@ public class MainGame : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-
-        SetStage();
-
-
+        if(mode == Mode.Stage)
+        {
+            SetStage();
+        }
+        else if(mode == Mode.Play)
+        {
+            SetChart();
+        }
 
         gameCanvas.SetActive(true);
         scoreUI.text = "";
@@ -259,7 +241,6 @@ public class MainGame : MonoBehaviour
         yield return new WaitForSeconds(3);
         Settable(true);        // 占쏙옙占쏙옙창 占쏙옙諛∽옙占?
     }
-
 
     public void StageStart()
     {
@@ -326,11 +307,12 @@ public class MainGame : MonoBehaviour
 
     IEnumerator GameEndCo()
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // Game End
         isStart = false;
         isGame = false;
 
-        Settable(true);     // 占쏙옙占쏙옙창 占쏙옙占쏙옙
+        // Off SettingUI
+        Settable(true);     
 
         // score ui 占쏙옙占쏙옙
         judgeUI.text = "Game Clear!";
@@ -350,6 +332,12 @@ public class MainGame : MonoBehaviour
 
         // 占쏙옙占쏙옙 占십깍옙화
         bgm.Stop();
+
+        yield return new WaitForSeconds(3);
+        if (mode == Mode.Play)
+        {
+            sceneManager.ToScoreScene();
+        }
     }
 
     // life 0돼서 게임 오버됐을 때
@@ -541,6 +529,38 @@ public class MainGame : MonoBehaviour
         }
     }
 
+    public void MissTimer()
+    {
+        // miss 처리
+        if (isGame && noteIndex < chart.Length - 1 &&
+            bgm.time > (chart[noteIndex][0] + badRange + judgeRange))
+        {
+            noteIndex++;
+
+            // miss 처리
+            miss++;
+            judgeUI.color = color[3];
+            judgeUI.text = "MISS";
+
+            // combo 처리
+            combo = curCombo;
+            curCombo = 0;
+            comboUI.text = "";
+            combotext.text = "";
+
+            // score 처리
+            score += missScore;
+            scoreUI.text = "SCORE\n" + score.ToString();
+
+            // life 감소
+            life--;
+            lifeUI.value = life;
+
+            // 이펙트 처리
+            judgeeff.Play();
+        }
+    }
+
     public void Stop()
     {
         if (!isGame) return;
@@ -706,13 +726,6 @@ public class MainGame : MonoBehaviour
     public void SetStage()
     {
         // 스테이지 데이터 세팅
-        stageNum = 1;
-
-        if (GameObject.Find("Data"))
-        {
-            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
-            stageNum = dm.stageNum;
-        }
 
         // 스테이지 음악 세팅
         bgm.clip = soundMan.bgmClip[stageNum - 1];
@@ -723,17 +736,10 @@ public class MainGame : MonoBehaviour
             stageObject[i].SetActive(false);
         }
         stageObject[stageNum - 1].SetActive(true);
-
-
-        // 채보 정보 가져오기
-        // chart = 
     }
 
     public void GetMainData()
     {
-
-        // 채보 불러오기
-
         // 임시 채보, 추후 삭제
         if(stageNum == 1)
         {
@@ -1344,11 +1350,37 @@ public class MainGame : MonoBehaviour
         notesynkRange = connector.maingamedata.synk;
         judgeRange = connector.maingamedata.judge;
 
+        if (GameObject.Find("Data"))
+        {
+            print("데이터 오브젝트 연결");
+            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
+
+            dm.LoadMainGameData();
+            dm.LoadSoundData();
+
+            mode = (Mode)(int)dm.mode;
+            if (mode == Mode.Stage)
+            {
+                stageNum = dm.stageNum;
+                SetStage();
+            }
+            if (mode == Mode.Play)
+            {
+                dm.LoadEditorDataToMain(dm.chartNum);
+                SetChart();
+            }
+
+            bgm.volume = dm.sounddata.bgm;
+            effect.volume = dm.sounddata.effect;
+            notesynkRange = dm.maingamedata.synk;
+            judgeRange = dm.maingamedata.judge;
+        }
 
         // Connect Data
         if (!connector.dataMan) return;
         dataMan = connector.dataMan;
         stageNum = dataMan.stageNum;
+
     }
 
     public void SetChart()
