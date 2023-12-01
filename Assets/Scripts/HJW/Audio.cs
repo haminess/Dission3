@@ -187,15 +187,19 @@ public class Audio : MonoBehaviour
                 break;
             case 1:
                 Makemadi.instance.bpm = 118;
+                Makemadi.instance.starttime = 0;
                 break;
             case 2:
                 Makemadi.instance.bpm = 128;
+                Makemadi.instance.starttime = 0;
                 break;
             case 3:
                 Makemadi.instance.bpm = 150;
+                Makemadi.instance.starttime = 0;
                 break;
             case 4:
                 Makemadi.instance.bpm = 78;
+                Makemadi.instance.starttime = 0;
                 break;
         }
         Makemadi.instance.uiset();

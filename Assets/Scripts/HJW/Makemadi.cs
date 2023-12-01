@@ -279,19 +279,16 @@ public class Makemadi : MonoBehaviour
         sec = Convert.ToInt64(length_ui.text);
         up = Convert.ToInt32(bakjapyoup_ui.text);
         projectname = name_ui.text;
-        if(bpm != temp_b || starttime != temp_starttime || sec != temp_sec || up != temp_up || down != temp_down)
-        {
-            Maketile.instance.note.transform.SetParent(canvas);
-            Maketile.instance.curpointer.transform.SetParent(canvas);
-            Maketile.instance.fakepointer.transform.SetParent(canvas);
-            Maketile.instance.bakjapyoset();
-            Array.Resize(ref note.notedata, 0);
-            Array.Resize(ref note.notesobj, 0);
-            Array.Resize(ref note.notepos, 0);
-            Array.Resize(ref note.notegroup, 0);
-            Array.Resize(ref note.notetype, 0);
-            madiset();
-        }
+        Maketile.instance.note.transform.SetParent(canvas);
+        Maketile.instance.curpointer.transform.SetParent(canvas);
+        Maketile.instance.fakepointer.transform.SetParent(canvas);
+        Maketile.instance.bakjapyoset();
+        Array.Resize(ref note.notedata, 0);
+        Array.Resize(ref note.notesobj, 0);
+        Array.Resize(ref note.notepos, 0);
+        Array.Resize(ref note.notegroup, 0);
+        Array.Resize(ref note.notetype, 0);
+        madiset();
     }
 
     public void check()
