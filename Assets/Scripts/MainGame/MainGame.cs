@@ -222,10 +222,12 @@ public class MainGame : MonoBehaviour
         PlayerReposition();
 
         // 첫 占쏙옙트 占쏙옙占쏙옙占쌍깍옙 
+        print("노트 개수1" + chart.Length);
         yield return StartCoroutine(ShowNextNoteCo());
 
         // 카占쏙옙트
         yield return StartCoroutine(TimeCountCo(judgeUI));
+        print("노트 개수2" + chart.Length);
 
         // 占쏙옙占쌈쏙옙占쏙옙
         isStart = true;        // 占쏙옙占쏙옙 占쌩댐옙占쏙옙
@@ -748,6 +750,9 @@ public class MainGame : MonoBehaviour
             stageObject[i].SetActive(false);
         }
         stageObject[stageNum - 1].SetActive(true);
+
+        // 차트
+        GetComponent<NoteGenerator>().SetChart(chart);
     }
 
     public void GetMainData()
@@ -1400,12 +1405,15 @@ public class MainGame : MonoBehaviour
     {
         // Load Chart
         dataMan.LoadEditorDataToMain(dataMan.chartNum);
+        chart = new float[dataMan.editordata.notedata.Length][];
         for(int i = 0; i < dataMan.editordata.notedata.Length; i++)
         {
+            chart[i] = new float[3] { 0, 0, 0 };
             chart[i][0] = (float)dataMan.editordata.notedata[i];
-            chart[i][1] = dataMan.editordata.boxpos[i].x;
-            chart[i][2] = dataMan.editordata.boxpos[i].y;
+            chart[i][1] = (int)dataMan.editordata.boxpos[i].x;
+            chart[i][2] = (int)dataMan.editordata.boxpos[i].y;
         }
+        GetComponent<NoteGenerator>().SetChart(chart);
 
         // Load Music
         bgm.clip = dataMan.editordata.music;
