@@ -173,10 +173,6 @@ public class MainGame : MonoBehaviour
             {
                 StageEnd();
             }
-            else if ( mode == Mode.Play)
-            {
-
-            }
             else
             {
                 GameEnd();

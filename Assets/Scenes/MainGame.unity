@@ -33778,6 +33778,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 2f1c6f92a7db9d644b5368d43836829e, type: 3}
     - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmClip.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 974a091bcbbe176479dcacdd3f0ba3c5, type: 3}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmClip.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 1e2f5740bd6b2924e9fead02a3501f02, type: 3}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
       propertyPath: bgmTempo.Array.data[0]
       value: 1
       objectReference: {fileID: 0}
@@ -86598,6 +86606,7 @@ MonoBehaviour:
   - {fileID: 1720295860}
   noteIndex: 0
   startButton: 0
+  mode: 0
   stageNum: 1
   stageMode: 0
   isStart: 0
