@@ -31,6 +31,7 @@ public class Audio : MonoBehaviour
         pos = Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition;
         testpos = testmadi.GetComponent<RectTransform>().anchoredPosition;
         index = 3;
+        audiosourse.volume = DataManager.Instance.sounddata.bgm;
     }
     public void playmus()
     {
