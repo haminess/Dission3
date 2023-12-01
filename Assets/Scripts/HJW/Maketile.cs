@@ -414,6 +414,7 @@ public class Maketile : MonoBehaviour
         if(gameObject.transform.childCount == 0)
         {
             Array.Resize(ref boxpos, 0);
+            Array.Resize(ref editorboxpos, 0);
         }
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {
