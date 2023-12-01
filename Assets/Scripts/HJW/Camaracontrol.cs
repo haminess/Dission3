@@ -51,20 +51,6 @@ public class Camaracontrol : MonoBehaviour
         {
             cam.transform.position = new Vector3(cam.transform.position.x - (real_mospos.x * 0.1f), cam.transform.position.y - (real_mospos.y * 0.1f), -10);
         }
-        if(Input.mouseScrollDelta.y < 0 && !Makemadi.instance.chart)
-        {
-            if (cam.orthographicSize > 1)
-            {
-                cam.orthographicSize -= 1;
-            }
-        }
-        if (Input.mouseScrollDelta.y > 0 && !Makemadi.instance.chart)
-        {
-            if(cam.orthographicSize < 45)
-            {
-                cam.orthographicSize += 1;
-            }
-        }
 
     }
     public void up()

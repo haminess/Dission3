@@ -287,6 +287,9 @@ public class Makemadi : MonoBehaviour
             Maketile.instance.bakjapyoset();
             Array.Resize(ref note.notedata, 0);
             Array.Resize(ref note.notesobj, 0);
+            Array.Resize(ref note.notepos, 0);
+            Array.Resize(ref note.notegroup, 0);
+            Array.Resize(ref note.notetype, 0);
             madiset();
         }
     }

@@ -24,7 +24,6 @@ public class Maketile : MonoBehaviour
     public int index;
     public int mode;
     [Space(20)]
-    public Vector2[] editorboxpos;
     public Vector2[] boxpos;
     private bool holding;
     [Space(20)]
@@ -414,41 +413,21 @@ public class Maketile : MonoBehaviour
         if(gameObject.transform.childCount == 0)
         {
             Array.Resize(ref boxpos, 0);
-            Array.Resize(ref editorboxpos, 0);
         }
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {
             gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
             Array.Resize(ref boxpos, gameObject.transform.childCount);
-            Array.Resize(ref editorboxpos, gameObject.transform.childCount);
-            editorboxpos[i] = gameObject.transform.GetChild(i).position;
-            if (gameObject.transform.GetChild(i).position.x > 0)
-            {
-                boxpos[i].x = MathF.Ceiling(gameObject.transform.GetChild(i).position.x);
-            }
-            else if (gameObject.transform.GetChild(i).position.x < 0)
-            {
-                boxpos[i].x = MathF.Floor(gameObject.transform.GetChild(i).position.x);
-            }
-            if (gameObject.transform.GetChild(i).position.y > 0)
-            {
-                boxpos[i].y = MathF.Ceiling(gameObject.transform.GetChild(i).position.y);
-            }
-            else if (gameObject.transform.GetChild(i).position.y < 0)
-            {
-                boxpos[i].y = MathF.Floor(gameObject.transform.GetChild(i).position.y);
-            }
+            boxpos[i] = new Vector2( MathF.Round( gameObject.transform.GetChild(i).position.x + 0.496885f), MathF.Round(gameObject.transform.GetChild(i).position.y - 0.48292f));
         }
     }
 
     public void Saveboxpos()
     {
         Array.Resize(ref editordata.boxpos, boxpos.Length);
-        Array.Resize(ref editordata.editorboxpos, editorboxpos.Length);
         for(int i = 0; i < boxpos.Length;i++)
         {
             editordata.boxpos[i] = boxpos[i];
-            editordata.editorboxpos[i] = editorboxpos[i];
         }
         showtile();
     }
@@ -458,10 +437,6 @@ public class Maketile : MonoBehaviour
         for(int i=0; i < gameObject.transform.childCount; i++)
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
-        }
-        for(int i=0; i < boxpos.Length;i++)
-        {
-            Instantiate(prefeb, editorboxpos[i], Quaternion.identity, gameObject.transform);
         }
     }
 

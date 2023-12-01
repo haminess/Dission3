@@ -225,7 +225,6 @@ public class DataManager : MonoBehaviour
 
             Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
             Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
-            Array.Resize(ref Maketile.instance.editorboxpos, editordata.editorboxpos.Length);
             Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
             Array.Resize(ref Makemadi.instance.note.notegroup, editordata.notegroup.Length);
             Array.Resize(ref Makemadi.instance.note.notetype, editordata.notetype.Length);
@@ -237,10 +236,6 @@ public class DataManager : MonoBehaviour
             for (int a = 0; a < editordata.boxpos.Length; a++)
             {
                 Maketile.instance.boxpos[a] = editordata.boxpos[a];
-            }
-            for (int a = 0; a < editordata.boxpos.Length; a++)
-            {
-                Maketile.instance.editorboxpos[a] = editordata.editorboxpos[a];
             }
             for (int a = 0; a < editordata.notepos.Length; a++)
             {
