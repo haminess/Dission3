@@ -328,7 +328,7 @@ public class MainGame : MonoBehaviour
         judgeUI.text = "Game Clear!";
         judgeUI.color = Color.yellow;
 
-        // 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 결과 씬에 점수 보내기
         GameObject.Find("ResultData").GetComponent<ResultManager>().SendResult();
 
         // 5占쏙옙 占쏙옙 占쏙옙占쏙옙 占쏙옙占?
@@ -343,8 +343,9 @@ public class MainGame : MonoBehaviour
         // 占쏙옙占쏙옙 占십깍옙화
         bgm.Stop();
 
+        // 결과 씬 이동
         yield return new WaitForSeconds(3);
-        if (mode == Mode.Play)
+        if (mode != Mode.Debug)
         {
             sceneManager.ToScoreScene();
         }
