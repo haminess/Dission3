@@ -251,6 +251,25 @@ public class MainGame : MonoBehaviour
 
     public IEnumerator StageStartCo()
     {
+        // 스토리 노래 출력
+        yield return StartCoroutine(OnStoryMusic());
+
+        // 스토리 출력
+        yield return StartCoroutine(storyManager.ShowStoryCo());
+
+        // 스토리 노래 끄기
+        yield return StartCoroutine(OffStoryMusic());
+
+        // 리듬게임 시작 전 플레이어 위치 변경
+        // 첫 노트 앞으로 이동
+        PlayerReposition();
+
+        // 게임 시작
+        yield return StartCoroutine(GameStartCo());
+    }
+
+    public IEnumerator OnStoryMusic()
+    {
         // 스토리 노래 틀어주기
         float curVolume = bgm.volume;
         //bgm.time = soundMan.bgmHookTime[stageNum - 1];
@@ -266,26 +285,19 @@ public class MainGame : MonoBehaviour
                 break;
             }
         }
-
-        // 스토리 출력
-        yield return StartCoroutine(storyManager.ShowStoryCo());
-
-        // 리듬게임 시작 전 플레이어 위치 변경
-        PlayerReposition();
-
+    }
+    public IEnumerator OffStoryMusic()
+    {
         // 스토리 노래 페이드아웃
         while (true)
         {
             bgm.volume -= 0.001f;
             yield return new WaitForSeconds(0.01f);
-            if(bgm.volume < 0.01f)
+            if (bgm.volume < 0.01f)
             {
                 break;
             }
         }
-
-        // 게임 시작
-        yield return StartCoroutine(GameStartCo());
     }
 
     // 占쏙옙占쏙옙 占쏙옙占썅도
@@ -740,8 +752,43 @@ public class MainGame : MonoBehaviour
 
     public void GetMainData()
     {
+        // 커넥터 연결하기
+        Connector connector = GetComponent<Connector>();
+        connector.UpdateData();
+        bgm.volume = connector.sounddata.bgm;
+        effect.volume = connector.sounddata.effect;
+        notesynkRange = connector.maingamedata.synk;
+        judgeRange = connector.maingamedata.judge;
+
+        if (GameObject.Find("Data"))
+        {
+            print("데이터 오브젝트 연결");
+            dataMan = GameObject.Find("Data").GetComponent<DataManager>();
+
+            dataMan.LoadMainGameData();
+            dataMan.LoadSoundData();
+
+            mode = (Mode)(int)dataMan.mode;
+            if (mode == Mode.Stage)
+            {
+                stageNum = dataMan.stageNum;
+                SetStage();
+            }
+            if (mode == Mode.Play)
+            {
+                dataMan.LoadEditorDataToMain(dataMan.chartNum);
+                SetChart();
+            }
+
+            bgm.volume = dataMan.sounddata.bgm;
+            effect.volume = dataMan.sounddata.effect;
+            notesynkRange = dataMan.maingamedata.synk;
+            judgeRange = dataMan.maingamedata.judge;
+        }
+
+
         // 임시 채보, 추후 삭제
-        if(stageNum == 1)
+        if (stageNum == 1)
         {
             chart = new float[236][];
             chart[0] = new float[3] { 1, 7, -28 };
@@ -981,7 +1028,7 @@ public class MainGame : MonoBehaviour
             chart[234] = new float[3] { 104.96f, -3, 19 };
             chart[235] = new float[3] { 105.642f, -3, 20 };
         }
-        else if(stageNum == 2)
+        else if (stageNum == 2)
         {
             chart = new float[137][];
             chart[0] = new float[3] { 0.4693333f, 43, -45 };
@@ -1122,7 +1169,7 @@ public class MainGame : MonoBehaviour
             chart[135] = new float[3] { 85.67467f, 20, -17 };
             chart[136] = new float[3] { 85.824f, 20, -16 };
         }
-        else if(stageNum == 3)
+        else if (stageNum == 3)
         {
             chart = new float[207][];
             chart[0] = new float[3] { 1.258667f, 13f, -53 };
@@ -1342,44 +1389,10 @@ public class MainGame : MonoBehaviour
 
         //}
 
-        // 커넥터 연결하기
-        Connector connector = GetComponent<Connector>();
-        connector.UpdateData();
-        bgm.volume = connector.sounddata.bgm;
-        effect.volume = connector.sounddata.effect;
-        notesynkRange = connector.maingamedata.synk;
-        judgeRange = connector.maingamedata.judge;
-
-        if (GameObject.Find("Data"))
-        {
-            print("데이터 오브젝트 연결");
-            DataManager dm = GameObject.Find("Data").GetComponent<DataManager>();
-
-            dm.LoadMainGameData();
-            dm.LoadSoundData();
-
-            mode = (Mode)(int)dm.mode;
-            if (mode == Mode.Stage)
-            {
-                stageNum = dm.stageNum;
-                SetStage();
-            }
-            if (mode == Mode.Play)
-            {
-                dm.LoadEditorDataToMain(dm.chartNum);
-                SetChart();
-            }
-
-            bgm.volume = dm.sounddata.bgm;
-            effect.volume = dm.sounddata.effect;
-            notesynkRange = dm.maingamedata.synk;
-            judgeRange = dm.maingamedata.judge;
-        }
-
         // Connect Data
-        if (!connector.dataMan) return;
-        dataMan = connector.dataMan;
-        stageNum = dataMan.stageNum;
+        //if (!connector.dataMan) return;
+        //dataMan = connector.dataMan;
+        //stageNum = dataMan.stageNum;
 
     }
 

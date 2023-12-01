@@ -304,37 +304,28 @@ public class StoryManager : MonoBehaviour
     // ???? ???
     public void Skip()
     {
+        // skip coroutine
         StopAllCoroutines();
         StartCoroutine(SkipCo());
     }
 
     public IEnumerator SkipCo()
     {
-        yield return StartCoroutine(Fade(black));
+        yield return StartCoroutine(OffStory());
 
-        storyCamera.SetActive(false);
-        playerCam.SetActive(true);
-        player.SetActive(true);
-        player.GetComponent<Player>().enabled = true;
-        player.GetComponentInChildren<SpriteRenderer>().enabled = true;
-        yield return StartCoroutine(Fade(black, false));
-
-        for(int i = 0; i < storyObject.childCount; i++)
+        if (MainGame.instance.mode == MainGame.Mode.Stage)
         {
-            Destroy(storyObject.GetChild(i).gameObject);
+            yield return StartCoroutine(MainGame.instance.OffStoryMusic());
+            if (!MainGame.instance.isEnd)
+            {
+                MainGame.instance.GameStart();
+            }
+            else
+            {
+                MainGame.instance.GameEnd();
+            }
         }
 
-        if (!MainGame.instance.stageMode)
-            yield break;
-
-        if (!MainGame.instance.isEnd)
-        {
-            MainGame.instance.GameStart();
-        }
-        else
-        {
-            MainGame.instance.GameEnd();
-        }
     }
 
     IEnumerator Story()
@@ -359,6 +350,22 @@ public class StoryManager : MonoBehaviour
         // ???? ???????
         yield return StartCoroutine(SetCam(false));
 
+    }
+    public IEnumerator OffStory()
+    {
+        yield return StartCoroutine(Fade(black));
+
+        storyCamera.SetActive(false);
+        playerCam.SetActive(true);
+        player.SetActive(true);
+        player.GetComponent<Player>().enabled = true;
+        player.GetComponentInChildren<SpriteRenderer>().enabled = true;
+        yield return StartCoroutine(Fade(black, false));
+
+        for (int i = 0; i < storyObject.childCount; i++)
+        {
+            Destroy(storyObject.GetChild(i).gameObject);
+        }
     }
 
     IEnumerator SetCam(bool _isOn, float _x = 0, float _y = 0)

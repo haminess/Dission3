@@ -26,7 +26,7 @@ public class Filedataconvey : MonoBehaviour
 
     public void OnSelected()
     {
-        PlayManager pm = GameObject.FindObjectOfType<PlayManager>();
-        pm.selectedFile = this.gameObject;
+        DataManager dm = GameObject.FindObjectOfType<DataManager>();
+        dm.chartNum = this.gameObject.name;
     }
 }
