@@ -24,6 +24,7 @@ public class Maketile : MonoBehaviour
     public int index;
     public int mode;
     [Space(20)]
+    public Vector2[] editorboxpos;
     public Vector2[] boxpos;
     private bool holding;
     [Space(20)]
@@ -418,6 +419,8 @@ public class Maketile : MonoBehaviour
         {
             gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
             Array.Resize(ref boxpos, gameObject.transform.childCount);
+            Array.Resize(ref editorboxpos, gameObject.transform.childCount);
+            editorboxpos[i] = gameObject.transform.GetChild(i).position;
             if (gameObject.transform.GetChild(i).position.x > 0)
             {
                 boxpos[i].x = MathF.Ceiling(gameObject.transform.GetChild(i).position.x);
@@ -440,10 +443,11 @@ public class Maketile : MonoBehaviour
     public void Saveboxpos()
     {
         Array.Resize(ref editordata.boxpos, boxpos.Length);
+        Array.Resize(ref editordata.editorboxpos, editorboxpos.Length);
         for(int i = 0; i < boxpos.Length;i++)
         {
             editordata.boxpos[i] = boxpos[i];
-
+            editordata.editorboxpos[i] = editorboxpos[i];
         }
     }
 
@@ -455,7 +459,7 @@ public class Maketile : MonoBehaviour
         }
         for(int i=0; i < boxpos.Length;i++)
         {
-            Instantiate(prefeb, boxpos[i], Quaternion.identity, gameObject.transform);
+            Instantiate(prefeb, editorboxpos[i], Quaternion.identity, gameObject.transform);
         }
     }
 

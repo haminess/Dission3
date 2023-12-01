@@ -78,7 +78,7 @@ public class Makenote : MonoBehaviour
                 }
                 if (Maketile.instance.boxpos.Length > c && !hold)
                 {
-                    previewbox.transform.position = Maketile.instance.boxpos[c];
+                    previewbox.transform.position = Maketile.instance.editorboxpos[c];
                 }
                 test = false;
             }
