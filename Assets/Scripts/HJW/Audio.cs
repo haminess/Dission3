@@ -25,6 +25,7 @@ public class Audio : MonoBehaviour
     public GameObject testmadi;
     public static bool testing;
     public GameObject testingpopup;
+    public AudioClip[] defaultmusic;
     private void Start()
     {
         pos = Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition;
@@ -168,5 +169,38 @@ public class Audio : MonoBehaviour
         {
             repaint();
         }
+    }
+    int a = 0;
+    public void musicchange()
+    {
+        if(a == 4)
+        {
+            a = 0;
+        }
+        audiosourse.clip = defaultmusic[a];
+        Makemadi.instance.musicname.text = audiosourse.clip.ToString();
+        Makemadi.instance.sec = Mathf.Round(defaultmusic[a].length);
+        switch (a)
+        {
+            case 0:
+                Makemadi.instance.bpm = 120;
+                break;
+            case 1:
+                Makemadi.instance.bpm = 118;
+                break;
+            case 2:
+                Makemadi.instance.bpm = 128;
+                break;
+            case 3:
+                Makemadi.instance.bpm = 150;
+                break;
+            case 4:
+                Makemadi.instance.bpm = 78;
+                break;
+        }
+        Makemadi.instance.uiset();
+        Makemadi.instance.check();
+        resetmusic();
+        a++;
     }
 }

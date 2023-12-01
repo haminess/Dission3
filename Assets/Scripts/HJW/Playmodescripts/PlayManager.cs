@@ -8,6 +8,7 @@ public class PlayManager : MonoBehaviour
     public Transform fileparent;
     public GameObject fileprefeb;
     public GameObject infopannal;
+    public GameObject nofile;
     public TextMeshProUGUI projectname;
     public TextMeshProUGUI bgmname;
     public TextMeshProUGUI sec;

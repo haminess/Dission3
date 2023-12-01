@@ -340,6 +340,11 @@ public class DataManager : MonoBehaviour
                 editorfilelist[i] = read[i];
             }
         }
+        if(editorfilelist.Length == 0)
+        {
+            PlayManager.instance.nofile.SetActive(true);
+            return;
+        }
         for (int i = 0; i < editorfilelist.Length; i++)
         {
             var a = Instantiate(PlayManager.instance.fileprefeb, PlayManager.instance.fileparent);
