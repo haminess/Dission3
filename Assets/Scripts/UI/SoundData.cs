@@ -9,7 +9,7 @@ public class SoundData //: MonoBehaviour
 
     public SoundData()
     {
-        //�ʱ�ȭ
+        //�ʱ�ȭ
         bgm = 1;
         effect = 1;
     }
