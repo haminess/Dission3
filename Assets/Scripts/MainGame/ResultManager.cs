@@ -121,8 +121,8 @@ public class ResultManager : MonoBehaviour
     {
         // 왼쪽 패널 결과
         GameObject canvas = GameObject.Find("Canvas");
-        GameObject collectPanel = canvas.transform.GetChild(1).gameObject;
-        GameObject scorePanel = canvas.transform.GetChild(2).gameObject;
+        GameObject collectPanel = canvas.transform.GetChild(2).gameObject;
+        GameObject scorePanel = canvas.transform.GetChild(3).gameObject;
 
         // score 패널
         TextMeshProUGUI[] contents = scorePanel.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>();
