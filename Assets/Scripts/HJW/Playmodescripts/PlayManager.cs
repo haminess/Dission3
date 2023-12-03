@@ -27,4 +27,11 @@ public class PlayManager : MonoBehaviour
     {
         DataManager.Instance.Playmodelistload();
     }
+    private void Update()
+    {
+        if(fileparent.childCount != DataManager.Instance.editorfilelist.Length)
+        {
+            DataManager.Instance.Playmodelistload();
+        }
+    }
 }
