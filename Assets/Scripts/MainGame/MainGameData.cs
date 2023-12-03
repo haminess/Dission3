@@ -7,10 +7,10 @@ using UnityEngine.SceneManagement;
 public class MainGameData //: MonoBehaviour
 {
     //public int STageNum;
-    public int[] stageNum = new int[4];
+    public int[] stageNum = new int[5];
 
     //public int score;
-    public int[] score = new int[4];
+    public int[] score = new int[5];
 
     //public int combo;
     //public int curCombo;
@@ -20,9 +20,9 @@ public class MainGameData //: MonoBehaviour
     //public int miss;
 
     //public int collection;
-    public int[] collection = new int[4];
-    public bool[] happy = new bool[4];
-    public bool[] sad = new bool[4];
+    public int[] collection = new int[5];
+    public bool[] happy = new bool[5];
+    public bool[] sad = new bool[5];
 
     public float synk;
     public float judge;
@@ -32,7 +32,7 @@ public class MainGameData //: MonoBehaviour
     public MainGameData()
     {
         // √ ±‚»≠
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             stageNum[i] = i + 1;
             score[i] = 0;
