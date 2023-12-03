@@ -27,8 +27,8 @@ public class StageManager : MonoBehaviour
     public AudioSource effect;
     public SoundManager soundMan;
 
-    public string[] location = { "교실", "교문", "뒷 화단", "운동장" };
-    public int[] difficulty = { 2, 3, 3, 2 };   // 1: 쉬움, 2: 보통, 3: 어려움
+    public string[] location = { "교실", "교문", "운동장", "옥상" , "운동장"};
+    public int[] difficulty = { 3, 1, 3, 2, 2 };   // 1: 쉬움, 2: 보통, 3: 어려움
 
     // 스테이지 오브젝트
     TextMeshProUGUI[] stageInfo;
@@ -96,13 +96,19 @@ public class StageManager : MonoBehaviour
         switch (difficulty[curStage - 1])
         {
             case 1:
-                stageInfo[5].text = "TAA";
+                stageInfo[5].text = "TTTTT";
                 break;
             case 2:
-                stageInfo[5].text = "TTA";
+                stageInfo[5].text = "TTAAA";
                 break;
             case 3:
-                stageInfo[5].text = "TTT";
+                stageInfo[5].text = "TTTAA";
+                break;
+            case 4:
+                stageInfo[5].text = "TTTAA";
+                break;
+            case 5:
+                stageInfo[5].text = "TTTAA";
                 break;
         }
 
@@ -163,6 +169,7 @@ public class StageManager : MonoBehaviour
         isUnlock[1] = true;
         isUnlock[2] = true;
         isUnlock[3] = true;
+        isUnlock[4] = true;
     }
 
     public void LockPlayButton()
@@ -174,14 +181,12 @@ public class StageManager : MonoBehaviour
         {
             stage[curStage - 1].GetComponent<Button>().enabled = true;
             playButton.GetComponent<Button>().interactable = true;
-            //playButton.GetComponent<Image>().color = Color.white;
             playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Play";
         }
         else
         {
             stage[curStage - 1].GetComponent<Button>().enabled = false;
             playButton.GetComponent<Button>().interactable = false;
-            //playButton.GetComponent<Image>().color = Color.gray;
             playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Locked";
         }
     }
@@ -193,6 +198,9 @@ public class StageManager : MonoBehaviour
         {
             find = true;
             data = GameObject.Find("Data").GetComponent<DataManager>();
+            data.SaveMainGameData();
+            data.LoadMainGameData();
+            data.LoadSoundData();
         }
 
         // 로컬 데이터 불러오기
