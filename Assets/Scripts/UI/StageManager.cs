@@ -96,7 +96,7 @@ public class StageManager : MonoBehaviour
         switch (difficulty[curStage - 1])
         {
             case 1:
-                stageInfo[5].text = "TTTTT";
+                stageInfo[5].text = "TAAAA";
                 break;
             case 2:
                 stageInfo[5].text = "TTAAA";
@@ -105,10 +105,10 @@ public class StageManager : MonoBehaviour
                 stageInfo[5].text = "TTTAA";
                 break;
             case 4:
-                stageInfo[5].text = "TTTAA";
+                stageInfo[5].text = "TTTTA";
                 break;
             case 5:
-                stageInfo[5].text = "TTTAA";
+                stageInfo[5].text = "TTTTT";
                 break;
         }
 
