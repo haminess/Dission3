@@ -834,6 +834,7 @@ public class StoryManager : MonoBehaviour
         Destroy(player);
         Destroy(mirror);
 
+        StartCoroutine(Fade(door));
         // ???? ???????
         yield return StartCoroutine(SetCam(false));
     }
@@ -917,9 +918,13 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(SetCam(true, 100, 100.8f));
 
         // npc 생성
-        GameObject player = NPC(0, 100, 100);
+        GameObject player = NPC(0, 99, 100);
         GameObject mom = NPC(4, 101,100);
         GameObject doctor = NPC(5, 102, 100);
+        player.GetComponent<SpriteRenderer>().flipX = true;
+        StartCoroutine(Fade(player));
+        StartCoroutine(Fade(mom));
+        yield return StartCoroutine(Fade(doctor));
 
         yield return StartCoroutine(Typing(doctor, scripts[sID][0]));
         yield return StartCoroutine(Typing(mom, scripts[sID][1]));
