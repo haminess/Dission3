@@ -946,14 +946,13 @@ public class StoryManager : MonoBehaviour
     IEnumerator Ending1()
     {
         // Story On
-        // ???? ????
-        yield return StartCoroutine(SetCam(true, 0, 0));
+        yield return StartCoroutine(SetCam(true, 100, 100));
 
-        // ��???? ????
-        GameObject player = NPC(0, 0, 0);
-        GameObject mom = NPC(4, -1, 1);
-        GameObject doctor = NPC(5, 1, 1);
-        // ��???? ???
+        // npc 생성
+        GameObject player = NPC(0, 100, 100);
+        GameObject mom = NPC(4, 101,100);
+        GameObject doctor = NPC(5, 102, 100);
+
         yield return StartCoroutine(Typing(doctor, scripts[sID][0]));
         yield return StartCoroutine(Typing(mom, scripts[sID][1]));
         yield return StartCoroutine(Typing(mom, scripts[sID][2]));
@@ -966,20 +965,16 @@ public class StoryManager : MonoBehaviour
         Destroy(mom);
         Destroy(doctor);
 
-        // ???? ???????
         yield return StartCoroutine(SetCam(false));
     }
     IEnumerator Ending2()
     {
         // Story On
-        // ???? ????
         yield return StartCoroutine(SetCam(true, 8, -34));
 
-        // ��???? ????
         GameObject player = NPC(0, 8, -34);
         GameObject friend1 = NPC(1, 9, -34);
         GameObject friend2 = NPC(2, 10, -34);
-        // ��???? ???
         yield return StartCoroutine(Typing(friend1, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend1, scripts[sID][1]));
         yield return StartCoroutine(Typing(player, scripts[sID][2]));
@@ -993,11 +988,8 @@ public class StoryManager : MonoBehaviour
         Destroy(friend1);
         Destroy(friend2);
 
-        // ???? ???????
         yield return StartCoroutine(SetCam(false));
     }
-
-    // ?????? ???��??? ??????? ??? ??? ?????
 
     IEnumerator Fade(GameObject obj, bool IsShowing = true)
     {

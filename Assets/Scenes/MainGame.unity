@@ -88125,7 +88125,7 @@ MonoBehaviour:
   bgm: {fileID: 1540117195}
   effect: {fileID: 1966317586}
   soundMan: {fileID: 1232927423}
-  sceneManager: {fileID: 0}
+  sceneManager: {fileID: 675823392}
   player: {fileID: 1935883538}
   note: {fileID: 2464535124320205488, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
   judgeEffect: {fileID: 1715814828434402506, guid: 64c0c8f791163324b850a94bb129619f, type: 3}
