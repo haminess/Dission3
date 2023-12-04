@@ -30,9 +30,6 @@ public class DataManager : MonoBehaviour
     public SoundData sounddata = new SoundData();
     public EditorData editordata = new EditorData();
 
-    // score
-    public int[,] rankScore = new int[5, 10];
-    public string[,] rankName = new string[5, 10];
 
     public static DataManager Instance
     {
