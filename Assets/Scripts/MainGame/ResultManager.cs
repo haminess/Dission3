@@ -92,6 +92,8 @@ public class ResultManager : MonoBehaviour
             print("스테이지 번호 비정상으로 저장 실패");
             return;
         }
+
+        // 기록 저장
         if (score > maingamedata.score[StageNum - 1])
         {
             maingamedata.score[StageNum - 1] = score;
@@ -105,10 +107,21 @@ public class ResultManager : MonoBehaviour
             print("메인게임 저장안됨");
         }
 
+        // 수집품 저장
         if(collection > maingamedata.collection[StageNum - 1])
         {
             print("수집품 신기록 저장");
             maingamedata.collection[StageNum - 1] = collection;
+        }
+
+        // 엔딩 저장
+        if(miss < 10)
+        {
+            maingamedata.happy[StageNum - 1] = true;
+        }
+        else
+        {
+            maingamedata.sad[StageNum - 1] = true;
         }
 
         if (GameObject.Find("Data"))
@@ -164,12 +177,14 @@ public class ResultManager : MonoBehaviour
         contents[4].text = good.ToString();
         contents[5].text = bad.ToString();
         contents[6].text = miss.ToString();
+        print("콤보" + combo);
+        print("콤보" + contents[2].name);
 
         // collect 패널
         collectPanel.SetActive(true);
         Button[] collects = collectPanel.GetComponentsInChildren<Button>();
 
-        if(collection > 2)
+        if(miss < 10)
         {
             collects[0].gameObject.SetActive(true);
             collects[1].gameObject.SetActive(false);
@@ -179,6 +194,14 @@ public class ResultManager : MonoBehaviour
             collects[0].gameObject.SetActive(false);
             collects[1].gameObject.SetActive(true);
         }
+        if(maingamedata.happy[StageNum - 1])
+        {
+            collects[0].gameObject.SetActive(true);
+        }
+        if (maingamedata.happy[StageNum - 1])
+        {
+            collects[1].gameObject.SetActive(true);
+        }
 
         for (int i = 0; i < collection; i++)
         {
@@ -186,7 +209,7 @@ public class ResultManager : MonoBehaviour
             c.transform.localPosition += Vector3.right * 110 * i;
         }
 
-        Destroy(contents[2].gameObject);
+        Destroy(collects[2].gameObject);
         collectPanel.SetActive(false);
 
 

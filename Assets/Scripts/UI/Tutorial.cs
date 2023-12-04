@@ -47,7 +47,6 @@ public class Tutorial : MonoBehaviour
         Note3,
         Note4,
         Synk,
-        Judge,
         None
     }
 
@@ -539,14 +538,17 @@ public class Tutorial : MonoBehaviour
     public void PlayerReposition()
     {
         // 시작 위치 조정
-        if (chart[curNote][0] != 0) return;
-        else if (chart[curNote][0] == 0 && noteIndex != 0 && curNote == noteIndex && time > 3)
+
+        // 채보 중간이면 탈출
+        if (chart[curNote][0] != 0 && curNote != 0) return;
+        // 채보 끝났으면 초기화
+        else if ( noteIndex != 0 && curNote == noteIndex && time > 3)
         {
             noteIndex = 0;
             curNote = 0;
             time = 0;
         }
-        if (step == Step.Synk || step == Step.Judge)
+        if (step == Step.Synk)
         {
             return;
         }

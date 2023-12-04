@@ -249,4 +249,15 @@ public class SoundManager : MonoBehaviour
             bgm.Play();
         }
     }
+    public void PlayBGM()
+    {
+        if (bgm.isPlaying)
+        {
+            return;
+        }
+        else
+        {
+            bgm.Play();
+        }
+    }
 }
