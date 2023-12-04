@@ -30,6 +30,10 @@ public class DataManager : MonoBehaviour
     public SoundData sounddata = new SoundData();
     public EditorData editordata = new EditorData();
 
+    // score
+    public int[,] rankScore = new int[5, 10];
+    public string[,] rankName = new string[5, 10];
+
     public static DataManager Instance
     {
         get
@@ -80,6 +84,8 @@ public class DataManager : MonoBehaviour
         characterNum = 0;
         stageNum = 1;
         difficulty = 0;
+
+
 
         LoadMainGameData();
         LoadSoundData();
@@ -422,6 +428,11 @@ public class DataManager : MonoBehaviour
     {
         GameObject.Find("Data").GetComponent<DataManager>().mode = (Mode)_mode;
         mode = (Mode)_mode;
+    }
+
+    public void ShowRank(GameObject _RankButton)
+    {
+
     }
 }
 
