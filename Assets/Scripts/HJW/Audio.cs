@@ -80,7 +80,7 @@ public class Audio : MonoBehaviour
             {
                 Maketile.instance.makenote.madi_sec = audiosourse.time;
                 audiosourse.Stop();
-                audiosourse.volume = 100;
+                audiosourse.volume = DataManager.Instance.sounddata.bgm;
                 time = 0;
                 time_length = 0;
                 testmadi.GetComponent<RectTransform>().anchoredPosition = testpos;
