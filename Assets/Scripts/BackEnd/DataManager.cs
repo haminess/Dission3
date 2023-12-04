@@ -115,27 +115,26 @@ public class DataManager : MonoBehaviour
             }
 
         }
-
-        print("�ε� �ʱ�ȭ");
-        // ��� �ʱ�ȭ �ڵ�
-        maingamedata = new MainGameData(); // �Ǵ� �ٸ� �ʱⰪ���� ������ �� ����
-
-        // �ʱ�ȭ
-        for (int i = 0; i < 4; i++)
+        else
         {
-            maingamedata.stageNum[i] = i + 1;
-            maingamedata.score[i] = 0;
-            maingamedata.collection[i] = 0;
-            maingamedata.happy[i] = false;
-            maingamedata.sad[i] = false;
+            // ��� �ʱ�ȭ �ڵ�
+            maingamedata = new MainGameData(); // �Ǵ� �ٸ� �ʱⰪ���� ������ �� ����
+
+            // �ʱ�ȭ
+            for (int i = 0; i < 4; i++)
+            {
+                maingamedata.stageNum[i] = i + 1;
+                maingamedata.score[i] = 0;
+                maingamedata.collection[i] = 0;
+                maingamedata.happy[i] = false;
+                maingamedata.sad[i] = false;
+            }
+
+            maingamedata.synk = 0;
+            maingamedata.judge = 0;
+
+            SaveMainGameData();
         }
-
-        maingamedata.synk = 0;
-        maingamedata.judge = 0;
-
-        SaveMainGameData();
-
-        Debug.Log("LoadMainGameData().else �ʱ�ȭ ����"); //(Ȯ�ο�)
     }
 
     public void LoadSoundData()
@@ -219,7 +218,6 @@ public class DataManager : MonoBehaviour
         if (File.Exists(filePath))
         {
             Makemadi.instance.audio_.resetmusic();
-            // ?     
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
