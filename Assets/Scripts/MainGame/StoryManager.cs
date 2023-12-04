@@ -384,7 +384,7 @@ public class StoryManager : MonoBehaviour
             // ???? ????
             playerCam.SetActive(false);
             storyCamera.SetActive(true);
-            storyCamera.transform.position = new Vector3(_x, _y, -10);
+            storyCamera.transform.position = new Vector3(_x, _y, -8);
 
             yield return StartCoroutine(Fade(black, false));
 
@@ -413,7 +413,7 @@ public class StoryManager : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         yield return StartCoroutine(Move(teacher, Vector3.left, 6));
-        yield return StartCoroutine(Jump(teacher, 2, 0.2f));
+        yield return StartCoroutine(Jump(teacher, 1, 0.2f));
 
         yield return new WaitForSeconds(1);
         yield return StartCoroutine(Typing(teacher, scripts[sID][0]));
@@ -486,38 +486,6 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Typing(friend, scripts[sID][3]));
         yield return StartCoroutine(Typing(player, scripts[sID][4]));
 
-        // 첨벙..!
-        // 하지마...!!
-        // 깔깔 얘 변기 물 젖은 꼴 좀 봐
-        // 이제부터 변기라고 부르자 오변기~~
-        // ...
-        // 무슨 냄새가 나는 것 같은데?
-        // 이거 화장실 냄새 아니야? 화장실 락스 냄새인데?
-        // 헐 누구야.. 민폐
-
-        // 이게 뭐야? 얘 아직도 인형 가지고 다니나 봐
-        // 완전 유치해~~!! 우리가 예쁘게 꾸며주자~
-        // 머리도 예쁘게 다듬어주고~ 얼굴도 화장해 주고~
-        // ...
-        // 흑흑..
-        // 엄마가 준 인형인데.. 엉망이 돼버렸어..
-
-        // 자 오늘은 운동회니까 두 명씩 짝꿍을 맺어 도장을 모아 오도록~
-        // 아무도 ..이랑 짝꿍 할 사람 없어?
-        // 어쩔 수 없이 ..이는 선생님이랑 짝꿍 하자
-        
-        // 퍽!!
-        // 어머~ 미안 실수로 얼굴을 맞춰버렸네!!
-        // 실수인 거 알지? 피구 하다 보면 그럴 수 있잖아~
-        // 퍽!!!
-        // 헉 또 얼굴을 맞춰버렸네~ 얼굴 맞았으니까 무효~
-
-        // 덜컹..!!
-        // 뭐야? 나 갇혔어 내보내줘..!!
-        // 안에 사람 있어요!!
-        // 안웨 솨뢈 있워요~~ 깔깔깔
-        // 이 시간에는 아무도 안 올걸? 좋은 밤 보내~
-        // 이거 열어줘..!! 내가 잘못했어.. 가지 마..
 
         // Story Off
         yield return StartCoroutine(Fade(black));
@@ -946,7 +914,7 @@ public class StoryManager : MonoBehaviour
     IEnumerator Ending1()
     {
         // Story On
-        yield return StartCoroutine(SetCam(true, 100, 100));
+        yield return StartCoroutine(SetCam(true, 100, 100.8f));
 
         // npc 생성
         GameObject player = NPC(0, 100, 100);
