@@ -3,6 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static TreeEditor.TreeEditorHelper;
 
 public class Maketile : MonoBehaviour
 {
@@ -44,6 +45,13 @@ public class Maketile : MonoBehaviour
     public bool fuckkkk;
     public bool is_fucking;
     [Space(20)]
+    public float[] unmun_vec;
+    public float[] ebun_vec;
+    public float[] zabun_vec;
+    public float[] palbun_vec;
+    public float[] sipukbun_vec;
+    public float[] samsipebun_vec;
+    [Space(20)]
     [Header("shortcuts")]
     public KeyCode[] keys;
     // Start is called before the first frame update
@@ -57,8 +65,26 @@ public class Maketile : MonoBehaviour
         bakjapyoset();
         holding = false;
         rebutton();
+        positioncal(zabun);
+        positioncal(ebun);
+        positioncal(unmun);
+        positioncal(palbun);
+        positioncal(sipukbun);
+        positioncal(samsipebun);
     }
+    public void positioncal(float notetype)
+    {
+        if (fuckkkk & MathF.Floor(divide * notetype) != divide * notetype)
+        {
 
+            fuck2forcal(divide * notetype);
+        }
+        else
+        {
+
+            fuckforcal(divide * notetype);
+        }
+    }
     public void bakjapyoset()
     {
         backjapyo();
@@ -374,6 +400,58 @@ public class Maketile : MonoBehaviour
                 break;
         }
     }
+    public void fuckforcal(float note)
+    {
+        float a = (float)492 / (note * 2);
+        if(note == divide * zabun)
+        {
+            Array.Resize(ref zabun_vec, (int)(divide * zabun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                zabun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+        else if (note == divide * ebun)
+        {
+            Array.Resize(ref ebun_vec, (int)(divide * ebun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                ebun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+        else if (note == divide * unmun)
+        {
+            Array.Resize(ref unmun_vec, (int)(divide * unmun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                unmun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+        else if (note == divide * palbun)
+        {
+            Array.Resize(ref palbun_vec, (int)(divide * palbun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                palbun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+        else if (note == divide * sipukbun)
+        {
+            Array.Resize(ref sipukbun_vec, (int)(divide * sipukbun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                sipukbun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+        else if (note == divide * samsipebun)
+        {
+            Array.Resize(ref samsipebun_vec, (int)(divide * samsipebun * 2 - 1));
+            for (int i = 0; i < note * 2 - 1; i += 2)
+            {
+                samsipebun_vec[i] = -246 + a * (i + 1);
+            }
+        }
+    }
     public void fuck(float note)
     {
         float a = (float)492 / (note * 2);
@@ -384,10 +462,65 @@ public class Maketile : MonoBehaviour
         is_fucking = true;
         for (int i = 0; i < note * 2 - 1; i += 2)
         {
-            if (-246 + a * i <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + a * (i + 2))
+            if(fakepointer.transform.localPosition.x < 238.3125f && fakepointer.transform.localPosition.x > -238.3125f)
             {
-                curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + a * (i + 1), 2);
-                curpos = i + 1;
+                if (-246 + a * i <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + a * (i + 2))
+                {
+                    curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + a * (i + 1), 2);
+                    curpos = i + 1;
+                }
+            }
+        }
+    }
+    public void fuck2forcal(float note)
+    {
+        float a = (float)492 / (note * 2);
+        if (note == divide * zabun)
+        {
+            Array.Resize(ref zabun_vec, (int)(divide * zabun * 2 + MathF.Floor(divide * zabun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                zabun_vec[i] = -246 + (a * (i + 2));
+            }
+        }
+        else if (note == divide * zabun)
+        {
+            Array.Resize(ref ebun_vec, (int)(divide * ebun * 2 + MathF.Floor(divide * ebun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                ebun_vec[i] = -246 + (a * (i + 2));
+            }
+        }
+        else if (note == divide * unmun)
+        {
+            Array.Resize(ref unmun_vec, (int)(divide * unmun * 2 + MathF.Floor(divide * unmun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                unmun_vec[i] = -246 + (a * (i + 2));
+            }
+        }
+        else if (note == divide * palbun)
+        {
+            Array.Resize(ref palbun_vec, (int)(divide * palbun * 2 + MathF.Floor(divide * palbun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                palbun_vec[i] = -246 + (a * (i + 2));
+            }
+        }
+        else if (note == divide * sipukbun)
+        {
+            Array.Resize(ref sipukbun_vec, (int)(divide * sipukbun * 2 + MathF.Floor(divide * sipukbun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                sipukbun_vec[i] = -246 + (a * (i + 2));
+            }
+        }
+        else if (note == divide * samsipebun)
+        {
+            Array.Resize(ref samsipebun_vec, (int)(divide * samsipebun * 2 + MathF.Floor(divide * samsipebun)));
+            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
+            {
+                samsipebun_vec[i] = -246 + (a * (i + 2));
             }
         }
     }
@@ -401,11 +534,15 @@ public class Maketile : MonoBehaviour
         is_fucking = true;
         for (int i = 0; i < note * 2 + MathF.Floor( note); i += 2)
         {
-            if (-246 + (a * (i + 1)) <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + (a * (i + 3)))
+            if (fakepointer.transform.localPosition.x < 238.3125f && fakepointer.transform.localPosition.x > -238.3125f)
             {
-                curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + (a * (i + 2)), 2);
-                curpos = (((i + 1) -1) * 0.5f) + 1;
+                if (-246 + (a * (i + 1)) <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + (a * (i + 3)))
+                {
+                    curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + (a * (i + 2)), 2);
+                    curpos = (((i + 1) - 1) * 0.5f) + 1;
+                }
             }
+
         }
     }
     void repaint() //box
