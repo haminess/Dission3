@@ -218,12 +218,10 @@ public class MainGame : MonoBehaviour
         PlayerReposition();
 
         // 첫 占쏙옙트 占쏙옙占쏙옙占쌍깍옙 
-        print("노트 개수1" + chart.Length);
         yield return StartCoroutine(ShowNextNoteCo());
 
         // 카占쏙옙트
         yield return StartCoroutine(TimeCountCo(judgeUI));
-        print("노트 개수2" + chart.Length);
 
         // 占쏙옙占쌈쏙옙占쏙옙
         isStart = true;        // 占쏙옙占쏙옙 占쌩댐옙占쏙옙
@@ -523,7 +521,7 @@ public class MainGame : MonoBehaviour
                     judgeUI.color = color[3];
 
                     // combo 처리
-                    combo = curCombo;
+                    combo += curCombo;
                     curCombo = 0;
                     comboUI.text = "";
                     combotext.text = "";
@@ -562,7 +560,7 @@ public class MainGame : MonoBehaviour
             judgeUI.text = "MISS";
 
             // combo 처리
-            combo = curCombo;
+            combo += curCombo;
             curCombo = 0;
             comboUI.text = "";
             combotext.text = "";

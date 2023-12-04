@@ -8,6 +8,7 @@ public class TitleManager : MonoBehaviour
     public GameObject arrow;
     public GameObject[] TitleButton;
     public GameObject[] OptionButton;
+    public GameObject[] SynkButton;
     public int arrowPoint;
     public int mode;
 
@@ -83,6 +84,7 @@ public class TitleManager : MonoBehaviour
                 ArrowControl(OptionButton);
                 break;
             case 3:
+                ArrowControl(SynkButton);
                 // synk mode
                 break;
             case 4:
