@@ -132,6 +132,10 @@ public class StageManager : MonoBehaviour
         {
             rank = "B";
         }
+        else if (rankscore == 0)
+        {
+            rank = "None";
+        }
         else
         {
             rank = "F";

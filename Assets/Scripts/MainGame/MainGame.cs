@@ -23,8 +23,8 @@ public class MainGame : MonoBehaviour
     public AudioSource bgm;
     public AudioSource effect;
     public SoundManager soundMan;
+    public ChangeScene sceneManager;
     StoryManager storyManager;
-    ChangeScene sceneManager;
 
     // 게임 오브젝트
     [Header("GameObject")]
@@ -345,7 +345,7 @@ public class MainGame : MonoBehaviour
 
         // 결과 씬 이동
         yield return new WaitForSeconds(3);
-        if (mode != Mode.Debug)
+        if (mode == Mode.Play)
         {
             sceneManager.ToScoreScene();
         }
@@ -370,10 +370,11 @@ public class MainGame : MonoBehaviour
     }
     IEnumerator StageEndCo()
     {
-        // 占쏙옙占쏙옙 占쏙옙占쏙옙
+        // 게임 종료
         yield return StartCoroutine(GameEndCo());
 
-        // 占쏙옙占쏙옙 占쏙옙占썰리 占쏙옙占?
+        // 엔딩 스토리 출력
+        print("엔딩 스토리 출력");
         yield return new WaitForSeconds(1);
         storyManager.sID = (stageNum - 1) * 3;
         if(miss < 10)
@@ -388,22 +389,30 @@ public class MainGame : MonoBehaviour
         }
         yield return StartCoroutine(storyManager.ShowStoryCo());
 
-        print(collections.Count + "개 수집");
-        for(int i = 0; i < collections.Count; i++)
-        {
-            yield return StartCoroutine(ShowGuide(collections[i]));
-        }
+        yield return StartCoroutine(ShowCollection());
 
-        // 占쏙옙占?화占쏙옙 占쏙옙환
+        // 결과창으로 넘어가기
         yield return new WaitForSeconds(1);
         sceneManager.ToScoreScene();
     }
 
+
+    public IEnumerator ShowCollection()
+    {
+        // 수집품 출력
+        print("수집품 출력");
+        for (int i = 0; i < collections.Count; i++)
+        {
+            yield return StartCoroutine(ShowGuide(collections[i]));
+        }
+    }
     IEnumerator ShowGuide(string[] _content)
     {
-        print("가이드 생성");
+        // 가이드 보여주기
         GameObject guide = Instantiate(guidePrefab, screenCanvas.transform);
         guide.GetComponent<Guide>().explain = _content;
+
+        // 가이드 다 읽을 때까지 대기
         while (true)
         {
             if (guide == null)
@@ -539,7 +548,6 @@ public class MainGame : MonoBehaviour
             }
         }
     }
-
     public void MissTimer()
     {
         // miss 처리
@@ -571,7 +579,6 @@ public class MainGame : MonoBehaviour
             judgeeff.Play();
         }
     }
-
     public void Stop()
     {
         if (!isGame) return;
@@ -597,7 +604,6 @@ public class MainGame : MonoBehaviour
             StartCoroutine(ContinueCo());
         }
     }
-
     IEnumerator ContinueCo()
     {
         // 시작 전 첫 노트 앞으로 위치 이동
@@ -625,7 +631,17 @@ public class MainGame : MonoBehaviour
     {
         StartCoroutine(TimeCountCo());
     }
-
+    IEnumerator TimeCountCo()
+    {
+        Debug.Log("COUNT 3");
+        yield return new WaitForSeconds(1);
+        Debug.Log("COUNT 2");
+        yield return new WaitForSeconds(1);
+        Debug.Log("COUNT 1");
+        yield return new WaitForSeconds(1);
+        Debug.Log("START");
+        yield return new WaitForSeconds(1);
+    }
     IEnumerator TimeCountCo(TextMeshProUGUI textUI)
     {
         textUI.text = "3";
@@ -638,18 +654,6 @@ public class MainGame : MonoBehaviour
         yield return new WaitForSeconds(1);
         textUI.text = "";
     }
-    IEnumerator TimeCountCo()
-    {
-        Debug.Log("COUNT 3");
-        yield return new WaitForSeconds(1);
-        Debug.Log("COUNT 2");
-        yield return new WaitForSeconds(1);
-        Debug.Log("COUNT 1");
-        yield return new WaitForSeconds(1);
-        Debug.Log("START");
-        yield return new WaitForSeconds(1);
-    }
-
     public void ShowNextNote()
     {
         StartCoroutine(ShowNextNoteCo());
@@ -661,7 +665,6 @@ public class MainGame : MonoBehaviour
         Destroy(note1, 3);
         yield return new WaitForSeconds(3);
     }
-
     public void PlayerReposition()
     {
         // 시작 위치 조정
@@ -689,16 +692,13 @@ public class MainGame : MonoBehaviour
             player.CurPos += Vector3.right;
         }
     }
-
     public void Settable(bool _isCan)
     {
         gameCanvas.transform.GetChild(0).gameObject.SetActive(_isCan);
         player.GetComponent<Player>().Settable = _isCan;
     }
-
     public void ResetMain()
     {
-
         // 게임 초기화
         noteIndex = 0;
         isStart = false;
@@ -733,7 +733,6 @@ public class MainGame : MonoBehaviour
         // 게임 캔버스
         gameCanvas.SetActive(false);
     }
-
     public void SetStage()
     {
         // 스테이지 데이터 세팅
@@ -751,7 +750,6 @@ public class MainGame : MonoBehaviour
         // 차트
         GetComponent<NoteGenerator>().SetChart(chart);
     }
-
     public void GetMainData()
     {
         // 커넥터 연결하기
@@ -2006,14 +2004,7 @@ public class MainGame : MonoBehaviour
             chart[303] = new float[3] { 143.488f, 59.0f, -10.0f };
             chart[304] = new float[3] { 143.9573f, 59.0f, -9.0f };
         }
-
-        // Connect Data
-        //if (!connector.dataMan) return;
-        //dataMan = connector.dataMan;
-        //stageNum = dataMan.stageNum;
-
     }
-
     public void SetChart()
     {
         // Load Chart
@@ -2031,5 +2022,4 @@ public class MainGame : MonoBehaviour
         // Load Music
         bgm.clip = dataMan.editordata.music;
     }
-
 }

@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     // 움직임 제어 관리
     public bool Movable = true;
     public bool Settable = false;
+    public float waitTime = 0;
     public float speed = 0.1f;
 
     public float setTime = 10;
@@ -78,7 +79,10 @@ public class Player : MonoBehaviour
             Move();
         }
 
-
+        if(waitTime > 0)
+        {
+            waitTime -= Time.deltaTime;
+        }
 
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
@@ -147,7 +151,7 @@ public class Player : MonoBehaviour
 
     public void OnSetting()
     {
-        if (!Settable) return;
+        if (!Settable || waitTime > 0) return;
         if (!isSetOn)
         {
             // 설정창 상태 설정
@@ -178,6 +182,8 @@ public class Player : MonoBehaviour
 
             // 설정창 비활성화
             settingUI.SetActive(false);
+
+            waitTime = 5;
         }
     }
 

@@ -323,6 +323,11 @@ public class StoryManager : MonoBehaviour
             else
             {
                 MainGame.instance.GameEnd();
+                yield return StartCoroutine(MainGame.instance.ShowCollection());
+
+                yield return new WaitForSeconds(1);
+
+                MainGame.instance.sceneManager.ToScoreScene();
             }
         }
 
