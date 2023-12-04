@@ -3856,6 +3856,22 @@ PrefabInstance:
       propertyPath: bgmClip.Array.data[3]
       value: 
       objectReference: {fileID: 8300000, guid: 1e2f5740bd6b2924e9fead02a3501f02, type: 3}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmHookTime.Array.data[1]
+      value: 24.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmHookTime.Array.data[2]
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmHookTime.Array.data[3]
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405086926632491695, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
+      propertyPath: bgmHookTime.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4caf68bce3bb30b459b83fefe85d26e0, type: 3}
 --- !u!82 &778801064 stripped
@@ -7866,6 +7882,7 @@ MonoBehaviour:
   moveDistance: 0.5
   Movable: 1
   Settable: 0
+  waitTime: 0
   speed: 0.2
   setTime: 10
 --- !u!58 &3062581097761841099

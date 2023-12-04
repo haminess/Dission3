@@ -17,7 +17,7 @@ public class MainSetting : MonoBehaviour
     void Start()
     {
         // 연결
-        musicVolume = gameObject.transform.Find("NoteRangeSlider").GetComponent<Slider>();
+        noteRange = gameObject.transform.Find("NoteRangeSlider").GetComponent<Slider>();
         judgeRange = gameObject.transform.Find("JudgeRangeSlider").GetComponent<Slider>();
         musicVolume = gameObject.transform.Find("VolumeSlider").GetComponent<Slider>();
         tNoteRange = noteRange.GetComponentInChildren<TextMeshProUGUI>();
@@ -34,15 +34,16 @@ public class MainSetting : MonoBehaviour
         judgeRange.value = DataManager.Instance.maingamedata.judge;
         musicVolume.value = DataManager.Instance.sounddata.bgm;
 
-        tNoteRange.text = noteRange.value.ToString("0.00");
-        tJudgeRange.text = judgeRange.value.ToString("0.00");
+        // 초기화
+        tNoteRange.text =  noteRange.value.ToString("0.00") + "ms";
+        tJudgeRange.text = judgeRange.value.ToString("0.00") + "ms";
         tMusicVolume.text = (musicVolume.value * 100).ToString("0");
     }
 // Update Hp Bar
     private void OnNoteRnageChanged()
     {
         MainGame.instance.notesynkRange = noteRange.value;
-        tNoteRange.text = noteRange.value.ToString("0.00");
+        tNoteRange.text = noteRange.value.ToString("0.00") + "ms";
 
         // 로컬 저장
         DataManager.Instance.maingamedata.synk = judgeRange.value;
@@ -50,7 +51,7 @@ public class MainSetting : MonoBehaviour
     private void OnRangeChanged()
     {
         MainGame.instance.judgeRange = judgeRange.value;
-        tJudgeRange.text = judgeRange.value.ToString("0.00");
+        tJudgeRange.text = judgeRange.value.ToString("0.00") + "ms";
 
         // 로컬 저장
         DataManager.Instance.maingamedata.judge = judgeRange.value;
