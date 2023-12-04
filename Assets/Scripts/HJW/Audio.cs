@@ -26,6 +26,7 @@ public class Audio : MonoBehaviour
     public static bool testing;
     public GameObject testingpopup;
     public AudioClip[] defaultmusic;
+    bool depthok = false;
     private void Start()
     {
         pos = Makemadi.instance.charts.GetComponent<RectTransform>().anchoredPosition;
@@ -76,7 +77,12 @@ public class Audio : MonoBehaviour
     {
         if(testing)
         {
-            if(testmadi.GetComponent<RectTransform>().anchoredPosition.y < -50.1f)
+            if(depthok == false && testmadi.GetComponent<RectTransform>().anchoredPosition.y <= -28.657f)
+            {
+                Maketile.instance.makenote.madi_bar_depth = audiosourse.time;
+                depthok = true;
+            }
+            if (testmadi.GetComponent<RectTransform>().anchoredPosition.y <= -49.497f)
             {
                 Maketile.instance.makenote.madi_sec = audiosourse.time;
                 audiosourse.Stop();
@@ -86,6 +92,7 @@ public class Audio : MonoBehaviour
                 testmadi.GetComponent<RectTransform>().anchoredPosition = testpos;
                 testmadi.SetActive(false);
                 testing = false;
+                depthok = false;
                 testingpopup.SetActive(false);
             }
 
