@@ -438,6 +438,10 @@ public class Maketile : MonoBehaviour
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
+        for(int i=0;i < boxpos.Length;i++)
+        {
+            Instantiate(prefeb, new Vector2(boxpos[i].x - 0.496885f, boxpos[i].y + 0.48292f), Quaternion.identity ,gameObject.transform);
+        }
     }
 
     public void hidetile()

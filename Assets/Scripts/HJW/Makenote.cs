@@ -78,7 +78,7 @@ public class Makenote : MonoBehaviour
                 }
                 if (Maketile.instance.boxpos.Length > c && !hold)
                 {
-                    previewbox.transform.position = Maketile.instance.boxpos[c];
+                    previewbox.transform.position = new Vector2(Maketile.instance.boxpos[c].x - 0.496885f, Maketile.instance.boxpos[c].y + 0.48292f);
                 }
                 test = false;
             }
@@ -92,7 +92,7 @@ public class Makenote : MonoBehaviour
         }
         if (Maketile.instance.mode == 0)
         {
-            if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
+            if (Input.GetMouseButton(0) && makemadi.chart && chartmode && Maketile.instance.is_fucking) //make note
             {
                 Datacal();
                 if (Array.Exists(notedata, x => x == data))
