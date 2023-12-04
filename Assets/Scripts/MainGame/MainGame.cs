@@ -549,7 +549,7 @@ public class MainGame : MonoBehaviour
     public void MissTimer()
     {
         // miss 처리
-        if (isGame && noteIndex < chart.Length - 1 &&
+        if (isGame && noteIndex < chart.Length &&
             bgm.time > (chart[noteIndex][0] + badRange + judgeRange))
         {
             noteIndex++;
