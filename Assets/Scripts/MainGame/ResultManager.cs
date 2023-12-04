@@ -4,14 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class ResultManager : MonoBehaviour
 {
-    // ÀúÀåµÈ µ¥ÀÌÅÍ ºÒ·¯¿À±â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
     private MainGameData maingamedata => DataManager.Instance.maingamedata;
 
     public SoundManager soundmanager;
 
+    public TMP_InputField rankname;
     public int StageNum;
 
     //public int score;
@@ -38,11 +40,11 @@ public class ResultManager : MonoBehaviour
 
     void OnEnable()
     {
-        // ¾À ¸Å´ÏÀúÀÇ sceneLoaded¿¡ Ã¼ÀÎÀ» °Ç´Ù.
+        // ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ sceneLoadedï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½.
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // Ã¼ÀÎÀ» °É¾î¼­ ÀÌ ÇÔ¼ö´Â ¸Å ¾À¸¶´Ù È£ÃâµÈ´Ù.
+    // Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½É¾î¼­ ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½È´ï¿½.
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene().name == "ScoreScene")
@@ -60,20 +62,22 @@ public class ResultManager : MonoBehaviour
                 soundmanager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
             }
 
-
-
-            // °á°ú È­¸é Ãâ·Â(¿ŞÂÊ)
+            if (GameObject.Find("MainBtn"))
+            {
+                rankname = GameObject.Find("MainBtn").GetComponent<BackBtn>().rankname;
+            }
+            // ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
             ShowResult();
 
 
-            // ·ÎÄÃ µ¥ÀÌÅÍ ÀúÀå
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             SaveResult();
         }
     }
 
     public void SendResult()
     {
-        // ¸ŞÀÎ°ÔÀÓ °á°ú°ª °á°ú¾À¿¡ Àü´Ş
+        // ï¿½ï¿½ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         StageNum = MainGame.instance.stageNum;
         score = MainGame.instance.score;
         combo = MainGame.instance.combo;
@@ -89,32 +93,31 @@ public class ResultManager : MonoBehaviour
     {
         if (StageNum < 1 || StageNum > 4)
         {
-            print("½ºÅ×ÀÌÁö ¹øÈ£ ºñÁ¤»óÀ¸·Î ÀúÀå ½ÇÆĞ");
+            print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             return;
         }
 
-        // ±â·Ï ÀúÀå
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (score > maingamedata.score[StageNum - 1])
         {
             maingamedata.score[StageNum - 1] = score;
             maingamedata.collection[StageNum - 1] = collection;
-            print(score + "½Å±â·Ï" + maingamedata.score);
-            print("¸ŞÀÎ°ÔÀÓ ÀúÀå");
+            print(score + "ï¿½Å±ï¿½ï¿½" + maingamedata.score);
+            print("ï¿½ï¿½ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
         else
         {
-            print(MainGame.instance.score + "½Å±â·Ï ½ÇÆĞ" + maingamedata.score);
-            print("¸ŞÀÎ°ÔÀÓ ÀúÀå¾ÈµÊ");
+            print(MainGame.instance.score + "ï¿½Å±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" + maingamedata.score);
+            print("ï¿½ï¿½ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Èµï¿½");
         }
 
-        // ¼öÁıÇ° ÀúÀå
+        // ï¿½ï¿½ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
         if(collection > maingamedata.collection[StageNum - 1])
         {
-            print("¼öÁıÇ° ½Å±â·Ï ÀúÀå");
+            print("ï¿½ï¿½ï¿½ï¿½Ç° ï¿½Å±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             maingamedata.collection[StageNum - 1] = collection;
         }
-
-        // ¿£µù ÀúÀå
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if(miss < 10)
         {
             maingamedata.happy[StageNum - 1] = true;
@@ -129,15 +132,74 @@ public class ResultManager : MonoBehaviour
             GameObject.Find("Data").GetComponent<DataManager>().SaveMainGameData();
         }
     }
+    public void reverse(int[] idata, string[] sdata)
+    {
+        int N = idata.Length;
+
+        //â‘¡ ì²˜ë¦¬: ì„ íƒ ì •ë ¬ ì•Œê³ ë¦¬ì¦˜
+        for (int i = 0; i < N - 1; i++)   //i = 0 to N - 1
+        {
+            for (int j = i + 1; j < N; j++)  //j = i + 1 to N
+            {
+                if (idata[i] < idata[j])       //ë¶€ë“±í˜¸ ë°©í–¥: ì˜¤ë¦„ì°¨ìˆœ(>), ë‚´ë¦¼ì°¨ìˆœ(<)
+                {
+                    int temp = idata[i]; idata[i] = idata[j]; idata[j] = temp; //SWAP
+                    string temp2 = sdata[i]; sdata[i] = sdata[j]; sdata[j] = temp2; //SWAP
+                }
+            }
+        }
+    }
+    public void Rank()
+    {
+        switch (StageNum)
+        {
+            case 1:
+                Array.Resize(ref maingamedata.first_stage, maingamedata.first_stage.Length + 1);
+                maingamedata.first_stage[maingamedata.first_stage.Length - 1] = score;
+                Array.Resize(ref maingamedata.first_stage_n, maingamedata.first_stage_n.Length + 1);
+                maingamedata.first_stage_n[maingamedata.first_stage_n.Length - 1] = rankname.text;
+                reverse(maingamedata.first_stage, maingamedata.first_stage_n);
+                break;
+            case 2:
+                Array.Resize(ref maingamedata.second_stage, maingamedata.second_stage.Length + 1);
+                maingamedata.second_stage[maingamedata.second_stage.Length - 1] = score;
+                Array.Sort(maingamedata.second_stage);
+                Array.Resize(ref maingamedata.second_stage_n, maingamedata.second_stage_n.Length + 1);
+                maingamedata.second_stage_n[maingamedata.second_stage_n.Length - 1] = rankname.text;
+                reverse(maingamedata.second_stage, maingamedata.second_stage_n);
+                break;
+            case 3:
+                Array.Resize(ref maingamedata.third_stage, maingamedata.third_stage.Length + 1);
+                maingamedata.third_stage[maingamedata.third_stage.Length - 1] = score;
+                Array.Resize(ref maingamedata.third_stage_n, maingamedata.third_stage_n.Length + 1);
+                maingamedata.third_stage_n[maingamedata.third_stage_n.Length - 1] = rankname.text;
+                reverse(maingamedata.third_stage, maingamedata.third_stage_n);
+                break;
+            case 4:
+                Array.Resize(ref maingamedata.fourth_stage, maingamedata.fourth_stage.Length + 1);
+                maingamedata.fourth_stage[maingamedata.fourth_stage.Length - 1] = score;
+                Array.Resize(ref maingamedata.fourth_stage_n, maingamedata.fourth_stage_n.Length + 1);
+                maingamedata.fourth_stage_n[maingamedata.fourth_stage_n.Length - 1] = rankname.text;
+                reverse(maingamedata.fourth_stage, maingamedata.fourth_stage_n);
+                break;
+            case 5:
+                Array.Resize(ref maingamedata.fifth_stage, maingamedata.fifth_stage.Length + 1);
+                maingamedata.fifth_stage[maingamedata.fifth_stage.Length - 1] = score;
+                Array.Resize(ref maingamedata.fifth_stage_n, maingamedata.fifth_stage_n.Length + 1);
+                maingamedata.fifth_stage_n[maingamedata.fifth_stage_n.Length - 1] = rankname.text;
+                reverse(maingamedata.fifth_stage, maingamedata.fifth_stage_n);
+                break;
+        }
+    }
 
     public void ShowResult()
     {
-        // ¿ŞÂÊ ÆĞ³Î °á°ú
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ³ï¿½ ï¿½ï¿½ï¿½
         GameObject canvas = GameObject.Find("Canvas");
         GameObject collectPanel = canvas.transform.GetChild(2).gameObject;
         GameObject scorePanel = canvas.transform.GetChild(3).gameObject;
 
-        // score ÆĞ³Î
+        // score ï¿½Ğ³ï¿½
         TextMeshProUGUI[] contents = scorePanel.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>();
 
         string rank = "";
@@ -177,10 +239,10 @@ public class ResultManager : MonoBehaviour
         contents[4].text = good.ToString();
         contents[5].text = bad.ToString();
         contents[6].text = miss.ToString();
-        print("ÄŞº¸" + combo);
-        print("ÄŞº¸" + contents[2].name);
+        print("ï¿½Şºï¿½" + combo);
+        print("ï¿½Şºï¿½" + contents[2].name);
 
-        // collect ÆĞ³Î
+        // collect ï¿½Ğ³ï¿½
         collectPanel.SetActive(true);
         Button[] collects = collectPanel.GetComponentsInChildren<Button>();
 
@@ -213,7 +275,7 @@ public class ResultManager : MonoBehaviour
         collectPanel.SetActive(false);
 
 
-        // ¿À¸¥ÂÊ ÆĞ³Î °á°ú
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ğ³ï¿½ ï¿½ï¿½ï¿½
         if (GameObject.Find("rightpanel"))
         {
             Animator right = GameObject.Find("rightpanel").GetComponent<Animator>();

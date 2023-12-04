@@ -7,30 +7,30 @@ using TMPro;
 
 public class StageManager : MonoBehaviour
 {
-    // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
     private MainGameData maingamedata => DataManager.Instance.maingamedata;
     private SoundData sounddata => DataManager.Instance.sounddata;
 
     bool find = false;
     DataManager data;
 
-    // À¯Àú Á¤º¸ °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public GameObject[] stage;
     public bool[] isUnlock;
     public int[] stageScore = new int[4];
     public int curStage = 2;
     float highlightTime = 0;
 
-    // À½¾Ç
-    // ½ºÅ×ÀÌÁö Á¤º¸ °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public AudioSource bgm;
     public AudioSource effect;
     public SoundManager soundMan;
 
-    public string[] location = { "±³½Ç", "±³¹®", "¿îµ¿Àå", "¿Á»ó" , "¿îµ¿Àå"};
-    public int[] difficulty = { 3, 1, 3, 2, 2 };   // 1: ½¬¿ò, 2: º¸Åë, 3: ¾î·Á¿ò
+    public string[] location = { "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½", "ï¿½îµ¿ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½" , "ï¿½îµ¿ï¿½ï¿½"};
+    public int[] difficulty = { 3, 1, 3, 2, 2 };   // 1: ï¿½ï¿½ï¿½ï¿½, 2: ï¿½ï¿½ï¿½ï¿½, 3: ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    // ½ºÅ×ÀÌÁö ¿ÀºêÁ§Æ®
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     TextMeshProUGUI[] stageInfo;
 
     // Start is called before the first frame update
@@ -38,7 +38,7 @@ public class StageManager : MonoBehaviour
     {
         stageInfo = GameObject.Find("StagePanel").GetComponentsInChildren<TextMeshProUGUI>();
 
-        // ÃÊ±â°ª ¼¼ÆÃ
+        // ï¿½Ê±â°ª ï¿½ï¿½ï¿½ï¿½
         //curStage = 2;
 
 
@@ -46,7 +46,7 @@ public class StageManager : MonoBehaviour
 
         ConnectData();
 
-        // ÇØ±Ý±â´É
+        // ï¿½Ø±Ý±ï¿½ï¿½
         SetStageLock();
 
         ShowStage();
@@ -73,24 +73,24 @@ public class StageManager : MonoBehaviour
 
     public void ShowStage()
     {
-        // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         DataManager.Instance.LoadMainGameData();
 
-        // À½¾Ç Ãâ·Â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         bgm.clip = soundMan.bgmClip[curStage - 1];
         bgm.time = soundMan.bgmHookTime[curStage - 1];
         bgm.Play();
 
-        // ½ºÅ×ÀÌÁö Á¤º¸ Ãâ·Â
-        // ½ºÅ×ÀÌÁö ¹øÈ£
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£
         stageInfo[0].text = "stage " + curStage.ToString();
-        // Àå¼Ò
+        // ï¿½ï¿½ï¿½
         stageInfo[1].text = location[curStage - 1].ToString();
-        // °î ÀÌ¸§
+        // ï¿½ï¿½ ï¿½Ì¸ï¿½
         stageInfo[2].text = soundMan.bgmClip[curStage - 1].name.ToString();
-        // °î ½Ã°£
+        // ï¿½ï¿½ ï¿½Ã°ï¿½
         stageInfo[3].text = (Mathf.Floor(soundMan.bgmClip[curStage - 1].length / 60.0f)).ToString("00") + ":" + (soundMan.bgmClip[curStage - 1].length % 60).ToString("00");
-        // ³­ÀÌµµ
+        // ï¿½ï¿½ï¿½Ìµï¿½
         stageInfo[4].text = "Difficulty";
 
         switch (difficulty[curStage - 1])
@@ -112,7 +112,7 @@ public class StageManager : MonoBehaviour
                 break;
         }
 
-        // ÃÖ°íÁ¡¼ö
+        // ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½
         stageInfo[6].text = maingamedata.score[curStage - 1].ToString() + " Score";
         string rank = "";
         int rankscore = maingamedata.score[curStage - 1];
@@ -152,7 +152,7 @@ public class StageManager : MonoBehaviour
             stageInfo[9].text = maingamedata.collection[curStage - 1].ToString() + " Collection";
         }
 
-        // ÇØ±Ý ±â´É
+        // ï¿½Ø±ï¿½ ï¿½ï¿½ï¿½
         LockPlayButton();
 
     }
@@ -160,7 +160,7 @@ public class StageManager : MonoBehaviour
     public void SetStageLock()
     {
         isUnlock[0] = true;
-        // ½ºÅ×ÀÌÁö ±â·Ï¿¡ µû¶ó ÇØ±Ý ±â´É ±¸Çö
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø±ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         for (int i = 0; i < stageScore.Length; i++)
         {
             if (stageScore[i] > 10000)
@@ -169,7 +169,7 @@ public class StageManager : MonoBehaviour
             }
         }
 
-        // ÀÓ½Ã·Î ÇØÁ¦ ÇØ ³õ±â
+        // ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         isUnlock[1] = true;
         isUnlock[2] = true;
         isUnlock[3] = true;
@@ -179,7 +179,7 @@ public class StageManager : MonoBehaviour
     public void LockPlayButton()
     {
 
-        // ÇØ±Ý±â´É 
+        // ï¿½Ø±Ý±ï¿½ï¿½ 
         GameObject playButton = GameObject.Find("PlayButton");
         if (isUnlock[curStage - 1])
         {
@@ -197,7 +197,7 @@ public class StageManager : MonoBehaviour
 
     public void ConnectData()
     {
-        // µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         if (GameObject.Find("Data"))
         {
             find = true;
@@ -207,7 +207,7 @@ public class StageManager : MonoBehaviour
             data.LoadSoundData();
         }
 
-        // ·ÎÄÃ µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         DataManager.Instance.LoadSoundData();
         bgm.volume = sounddata.bgm;
 
@@ -215,7 +215,7 @@ public class StageManager : MonoBehaviour
         for (int i = 0; i < maingamedata.score.Length; i++)
         {
             stageScore[i] = maingamedata.score[i];
-            print(maingamedata.score[i] + "Á¡¼ö");
+            print(maingamedata.score[i] + "ï¿½ï¿½ï¿½ï¿½");
         }
     }
 

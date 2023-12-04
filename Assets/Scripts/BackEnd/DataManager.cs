@@ -104,19 +104,10 @@ public class DataManager : MonoBehaviour
             //�ҷ�����
             string FromJsonData = File.ReadAllText(filePath);
             maingamedata = JsonUtility.FromJson<MainGameData>(FromJsonData);
-            Debug.Log("LoadMainGameData() ����"); //(Ȯ�ο�)
-            print("���� ��ũ " + maingamedata.synk + "����" + maingamedata.judge);
-
             if (maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
             {
-                // ������ �� �����̸� ����
-                print("����� ���� ���� �ε�");
-                print("���� ���� 1: " + maingamedata.score[0] + "2: " + maingamedata.score[1] + "3: " + maingamedata.score[2] + "4: " + maingamedata.score[3]);
-
-                print("���� ��ũ " + maingamedata.synk + "����" + maingamedata.judge);
                 return;
             }
-
         }
         else
         {

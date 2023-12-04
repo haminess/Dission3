@@ -26,12 +26,22 @@ public class MainGameData //: MonoBehaviour
 
     public float synk;
     public float judge;
-    
 
+    public int[] first_stage;
+    public int[] second_stage;
+    public int[] third_stage;
+    public int[] fourth_stage;
+    public int[] fifth_stage;
+
+    public string[] first_stage_n;
+    public string[] second_stage_n;
+    public string[] third_stage_n;
+    public string[] fourth_stage_n;
+    public string[] fifth_stage_n;
 
     public MainGameData()
     {
-        // �ʱ�ȭ
+        // �ʱ�ȭ
         for (int i = 0; i < 5; i++)
         {
             stageNum[i] = i + 1;
