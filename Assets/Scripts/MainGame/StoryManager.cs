@@ -46,7 +46,6 @@ public class StoryManager : MonoBehaviour
     public GameObject storyCamera;
     public GameObject gameCanvas;
     public GameObject playerPrefab;
-    public GameObject npcPrefab;
     public GameObject[] stageObject;     // ???????? ???? ???????
     public Transform storyObject;
 
@@ -468,7 +467,6 @@ public class StoryManager : MonoBehaviour
     }
     IEnumerator Story1Happy()
     {
-
         // Story On
         // ???? ????
         yield return StartCoroutine(SetCam(true, 56, -8));
