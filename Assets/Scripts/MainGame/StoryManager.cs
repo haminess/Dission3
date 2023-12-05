@@ -403,17 +403,11 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Story1()
     {
-        // ??? ???
         yield return StartCoroutine(SetCam(true, 8, -27));
 
         // # 1
-        GameObject teacher = NPC(3, 14, -27);
+        GameObject teacher = NPC(3, 8, -27);
         yield return StartCoroutine(Fade(teacher));
-
-        yield return new WaitForSeconds(1);
-
-        yield return StartCoroutine(Move(teacher, Vector3.left, 6));
-        yield return StartCoroutine(Jump(teacher, 1, 0.2f));
 
         yield return new WaitForSeconds(1);
         yield return StartCoroutine(Typing(teacher, scripts[sID][0]));
@@ -434,13 +428,11 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(player, Vector3.down, 8));
         yield return StartCoroutine(Move(player, Vector3.left));
 
-        // ??? ???
         yield return StartCoroutine(Fade(black));
         Destroy(teacher);
         Destroy(player);
 
         // # 2
-        // ??? ???
         GameObject minji = NPC(1, 9, -27);
         player = NPC(0, 8, -35);
         yield return StartCoroutine(SetCam(true, 8, -34));
