@@ -909,7 +909,7 @@ public class StoryManager : MonoBehaviour
     IEnumerator Ending1()
     {
         // Story On
-        yield return StartCoroutine(SetCam(true, 100, 100.8f));
+        yield return StartCoroutine(SetCam(true, 92.93f, 124.84f));
 
         // npc 생성
         GameObject player = NPC(0, 99, 100);
