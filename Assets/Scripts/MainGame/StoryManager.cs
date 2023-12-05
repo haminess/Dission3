@@ -55,6 +55,8 @@ public class StoryManager : MonoBehaviour
     public Sprite student;
     public Sprite friend1;
     public GameObject black;
+    public GameObject Credits;
+    public float scrollspeed;
 
     public GameObject ChatPrefab;
 
@@ -931,7 +933,8 @@ public class StoryManager : MonoBehaviour
         Destroy(doctor);
 
         // 엔딩크레딧
-
+        Credits.GetComponent<RectTransform>().anchoredPosition = new Vector2(1.633698f, -1038);
+        yield return StartCoroutine(end());
 
         yield return StartCoroutine(SetCam(false));
     }
@@ -1095,5 +1098,17 @@ public class StoryManager : MonoBehaviour
             yield return null;
         }
         npc.transform.position = new Vector2(npc.transform.position.x, goal);
+    }
+
+    IEnumerator end()
+    {
+        while (Credits.GetComponent<RectTransform>().anchoredPosition.y < 2021)
+        {
+            Credits.SetActive(true);
+            Credits.transform.Translate(Vector2.up * scrollspeed);
+            yield return new WaitForSeconds(0.01f);
+        }
+        yield return new WaitForSeconds(3);
+        Credits.SetActive(false);
     }
 }
