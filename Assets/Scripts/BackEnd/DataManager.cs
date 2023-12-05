@@ -365,12 +365,7 @@ public class DataManager : MonoBehaviour
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
             PlayManager.instance.projectname.text = editordata.projectname;
-            char[] musicname = editordata.music.ToString().ToCharArray(); //24
-            for (int j = musicname.Length - 1; j > musicname.Length - 24; j--)
-            {
-                musicname[j] = ' ';
-            }
-            PlayManager.instance.bgmname.text = String.Join("", musicname);
+            PlayManager.instance.bgmname.text = editordata.musicname;
             PlayManager.instance.bpm.text = editordata.bpm + " Bpm".ToString();
             PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
             string min = (Mathf.Floor((float)editordata.sec / 60)).ToString();
@@ -386,7 +381,7 @@ public class DataManager : MonoBehaviour
             PlayManager.instance.sec.text = min + ":" + sec.ToString();
             PlayManager.instance.creator.text = editordata.creator;
             PlayManager.instance.timesig.text = editordata.up + "/" + editordata.down;
-            PlayManager.instance.music.clip = editordata.music;
+            PlayManager.instance.music.clip = Resources.Load(editordata.musicname) as AudioClip;
             PlayManager.instance.music.Play();
         }
     }

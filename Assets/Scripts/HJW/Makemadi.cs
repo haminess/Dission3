@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,6 +47,7 @@ public class Makemadi : MonoBehaviour
     public double sec; //total sec
     public double madi;
     public float madilength;
+    public string musicnamee;
     [Header("Backjapyo")]
     public int up;
     public int down;
@@ -258,7 +260,7 @@ public class Makemadi : MonoBehaviour
     int temp_down;
     public void uiset()
     {
-        musicname.text = audio_.audiosourse.clip.ToString();
+        musicname.text = musicnamee.ToString();
         bpm_ui.text = bpm.ToString();
         starttime_ui.text = starttime.ToString();
         length_ui.text = sec.ToString();
@@ -312,6 +314,7 @@ public class Makemadi : MonoBehaviour
         editordata.up = up;
         editordata.down = down;
         editordata.music = audio_.audiosourse.clip;
+        editordata.musicname = musicnamee;
         editordata.creator = creator_ui.text; 
     }
     public void Loadinfo()
@@ -325,8 +328,9 @@ public class Makemadi : MonoBehaviour
         up = editordata.up;
         down = editordata.down;
         settings.downsel(down);
-        audio_.audiosourse.clip = editordata.music;
-        musicname.text = editordata.music.name;
+        musicnamee = editordata.musicname;
+        audio_.audiosourse.clip = Resources.Load(musicnamee) as AudioClip;
+        musicname.text = editordata.musicname;
         creator_ui.text = editordata.creator;
 
         uiset();

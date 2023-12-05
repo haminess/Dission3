@@ -286,6 +286,7 @@ public class Makenote : MonoBehaviour
             notesobj[i].GetComponent<Noteindex>().index = i;
         }
         madi_sec = editordata.madi_sec;
+        madi_bar_depth = editordata.madi_bar_depth;
     }
 
     public void Savenotepos()
@@ -311,6 +312,7 @@ public class Makenote : MonoBehaviour
             editordata.notetype[i] = notetype[i];
         }
         editordata.madi_sec = madi_sec;
+        editordata.madi_bar_depth = madi_bar_depth;
     }
 
     void sort()

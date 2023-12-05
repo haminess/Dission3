@@ -193,22 +193,28 @@ public class Audio : MonoBehaviour
         {
             case 0:
                 Makemadi.instance.bpm = 120;
+                Makemadi.instance.musicnamee = "Dinosaurs Are Still Alive";
                 break;
             case 1:
                 Makemadi.instance.bpm = 118;
                 Makemadi.instance.starttime = 0;
+                Makemadi.instance.musicnamee = "Back in my days";
                 break;
             case 2:
                 Makemadi.instance.bpm = 128;
                 Makemadi.instance.starttime = 0;
+                Makemadi.instance.musicnamee = "Cat and Dog";
                 break;
             case 3:
                 Makemadi.instance.bpm = 150;
                 Makemadi.instance.starttime = 0;
+                Makemadi.instance.musicnamee = "Little Slime";
                 break;
             case 4:
                 Makemadi.instance.bpm = 78;
                 Makemadi.instance.starttime = 0;
+                Makemadi.instance.musicnamee = "insert-coint-k-sun";
+
                 break;
         }
         Makemadi.instance.uiset();

@@ -45,6 +45,7 @@ public class FileOpenDialog : MonoBehaviour
         File.Copy(filepath, des, true);
         UnityEditor.AssetDatabase.Refresh();
         music.clip = Resources.Load(Path.GetFileNameWithoutExtension(filepath)) as AudioClip;
+        Makemadi.instance.musicnamee = Path.GetFileNameWithoutExtension(filepath);
         Makemadi.instance.musicname.text = Makemadi.instance.audio_.audiosourse.clip.ToString();
         Makemadi.instance.sec = Mathf.Round( music.clip.length);
         Makemadi.instance.uiset();

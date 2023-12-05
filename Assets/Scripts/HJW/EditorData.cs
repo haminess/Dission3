@@ -20,7 +20,9 @@ public class EditorData //: MonoBehaviour
 
     public string creator;
     public AudioClip music;
+    public string musicname;
     public double madi_sec;
+    public double madi_bar_depth;
     // Start is called before the first frame update
     void Start()
     {
