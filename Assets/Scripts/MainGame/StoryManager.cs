@@ -1027,7 +1027,7 @@ public class StoryManager : MonoBehaviour
         chatUI.text = chat;
         Destroy(chatBox, tDestroy);
     }
-    IEnumerator Typing(GameObject talker, string chat, float tDestroy = 1)
+    public IEnumerator Typing(GameObject talker, string chat, float tDestroy = 1)
     {
         GameObject chatBox = Instantiate(ChatPrefab, talker.transform);
         chatBox.transform.SetParent(talker.transform);

@@ -88,6 +88,10 @@ PrefabInstance:
       value: teacher
       objectReference: {fileID: 0}
     - target: {fileID: 2921284142586280721, guid: 6aeeffb158e4fa245a704d5e41a9c6ad, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2921284142586280721, guid: 6aeeffb158e4fa245a704d5e41a9c6ad, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: f8b8db1d9ce8525478d8b8d7c2104706, type: 2}

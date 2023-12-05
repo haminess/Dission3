@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: ce28cf440708d2a439043e02c7acf3e4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - chatPrefab: {fileID: 3513154823587895963, guid: 869a3117692f50f4f9215e13038c7219, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
