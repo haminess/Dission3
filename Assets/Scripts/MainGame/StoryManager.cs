@@ -1001,7 +1001,7 @@ public class StoryManager : MonoBehaviour
             //}
         }
 
-        Animation anim = obj.GetComponent<Animation>();
+        Animation anim = obj.GetComponentInChildren<Animation>();
 
         anim.enabled = false;
         anim.enabled = true;
@@ -1046,7 +1046,7 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Move(GameObject npc, Vector3 head, int length = 1, float speed = 0.05f)
     {
-        npc.GetComponent<Animator>().SetBool("Walk", true);
+        npc.GetComponentInChildren<Animator>().SetBool("Walk", true);
         for (int i = 0; i < length; i++)
         {
             Vector3 curPos = npc.transform.localPosition;
@@ -1064,7 +1064,7 @@ public class StoryManager : MonoBehaviour
                 yield return null;
             }
         }
-        npc.GetComponent<Animator>().SetBool("Walk", false);
+        npc.GetComponentInChildren<Animator>().SetBool("Walk", false);
     }
 
     // npc ��???? ????
