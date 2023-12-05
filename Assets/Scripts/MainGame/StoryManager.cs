@@ -930,6 +930,9 @@ public class StoryManager : MonoBehaviour
         Destroy(mom);
         Destroy(doctor);
 
+        // 엔딩크레딧
+
+
         yield return StartCoroutine(SetCam(false));
     }
     IEnumerator Ending2()
