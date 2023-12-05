@@ -103,7 +103,7 @@ public class StoryManager : MonoBehaviour
                                       "좋아!"});                             // 주인공
         scripts.Add(1, new string[] { "이걸로 학교 소개는 끝이야!",            // 친구1
                                       "앞으로 재미있게 학교생활 해보자",
-                                      "아 맞다! 이 동상은 가까이 하지 마!!",
+                                      "아 맞다! 이 분수는 가까이 하지 마!!",
                                       "귀신이 들렀다는 소문이 있으니까~ 흐흐",
                                       "(음.. 뭔가 수상하게 생겼네..)"});       // 주인공
         scripts.Add(2, new string[] { "어? 선지가 어디로 간 거지?",
@@ -450,6 +450,7 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Typing(player, scripts[sID][7]));
 
         yield return StartCoroutine(Move(minji, Vector3.down));
+        minji.GetComponentInChildren<SpriteRenderer>().flipX = true;
         yield return StartCoroutine(Move(minji, Vector3.right, 10));
 
         // Story Off
@@ -462,10 +463,8 @@ public class StoryManager : MonoBehaviour
     IEnumerator Story1Happy()
     {
         // Story On
-        // ???? ????
         yield return StartCoroutine(SetCam(true, 56, -8));
 
-        // ��???? ????
         GameObject player = NPC(0, 55, -16);
         GameObject friend = NPC(1, 57, -16);
         player.GetComponentInChildren<SpriteRenderer>().flipX = true;
@@ -518,7 +517,7 @@ public class StoryManager : MonoBehaviour
 
 
         // ???? ????
-        yield return StartCoroutine(SetCam(true, 2, 18));
+        yield return StartCoroutine(SetCam(true, 2, 17));
 
         // ��???? ????
         GameObject player = NPC(0, 3, 16);
@@ -594,26 +593,30 @@ public class StoryManager : MonoBehaviour
 
         // ��???? ????
         GameObject player = NPC(0, 27, -1);
-        GameObject friend1 = NPC(1, 27, -2);
-        GameObject friend2 = NPC(2, 28, -2);
-        GameObject friend3 = NPC(1, 30, 0);
-        //GameObject cat = NPC(character[(int)SpriteNum.cat], 30, -1);  // ?????
+        GameObject friend1 = NPC(1, 28, -2);
+        GameObject friend2 = NPC(2, 29, -2);
+        GameObject friend3 = NPC(1, 31, -1);
+        GameObject cat = NPC(6, 30, -1);
+
         player.GetComponentInChildren<SpriteRenderer>().flipX = true;
         friend1.GetComponentInChildren<SpriteRenderer>().flipX = true;
         friend2.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        cat.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
         friend1.SetActive(false);
         friend2.SetActive(false);
         friend3.SetActive(false);
-        yield return StartCoroutine(Fade(player));
-        friend3.SetActive(true);
+        cat.SetActive(false);
         yield return StartCoroutine(Fade(player));
         friend1.SetActive(true);
         yield return StartCoroutine(Fade(friend1));
         friend2.SetActive(true);
         yield return StartCoroutine(Fade(friend2));
+        friend3.SetActive(true);
+        yield return StartCoroutine(Fade(friend3));
+        cat.SetActive(true);
+        yield return StartCoroutine(Fade(cat));
 
-        // ��???? ???
-        yield return StartCoroutine(Move(friend3, Vector3.left, 1));
         // ��???? ???
         yield return StartCoroutine(Typing(friend3, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend3, scripts[sID][1]));
@@ -621,6 +624,9 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Typing(friend3, scripts[sID][3]));
         yield return StartCoroutine(Typing(friend1, scripts[sID][4]));
         yield return StartCoroutine(Typing(friend1, scripts[sID][5]));
+
+        yield return StartCoroutine(Move(cat, Vector3.left, 2));
+
         yield return StartCoroutine(Typing(player, scripts[sID][6]));
         yield return StartCoroutine(Typing(player, scripts[sID][7]));
 
@@ -631,6 +637,7 @@ public class StoryManager : MonoBehaviour
         Destroy(friend1);
         Destroy(friend2);
         Destroy(friend3);
+        Destroy(cat);
 
         // ???? ???????
         yield return StartCoroutine(SetCam(false));
@@ -682,6 +689,9 @@ public class StoryManager : MonoBehaviour
         GameObject player = NPC(0, 8, -35);
         player.GetComponentInChildren<SpriteRenderer>().flipX = true;
 
+        yield return StartCoroutine(Fade(player));
+        yield return StartCoroutine(Fade(friend2));
+
         yield return StartCoroutine(Move(friend2, Vector2.left, 7));
         yield return StartCoroutine(Move(friend2, Vector2.up, 1));
 
@@ -702,7 +712,7 @@ public class StoryManager : MonoBehaviour
         // ???? ????
         yield return StartCoroutine(Fade(black));
         GameObject player = NPC(0, 79, -19);
-        yield return StartCoroutine(SetCam(true, 76, -21));
+        yield return StartCoroutine(SetCam(true, 76, -19));
 
         // ��???? ????
         GameObject friend = NPC(2, 71, -22);
@@ -732,7 +742,7 @@ public class StoryManager : MonoBehaviour
         // ???? ????
         yield return StartCoroutine(Fade(black));
         GameObject player = NPC(0, 79, -19);
-        yield return StartCoroutine(SetCam(true, 76, -21));
+        yield return StartCoroutine(SetCam(true, 76, -19));
 
         // ��???? ????
         GameObject friend = NPC(2, 71, -22);
@@ -803,7 +813,7 @@ public class StoryManager : MonoBehaviour
 
 
         // # 2
-        yield return StartCoroutine(SetCam(true, -5, 72));
+        yield return StartCoroutine(SetCam(true, -5, 74));
 
         player = NPC(0, -5, 66);
         yield return StartCoroutine(Fade(player));
@@ -860,6 +870,9 @@ public class StoryManager : MonoBehaviour
         GameObject friend1 = NPC(1, 9, -34);
         GameObject friend2 = NPC(2, 9, -35);
         GameObject player = NPC(0, 8, -34);
+
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
         friend1.SetActive(false);
         friend2.SetActive(false);
         yield return StartCoroutine(Fade(player));
@@ -909,22 +922,27 @@ public class StoryManager : MonoBehaviour
     IEnumerator Ending1()
     {
         // Story On
-        yield return StartCoroutine(SetCam(true, 92.93f, 124.84f));
+        yield return StartCoroutine(SetCam(true, 100.2f, 100.8f));
 
         // npc 생성
-        GameObject player = NPC(0, 99, 100);
-        GameObject mom = NPC(4, 101,100);
-        GameObject doctor = NPC(5, 102, 100);
-        player.GetComponent<SpriteRenderer>().flipX = true;
+        GameObject player = NPC(0, 98, 99.09f);
+        GameObject mom = NPC(4, 102, 99.09f);
+        GameObject doctor = NPC(5, 103, 99.09f);
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
         StartCoroutine(Fade(player));
         StartCoroutine(Fade(mom));
         yield return StartCoroutine(Fade(doctor));
+
+
+        yield return StartCoroutine(Move(mom, Vector2.left, 1));
+        yield return StartCoroutine(Move(doctor, Vector2.left, 1));
 
         yield return StartCoroutine(Typing(doctor, scripts[sID][0]));
         yield return StartCoroutine(Typing(mom, scripts[sID][1]));
         yield return StartCoroutine(Typing(mom, scripts[sID][2]));
         yield return StartCoroutine(Typing(player, scripts[sID][3]));
         yield return StartCoroutine(Typing(player, scripts[sID][4]));
+        yield return StartCoroutine(Move(player, Vector2.right, 2));
 
         // Story Off
         yield return StartCoroutine(Fade(black));
@@ -933,7 +951,7 @@ public class StoryManager : MonoBehaviour
         Destroy(doctor);
 
         // 엔딩크레딧
-        Credits.GetComponent<RectTransform>().anchoredPosition = new Vector2(1.633698f, -1038);
+        Credits.GetComponentInChildren<RectTransform>().anchoredPosition = new Vector2(1.633698f, -1038);
         yield return StartCoroutine(end());
 
         yield return StartCoroutine(SetCam(false));

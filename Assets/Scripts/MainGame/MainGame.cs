@@ -371,6 +371,8 @@ public class MainGame : MonoBehaviour
         // 게임 종료
         yield return StartCoroutine(GameEndCo());
 
+        stageObject[stageNum - 1].SetActive(false);
+
         // 엔딩 스토리 출력
         print("엔딩 스토리 출력");
         yield return new WaitForSeconds(1);
@@ -770,12 +772,12 @@ public class MainGame : MonoBehaviour
             if (mode == Mode.Stage)
             {
                 stageNum = dataMan.stageNum;
-                SetStage();
+                //SetStage();
             }
             if (mode == Mode.Play)
             {
                 dataMan.LoadEditorDataToMain(dataMan.chartNum);
-                SetChart();
+                //SetChart();
             }
 
             bgm.volume = dataMan.sounddata.bgm;
