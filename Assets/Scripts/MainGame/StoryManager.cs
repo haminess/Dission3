@@ -125,15 +125,15 @@ public class StoryManager : MonoBehaviour
                                       "우리 세명이서 담력테스트 해볼래?!?!",    // 친구1
                                       "좋아! 그럼 저녁에 급식실에서 만나자!!",  // 친구2
                                       "(헉.. 무서울 것 같은데;;)"});           // 주인공
-        scripts.Add(4, new string[] { "사실 내가 몰래 급식실에서 고양이를 키우고 있었어..", // 친구3
-                                      "이 고양이 사람 손을 타서",
-                                      "엄마 고양이한테 버려진 거 같아..",
+        scripts.Add(4, new string[] { "애들아 미안 이상한 소리의 정체는 바로 나였어..", // 친구3
+                                      "사실 내가 몰래 급식실에서 고양이를 키우고 있었는데 소리가 새어나갔나봐",
+                                      "이 고양이 사람 손을 타서 엄마 고양이한테 버려진 거 같아..",
                                       "이렇게 일이 커질 줄 몰랐는데.. 미안!",
                                       "그런 거 였구나.. 그럼 귀신은 없는건가?", // 친구1
                                       "응? 선지한테 가는데?",
                                       // 고양이가 인형을 물어와 주인공에게 건네준다.
-                                      "(어라? 이 인형 아는 인형인데..)",         // 주인공
-                                      "(어디서 봤더라..)"});
+                                      "(어라 인형을 주었네? 이 인형 아는 인형인데..)",         // 주인공
+                                      "(어디서 봤더라.. 기억이 안나)"});
         scripts.Add(5, new string[] { "으으 너무 무서워..",
                                       "그냥 포기하고 나가야겠어.."});
 
@@ -951,8 +951,8 @@ public class StoryManager : MonoBehaviour
         Destroy(doctor);
 
         // 엔딩크레딧
-        Credits.GetComponentInChildren<RectTransform>().anchoredPosition = new Vector2(1.633698f, -1038);
-        yield return StartCoroutine(end());
+        //Credits.GetComponentInChildren<RectTransform>().anchoredPosition = new Vector2(1.633698f, -1038);
+        //yield return StartCoroutine(end());
 
         yield return StartCoroutine(SetCam(false));
     }
@@ -964,6 +964,11 @@ public class StoryManager : MonoBehaviour
         GameObject player = NPC(0, 8, -34);
         GameObject friend1 = NPC(1, 9, -34);
         GameObject friend2 = NPC(2, 10, -34);
+        StartCoroutine(Fade(player));
+        StartCoroutine(Fade(friend1));
+        yield return StartCoroutine(Fade(friend2));
+        player.GetComponentInChildren<SpriteRenderer>().flipX = true;
+
         yield return StartCoroutine(Typing(friend1, scripts[sID][0]));
         yield return StartCoroutine(Typing(friend1, scripts[sID][1]));
         yield return StartCoroutine(Typing(player, scripts[sID][2]));

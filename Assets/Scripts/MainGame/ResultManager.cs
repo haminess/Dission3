@@ -282,7 +282,7 @@ public class ResultManager : MonoBehaviour
 
             string animName = StageNum.ToString() + "_";
 
-            if (miss < 10)
+            if (miss < 100)
             {
                 soundmanager.SetEffect(3);
                 soundmanager.PlayEffect();

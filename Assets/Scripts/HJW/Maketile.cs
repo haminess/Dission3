@@ -3,7 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static TreeEditor.TreeEditorHelper;
+//using static TreeEditor.TreeEditorHelper;
 
 public class Maketile : MonoBehaviour
 {

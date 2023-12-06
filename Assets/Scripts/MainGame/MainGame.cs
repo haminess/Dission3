@@ -377,7 +377,7 @@ public class MainGame : MonoBehaviour
         print("엔딩 스토리 출력");
         yield return new WaitForSeconds(1);
         storyManager.sID = (stageNum - 1) * 3;
-        if(miss < 10)
+        if(miss < 100)
         {
             storyManager.sID += 1;
             storyManager.sId += 1;
@@ -772,12 +772,12 @@ public class MainGame : MonoBehaviour
             if (mode == Mode.Stage)
             {
                 stageNum = dataMan.stageNum;
-                //SetStage();
+                SetStage();
             }
             if (mode == Mode.Play)
             {
                 dataMan.LoadEditorDataToMain(dataMan.chartNum);
-                //SetChart();
+                SetChart();
             }
 
             bgm.volume = dataMan.sounddata.bgm;
