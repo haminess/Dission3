@@ -163,7 +163,7 @@ public class ResultManager : MonoBehaviour
             case 2:
                 Array.Resize(ref maingamedata.second_stage, maingamedata.second_stage.Length + 1);
                 maingamedata.second_stage[maingamedata.second_stage.Length - 1] = score;
-                Array.Sort(maingamedata.second_stage);
+                //Array.Sort(maingamedata.second_stage);
                 Array.Resize(ref maingamedata.second_stage_n, maingamedata.second_stage_n.Length + 1);
                 maingamedata.second_stage_n[maingamedata.second_stage_n.Length - 1] = rankname.text;
                 reverse(maingamedata.second_stage, maingamedata.second_stage_n);
@@ -211,19 +211,19 @@ public class ResultManager : MonoBehaviour
         {
             rank = "SS";
         }
-        else if (miss < 5)
+        else if (miss < 10)
         {
             rank = "S";
         }
-        else if (miss < 10)
+        else if (miss < 30)
         {
             rank = "A";
         }
-        else if (miss < 30)
+        else if (miss < 100)
         {
             rank = "B";
         }
-        else if (miss < 50)
+        else if (miss < 300)
         {
             rank = "C";
         }

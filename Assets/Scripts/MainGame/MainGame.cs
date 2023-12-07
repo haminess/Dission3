@@ -371,7 +371,7 @@ public class MainGame : MonoBehaviour
         // 게임 종료
         yield return StartCoroutine(GameEndCo());
 
-        stageObject[stageNum - 1].SetActive(false);
+        //stageObject[stageNum - 1].SetActive(false);
 
         // 엔딩 스토리 출력
         print("엔딩 스토리 출력");

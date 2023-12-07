@@ -9,6 +9,17 @@ public class FllowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = player.transform.position;
+        if (!player.GetComponent<Player>().enabled && !MainGame.instance.isEnd)
+        {
+            gameObject.transform.position = new Vector2(8.6f, -33.8f);
+        }
+        else if (!player.GetComponent<Player>().enabled && MainGame.instance.isEnd)
+        {
+            gameObject.transform.position = new Vector2(28.98f, -0.9f);
+        }
+        else
+        {
+            gameObject.transform.position = player.transform.position;
+        }
     }
 }

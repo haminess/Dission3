@@ -52,7 +52,7 @@ public class Ranking : MonoBehaviour
 
                 for (int i = 0; i < maingamedata.first_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + (maingamedata.first_stage_n[i] + "\n");
+                    temp_n = temp_n + i + "등 " + (maingamedata.first_stage_n[i] + "\n");
                 }
                 names.text = temp_n;
                 break;
@@ -66,7 +66,7 @@ public class Ranking : MonoBehaviour
 
                 for (int i = 0; i < maingamedata.second_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + (maingamedata.second_stage_n[i] + "\n");
+                    temp_n = temp_n + i + "등 " + (maingamedata.second_stage_n[i] + "\n");
                 }
                 names.text = temp_n;
                 break;
@@ -80,7 +80,7 @@ public class Ranking : MonoBehaviour
 
                 for (int i = 0; i < maingamedata.third_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + (maingamedata.third_stage_n[i] + "\n");
+                    temp_n = temp_n + i + "등 " + (maingamedata.third_stage_n[i] + "\n");
                 }
                 names.text = temp_n;
                 break;
@@ -94,7 +94,7 @@ public class Ranking : MonoBehaviour
 
                 for (int i = 0; i < maingamedata.fourth_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + (maingamedata.fourth_stage_n[i] + "\n");
+                    temp_n = temp_n + i + "등 " + (maingamedata.fourth_stage_n[i] + "\n");
                 }
                 names.text = temp_n;
                 break;
@@ -108,7 +108,7 @@ public class Ranking : MonoBehaviour
 
                 for (int i = 0; i < maingamedata.fifth_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + (maingamedata.fifth_stage_n[i] + "\n");
+                    temp_n = temp_n + i + "등 " + (maingamedata.fifth_stage_n[i] + "\n");
                 }
                 names.text = temp_n;
                 break;
@@ -152,7 +152,7 @@ public class Ranking : MonoBehaviour
             }
         }
         Array.Resize(ref third_stage, maingamedata.third_stage.Length);
-        for (int i = 0; i < first_stage.Length; i++)
+        for (int i = 0; i < third_stage.Length; i++)
         {
             if (maingamedata.third_stage.Length > 0)
             {
