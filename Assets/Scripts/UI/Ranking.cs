@@ -47,12 +47,14 @@ public class Ranking : MonoBehaviour
                 for (int i = 0; i < maingamedata.first_stage.Length; i++)
                 {
                     temp = temp + (maingamedata.first_stage[i].ToString() + "\n");
+                    if (i > 10) break;
                 }
                 scores.text = temp;
 
                 for (int i = 0; i < maingamedata.first_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + i + "등 " + (maingamedata.first_stage_n[i] + "\n");
+                    temp_n = temp_n + (i + 1) + "등 " + (maingamedata.first_stage_n[i] + "\n");
+                    if (i > 10) break;
                 }
                 names.text = temp_n;
                 break;
@@ -61,12 +63,14 @@ public class Ranking : MonoBehaviour
                 for (int i = 0; i < maingamedata.second_stage.Length; i++)
                 {
                     temp = temp + (maingamedata.second_stage[i].ToString() + "\n");
+                    if (i > 10) break;
                 }
                 scores.text = temp;
 
                 for (int i = 0; i < maingamedata.second_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + i + "등 " + (maingamedata.second_stage_n[i] + "\n");
+                    temp_n = temp_n + (i + 1) + "등 " + (maingamedata.second_stage_n[i] + "\n");
+                    if (i > 10) break;
                 }
                 names.text = temp_n;
                 break;
@@ -75,12 +79,14 @@ public class Ranking : MonoBehaviour
                 for (int i = 0; i < maingamedata.third_stage.Length; i++)
                 {
                     temp = temp + (maingamedata.third_stage[i].ToString() + "\n");
+                    if (i > 10) break;
                 }
                 scores.text = temp;
 
                 for (int i = 0; i < maingamedata.third_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + i + "등 " + (maingamedata.third_stage_n[i] + "\n");
+                    temp_n = temp_n + (i + 1) + "등 " + (maingamedata.third_stage_n[i] + "\n");
+                    if (i > 10) break;
                 }
                 names.text = temp_n;
                 break;
@@ -89,12 +95,14 @@ public class Ranking : MonoBehaviour
                 for (int i = 0; i < maingamedata.fourth_stage.Length; i++)
                 {
                     temp = temp + (maingamedata.fourth_stage[i].ToString() + "\n");
+                    if (i > 10) break;
                 }
                 scores.text = temp;
 
                 for (int i = 0; i < maingamedata.fourth_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + i + "등 " + (maingamedata.fourth_stage_n[i] + "\n");
+                    temp_n = temp_n + (i + 1) + "등 " + (maingamedata.fourth_stage_n[i] + "\n");
+                    if (i > 10) break;
                 }
                 names.text = temp_n;
                 break;
@@ -103,12 +111,14 @@ public class Ranking : MonoBehaviour
                 for (int i = 0; i < maingamedata.fifth_stage.Length; i++)
                 {
                     temp = temp + (maingamedata.fifth_stage[i].ToString() + "\n");
+                    if (i > 10) break;
                 }
                 scores.text = temp;
 
                 for (int i = 0; i < maingamedata.fifth_stage_n.Length; i++)
                 {
-                    temp_n = temp_n + i + "등 " + (maingamedata.fifth_stage_n[i] + "\n");
+                    temp_n = temp_n + (i + 1) + "등 " + (maingamedata.fifth_stage_n[i] + "\n");
+                    if (i > 10) break;
                 }
                 names.text = temp_n;
                 break;
@@ -193,16 +203,14 @@ public class Ranking : MonoBehaviour
             if (maingamedata.second_stage_n.Length > 0)
             {
                 second_stage_n[i] = maingamedata.second_stage_n[i];
-
             }
         }
         Array.Resize(ref third_stage_n, maingamedata.third_stage_n.Length);
-        for (int i = 0; i < first_stage_n.Length; i++)
+        for (int i = 0; i < third_stage_n.Length; i++)
         {
             if (maingamedata.third_stage_n.Length > 0)
             {
                 third_stage_n[i] = maingamedata.third_stage_n[i];
-
             }
         }
         Array.Resize(ref fourth_stage_n, maingamedata.fourth_stage_n.Length);
@@ -220,7 +228,6 @@ public class Ranking : MonoBehaviour
             if (maingamedata.fifth_stage_n.Length > 0)
             {
                 fifth_stage_n[i] = maingamedata.fifth_stage_n[i];
-
             }
         }
     }

@@ -76,10 +76,10 @@ public class MainGame : MonoBehaviour
 
     // 메인 판정범위 관리
     [Header("Range")]
-    public float perfectRange = 0.05f;
-    public float goodRange = 0.1f;
-    public float badRange = 0.2f;
-    public float missRange = 0.5f;
+    public float perfectRange = 0.1f;
+    public float goodRange = 0.3f;
+    public float badRange = 0.8f;
+    public float missRange = 1f;
     public float notesynkRange = 0f;
     public float judgeRange = 0f;
 
@@ -272,27 +272,19 @@ public class MainGame : MonoBehaviour
         bgm.volume = 0;
         bgm.Play();
         storyManager.sID = (stageNum - 1) * 3;
-        while (true)
+        while (bgm.volume < curVolume)
         {
-            bgm.volume += 0.001f;
+            bgm.volume += 0.01f;
             yield return new WaitForSeconds(0.01f);
-            if (bgm.volume > curVolume)
-            {
-                break;
-            }
         }
     }
     public IEnumerator OffStoryMusic()
     {
         // 스토리 노래 페이드아웃
-        while (true)
+        while (bgm.volume > 0.01f)
         {
-            bgm.volume -= 0.001f;
+            bgm.volume -= 0.01f;
             yield return new WaitForSeconds(0.01f);
-            if (bgm.volume < 0.01f)
-            {
-                break;
-            }
         }
     }
 
