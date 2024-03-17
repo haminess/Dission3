@@ -13,7 +13,7 @@ public class TutorialEvent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
@@ -22,7 +22,7 @@ public class TutorialEvent : MonoBehaviour
         if (gameObject.name == "reposition")
         {
             collision.transform.position = Vector3.zero;
-            collision.GetComponent<Player>().CurPos = Vector3.zero;
+            collision.GetComponent<TutorialMove>().CurPos = Vector3.zero;
         }
     }
 }
