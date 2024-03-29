@@ -8,6 +8,7 @@ public class LNoteGenerator : MonoBehaviour
     float[][] chart;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
     public GameObject note;           // 바닥에 뿌릴 노트 프리팹
     public GameObject routeNote;
+    public GameObject lRouteNote;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class LNoteGenerator : MonoBehaviour
         // 채보 데이터 불러오기
         {
             // time, x, y, length, direct
-            // direct 1: up, 2: down, 3: left, 4: right
+            // direct 0: up, 1: left, 2: down, 3: right
             chart = new float[10][];
             chart[0] = new float[5] { 1, 1, 0, 0, 0};
             chart[1] = new float[5] { 2, 2, 0, 0, 0};
@@ -113,16 +114,52 @@ public class LNoteGenerator : MonoBehaviour
 
     GameObject MakeRoute(int _index)
     {
-        // route 생성
-        GameObject route = Instantiate(routeNote);
+        if (chart[_index][3] > 0)
+        {
+            GameObject route = Instantiate(lRouteNote);
 
-        // route 위치 지정
-        route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
+            // 길이 조정
+            route.GetComponent<SpriteRenderer>().size = Vector2.up * chart[_index][3];
 
-        // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-        Destroy(route, chart[_index][0] - MainGame.instance.bgm.time);
+            // 각도 조정
+            Vector3 rot = Vector3.forward * 90 * chart[_index][4];
+            route.transform.rotation = new Quaternion(rot.x, rot.y, rot.z, route.transform.rotation.w);
 
-        return route;
+            // 위치 조정
+            Vector2 pos = new Vector2(chart[noteIndex][1], chart[noteIndex][2]);
+            switch(chart[_index][4])
+            {
+                case 0:
+                    pos += Vector2.down * 0.5f;
+                    break;
+                case 1:
+                    pos += Vector2.right * 0.5f;
+                    break;
+                case 2:
+                    pos += Vector2.up * 0.5f;
+                    break;
+                case 3:
+                    pos += Vector2.left * 0.5f;
+                    break;
+            }
+            route.transform.position = pos;
+
+            // 롱노트
+            return route;
+        }
+        else
+        {
+            // route 생성
+            GameObject route = Instantiate(routeNote);
+
+            // route 위치 지정
+            route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
+
+            // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
+            Destroy(route, chart[_index][0] - MainGame.instance.bgm.time);
+
+            return route;
+        }
     }
 
     public void SetChart(float[][] _chart)
