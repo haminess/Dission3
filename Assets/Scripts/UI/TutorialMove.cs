@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MoveMode
+{
+    Short,
+    Long
+}
+
 public class TutorialMove : MonoBehaviour
 {
 
@@ -10,6 +16,10 @@ public class TutorialMove : MonoBehaviour
     public SpriteRenderer sprite;
     Animator animator;
     public Tutorial tutorial;
+
+    // 설정
+    public MoveMode moveMode = MoveMode.Short;
+    public Coroutine slideCo = null;
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
@@ -30,6 +40,19 @@ public class TutorialMove : MonoBehaviour
         Move();
     }
 
+    IEnumerator Slide(Vector3 _head)
+    {
+        while(moveMode == MoveMode.Long)
+        {
+            CurPos += _head * moveDistance * 0.1f;
+            yield return null;
+        }
+    }
+
+    public void StopSlide()
+    {
+        CurPos = new Vector3(Mathf.Round(CurPos.x), Mathf.Round(CurPos.y), CurPos.z);
+    }
 
     public void Move()
     {
@@ -65,8 +88,8 @@ public class TutorialMove : MonoBehaviour
 
     public void Head(Vector3 _head)
     {
-        // 벽 이동불가
-        LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
+    // 벽 이동불가
+    LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
         // 애니메이션
         animator.SetTrigger("Jump");
@@ -75,7 +98,19 @@ public class TutorialMove : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
         {
-            CurPos += _head * moveDistance;
+            if (moveMode == MoveMode.Long)
+            {
+                if(slideCo != null)
+                {
+                    StopCoroutine(slideCo);
+                    StopSlide();
+                }
+                slideCo = StartCoroutine(Slide(_head));
+            }
+            else
+            {
+                CurPos += _head * moveDistance;
+            }
 
             tutorial.Judge(tutorial.time, CurPos.x, CurPos.y);
         }
