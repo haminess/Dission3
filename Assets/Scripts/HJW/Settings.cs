@@ -8,12 +8,8 @@ public class Settings : MonoBehaviour
 {
     public static bool popup;
     public GameObject popupui;
-    public Image[] bakjapyodown_ui;
-    public Sprite selsprite;
-    public Sprite deselsprite;
     public GameObject inputwindow;
     public TextMeshProUGUI[] keyinputext;
-    public Button[] Notebuttons;
 
     public KeyCode[] keyCodes =
     {
@@ -26,7 +22,6 @@ public class Settings : MonoBehaviour
 
     private void Start()
     {
-        downsel(4);
     }
     private void Update()
     {
@@ -54,77 +49,6 @@ public class Settings : MonoBehaviour
     public void editname()
     {
         Makemadi.instance.projectname = Makemadi.instance.name_ui.text;
-    }
-
-    public void downsel(int i)
-    {
-        Makemadi.instance.down = i;
-        switch(i)
-        {
-            case 2:
-                for (int a = 0; a < 6; a++)
-                {
-                    Notebuttons[a].interactable = true;
-                }
-                bakjapyodown_ui[0].sprite = selsprite;
-                deselspritefuc(0);
-                break;
-            case 4:
-                for (int a = 0; a < 6; a++)
-                {
-                    Notebuttons[a].interactable = true;
-                }
-                bakjapyodown_ui[1].sprite = selsprite;
-                deselspritefuc(1);
-                break;
-            case 8:
-                for(int a = 0; a < 1; a++)
-                {
-                    Notebuttons[a].interactable = false;
-                }
-                for (int a = 1; a < 6; a++)
-                {
-                    Notebuttons[a].interactable = true;
-                }
-                bakjapyodown_ui[2].sprite = selsprite;
-                deselspritefuc(2);
-                break;
-            case 16:
-                for (int a = 0; a < 2; a++)
-                {
-                    Notebuttons[a].interactable = false;
-                }
-                for (int a = 2; a < 6; a++)
-                {
-                    Notebuttons[a].interactable = true;
-                }
-                bakjapyodown_ui[3].sprite = selsprite;
-                deselspritefuc(3);
-                break;
-            case 32:
-                for (int a = 0; a < 3; a++)
-                {
-                    Notebuttons[a].interactable = false;
-                }
-                for (int a = 3; a < 6; a++)
-                {
-                    Notebuttons[a].interactable = true;
-                }
-                bakjapyodown_ui[4].sprite = selsprite;
-                deselspritefuc(4);
-                break;
-        }
-    }
-
-    void deselspritefuc(int e)
-    {
-        for(int i = 0; i < 5; i++)
-        {
-            if(i != e)
-            {
-                bakjapyodown_ui[i].sprite = deselsprite;
-            }
-        }
     }
     public void showinput()
     {

@@ -5,99 +5,82 @@ public class Mouseevent : MonoBehaviour
 {
     public Makenote note;
     public bool simplepointer;
-    public bool isnote;
-    public Sprite high;
-    public Sprite nor;
     public static bool nopointer;
+    public bool hidingpointer;
     private void Start()
     {
         note = GameObject.Find("note").GetComponent<Makenote>();
     }
-
-    private void OnMouseOver()
+    private void Update()
     {
-        if (Settings.popup)
+       var a = Physics2D.Raycast(Maketile.instance.mospos, Vector3.forward, 2, LayerMask.GetMask("UI"));
+        if(a)
         {
-            return;
-        }
-        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false)
-        {
-            gameObject.GetComponent<Image>().sprite = high;
-        }
-    }
-    private void OnMouseEnter()
-    {
-        if (Settings.popup)
-        {
-            return;
-        }
-        if (simplepointer)
-        {
-            if (nopointer)
+            if (Settings.popup)
             {
+                return;
+            }
+            if (simplepointer)
+            {
+                if (nopointer)
+                {
+                    if (Maketile.instance.curpointer.GetComponent<Image>())
+                    {
+                        Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                    }
+                    else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                    {
+                        Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                    }
+                    hidingpointer = true;
+                    return;
+                }
                 if (Maketile.instance.curpointer.GetComponent<Image>())
                 {
                     Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                    hidingpointer = true;
                 }
                 else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
                 {
                     Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                    hidingpointer = true;
                 }
-                return;
-            }
-            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
-            {
-                return;
-            }
-            if (Maketile.instance.curpointer.GetComponent<Image>())
-            {
-                Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
-            }
-            else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
-            {
-                Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
-            }
 
-        }
-    }
-
-    private void OnMouseExit()
-    {
-        if(Settings.popup)
-        {
-            return;
-        }
-        if (isnote && Makemadi.instance.chart && Makenote.chartmode && Maketile.instance.mode != 0 && Makenote.hold == false )
-        {
-            note.init();
-            return;
-        }
-        if (simplepointer)
-        {
-            if(nopointer)
-            {
-                if(Maketile.instance.curpointer.GetComponent<Image>())
-                {
-                    Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
-                }
-                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
-                {
-                    Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
-                }
-                return;
             }
-            if (Makemadi.instance.chart && Makenote.chartmode) //editing madi
+        }
+        else
+        {
+            if (Settings.popup)
             {
                 return;
             }
-                if(Maketile.instance.curpointer.GetComponent<Image>())
+            if (simplepointer)
+            {
+                if (nopointer)
+                {
+                    if (Maketile.instance.curpointer.GetComponent<Image>())
+                    {
+                        Maketile.instance.curpointer.GetComponent<Image>().enabled = false;
+                        hidingpointer = true;
+                    }
+                    else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                    {
+                        Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = false;
+                        hidingpointer = true;
+                    }
+                    return;
+                }
+                if (Maketile.instance.curpointer.GetComponent<Image>())
                 {
                     Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
+                    hidingpointer = false;
                 }
-                else if(Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
+                else if (Maketile.instance.curpointer.GetComponent<SpriteRenderer>())
                 {
                     Maketile.instance.curpointer.GetComponent<SpriteRenderer>().enabled = true;
+                    hidingpointer = false;
                 }
+            }
         }
     }
 }

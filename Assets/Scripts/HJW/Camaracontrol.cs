@@ -4,73 +4,47 @@ using UnityEngine.UI;
 public class Camaracontrol : MonoBehaviour
 {
     public Camera cam;
-
-    public Sprite high;
-    public Sprite nor;
-
-    Sprite a;
-    Image a_;
-    public Vector3 real_mospos;
+    public Vector3 mosposanchor;
+    public Vector3 curmospos;
     private void Update()
     {
-        if(Settings.popup)
+        if(Input.GetMouseButtonDown(2))
         {
-            return;
+            mosposanchor = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         }
-        var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-        real_mospos = new Vector2( cam.transform.position.x - mospos.x, cam.transform.position.y - mospos.y);
-        var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Camctr"));
-        if(e && e.collider.gameObject.GetComponent<Image>().sprite == nor)
+        if(Input.GetMouseButton(2))
         {
-            a = e.collider.gameObject.GetComponent<Image>().sprite = high;
-            a_ = e.collider.gameObject.GetComponent<Image>();
+            curmospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
+            cam.transform.position += new Vector3( mosposanchor.x - curmospos.x, mosposanchor.y - curmospos.y);
         }
-        else if (e == false && a == high)
+        if(Input.mouseScrollDelta.y > 0 && !Makemadi.instance.chart && !Maketile.instance.mos.hidingpointer)
         {
-            a_.sprite = nor;
-        }
-        if (e && Input.GetMouseButton(0))
-        {
-            switch (e.collider.name)
+            if(cam.orthographicSize > 1.6f)
             {
-                case "up":
-                    up();
-                    break;
-                case "down":
-                    down();
-                    break;
-                case "left":
-                    left();
-                    break;
-                case "right":
-                    right();
-                    break;
+                cam.orthographicSize -= 2;
             }
         }
-        if (Input.GetMouseButton(2))
+        if (Input.mouseScrollDelta.y < 0 && !Makemadi.instance.chart && !Maketile.instance.mos.hidingpointer)
         {
-            cam.transform.position = new Vector3(cam.transform.position.x - (real_mospos.x * 0.1f), cam.transform.position.y - (real_mospos.y * 0.1f), -10);
+            cam.orthographicSize += 2;
+        }
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            cam.transform.position += new Vector3(-0.1f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            cam.transform.position += new Vector3(0.1f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            cam.transform.position += new Vector3(0, -0.1f, 0);
+        }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            cam.transform.position += new Vector3(0, 0.1f, 0);
         }
 
     }
-    public void up()
-    {
-        cam.transform.position += new Vector3(0, 0.1f, 0);
-    }
-    public void down()
-    {
-        cam.transform.position += new Vector3(0, -0.1f, 0);
-    }
-    public void left()
-    {
-        cam.transform.position += new Vector3(-0.1f, 0, 0);
-
-    }
-    public void right()
-    {
-
-        cam.transform.position += new Vector3(0.1f, 0, 0);
-    }
-
 
 }

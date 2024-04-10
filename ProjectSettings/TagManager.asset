@@ -17,17 +17,17 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
+  - tile
+  - note
   - Platform
   - Wall
   - Object
-  - 
   - Chart
-  - Note
-  - Noteonchart
-  - Charts
-  - Camctr
+  - notesound
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

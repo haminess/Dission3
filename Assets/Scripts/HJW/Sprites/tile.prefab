@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7237861924456202953}
   - component: {fileID: 7237861924456202952}
   - component: {fileID: 4421101000070841170}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: tile
   m_TagString: tile
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.0023121834, y: -0.0023128986}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -115,7 +115,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.1248903, y: 1.1248889}
   m_EdgeRadius: 0
 --- !u!1 &7237861925766617131
 GameObject:
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 7237861925766617127}
   - component: {fileID: 7237861925766617126}
   - component: {fileID: 7237861925766617125}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

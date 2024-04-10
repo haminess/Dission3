@@ -1,9 +1,7 @@
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-//using static TreeEditor.TreeEditorHelper;
 
 public class Maketile : MonoBehaviour
 {
@@ -13,44 +11,19 @@ public class Maketile : MonoBehaviour
     public Makenote makenote;
     public Makemadi makemadi;
     public Audio audio_;
+    public Mouseevent mos;
     public Image[] buttons;
     public Sprite[] buttonimg;
     public GameObject curpointer;
-    public GameObject fakepointer;
     public GameObject tile;
     public GameObject note;
-    public GameObject emergencynote;
-    public GameObject prefeb;
+    public GameObject tileprefeb;
     public Vector3 mospos;
-    public int index;
     public int mode;
+    public TextMeshProUGUI curtime;
     [Space(20)]
     public Vector2[] boxpos;
     private bool holding;
-    [Space(20)]
-    [Header("Note")]
-    public GameObject curmadiobj;
-    public int curmadi;
-    public float curpos;
-    [Space(20)]
-    public float unmun = 0;
-    public float ebun = 0;
-    public float zabun = 0;
-    public float palbun = 0;
-    public float sipukbun = 0;
-    public float samsipebun = 0;
-    [Space(20)]
-    public int divide;
-    public float totalbak;
-    public bool fuckkkk;
-    public bool is_fucking;
-    [Space(20)]
-    public float[] unmun_vec;
-    public float[] ebun_vec;
-    public float[] zabun_vec;
-    public float[] palbun_vec;
-    public float[] sipukbun_vec;
-    public float[] samsipebun_vec;
     [Space(20)]
     [Header("shortcuts")]
     public KeyCode[] keys;
@@ -58,64 +31,10 @@ public class Maketile : MonoBehaviour
     void Start()
     {
         instance = this;
-        curmadiobj = GameObject.Find("0");
-        note.GetComponent<SpriteRenderer>().enabled = false;
-        index = 1;
+        note.GetComponent<Image>().enabled = false;
         mode = 0;
-        bakjapyoset();
         holding = false;
         rebutton();
-        positioncal(zabun);
-        positioncal(ebun);
-        positioncal(unmun);
-        positioncal(palbun);
-        positioncal(sipukbun);
-        positioncal(samsipebun);
-    }
-    public void positioncal(float notetype)
-    {
-        if (fuckkkk & MathF.Floor(divide * notetype) != divide * notetype)
-        {
-
-            fuck2forcal(divide * notetype);
-        }
-        else
-        {
-
-            fuckforcal(divide * notetype);
-        }
-    }
-    public void bakjapyoset()
-    {
-        backjapyo();
-        divide = makemadi.up;
-        if (divide % 2 != 0) //분자가 홀수
-        {
-            fuckkkk = true;
-        }
-
-        switch (makemadi.down) 
-        {
-            case 32:
-                totalbak = 0.125f * makemadi.up;
-                break;
-            case 16:
-                totalbak = 0.25f * makemadi.up;
-                break;
-            case 8:
-                totalbak = 0.5f * makemadi.up;
-                break;
-            case 4:
-                totalbak = 1 * makemadi.up;
-                break;
-            case 2:
-                totalbak = 2 * makemadi.up;
-                break;
-            case 1:
-                totalbak = 4 * makemadi.up;
-                break;
-        }//calculate total bak
-
     }
 
     // Update is called once per frame
@@ -124,101 +43,11 @@ public class Maketile : MonoBehaviour
         mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         if (Makenote.chartmode && !Settings.popup)
         {
-            if (makemadi.chart)
+            curpointer.transform.position = new Vector2(mospos.x, mospos.y);
+            if(makemadi.chart)
             {
-                int c = 0;
-                curmadiobj = GameObject.Find(makemadi.curmadi);
-                fakepointer.transform.SetParent(curmadiobj.transform);
-                curpointer.transform.SetParent(curmadiobj.transform);
-                if(int.TryParse(makemadi.curmadi, out curmadi))
-                {
-                    c = curmadi;
-                }
-                if(c == 0) //small madi
-                {
-                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x - 1200, 0);
-                   
-                }
-                else
-                {
-                    //                                                                                              mouse     madi                 page
-                    fakepointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(Input.mousePosition.x + 120 - (505.5f * c) + (makemadi.page * 69f) - makemadi.length, 0);
-                }
-                backjapyo();
-                switch (Makenote.mode) 
-                {
-                    case 0: //4 
-                        if(fuckkkk & MathF.Floor( divide * zabun) != divide * zabun)
-                        {
-                            fuck2(divide * zabun);
-                        }
-                        else
-                        {
-                            fuck(divide * zabun);
-
-                        }
-                        break;
-                    case 1: //8
-                        if (fuckkkk & MathF.Floor(divide * palbun) != divide * palbun)
-                        {
-                            fuck2(divide * palbun);
-                        }
-                        else
-                        {
-                            fuck(divide * palbun);
-
-                        }
-                        break;
-                    case 2: //16
-                        if (fuckkkk & MathF.Floor(divide * sipukbun) != divide * sipukbun)
-                        {
-                            fuck2(divide * sipukbun);
-                        }
-                        else
-                        {
-                            fuck(divide * sipukbun);
-
-                        }
-                        break;
-                    case 3: //32
-                        if (fuckkkk & MathF.Floor(divide * samsipebun) != divide * samsipebun)
-                        {
-                            fuck2(divide * samsipebun);
-                        }
-                        else
-                        {
-                            fuck(divide * samsipebun);
-
-                        }
-                        break;
-                    case 4: //1
-                        if (fuckkkk & MathF.Floor(divide * unmun) != divide * unmun)
-                        {
-                            fuck2(divide * unmun);
-                        }
-                        else
-                        {
-                            fuck(divide * unmun);
-
-                        }
-                        break;
-                    case 5: //2
-                        if (fuckkkk & MathF.Floor(divide * ebun) != divide * ebun)
-                        {
-                            fuck2(divide * ebun);
-                        }
-                        else
-                        {
-                            fuck(divide * ebun);
-
-                        }
-                        break;
-                }//note move
-            }
-            else 
-            {
-                curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(-1069.49f, -279.01f);
-                is_fucking = false;
+                curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint( mospos.x, mospos.y, 0).x, 0);
+                curtime.text = "Time: " + (curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer).ToString();
             }
         }
         else
@@ -248,22 +77,29 @@ public class Maketile : MonoBehaviour
 
         if (Input.GetMouseButton(0)) //box
         {
-            if (makemadi.chart || Makenote.chartmode)
+            if (makemadi.chart || Makenote.chartmode )
             {
                 return;
             }
-            var e = Physics2D.Raycast(mospos, Vector3.forward, 2);
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
             switch (mode)
             {
                 case 0: //make
-                    if (e && e.collider.tag == "tile" || e && e.collider.tag == "ui")
+                    for(int i = 0; i < boxpos.Length; i++)
+                    {
+                        if(new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                        {
+                            return;
+                        }
+                    }
+                    if (e || mos.hidingpointer)
                     {
                         return;
                     }
-                    Instantiate(prefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+                    Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
                     break;
                 case 1: //erase
-                    if (e && e.collider.tag == "tile")
+                    if (e)
                     {
                         Destroy(e.collider.gameObject);
                     }
@@ -318,33 +154,9 @@ public class Maketile : MonoBehaviour
         }
         if (Input.GetKeyDown(keys[4]))
         {
-            makenote.mode4();
-        }
-        if (Input.GetKeyDown(keys[5]))
-        {
-            makenote.mode5();
-        }
-        if (Input.GetKeyDown(keys[6]))
-        {
-            makenote.mode0();
-        }
-        if (Input.GetKeyDown(keys[7]))
-        {
-            makenote.mode1();
-        }
-        if (Input.GetKeyDown(keys[8]))
-        {
-            makenote.mode2();
-        }
-        if (Input.GetKeyDown(keys[9]))
-        {
-            makenote.mode3();
-        }
-        if (Input.GetKeyDown(keys[10]))
-        {
             audio_.playmus();
         }
-        if (Input.GetKeyDown(keys[11]))
+        if (Input.GetKeyDown(keys[5]))
         {
             Saveboxpos();
             makenote.Savenotepos();
@@ -354,197 +166,7 @@ public class Maketile : MonoBehaviour
         }
         #endregion
     }
-    public void backjapyo()
-    {
-        switch (makemadi.down) //only 2, 4, 8, 16, 32
-        {
-            case 2:
-                unmun = 0.5f;
-                ebun = 1;
-                zabun = 2;
-                palbun = 4;
-                sipukbun = 8;
-                samsipebun = 16;
-                break;
-            case 4:
-                unmun = 0.25f;
-                ebun = 0.5f;
-                zabun = 1;
-                palbun = 2;
-                sipukbun = 4;
-                samsipebun = 8;
-                break;
-            case 8: //unm x
-                unmun = 0;
-                ebun = 0.25f;
-                zabun = 0.5f;
-                palbun = 1;
-                sipukbun = 2;
-                samsipebun = 4;
-                break;
-            case 16: //unm x, ebun x
-                unmun = 0;
-                ebun = 0;
-                zabun = 0.25f;
-                palbun = 0.5f;
-                sipukbun = 1;
-                samsipebun = 2;
-                break;
-            case 32: //unm x, ebun x, zabun x
-                unmun = 0;
-                ebun = 0;
-                zabun = 0;
-                palbun = 0.25f;
-                sipukbun = 0.5f;
-                samsipebun = 1;
-                break;
-        }
-    }
-    public void fuckforcal(float note)
-    {
-        float a = (float)492 / (note * 2);
-        if(note == divide * zabun)
-        {
-            Array.Resize(ref zabun_vec, (int)(divide * zabun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                zabun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-        else if (note == divide * ebun)
-        {
-            Array.Resize(ref ebun_vec, (int)(divide * ebun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                ebun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-        else if (note == divide * unmun)
-        {
-            Array.Resize(ref unmun_vec, (int)(divide * unmun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                unmun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-        else if (note == divide * palbun)
-        {
-            Array.Resize(ref palbun_vec, (int)(divide * palbun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                palbun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-        else if (note == divide * sipukbun)
-        {
-            Array.Resize(ref sipukbun_vec, (int)(divide * sipukbun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                sipukbun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-        else if (note == divide * samsipebun)
-        {
-            Array.Resize(ref samsipebun_vec, (int)(divide * samsipebun * 2 - 1));
-            for (int i = 0; i < note * 2 - 1; i += 2)
-            {
-                samsipebun_vec[i] = -246 + a * (i + 1);
-            }
-        }
-    }
-    public void fuck(float note)
-    {
-        float a = (float)492 / (note * 2);
-        if (curmadi == 0 || Audio.playing)
-        {
-            return;
-        }
-        is_fucking = true;
-        for (int i = 0; i < note * 2 - 1; i += 2)
-        {
-            if(fakepointer.transform.localPosition.x < 238.3125f && fakepointer.transform.localPosition.x > -238.3125f)
-            {
-                if (-246 + a * i <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + a * (i + 2))
-                {
-                    curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + a * (i + 1), 2);
-                    curpos = i + 1;
-                }
-            }
-        }
-    }
-    public void fuck2forcal(float note)
-    {
-        float a = (float)492 / (note * 2);
-        if (note == divide * zabun)
-        {
-            Array.Resize(ref zabun_vec, (int)(divide * zabun * 2 + MathF.Floor(divide * zabun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                zabun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-        else if (note == divide * zabun)
-        {
-            Array.Resize(ref ebun_vec, (int)(divide * ebun * 2 + MathF.Floor(divide * ebun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                ebun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-        else if (note == divide * unmun)
-        {
-            Array.Resize(ref unmun_vec, (int)(divide * unmun * 2 + MathF.Floor(divide * unmun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                unmun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-        else if (note == divide * palbun)
-        {
-            Array.Resize(ref palbun_vec, (int)(divide * palbun * 2 + MathF.Floor(divide * palbun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                palbun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-        else if (note == divide * sipukbun)
-        {
-            Array.Resize(ref sipukbun_vec, (int)(divide * sipukbun * 2 + MathF.Floor(divide * sipukbun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                sipukbun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-        else if (note == divide * samsipebun)
-        {
-            Array.Resize(ref samsipebun_vec, (int)(divide * samsipebun * 2 + MathF.Floor(divide * samsipebun)));
-            for (int i = 0; i < note * 2 + MathF.Floor(note); i += 2)
-            {
-                samsipebun_vec[i] = -246 + (a * (i + 2));
-            }
-        }
-    }
-    public void fuck2(float note) //분자 홀수 4분음표 사이에 들어감
-    {
-        float a = (float)492 / (note * 2);
-        if (curmadi == 0 || Audio.playing)
-        {
-            return;
-        }
-        is_fucking = true;
-        for (int i = 0; i < note * 2 + MathF.Floor( note); i += 2)
-        {
-            if (fakepointer.transform.localPosition.x < 238.3125f && fakepointer.transform.localPosition.x > -238.3125f)
-            {
-                if (-246 + (a * (i + 1)) <= fakepointer.transform.localPosition.x && fakepointer.transform.localPosition.x < -246 + (a * (i + 3)))
-                {
-                    curpointer.GetComponent<RectTransform>().localPosition = new Vector2(-246 + (a * (i + 2)), 2);
-                    curpos = (((i + 1) - 1) * 0.5f) + 1;
-                }
-            }
 
-        }
-    }
     void repaint() //box
     {
         if(gameObject.transform.childCount == 0)
@@ -577,7 +199,7 @@ public class Maketile : MonoBehaviour
         }
         for(int i=0;i < boxpos.Length;i++)
         {
-            Instantiate(prefeb, new Vector2(boxpos[i].x - 0.496885f, boxpos[i].y + 0.48292f), Quaternion.identity ,gameObject.transform);
+            Instantiate(tileprefeb, new Vector2(boxpos[i].x - 0.496885f, boxpos[i].y + 0.48292f), Quaternion.identity ,gameObject.transform);
         }
     }
 
@@ -595,6 +217,15 @@ public class Maketile : MonoBehaviour
         {
             gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
         }
+    }
+
+    public void initile()
+    {
+        for (int i = 0; i < gameObject.transform.childCount; i++)
+        {
+            Destroy(gameObject.transform.GetChild(i).gameObject);
+        }
+        Array.Resize(ref boxpos, 0);
     }
     #region switch
     //make 0 erase 1 edit 2
@@ -620,8 +251,8 @@ public class Maketile : MonoBehaviour
         nol(1);
         if (Makenote.chartmode)
         {
-            makenote.dehold();
             Mouseevent.nopointer = true;
+            makenote.buttoninteraction(true);
         }
     }
     public void make()
@@ -635,9 +266,8 @@ public class Maketile : MonoBehaviour
         nol(0);
         if (Makenote.chartmode)
         {
-            makenote.dehold();
-            makenote.makemodeanimt();
             Mouseevent.nopointer = false;
+            makenote.buttoninteraction(false);
         }
     }
 
@@ -653,6 +283,7 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = true;
+            makenote.buttoninteraction(true);
         }
     }
 
@@ -662,8 +293,7 @@ public class Maketile : MonoBehaviour
         Mouseevent.nopointer = false;
         makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
         rebutton();
-        note.GetComponent<SpriteRenderer>().enabled = false;
-        tile.GetComponent<SpriteRenderer>().enabled = true;
+        curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(-14.8f, 0);
         curpointer = tile;
     }
 

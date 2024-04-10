@@ -7,22 +7,15 @@ public class EditorData //: MonoBehaviour
     public Vector2[] boxpos;
     public double[] notedata;
     public Vector2[] notepos;
-    public int[] notegroup;
-    public int[] notetype;
 
-    public float starttime;
     public float length;
     public string projectname;
-    public double bpm;
-    public double sec; //total sec
-    public int up;
-    public int down;
+    public float sec; //total sec
 
     public string creator;
     public AudioClip music;
     public string musicname;
-    public double madi_sec;
-    public double madi_bar_depth;
+    public int bpm;
     // Start is called before the first frame update
     void Start()
     {

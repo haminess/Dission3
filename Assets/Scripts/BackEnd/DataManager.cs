@@ -218,8 +218,6 @@ public class DataManager : MonoBehaviour
             Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
             Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
             Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
-            Array.Resize(ref Makemadi.instance.note.notegroup, editordata.notegroup.Length);
-            Array.Resize(ref Makemadi.instance.note.notetype, editordata.notetype.Length);
 
             for (int a = 0; a < editordata.notedata.Length; a++)
             {
@@ -232,14 +230,6 @@ public class DataManager : MonoBehaviour
             for (int a = 0; a < editordata.notepos.Length; a++)
             {
                 Makemadi.instance.note.notepos[a] = editordata.notepos[a];
-            }
-            for (int a = 0; a < editordata.notegroup.Length; a++)
-            {
-                Makemadi.instance.note.notegroup[a] = editordata.notegroup[a];
-            }
-            for (int a = 0; a < editordata.notetype.Length; a++)
-            {
-                Makemadi.instance.note.notetype[a] = editordata.notetype[a];
             }
 
 
@@ -366,7 +356,6 @@ public class DataManager : MonoBehaviour
 
             PlayManager.instance.projectname.text = editordata.projectname;
             PlayManager.instance.bgmname.text = editordata.musicname;
-            PlayManager.instance.bpm.text = editordata.bpm + " Bpm".ToString();
             PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
             string min = (Mathf.Floor((float)editordata.sec / 60)).ToString();
             string sec = (editordata.sec % 60).ToString();
@@ -380,7 +369,6 @@ public class DataManager : MonoBehaviour
             }
             PlayManager.instance.sec.text = min + ":" + sec.ToString();
             PlayManager.instance.creator.text = editordata.creator;
-            PlayManager.instance.timesig.text = editordata.up + "/" + editordata.down;
             PlayManager.instance.music.clip = Resources.Load(editordata.musicname) as AudioClip;
             PlayManager.instance.music.Play();
         }

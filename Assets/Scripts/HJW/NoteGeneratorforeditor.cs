@@ -8,10 +8,11 @@ public class NoteGeneratorforeditor : MonoBehaviour
 
     public Makenote makenote;
     public int noteIndex;                   // ä�� ������(0 ~ ��Ʈ ����)
-    public float[][] chart;                  // ä��, ��: ä�� ��Ʈ �ν��Ͻ�, ��: {time, x, y}
+    public Vector2[] boxpos;
     public GameObject note;           // �ٴڿ� �Ѹ� ��Ʈ ������
     public float offset;
-
+    int length;
+    int altlength;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,30 +20,28 @@ public class NoteGeneratorforeditor : MonoBehaviour
     }
     public void refresh()
     {
-        if (makenote.notedata.Length != Maketile.instance.boxpos.Length)
+        if( makenote.notedata.Length > Maketile.instance.boxpos.Length)
         {
-            return;
-        }
-
-        chart = new float[makenote.notedata.Length][];
-        //time, x, y
-        for (int i = 0; i < makenote.notedata.Length; i++)
-        {
-            chart[i] = new float[3] { (float)makenote.notedata[i], Maketile.instance.boxpos[i].x - 0.496885f, Maketile.instance.boxpos[i].y + 0.48292f };
-        }
-        if(Makemadi.instance.page == 0)
-        {
-            noteIndex = 0;
+            length = makenote.notedata.Length;
+            altlength = Maketile.instance.boxpos.Length;
         }
         else
         {
-            for(int i = 0; i < makenote.notedata.Length; i++)
+            length = Maketile.instance.boxpos.Length;
+            altlength = makenote.notedata.Length;
+        }
+        boxpos = new Vector2[length];
+        //time, x, y
+        for (int i = 0; i < Maketile.instance.boxpos.Length; i++)
+        {
+            boxpos[i] = new Vector2(Maketile.instance.boxpos[i].x - 0.496885f, Maketile.instance.boxpos[i].y + 0.48292f);
+        }
+        for(int i = 0; i < makenote.notedata.Length; i++)
+        {
+            if (makenote.notedata[i] - Makemadi.instance.audio_.mainmusic.time > 1)
             {
-                if(chart[i][0] - Makemadi.instance.audio_.audiosourse.time > 1)
-                {
-                    noteIndex = i;
-                    break;
-                }
+                noteIndex = i;
+                break;
             }
         }
     }
@@ -50,7 +49,7 @@ public class NoteGeneratorforeditor : MonoBehaviour
     void Update()
     {
         // ���� �����ϸ�
-        if (Audio.playing && makenote.notedata.Length == Maketile.instance.boxpos.Length)
+        if (Audio.playing)
         {
             // �ٴڿ� ��Ʈ ����
             ShowNote();
@@ -60,12 +59,12 @@ public class NoteGeneratorforeditor : MonoBehaviour
     // ä�� ��Ʈ ����
     void ShowNote()
     {
-        if (noteIndex > chart.Length - 1) return;
-        if (chart[noteIndex][0] - 1< 0)
+        if (noteIndex > altlength - 1) return;
+        if (makenote.notedata[noteIndex] - 1< 0)
         {
-            noteIndex++;
+            MakeNote();
         }
-        else if (Makemadi.instance.audio_.audiosourse.time > chart[noteIndex][0] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
+        if (Makemadi.instance.audio_.mainmusic.time > makenote.notedata[noteIndex] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
         {
             MakeNote();
         }
@@ -73,8 +72,8 @@ public class NoteGeneratorforeditor : MonoBehaviour
     void MakeNote()
     {
         var note1 = Instantiate(note);
-        note1.name = "note" + noteIndex.ToString();
-        note1.transform.position = new Vector3(chart[noteIndex][1], chart[noteIndex][2], 0);
+        note1.name = "note" + noteIndex.ToString(); 
+        note1.transform.position = new Vector3(boxpos[noteIndex].x, boxpos[noteIndex].y, 0);
         noteIndex++;
         Destroy(note1, 3);
     }
