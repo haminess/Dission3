@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MoveMode
-{
-    Short,
-    Long
-}
-
 public class TutorialMove : MonoBehaviour
 {
 
@@ -18,8 +12,9 @@ public class TutorialMove : MonoBehaviour
     public Tutorial tutorial;
 
     // 설정
-    public MoveMode moveMode = MoveMode.Short;
+    public MoveMode moveMode = MoveMode.Default;
     public Coroutine slideCo = null;
+    public Transform slide_note;
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
@@ -42,7 +37,7 @@ public class TutorialMove : MonoBehaviour
 
     IEnumerator Slide(Vector3 _head)
     {
-        while(moveMode == MoveMode.Long)
+        while(moveMode == MoveMode.Slide)
         {
             CurPos += _head * moveDistance * 0.1f;
             yield return null;
@@ -57,33 +52,34 @@ public class TutorialMove : MonoBehaviour
     public void Move()
     {
         // 이동
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             // 좌우 반전
             sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             Head(Vector3.left);
 
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             // 좌우 반전
             sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
             Head(Vector3.right);
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             Head(Vector3.up);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
             Head(Vector3.down);
         }
+
         // 캐릭터 좌표 이동
-        transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
-        if (transform.localPosition == CurPos)
-        {
-            transform.localPosition = CurPos;
-        }
+        if (moveMode == MoveMode.Default)
+            transform.position = Vector3.Lerp(transform.position, CurPos, speed);
+        //else if (moveMode == MoveMode.Slide)
+        //    transform.position = slide_note.position;
+
     }
 
     public void Head(Vector3 _head)
@@ -98,21 +94,27 @@ public class TutorialMove : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, _head, 1 * moveDistance, mask);
         if (!rayHit)
         {
-            if (moveMode == MoveMode.Long)
-            {
-                if(slideCo != null)
-                {
-                    StopCoroutine(slideCo);
-                    StopSlide();
-                }
-                slideCo = StartCoroutine(Slide(_head));
-            }
-            else
+            if(moveMode == MoveMode.Default)
             {
                 CurPos += _head * moveDistance;
+                tutorial.Judge(tutorial.time, CurPos.x, CurPos.y);
             }
 
-            tutorial.Judge(tutorial.time, CurPos.x, CurPos.y);
+            //// long note
+            //if (CurPos == slide_note.position)
+            //    moveMode = MoveMode.Slide;
+            //else
+            //    moveMode = MoveMode.Default;
         }
+    }
+
+    public void ChangeMode(MoveMode _mode)
+    {
+        if(moveMode != MoveMode.Default && _mode == MoveMode.Default)
+        {
+            CurPos.x = Mathf.Round(transform.position.x); 
+            CurPos.y = Mathf.Round(transform.position.y);
+        }
+        moveMode = _mode;
     }
 }
