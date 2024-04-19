@@ -14,7 +14,7 @@ public class Tutorial : MonoBehaviour
     public GameObject guidePrefab;
     public GameObject canvas;
 
-    public TutorialMove player;
+    public LMove player;
     public AudioSource bgm;
     public Metronome metronome;
     public GameObject note;
@@ -490,7 +490,7 @@ public class Tutorial : MonoBehaviour
         }
         else
         {
-            print("좌표 불일치");
+            //print("좌표 불일치");
         }
     }
     public void Judge(float _time)
