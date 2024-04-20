@@ -7,7 +7,8 @@ public class NoteGenerator : MonoBehaviour
     
     public int noteIndex;                   // 채보 포인터(0 ~ 노트 개수)
     float[][] chart;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
-    public GameObject note;           // 바닥에 뿌릴 노트 프리팹
+    Note[] note;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
+    public GameObject notePrefab;           // 바닥에 뿌릴 노트 프리팹
     public GameObject routeNote;
 
     // Start is called before the first frame update
@@ -328,7 +329,7 @@ public class NoteGenerator : MonoBehaviour
 
     void MakeNote()
     {
-        var note1 = Instantiate(note);
+        var note1 = Instantiate(notePrefab);
         note1.name = "note" + noteIndex.ToString();
         note1.transform.position = new Vector3(chart[noteIndex][1], chart[noteIndex][2], 0);
         noteIndex++;
@@ -351,5 +352,9 @@ public class NoteGenerator : MonoBehaviour
     public void SetChart(float[][] _chart)
     {
         chart = _chart;
+    }
+    public void SetChart(Note[] _note)
+    {
+        note = _note;
     }
 }
