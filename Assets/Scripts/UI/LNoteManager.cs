@@ -31,7 +31,7 @@ public class LNoteManager : MonoBehaviour
     float[][] chart = new float[100][];
     Note[] note = new Note[300];
     public float time;
-    public int root_idx;   // show chart idx
+    public int route_idx;   // show chart idx
     public int judge_idx;  // judge chart idx
 
     // 판정범위
@@ -79,17 +79,6 @@ public class LNoteManager : MonoBehaviour
         ResetChart();
 
         {
-            //// 생성
-            //chart[0] = new float[5] { 1, 1, 0, 0, 0 };
-            //chart[1] = new float[5] { 2, 2, 0, 0, 0 };
-            //chart[2] = new float[5] { 3, 3, 0, 0, 0 };
-            //chart[3] = new float[5] { 4, 4, 0, 0, 0 };
-            //chart[4] = new float[5] { 5, 5, 0, 4, 3 };
-            //chart[5] = new float[5] { 9, 9, 0, 0, 0 };
-            //chart[6] = new float[5] { 10, 10, 0, 0, 0 };
-            //chart[7] = new float[5] { 11, 11, 0, 0, 0 };
-            //chart[8] = new float[5] { 12, 12, 0, 0, 0 };
-            //chart[9] = new float[5] { 13, 13, 0, 5, 3 };
 
             chart[0] = new float[5] { 1, 1, 0, 5, 3 };
             chart[1] = new float[5] { 3, 6, 0, 4, 3 };
@@ -485,14 +474,14 @@ public class LNoteManager : MonoBehaviour
     public void ShowNote(float _time, Transform _parent)
     {
         // 튜토리얼 채보는 1초 이상으로만 구성할 것.
-        if (root_idx < chart.Length - 1 && time > chart[root_idx][ctime] - 1)
+        if (route_idx < chart.Length - 1 && time > chart[route_idx][ctime] - 1)
         {
-            if (chart[root_idx][ctime] == 0) return;
+            if (chart[route_idx][ctime] == 0) return;
             if (step == Step.Note1) PlayerReposition();
             // 노트 생성
             GameObject note1 = Instantiate(notePrefab, _parent);
             note1.transform.localPosition = Vector3.zero;
-            root_idx++;
+            route_idx++;
 
             // 박자 소리 출력
             Invoke("PlayBeat", _time);
@@ -501,14 +490,14 @@ public class LNoteManager : MonoBehaviour
     public void ShowNote(float _time, Vector3 _pos)
     {
         // 튜토리얼 채보는 1초 이상으로만 구성할 것.
-        if (root_idx < chart.Length - 1 && time > chart[root_idx][0] - 1)
+        if (route_idx < chart.Length - 1 && time > chart[route_idx][0] - 1)
         {
-            if (chart[root_idx][0] == 0) return;
+            if (chart[route_idx][0] == 0) return;
             if (step == Step.Note1) PlayerReposition();
             // 노트 생성
             GameObject note1 = Instantiate(notePrefab);
             note1.transform.position = _pos;
-            root_idx++;
+            route_idx++;
 
             // 박자 소리 출력
             Invoke("PlayBeat", _time);  
@@ -516,14 +505,14 @@ public class LNoteManager : MonoBehaviour
     }
     public void ShowNote(float _time)
     {
-        ShowNote(_time, new Vector3(chart[root_idx][1], chart[root_idx][2], 0));
+        ShowNote(_time, new Vector3(chart[route_idx][1], chart[route_idx][2], 0));
     }
     // 채보 노트 생성
     void ShowNote()
     {
         // 노트 끝나면 리턴
         //if (noteIndex > chart.Length - 1) return;
-        if (root_idx > 0 && chart[root_idx][0] == 0) return;
+        if (route_idx > 0 && chart[route_idx][0] == 0) return;
 
  
         // 처음 경로 4칸 띄우기
@@ -537,9 +526,9 @@ public class LNoteManager : MonoBehaviour
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (chart[root_idx][0] - 1 - synk_range < 0)
+        if (chart[route_idx][0] - 1 - synk_range < 0)
         {
-            if (time > chart[root_idx][0] - 1)
+            if (time > chart[route_idx][0] - 1)
             {
                 MakeNote();
             }
@@ -547,13 +536,13 @@ public class LNoteManager : MonoBehaviour
         }
 
         // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
-        else if (time > chart[root_idx][0] - 1 - synk_range)
+        else if (time > chart[route_idx][0] - 1 - synk_range)
         {
             // 4칸 앞 경로 띄우기
-            if (root_idx < chart.Length - 4)
+            if (route_idx < chart.Length - 4)
             {
-                GameObject rt = MakeRoute(root_idx + 4);
-                if (rt) rt.name = "route" + (root_idx + 4);
+                GameObject rt = MakeRoute(route_idx + 4);
+                if (rt) rt.name = "route" + (route_idx + 4);
             }
 
             // 실제 노트 뿌리기
@@ -563,11 +552,11 @@ public class LNoteManager : MonoBehaviour
     void ShowNewNote()
     {
         // 노트 끝나면 리턴
-        if (note[root_idx] == null) return;
-        if (root_idx > 0 && note[root_idx].time == 0) return;
+        if (note[route_idx] == null) return;
+        if (route_idx > 0 && note[route_idx].time == 0) return;
 
         // 처음 경로 4칸 띄우기
-        if (root_idx == 0 && !GameObject.Find("route"))
+        if (route_idx == 0 && !GameObject.Find("route"))
         {
             GameObject rt = MakeRoute(note[0]);
             if (rt) rt.name = "route";
@@ -577,23 +566,23 @@ public class LNoteManager : MonoBehaviour
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (note[root_idx].time - 1 - synk_range < 0)
+        if (note[route_idx].time - 1 - synk_range < 0)
         {
-            if (bgm.time > note[root_idx].time - 1)
+            if (bgm.time > note[route_idx].time - 1)
             {
-                MakeNote(ref note[root_idx]);
+                MakeNote(ref note[route_idx]);
             }
             return;
         }
 
         // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
-        else if (bgm.time > note[root_idx].time - 1 - synk_range)
+        else if (bgm.time > note[route_idx].time - 1 - synk_range)
         {
-            GameObject rt = MakeRoute(note[root_idx + 4]);
-            if (rt) rt.name = "route" + (root_idx + 4);
+            GameObject rt = MakeRoute(note[route_idx + 4]);
+            if (rt) rt.name = "route" + (route_idx + 4);
 
             // 실제 노트 뿌리기
-            MakeNote(ref note[root_idx]);
+            MakeNote(ref note[route_idx]);
         }
     }
     IEnumerator ShowNextNoteCo()
@@ -606,22 +595,22 @@ public class LNoteManager : MonoBehaviour
     void MakeNote()
     {
         var newnote = Instantiate(notePrefab);
-        newnote.name = "note" + root_idx.ToString();
-        newnote.transform.position = new Vector3(chart[root_idx][1], chart[root_idx][2], 0);
+        newnote.name = "note" + route_idx.ToString();
+        newnote.transform.position = new Vector3(chart[route_idx][1], chart[route_idx][2], 0);
 
         // long note
-        if (chart[root_idx][3] > 1)
+        if (chart[route_idx][3] > 1)
         {
-            newnote.transform.Rotate(Vector3.forward * 90 * chart[root_idx][4]);
+            newnote.transform.Rotate(Vector3.forward * 90 * chart[route_idx][4]);
 
             LNote longnote = newnote.GetComponent<LNote>();
 
             longnote.ltype = true;
-            longnote.length = (int)chart[root_idx][3];
-            longnote.s_time = chart[root_idx][0] - time;
-            longnote.e_time = chart[root_idx + 1][0] - 1 - time;
+            longnote.length = (int)chart[route_idx][3];
+            longnote.s_time = chart[route_idx][0] - time;
+            longnote.e_time = chart[route_idx + 1][0] - 1 - time;
             Vector3 head = Vector3.up;
-            switch (chart[root_idx][4])
+            switch (chart[route_idx][4])
             {
                 case 0:
                     head = Vector3.up;
@@ -639,13 +628,13 @@ public class LNoteManager : MonoBehaviour
             longnote.head = head;
         }
 
-        root_idx++;
+        route_idx++;
     }
     void MakeNote(ref Note _note)
     {
         var newnote = Instantiate(notePrefab);
 
-        newnote.name = "note" + root_idx.ToString();
+        newnote.name = "note" + route_idx.ToString();
         newnote.transform.position = _note.pos;
 
         LNote longnote = newnote.GetComponent<LNote>();
@@ -653,7 +642,7 @@ public class LNoteManager : MonoBehaviour
 
         _note.note = newnote;
 
-        root_idx++;
+        route_idx++;
     }
     GameObject MakeRoute(int _index)
     {
@@ -1063,7 +1052,7 @@ public class LNoteManager : MonoBehaviour
         // 채보 끝났으면 초기화
         else if (judge_idx > 1 && bgm.time > note[judge_idx - 1].time + note[judge_idx - 1].duration + 0.5f)
         {
-            root_idx = 0;
+            route_idx = 0;
             judge_idx = 0;
             time = 0;
         }
@@ -1107,14 +1096,14 @@ public class LNoteManager : MonoBehaviour
         {
             note[i] = new Note(0, Vector3.zero);
         }
-        root_idx = 0;
+        route_idx = 0;
         judge_idx = 0;
         time = 0;
     }
     public void ResetTotal()
     {
         time = 0;
-        root_idx = 0;
+        route_idx = 0;
         judge_idx = 0;
         isNext = 0;
         //if(player != null) player.enabled = false;

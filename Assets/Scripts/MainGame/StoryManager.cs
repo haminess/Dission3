@@ -314,21 +314,21 @@ public class StoryManager : MonoBehaviour
     {
         yield return StartCoroutine(OffStory());
 
-        if (MainGame.instance.mode == MainGame.Mode.Stage)
+        if (MainManager.instance.MainMode == MainManager.PLAY_MODE.STAGE)
         {
-            yield return StartCoroutine(MainGame.instance.OffStoryMusic());
-            if (!MainGame.instance.isEnd)
+            yield return StartCoroutine(MainManager.instance.OffStoryMusic());
+            if (!MainManager.instance.isEnd)
             {
-                MainGame.instance.GameStart();
+                MainManager.instance.GameStart();
             }
             else
             {
-                MainGame.instance.GameEnd();
-                yield return StartCoroutine(MainGame.instance.ShowCollection());
+                MainManager.instance.GameEnd();
+                yield return StartCoroutine(MainManager.instance.ShowCollection());
 
                 yield return new WaitForSeconds(1);
 
-                MainGame.instance.sceneManager.ToScoreScene();
+                MainManager.instance.sceneManager.ToScoreScene();
             }
         }
 

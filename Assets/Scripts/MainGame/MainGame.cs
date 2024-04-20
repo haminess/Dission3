@@ -698,7 +698,7 @@ public class MainGame : MonoBehaviour
         isEnd = false;
         bgm.Stop();
         Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
-        GetComponent<NoteGenerator>().noteIndex = 0;
+        GetComponent<NoteManager>().noteIndex = 0;
         collections.Clear();
 
         // 게임 시간
@@ -740,7 +740,7 @@ public class MainGame : MonoBehaviour
         stageObject[stageNum - 1].SetActive(true);
 
         // 차트
-        GetComponent<NoteGenerator>().SetChart(chart);
+        GetComponent<NoteManager>().SetChart(chart);
     }
     public void GetMainData()
     {
@@ -2009,7 +2009,7 @@ public class MainGame : MonoBehaviour
             chart[i][1] = (int)dataMan.editordata.boxpos[i].x;
             chart[i][2] = (int)dataMan.editordata.boxpos[i].y;
         }
-        GetComponent<NoteGenerator>().SetChart(chart);
+        GetComponent<NoteManager>().SetChart(chart);
 
         // Load Music
         bgm.clip = dataMan.editordata.music;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoteGenerator : MonoBehaviour
+public class NoteManager : MonoBehaviour
 {
     
     public int noteIndex;                   // 채보 포인터(0 ~ 노트 개수)
@@ -267,19 +267,19 @@ public class NoteGenerator : MonoBehaviour
     void Update()
     {
         // 게임 시작하면
-        if (MainGame.instance.isGame)
+        if (MainManager.instance.isGame)
         {
             // 바닥에 노트 생성
             ShowNote();
         }
-        else if(MainGame.instance.isStart && !MainGame.instance.isGame)
+        else if(MainManager.instance.isStart && !MainManager.instance.isGame)
         {
             // 설정 및 중단 시 발생
             // 설정 해제 후 continue할 때 노래 5초 전으로 당기기
             // 대기 상태에서 첫 노트 표시해주기
             OnSetting();
         }
-        else if(!MainGame.instance.isStart && !MainGame.instance.isGame)
+        else if(!MainManager.instance.isStart && !MainManager.instance.isGame)
         {
             //Start();
         }
@@ -291,7 +291,7 @@ public class NoteGenerator : MonoBehaviour
         if (noteIndex > chart.Length - 1) return;
 
         // 처음 경로 4칸 띄우기
-        if (!MainGame.instance.bgm.isPlaying)
+        if (!MainManager.instance.bgm.isPlaying)
         {
             if (GameObject.Find("route")) return;
             MakeRoute(noteIndex + 0);
@@ -301,15 +301,15 @@ public class NoteGenerator : MonoBehaviour
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (chart[noteIndex][0] - 1 - MainGame.instance.notesynkRange < 0)
+        if (chart[noteIndex][0] - 1 - MainManager.instance.notesynkRange < 0)
         {
-            if(MainGame.instance.gameTime > chart[noteIndex][0])
+            if(MainManager.instance.gameTime > chart[noteIndex][0])
             {
                 MakeNote();
             }
             return;
         }
-        else if (MainGame.instance.bgm.time > chart[noteIndex][0] - 1 - MainGame.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (MainManager.instance.bgm.time > chart[noteIndex][0] - 1 - MainManager.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)
@@ -324,7 +324,7 @@ public class NoteGenerator : MonoBehaviour
 
     void OnSetting()
     {
-        noteIndex = MainGame.instance.noteIndex;
+        noteIndex = MainManager.instance.noteIndex;
     }
 
     void MakeNote()
@@ -344,7 +344,7 @@ public class NoteGenerator : MonoBehaviour
         route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
 
         // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-        Destroy(route, chart[_index][0] - MainGame.instance.bgm.time);
+        Destroy(route, chart[_index][0] - MainManager.instance.bgm.time);
 
         return route;
     }

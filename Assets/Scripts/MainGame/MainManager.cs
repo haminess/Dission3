@@ -8,11 +8,20 @@ using UnityEngine.Rendering.Universal;
 
 public class MainManager : MonoBehaviour
 {
-    public enum Mode
+    public enum PLAY_MODE
     {
-        Debug,
-        Stage,
-        Play
+        DEBUG,
+        STAGE,
+        PLAY,
+        END
+    }
+    public enum JUDGE
+    {
+        MISS,
+        BAD,
+        GOOD,
+        PERFECT,
+        END
     }
 
     // 메인게임 싱글톤
@@ -29,7 +38,7 @@ public class MainManager : MonoBehaviour
     // 게임 오브젝트
     [Header("GameObject")]
     public Player player;
-    public GameObject notePrefab;
+    public GameObject PrenotePrefab;
     public GameObject judgeEffect;
     public Animation comboeff;
     public Animation judgeeff;
@@ -48,8 +57,9 @@ public class MainManager : MonoBehaviour
     // 메인 상태 데이터
     [Header("Game State")]
     public bool startButton = false;
-    public Mode MainMode = Mode.Debug;
+    public PLAY_MODE MainMode = PLAY_MODE.DEBUG;
     public int stageNum = 1;
+    public List<bool> state;
     public bool isStart = false;
     public bool isGame = false;
     public bool isEnd = false;
@@ -127,11 +137,11 @@ public class MainManager : MonoBehaviour
         GetMainData();
 
         // 스테이지(실행) 모드이면 바로 시작
-        if (MainMode == Mode.Stage)
+        if (MainMode == PLAY_MODE.STAGE)
         {
             StageStart();
         }
-        else if(MainMode == Mode.Play)
+        else if(MainMode == PLAY_MODE.PLAY)
         {
             GameStart();
         }
@@ -142,7 +152,7 @@ public class MainManager : MonoBehaviour
     {
         if (startButton)
         {
-            if(MainMode == Mode.Stage)
+            if(MainMode == PLAY_MODE.STAGE)
             {
                 StageStart();
             }
@@ -169,7 +179,7 @@ public class MainManager : MonoBehaviour
         // 게임 종료
         if ((noteIndex > note.Length - 1 && !isEnd) /*|| (life <= 0 && !isEnd)*/)  // 편의 위해 생명 시스템 off
         {
-            if (MainMode == Mode.Stage)
+            if (MainMode == PLAY_MODE.STAGE)
             {
                 StageEnd();
             }
@@ -199,11 +209,11 @@ public class MainManager : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-        if(MainMode == Mode.Stage)
+        if(MainMode == PLAY_MODE.STAGE)
         {
             SetStage();
         }
-        else if(MainMode == Mode.Play)
+        else if(MainMode == PLAY_MODE.PLAY)
         {
             SetChart();
         }
@@ -335,7 +345,7 @@ public class MainManager : MonoBehaviour
 
         // 결과 씬 이동
         yield return new WaitForSeconds(3);
-        if (MainMode == Mode.Play)
+        if (MainMode == PLAY_MODE.PLAY)
         {
             sceneManager.ToScoreScene();
         }
@@ -652,7 +662,7 @@ public class MainManager : MonoBehaviour
     }
     IEnumerator ShowNextNoteCo()
     {
-        var note1 = Instantiate(notePrefab);
+        var note1 = Instantiate(PrenotePrefab);
         note1.transform.position = note[noteIndex].pos;
         Destroy(note1, 3);
         yield return new WaitForSeconds(3);
@@ -696,7 +706,7 @@ public class MainManager : MonoBehaviour
         isEnd = false;
         bgm.Stop();
         Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
-        GetComponent<NoteGenerator>().noteIndex = 0;
+        GetComponent<NoteManager>().noteIndex = 0;
         collections.Clear();
 
         // 게임 시간
@@ -738,8 +748,8 @@ public class MainManager : MonoBehaviour
         stageObject[stageNum - 1].SetActive(true);
 
         // 차트
-        GetComponent<NoteGenerator>().SetChart(chart);
-        GetComponent<NoteGenerator>().SetChart(note);
+        GetComponent<NoteManager>().SetChart(chart);
+        GetComponent<NoteManager>().SetChart(note);
     }
     public void GetMainData()
     {
@@ -759,13 +769,13 @@ public class MainManager : MonoBehaviour
             dataMan.LoadMainGameData();
             dataMan.LoadSoundData();
 
-            MainMode = (Mode)(int)dataMan.mode;
-            if (MainMode == Mode.Stage)
+            MainMode = (PLAY_MODE)(int)dataMan.mode;
+            if (MainMode == PLAY_MODE.STAGE)
             {
                 stageNum = dataMan.stageNum;
                 SetStage();
             }
-            if (MainMode == Mode.Play)
+            if (MainMode == PLAY_MODE.PLAY)
             {
                 dataMan.LoadEditorDataToMain(dataMan.chartNum);
                 SetChart();
@@ -2014,7 +2024,7 @@ public class MainManager : MonoBehaviour
             note[i] = new Note((float)dataMan.editordata.notedata[i],
                       new Vector3((int)dataMan.editordata.boxpos[i].x, (int)dataMan.editordata.boxpos[i].y));
         }
-        GetComponent<NoteGenerator>().SetChart(note);
+        GetComponent<NoteManager>().SetChart(note);
 
         // Load Music
         bgm.clip = dataMan.editordata.music;
