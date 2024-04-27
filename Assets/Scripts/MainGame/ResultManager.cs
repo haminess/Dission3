@@ -16,7 +16,6 @@ public class ResultManager : MonoBehaviour
     public TMP_InputField rankname;
     public int StageNum;
 
-    //public int score;
     public int score;
     public int combo;
     public int curCombo;
@@ -24,7 +23,6 @@ public class ResultManager : MonoBehaviour
     public int good;
     public int bad;
     public int miss;
-    //public int collection;
     public int collection;
 
     private void Awake()
@@ -75,9 +73,13 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    public void SendResult()
+    public void GetResult()
     {
-        // ���ΰ��� ����� ������� ����
+        // send game score to result scene
+        if (!MainGame.instance)
+        {
+            print("ResultManager::SendReuslt Method Failed!");
+        }
         StageNum = MainGame.instance.stageNum;
         score = MainGame.instance.score;
         combo = MainGame.instance.combo;

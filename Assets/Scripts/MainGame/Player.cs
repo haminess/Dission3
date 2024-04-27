@@ -35,10 +35,10 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-        if (MainManager.instance)
+        if (MainMan.instance)
         {
-            bgm = MainManager.instance.bgm;
-            effect = MainManager.instance.effect;
+            bgm = MainMan.instance.bgm;
+            effect = MainMan.instance.effect;
         }
 
 
@@ -51,10 +51,10 @@ public class Player : MonoBehaviour
 
         // 스테이지 별
         // 캐릭터 초기 위치 설정
-        switch(MainManager.instance.stageNum)
+        switch(MainMan.instance.stageNum)
         {
             case 1:
-                MainManager.instance.PlayerReposition();
+                MainMan.instance.PlayerReposition();
                 break;
             case 2:
                 CurPos = new Vector3(0, 0, 0);
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "MainManager") return;
 
         // 시작 후 설정창
-        if (Input.GetKeyDown(KeyCode.Escape) && MainManager.instance.isStart)
+        if (Input.GetKeyDown(KeyCode.Escape) && MainMan.instance.isStart)
         {
             OnSetting();
         }
@@ -144,8 +144,8 @@ public class Player : MonoBehaviour
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
-            if (MainManager.instance.isGame)
-                MainManager.instance.Judge(bgm.time, CurPos);
+            if (MainMan.instance.isGame)
+                MainMan.instance.Judge(bgm.time, CurPos);
         }
     }
 
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
             Movable = false;
 
             // 게임 멈춤
-            MainManager.instance.Stop();
+            MainMan.instance.Stop();
 
             // 설정창 활성화
             settingUI.SetActive(true);
@@ -175,10 +175,10 @@ public class Player : MonoBehaviour
             Movable = true;
 
             // 노트 위치로 이동
-            MainManager.instance.PlayerReposition();
+            MainMan.instance.PlayerReposition();
 
             // 이어하기 호출
-            MainManager.instance.Continue();
+            MainMan.instance.Continue();
 
             // 설정창 비활성화
             settingUI.SetActive(false);

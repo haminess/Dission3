@@ -41,21 +41,21 @@ public class LNoteGenerator : MonoBehaviour
     void Update()
     {
         // 게임 시작하면
-        if(MainManager.instance)
+        if(MainMan.instance)
         {
-            if (MainManager.instance.isGame)
+            if (MainMan.instance.isGame)
             {
                 // 바닥에 노트 생성
                 ShowNote();
             }
-            else if (MainManager.instance.isStart && !MainManager.instance.isGame)
+            else if (MainMan.instance.isStart && !MainMan.instance.isGame)
             {
                 // 설정 및 중단 시 발생
                 // 설정 해제 후 continue할 때 노래 5초 전으로 당기기
                 // 대기 상태에서 첫 노트 표시해주기
                 OnSetting();
             }
-            else if (!MainManager.instance.isStart && !MainManager.instance.isGame)
+            else if (!MainMan.instance.isStart && !MainMan.instance.isGame)
             {
                 //Start();
             }
@@ -68,7 +68,7 @@ public class LNoteGenerator : MonoBehaviour
         if (noteIndex > chart.Length - 1) return;
 
         // 처음 경로 4칸 띄우기
-        if (!MainManager.instance.bgm.isPlaying)
+        if (!MainMan.instance.bgm.isPlaying)
         {
             if (GameObject.Find("route")) return;
             MakeRoute(noteIndex + 0);
@@ -78,15 +78,15 @@ public class LNoteGenerator : MonoBehaviour
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (chart[noteIndex][0] - 1 - MainManager.instance.notesynkRange < 0)
+        if (chart[noteIndex][0] - 1 - MainMan.instance.notesynkRange < 0)
         {
-            if(MainManager.instance.gameTime > chart[noteIndex][0])
+            if(MainMan.instance.gameTime > chart[noteIndex][0])
             {
                 MakeNote();
             }
             return;
         }
-        else if (MainManager.instance.bgm.time > chart[noteIndex][0] - 1 - MainManager.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (MainMan.instance.bgm.time > chart[noteIndex][0] - 1 - MainMan.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (noteIndex < chart.Length - 4)
@@ -101,7 +101,7 @@ public class LNoteGenerator : MonoBehaviour
 
     void OnSetting()
     {
-        noteIndex = MainManager.instance.noteIndex;
+        noteIndex = MainMan.instance.noteIndex;
     }
 
     void MakeNote()
@@ -156,7 +156,7 @@ public class LNoteGenerator : MonoBehaviour
             route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
 
             // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-            Destroy(route, chart[_index][0] - MainManager.instance.bgm.time);
+            Destroy(route, chart[_index][0] - MainMan.instance.bgm.time);
 
             return route;
         }
