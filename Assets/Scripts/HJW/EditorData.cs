@@ -6,7 +6,7 @@ public class EditorData //: MonoBehaviour
 {
     public Vector2[] boxpos;
     public double[] notedata;
-    public Vector2[] notepos;
+    public float[] noteduration;
 
     public float length;
     public string projectname;

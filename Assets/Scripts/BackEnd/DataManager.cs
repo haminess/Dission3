@@ -216,8 +216,8 @@ public class DataManager : MonoBehaviour
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
             Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
+            Array.Resize(ref Makemadi.instance.note.noteduration, editordata.noteduration.Length);
             Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
-            Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
 
             for (int a = 0; a < editordata.notedata.Length; a++)
             {
@@ -227,11 +227,10 @@ public class DataManager : MonoBehaviour
             {
                 Maketile.instance.boxpos[a] = editordata.boxpos[a];
             }
-            for (int a = 0; a < editordata.notepos.Length; a++)
+            for (int a = 0; a < editordata.noteduration.Length; a++)
             {
-                Makemadi.instance.note.notepos[a] = editordata.notepos[a];
+                Makemadi.instance.note.noteduration[a] = editordata.noteduration[a];
             }
-
 
             Maketile.instance.boxposload();
             Makemadi.instance.Loadinfo();

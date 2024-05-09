@@ -5501,10 +5501,11 @@ MonoBehaviour:
   - {fileID: -1333987787, guid: a433d4ebf0e1c604f94a9d9cab212921, type: 3}
   noteimg: {fileID: -1347098328, guid: 3308db2a25e9d6a46af02d4d06b0d5bb, type: 3}
   noteimg_high: {fileID: -20816679, guid: d61713773ce83024e98e0ee7c0e47f72, type: 3}
-  note: {fileID: 2860062740327527966, guid: bed79122d71c1b644a3cec63771a6eea, type: 3}
+  note: {fileID: 2539780278716705600, guid: cff8f4e73af426e4390db0708632e0e6, type: 3}
   notedata: []
   notesobj: []
-  notepos: []
+  noteduration: []
+  tooshort: 0
 --- !u!1 &165235876
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,7 +51,7 @@ public class Makemadi : MonoBehaviour
         }
         Array.Resize(ref note.notedata, 0);
         Array.Resize(ref note.notesobj, 0);
-        Array.Resize(ref note.notepos, 0);
+        Array.Resize(ref note.noteduration, 0);
         Maketile.instance.initile();
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
     }
