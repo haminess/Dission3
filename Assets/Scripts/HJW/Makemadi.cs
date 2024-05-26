@@ -61,7 +61,19 @@ public class Makemadi : MonoBehaviour
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
         for(int i = 0; i < note.notesobj.Length;i++)
         {
-            note.notesobj[i].transform.localPosition = new Vector2( (float)note.notedata[i] * madimultiplyer, 0); 
+            note.notesobj[i].transform.localPosition = new Vector2( (float)note.notedata[i] * madimultiplyer, 0);
+            if (note.noteduration[i] > 0)
+            {
+                var mid = note.notesobj[i].transform.GetChild(1);
+                var over = note.notesobj[i].transform.GetChild(2);
+                var end = note.notesobj[i].transform.GetChild(3);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2(note.noteduration[i] * madimultiplyer, 103.87f);
+                note.notesobj[i].GetComponent<BoxCollider2D>().size = new Vector2(note.noteduration[i]* madimultiplyer + 0.6f, 201.7123f);
+                note.notesobj[i].GetComponent<BoxCollider2D>().offset = new Vector2((note.noteduration[i] * madimultiplyer / 2) + 0.15f, 15.45131f);
+                over.GetComponent<BoxCollider2D>().size = new Vector2(note.noteduration[i]* madimultiplyer + 3, 201.7123f);
+                over.GetComponent<BoxCollider2D>().offset = new Vector2(note.noteduration[i] * madimultiplyer / 2, 15.45131f);
+                end.GetComponent<RectTransform>().localPosition = new Vector2(note.noteduration[i] * madimultiplyer, 0);
+            }
         }
     }
     // Update is called once per frame

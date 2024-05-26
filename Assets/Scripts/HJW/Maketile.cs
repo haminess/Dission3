@@ -41,15 +41,32 @@ public class Maketile : MonoBehaviour
     void Update()
     {
         mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
+        if (Audio.playing)
+        {
+            curtime.text = "Time: " + float.Parse(audio_.mainmusic.time.ToString("N2"));
+        }
         if (Makenote.chartmode && !Settings.popup)
         {
             curpointer.transform.position = new Vector2(mospos.x, mospos.y);
             if(makemadi.chart)
             {
-                curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint( mospos.x, mospos.y, 0).x, 0);
-                curtime.text = "Time: " + (curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer).ToString();
+                if(makenote.movinglongnote)
+                {
+                    curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint( mospos.x, mospos.y, 0).x - makenote.dur /2, 0);
+                }
+                else
+                {
+                    curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x, 0);
+                }
+
+                if(curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer > 0 && !Audio.playing)
+                {
+                    curtime.text = "Time: " + float.Parse( (curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer).ToString("N2"));
+
+                }
             }
         }
+
         else
         {
             if(Settings.popup)
@@ -252,7 +269,7 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = true;
-            makenote.buttoninteraction(true);
+            makenote.movinglongnote = false;
         }
     }
     public void make()
@@ -267,7 +284,7 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = false;
-            makenote.buttoninteraction(false);
+            makenote.movinglongnote = false;
         }
     }
 
@@ -283,7 +300,7 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = true;
-            makenote.buttoninteraction(true);
+            makenote.movinglongnote = false;
         }
     }
 

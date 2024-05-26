@@ -1,4 +1,6 @@
 
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +25,7 @@ public class Audio : MonoBehaviour
     }
     public void playmus()
     {
+        if (Makenote.hold) { return; }
         if (playing == true) //play -> stop
         {
             gameObject.GetComponent<Image>().sprite = play;
@@ -45,7 +48,6 @@ public class Audio : MonoBehaviour
                     break;
                 }
             }
-            notegen.refresh();
         }
     }
     private void Update()
@@ -57,18 +59,17 @@ public class Audio : MonoBehaviour
             {
                 Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(3.5f, (-Makemadi.instance.madimultiplyer * mainmusic.time) - 39);
             }
-            if(Mathf.Abs( mainmusic.time - Makemadi.instance.sec )< 0.05f)
+            if(Mathf.Abs( mainmusic.time - Makemadi.instance.sec )< 0.05f) //end
             {
                 resetmusic();
             }
-            if(note.notedata.Length > 0 && note.notedata[noteindx] - time < 0.05f && note.notedata[noteindx] - time > 0)
+            if(note.notedata.Length > 0 && note.notedata[0] - time < 0.05f && note.notedata[0] - time > 0)
             {
-                notesound.Play();
-                if(note.notedata.Length - 1 == noteindx)
-                {
-                    noteindx = 0;
-                }
-                noteindx++;
+                Destroy(note.notesobj[0]);
+                note.notesobj = Array.FindAll(note.notesobj, num => num != note.notesobj[0]).ToArray();
+                note.notedata = Array.FindAll(note.notedata, num => num != note.notedata[0]).ToArray();
+                note.noteduration[0] = -1;
+                note.noteduration = Array.FindAll(note.noteduration, num => num != note.noteduration[0]).ToArray();
             }
         }
     }
@@ -118,10 +119,5 @@ public class Audio : MonoBehaviour
         Makemadi.instance.uiset();
         Makemadi.instance.check();
         resetmusic();
-    }
-
-    public void notegenrefresh()
-    {
-        notegen.refresh();
     }
 }
