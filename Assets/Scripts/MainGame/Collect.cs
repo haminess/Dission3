@@ -11,10 +11,10 @@ public class Collect : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        MainGame.instance.collection += CNum;
-        MainGame.instance.collections.Add(content);
-        MainGame.instance.effect.clip = MainGame.instance.soundMan.effectClip[1];
-        MainGame.instance.effect.Play();
+        MainMan.instance.collection += CNum;
+        MainMan.instance.collections.Add(content);
+        MainMan.instance.effect.clip = MainMan.instance.soundMan.effectClip[1];
+        MainMan.instance.effect.Play();
         Destroy(gameObject);
     }
 }

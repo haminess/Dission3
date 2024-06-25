@@ -35,10 +35,10 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
-        if (MainGame.instance)
+        if (MainMan.instance)
         {
-            bgm = MainGame.instance.bgm;
-            effect = MainGame.instance.effect;
+            bgm = MainMan.instance.bgm;
+            effect = MainMan.instance.effect;
         }
 
 
@@ -51,10 +51,10 @@ public class Player : MonoBehaviour
 
         // 스테이지 별
         // 캐릭터 초기 위치 설정
-        switch(MainGame.instance.stageNum)
+        switch(MainMan.instance.stageNum)
         {
             case 1:
-                MainGame.instance.PlayerReposition();
+                MainMan.instance.PlayerReposition();
                 break;
             case 2:
                 CurPos = new Vector3(0, 0, 0);
@@ -85,10 +85,10 @@ public class Player : MonoBehaviour
         }
 
         // 메인게임 아닐 때 리턴
-        if (SceneManager.GetActiveScene().name != "MainGame") return;
+        if (SceneManager.GetActiveScene().name != "MainManager") return;
 
         // 시작 후 설정창
-        if (Input.GetKeyDown(KeyCode.Escape) && MainGame.instance.isStart)
+        if (Input.GetKeyDown(KeyCode.Escape) && MainMan.instance.isStart)
         {
             OnSetting();
         }
@@ -144,8 +144,8 @@ public class Player : MonoBehaviour
             // 메인게임 아니면 리턴
             if (SceneManager.GetActiveScene().name != "MainGame") return;
             // 판정
-            if (MainGame.instance.isGame)
-                MainGame.instance.Judge(bgm.time, CurPos.x, CurPos.y);
+            if (MainMan.instance.isGame)
+                MainMan.instance.Judge(bgm.time, CurPos);
         }
     }
 
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
             Movable = false;
 
             // 게임 멈춤
-            MainGame.instance.Stop();
+            MainMan.instance.Stop();
 
             // 설정창 활성화
             settingUI.SetActive(true);
@@ -175,10 +175,10 @@ public class Player : MonoBehaviour
             Movable = true;
 
             // 노트 위치로 이동
-            MainGame.instance.PlayerReposition();
+            MainMan.instance.PlayerReposition();
 
             // 이어하기 호출
-            MainGame.instance.Continue();
+            MainMan.instance.Continue();
 
             // 설정창 비활성화
             settingUI.SetActive(false);
