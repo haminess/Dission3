@@ -20,15 +20,15 @@ public class NoteGeneratorforeditor : MonoBehaviour
     }
     public void refresh()
     {
-        if( makenote.notedata.Length > Maketile.instance.boxpos.Length)
+        if( makenote.notedata.Count > Maketile.instance.boxpos.Length)
         {
-            length = makenote.notedata.Length;
+            length = makenote.notedata.Count;
             altlength = Maketile.instance.boxpos.Length;
         }
         else
         {
             length = Maketile.instance.boxpos.Length;
-            altlength = makenote.notedata.Length;
+            altlength = makenote.notedata.Count;
         }
         boxpos = new Vector2[length];
         //time, x, y
@@ -36,9 +36,9 @@ public class NoteGeneratorforeditor : MonoBehaviour
         {
             boxpos[i] = new Vector2(Maketile.instance.boxpos[i].x - 0.496885f, Maketile.instance.boxpos[i].y + 0.48292f);
         }
-        for(int i = 0; i < makenote.notedata.Length; i++)
+        for(int i = 0; i < makenote.notedata.Count  ; i++)
         {
-            if (makenote.notedata[i] - Makemadi.instance.audio_.mainmusic.time > 1)
+            if (makenote.notedata[i].notedata - Makemadi.instance.audio_.mainmusic.time > 1)
             {
                 noteIndex = i;
                 break;
@@ -60,11 +60,11 @@ public class NoteGeneratorforeditor : MonoBehaviour
     void ShowNote()
     {
         if (noteIndex > altlength - 1) return;
-        if (makenote.notedata[noteIndex] - 1< 0)
+        if (makenote.notedata[noteIndex].notedata - 1< 0)
         {
             MakeNote();
         }
-        if (Makemadi.instance.audio_.mainmusic.time > makenote.notedata[noteIndex] - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
+        if (Makemadi.instance.audio_.mainmusic.time > makenote.notedata[noteIndex].notedata - 1 + offset)       // ���� �ð��� ���۽ð� ���ķ� ������ �ð��� ������ ����
         {
             MakeNote();
         }

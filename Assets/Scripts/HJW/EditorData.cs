@@ -5,8 +5,8 @@ using UnityEngine;
 public class EditorData //: MonoBehaviour
 {
     public Vector2[] boxpos;
-    public double[] notedata;
-    public float[] noteduration;
+    public List<double> notedata = new List<double>();
+    public List<float> noteduration = new List<float>();
 
     public float length;
     public string projectname;

@@ -1,9 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
-
+[System.Serializable]
+public class Notedata
+{
+    public double notedata;
+    public GameObject noteobj;
+    public float noteduration;
+}
 public class Makenote : MonoBehaviour
 {
     EditorData editordata => DataManager.Instance.editordata;
@@ -19,32 +25,33 @@ public class Makenote : MonoBehaviour
     public Sprite noteimg_high;
     public GameObject note;
     [Space(20)]
-    public double[] notedata;
-    public GameObject[] notesobj;
-    public float[] noteduration;
+    public List<Notedata> notedata = new List<Notedata>();
+    public List<Notedata> notedata_space = new List<Notedata>();
 
-    bool holding;
-    double data;
     public static bool hold;
-    RaycastHit2D a;
-    RaycastHit2D b;
-
-    Vector2 firstmospos;
-    GameObject n;
-    public float dur;
-    int curindex;
-    bool tooshort;
-    bool toofast;
-    bool overwritten;
-    [SerializeField]
-    bool edit_overwritten;
     public bool movinglongnote;
+    public float dur;
+
+    int curindexx;
+    bool edit_overwritten;
+    GameObject n;
     Transform mid;
     Transform end;
     Transform over;
-    float temp = 0;
-    float timetemp = 0;
+    bool holding;
+    bool overwritten;
+    float temp;
+    public bool tooshort;
+    bool toofast;
+    bool overlock;
+    RaycastHit2D a;
+    RaycastHit2D b;
+    double data;
+    Vector2 firstmospos;
+
+    float timetemp;
     float audiodur;
+
     private void Start()
     {
         chartmode = false;
@@ -52,12 +59,23 @@ public class Makenote : MonoBehaviour
     }
     private void Update()
     {
+
         if (Audio.playing && Input.GetKeyDown(KeyCode.Space))
         {
             tooshort = false;
             timetemp = Maketile.instance.audio_.time;
             n = Instantiate(note, makemadi.madi.transform);
-            n.transform.localPosition = makemadi.madi.transform.InverseTransformPoint(new Vector2(-8.494f, -4.683f));
+            n.transform.SetParent(canvas);
+            n.transform.localPosition = new Vector2(-837.1682f, -455.0459f);
+            n.transform.SetParent(makemadi.madi.transform);
+            Notedata tempdata = new Notedata();
+            notedata_space.Add(tempdata);
+            notedata_space[notedata_space.Count - 1].noteobj = n;
+            notedata_space[notedata_space.Count - 1].notedata = timetemp;
+            notedata_space[notedata_space.Count - 1].noteduration = 0;
+
+            curindexx = notedata_space.Count - 1;
+
             mid = n.transform.GetChild(1);
             end = n.transform.GetChild(2);
             over = n.transform.GetChild(3);
@@ -87,6 +105,7 @@ public class Makenote : MonoBehaviour
             n.GetComponent<BoxCollider2D>().offset = new Vector2(audiodur * makemadi.madimultiplyer / 2 + 0.5f, 15.45131f);
             over.GetComponent<BoxCollider2D>().size = new Vector2(audiodur * makemadi.madimultiplyer + 3, 201.7123f);
             over.GetComponent<BoxCollider2D>().offset = new Vector2(audiodur * makemadi.madimultiplyer / 2 + 0.5f, 15.45131f);
+            notedata_space[curindexx]. noteduration = MathF.Abs(audiodur);
         }
         if (Audio.playing || Settings.popup)
         {
@@ -95,10 +114,16 @@ public class Makenote : MonoBehaviour
         a = Physics2D.Raycast(Maketile.instance.mospos, Vector3.forward, 2, LayerMask.GetMask("note"));
         if (Maketile.instance.mode == 0)
         {
+            if(Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && a)
+            {
+                overlock = true;
+            }
             if (Input.GetMouseButtonDown(0) && makemadi.chart && chartmode && !a) //make note
             {
-                tooshort = false;
+                overlock = false;
+                tooshort = true;
                 overwritten = false;
+                toofast = false;
                 var pos = Maketile.instance.curpointer.GetComponent<RectTransform>().localPosition;
                 data = pos.x / makemadi.madimultiplyer;
                 n = Instantiate(note, makemadi.madi.transform);
@@ -107,57 +132,50 @@ public class Makenote : MonoBehaviour
                 mid = n.transform.GetChild(1);
                 end = n.transform.GetChild(2);
                 over = n.transform.GetChild(3);
-
-                Array.Resize(ref notesobj, notesobj.Length + 1);
-                notesobj[notesobj.Length - 1] = n;
-
-                Array.Resize(ref notedata, notedata.Length + 1);
-                notedata[notedata.Length - 1] = data;
-
-                Array.Resize(ref noteduration, noteduration.Length + 1);
-                noteduration[noteduration.Length - 1] = 0;
-
-                curindex = noteduration.Length - 1;
+                Notedata tempdata = new Notedata();
+                notedata.Add(tempdata);
+                notedata[notedata.Count - 1].noteobj = n;
+                notedata[notedata.Count - 1].notedata = data;
+                notedata[notedata.Count - 1].noteduration = 0;
                 sort();
-                tooshort = true;
+                curindexx = notedata.FindIndex(x => x.notedata == data);
 
             }
-            if (Input.GetMouseButton(0)&& makemadi.chart && chartmode && !tooshort && !overwritten) //overwrite and overscreen //not moving
+            if (Input.GetMouseButton(0)&& makemadi.chart && chartmode && !tooshort && !overwritten && !a && !overlock) //overwrite and overscreen //not moving
             {
+                if(end == null) { return; }
                 b = Physics2D.Raycast(end.position, Vector3.forward, 2, LayerMask.GetMask("overwrite"));
                 Debug.DrawRay(end.position, Vector3.forward * 2, Color.red);
                 var campos = Camera.main.WorldToViewportPoint(end.transform.position);
                 var pos = makemadi.madi.GetComponent<RectTransform>().anchoredPosition;
                 if (campos.x > 0.9f) //overmadi goooo
                 {
-                    if (-(38.8f - makemadi.sec * makemadi.madimultiplyer) + (pos.y - makemadi.madimultiplyer) < makemadi.madimultiplyer)
+                    if (makemadi.sec * makemadi.madimultiplyer + (pos.y - makemadi.madimultiplyer) - 78 < makemadi.madimultiplyer)
                     {
-                        makemadi.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, 38.8f - makemadi.sec * makemadi.madimultiplyer);
+                        makemadi.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(makemadi.anchorpos, -makemadi.sec * makemadi.madimultiplyer + 78);
                     }
                     else
                     {
-                        makemadi.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y - makemadi.madimultiplyer);
+                        makemadi.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(makemadi.anchorpos, pos.y - makemadi.madimultiplyer);
                     }
                 }
-                if (b || campos.x > 1f) //too overmadi destroy
+                if (!overlock && b || campos.x > 1f) //too overmadi destroy
                 {
                     overwritten = true;
-                    Destroy(notesobj[curindex]);
-                    notesobj = Array.FindAll(notesobj, num => num != notesobj[curindex]).ToArray();
-                    notedata = Array.FindAll(notedata, num => num != notedata[curindex]).ToArray();
-                    noteduration[curindex] = -1;
-                    noteduration = Array.FindAll(noteduration, num => num != noteduration[curindex]).ToArray();
+                    Destroy(notedata[curindexx].noteobj);
+                    notedata.RemoveAt(curindexx);
                 }
 
             }
-            if (Input.GetMouseButton(0) && Input.GetAxis("Mouse X") != 0 && makemadi.chart && chartmode&& !overwritten) //hold //moving
+            if (Input.GetMouseButton(0) && Input.GetAxis("Mouse X") != 0 && makemadi.chart && chartmode&& !overwritten && !a && !toofast && !overlock) //hold //moving
             {
-                if(Input.GetAxis("Mouse X") > 0.2f)
+                if(Input.GetAxis("Mouse X") > 1.5f)
                 {
                     toofast = true;
+                    Destroy(notedata[curindexx].noteobj);
+                    notedata.RemoveAt(curindexx);
                     return;
                 }
-                toofast = false;
                 var pos = Maketile.instance.curpointer.GetComponent<RectTransform>().localPosition;
                 dur = firstmospos.x - pos.x;
                 mid.gameObject.SetActive(true);
@@ -171,27 +189,43 @@ public class Makenote : MonoBehaviour
                 }
                 else { tooshort = false; }
             }
-            if (Input.GetMouseButtonUp(0) && makemadi.chart && chartmode && !overwritten) //end
+            if (Input.GetMouseButtonUp(0) && chartmode && !overwritten) //end
             {
-                over.GetComponent<BoxCollider2D>().enabled = true;
-                if(!tooshort)
+                if (over != null) { over.GetComponent<BoxCollider2D>().enabled = true; }
+                if (!tooshort) //longnote, give collider
                 {
                     if (toofast)
                     {
                         return;
                     }
-                    over.GetComponent<BoxCollider2D>().enabled = true;
-                    n.GetComponent<BoxCollider2D>().size = new Vector2(MathF.Abs(dur) + 1.5f, 201.7123f);
-                    n.GetComponent<BoxCollider2D>().offset = new Vector2(MathF.Abs(dur) / 2 + 0.5f, 15.45131f);
-                    over.GetComponent<BoxCollider2D>().size = new Vector2(MathF.Abs(dur) + 3, 201.7123f);
-                    over.GetComponent<BoxCollider2D>().offset = new Vector2(MathF.Abs(dur) / 2 + 0.5f, 15.45131f);
-                    end.SetParent(makemadi.madi.transform);
-                    end.gameObject.GetComponent<Image>().enabled = true;
-                    end.SetParent(n.transform);
-                    end.SetAsLastSibling();
-                    noteduration[curindex] = MathF.Abs(dur) / makemadi.madimultiplyer;
+                    if (over != null)
+                    {
+                        over.GetComponent<BoxCollider2D>().enabled = true;
+                        n.GetComponent<BoxCollider2D>().size = new Vector2(MathF.Abs(dur) + 1.5f, 201.7123f);
+                        n.GetComponent<BoxCollider2D>().offset = new Vector2(MathF.Abs(dur) / 2 + 0.5f, 15.45131f);
+                        over.GetComponent<BoxCollider2D>().size = new Vector2(MathF.Abs(dur) + 3, 201.7123f);
+                        over.GetComponent<BoxCollider2D>().offset = new Vector2(MathF.Abs(dur) / 2 + 0.5f, 15.45131f);
+                        end.SetParent(makemadi.madi.transform);
+                        end.gameObject.GetComponent<Image>().enabled = true;
+                        end.SetParent(n.transform);
+                        end.SetAsLastSibling();
+                        if(curindexx < notedata.Count ) { notedata[curindexx].noteduration = MathF.Abs(dur) / makemadi.madimultiplyer; }
+
+                    }
+                }
+                //here comes a after overlap part (fuck)
+                for(int i = 0; i < notedata.Count; i++)
+                {
+                    if (notedata[i].noteobj.transform.GetChild(1).gameObject.activeInHierarchy && notedata[i].noteobj.transform.GetChild(2).GetComponent<Image>() && notedata[i].noteobj.transform.GetChild(2).GetComponent<Image>().enabled ==false )
+                    {
+                        overwritten = true;
+                        Destroy(notedata[i].noteobj);
+                        notedata.RemoveAt(i);
+                        return;
+                    }
                 }
             }
+            
         }
         else if (Maketile.instance.mode == 1)
         {
@@ -199,12 +233,9 @@ public class Makenote : MonoBehaviour
             {
                 if (a)
                 {
-                    var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
-                    notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
-                    notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
-                    noteduration[noteindex] = -1;
-                    noteduration = Array.FindAll(noteduration, num => num != noteduration[noteindex]).ToArray();
+                    var noteindex = notedata.FindIndex(x => x.noteobj == a.collider.gameObject);
                     Destroy(a.collider.gameObject);
+                    if(noteindex < notedata.Count) { notedata.RemoveAt(noteindex); }
 
                     sort();
                 }
@@ -221,12 +252,9 @@ public class Makenote : MonoBehaviour
                     measure[0].transform.SetParent(makemadi.madi.transform);
                     measure[1].transform.SetParent(makemadi.madi.transform);
                     movinglongnote = false;
-                    var noteindex = Array.IndexOf(notesobj, a.collider.gameObject);
-                    notesobj = Array.FindAll(notesobj, num => num != notesobj[noteindex]).ToArray();
-                    notedata = Array.FindAll(notedata, num => num != notedata[noteindex]).ToArray();
-                    if (noteduration[noteindex] > 0) { movinglongnote = true;  temp = noteduration[noteindex]; dur = temp; }
-                    noteduration[noteindex] = -1;
-                    noteduration = Array.FindAll(noteduration, num => num != noteduration[noteindex]).ToArray();
+                    var noteindex = notedata.FindIndex(x => x.noteobj == a.collider.gameObject);
+                    if (notedata[noteindex].noteduration > 0) { movinglongnote = true; dur = -notedata[noteindex].noteduration; temp = notedata[noteindex].noteduration;}
+                    notedata.RemoveAt(noteindex);
                     Maketile.instance.curpointer.GetComponent<Image>().enabled = true;
                     if(movinglongnote)
                     {
@@ -255,10 +283,10 @@ public class Makenote : MonoBehaviour
                         var localend = measure[1].GetComponent<RectTransform>().anchoredPosition;
                         measure[0].transform.SetParent(canvas);
                         measure[1].transform.SetParent(canvas);
-                        Vector2 first = measure[0].transform.position;
-                        Vector2 end = measure[1].transform.position;
-                        var length = new Vector2(Mathf.Abs(end.x - first.x) + 0.1f, 1.5f);
-                        if (Physics2D.BoxCast(new Vector2(first.x + length.x / 2, first.y), length, 0, Vector2.down, 0, LayerMask.GetMask("note")) || localfirst.x < 0 || localend.x > 0) //edit too over
+                        Vector2 m_first = measure[0].transform.position;
+                        Vector2 m_end = measure[1].transform.position;
+                        var length = new Vector2(Mathf.Abs(m_end.x - m_first.x) + 0.1f, 1.5f);
+                        if (Physics2D.BoxCast(new Vector2(m_first.x + length.x / 2, m_first.y), length, 0, Vector2.down, 0, LayerMask.GetMask("note")) || localfirst.x < 0 || localend.x > 0) //edit too over
                         {
                             edit_overwritten = true;
                             return;
@@ -270,29 +298,26 @@ public class Makenote : MonoBehaviour
                     }
                     var pos = Maketile.instance.curpointer.GetComponent<RectTransform>().localPosition;
                     data = pos.x / makemadi.madimultiplyer;
-                    GameObject n = null;
-                    if(!movinglongnote)
+                    GameObject n2 = null;
+                    Notedata tempdata = new Notedata();
+                    notedata.Add(tempdata);
+                    if(!movinglongnote) //shortnote
                     {
-                        n = Instantiate(note, makemadi.madi.transform);
-                        n.transform.localPosition = pos;
-                        n.transform.GetChild(3).GetComponent<BoxCollider2D>().enabled = true;
+                        n2 = Instantiate(note, makemadi.madi.transform);
+                        n2.layer = 7;
+                        n2.transform.localPosition = pos;
+                        n2.transform.GetChild(3).GetComponent<BoxCollider2D>().enabled = true;
+                        notedata[notedata.Count - 1].noteobj = n2;
+                        notedata[notedata.Count - 1].noteduration = 0;
                     }
-                    Array.Resize(ref notesobj, notesobj.Length + 1);
-                    Array.Resize(ref noteduration, noteduration.Length + 1);
                     if (movinglongnote) 
-                    { 
-                        notesobj[notesobj.Length - 1] = Maketile.instance.curpointer; 
-                        noteduration[noteduration.Length - 1] = temp; 
+                    {
+                        notedata[notedata.Count - 1].noteobj = Maketile.instance.curpointer;
+                        notedata[notedata.Count - 1].noteduration = temp;
                         Maketile.instance.curpointer.GetComponent<BoxCollider2D>().enabled = true; 
                     }
-                    else 
-                    { 
-                        notesobj[notesobj.Length - 1] = n; 
-                        noteduration[noteduration.Length - 1] = 0; 
-                    }
 
-                    Array.Resize(ref notedata, notedata.Length + 1);
-                    notedata[notedata.Length - 1] = data;
+                    notedata[notedata.Count - 1].notedata = data;
 
                     sort();
 
@@ -307,12 +332,11 @@ public class Makenote : MonoBehaviour
     }
     public void noteload()
     {
-        Array.Resize(ref notesobj, notedata.Length);
-        for (int i = 0; i < notedata.Length; i++)
+        for (int i = 0; i < notedata.Count; i++)
         {
-            var newpos = new Vector2((float)notedata[i] * makemadi.madimultiplyer, 0);
+            var newpos = new Vector2((float)notedata[i].notedata * makemadi.madimultiplyer, 0);
             var n = Instantiate(note, newpos, Quaternion.identity, makemadi.madi.transform);
-            if (noteduration[i] > 0)
+            if (notedata[i].noteduration > 0)
             {
                 var mid = n.transform.GetChild(1);
                 var end = n.transform.GetChild(2);
@@ -320,50 +344,48 @@ public class Makenote : MonoBehaviour
                 mid.gameObject.SetActive(true);
                 over.GetComponent<BoxCollider2D>().enabled = true;
                 end.gameObject.GetComponent<Image>().enabled = true;
-                mid.GetComponent<RectTransform>().sizeDelta = new Vector2(noteduration[i] * makemadi.madimultiplyer, 103.87f);
-                n.GetComponent<BoxCollider2D>().size = new Vector2(noteduration[i] * makemadi.madimultiplyer + 0.6f, 201.7123f);
-                n.GetComponent<BoxCollider2D>().offset = new Vector2((noteduration[i] * makemadi.madimultiplyer / 2) + 0.15f, 15.45131f);
-                over.GetComponent<BoxCollider2D>().size = new Vector2(noteduration[i] * makemadi.madimultiplyer + 3, 201.7123f);
-                over.GetComponent<BoxCollider2D>().offset = new Vector2(noteduration[i] * makemadi.madimultiplyer / 2, 15.45131f);
-                end.GetComponent<RectTransform>().localPosition = new Vector2(noteduration[i] * makemadi.madimultiplyer, 0);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2(notedata[i].noteduration * makemadi.madimultiplyer, 103.87f);
+                n.GetComponent<BoxCollider2D>().size = new Vector2(notedata[i].noteduration * makemadi.madimultiplyer + 0.6f, 201.7123f);
+                n.GetComponent<BoxCollider2D>().offset = new Vector2((notedata[i].noteduration * makemadi.madimultiplyer / 2) + 0.15f, 15.45131f);
+                over.GetComponent<BoxCollider2D>().size = new Vector2(notedata[i].noteduration * makemadi.madimultiplyer + 3, 201.7123f);
+                over.GetComponent<BoxCollider2D>().offset = new Vector2(notedata[i].noteduration * makemadi.madimultiplyer / 2, 15.45131f);
+                end.GetComponent<RectTransform>().localPosition = new Vector2(notedata[i].noteduration * makemadi.madimultiplyer, 0);
                 end.SetAsLastSibling();
             }
             n.transform.localPosition = newpos;
-            notesobj[i] = n;
+            notedata[i].noteobj = n;
         }
     }
 
     public void Savenotepos()
     {
-        Array.Resize(ref editordata.notedata, notedata.Length);
-        Array.Resize(ref editordata.noteduration, noteduration.Length);
-        for (int i = 0; i < notedata.Length; i++)
+        editordata.notedata.Clear();
+        editordata.noteduration.Clear();
+        for (int i = 0; i < notedata.Count; i++)
         {
-            editordata.notedata[i] = notedata[i];
-        }
-        for (int i = 0; i < noteduration.Length; i++)
-        {
-            editordata.noteduration[i] = noteduration[i];
+            editordata.notedata.Add(notedata[i].notedata);
+            editordata.noteduration.Add(notedata[i].noteduration);
         }
     }
     void sort()
     {
-        for (int i = 0; i < notedata.Length - 1; i++)   //i = 0 to N - 1
+        for (int i = 0; i < notedata.Count - 1; i++)   //i = 0 to N - 1    i > j
         {
-            for (int j = i + 1; j < notedata.Length; j++)  //j = i + 1 to N
+            for (int j = i + 1; j < notedata.Count; j++)  //j = i + 1 to N
             {
-                if (notedata[i] > notedata[j])       //부등호 방향: 오름차순(>), 내림차순(<)
+                if (notedata[i].notedata > notedata[j].notedata)       //부등호 방향: 오름차순(>), 내림차순(<)
                 {
-                    var temp2 = notesobj[i]; notesobj[i] = notesobj[j]; notesobj[j] = temp2; //SWAP
-                    var temp5 = notedata[i]; notedata[i] = notedata[j]; notedata[j] = temp5; //SWAP
-                    var temp3 = noteduration[i]; noteduration[i] = noteduration[j]; noteduration[j] = temp3; //SWAP
-                    if(j == curindex)
-                    {
-                        curindex = i;
-                    }
+                    var temp2 = notedata[i]; notedata[i] = notedata[j]; notedata[j] = temp2; //SWAP
                 }
             }
         }
+    }
+    public void merge()
+    {
+        over = null;
+        notedata.AddRange(notedata_space);
+        notedata_space.Clear();
+        sort();
     }
     private void OnDrawGizmos()
     {

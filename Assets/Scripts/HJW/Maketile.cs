@@ -27,6 +27,9 @@ public class Maketile : MonoBehaviour
     [Space(20)]
     [Header("shortcuts")]
     public KeyCode[] keys;
+    GameObject temp;
+    bool toofast;
+    public bool makeingtrail;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,11 +55,13 @@ public class Maketile : MonoBehaviour
             {
                 if(makenote.movinglongnote)
                 {
-                    curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint( mospos.x, mospos.y, 0).x - makenote.dur /2, 0);
+                    var a = 0.5026326221305f * makenote.dur - 0.7692264517454f;
+                    var start = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x + makenote.dur * makemadi.madimultiplyer / 4 + a, 0);
+                    curpointer.GetComponent<RectTransform>().anchoredPosition = start;
                 }
                 else
                 {
-                    curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x, 0);
+                    curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x, 0);
                 }
 
                 if(curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer > 0 && !Audio.playing)
@@ -91,8 +96,54 @@ public class Maketile : MonoBehaviour
             }
         }//box move
 
+        if (Input.GetMouseButtonDown(0) && mode == 0) //box
+        {
+            if (makemadi.chart || Makenote.chartmode)
+            {
+                return;
+            }
+            toofast = false;
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
+            for (int i = 0; i < boxpos.Length; i++)
+            {
+                if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                {
+                    return;
+                }
+            }
+            if (e || mos.hidingpointer)
+            {
+                return;
+            }
+            var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+            temp = t;
+        }
+        repaint();
+        if (Input.GetMouseButton(0) && mode == 0 && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) //box
+        {
+            if (makemadi.chart || Makenote.chartmode)
+            {
+                return;
+            }
+            toofast = false;
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
+            for (int i = 0; i < boxpos.Length; i++)
+            {
+                if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                {
+                    return;
+                }
+            }
+            if (e || mos.hidingpointer)
+            {
+                return;
+            }
+            makeingtrail = true;
+            var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+            temp = t;
+        }
 
-        if (Input.GetMouseButton(0)) //box
+        if (Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) //longbox
         {
             if (makemadi.chart || Makenote.chartmode )
             {
@@ -102,28 +153,51 @@ public class Maketile : MonoBehaviour
             switch (mode)
             {
                 case 0: //make
-                    for(int i = 0; i < boxpos.Length; i++)
+                    if (makemadi.chart || Makenote.chartmode)
                     {
-                        if(new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                        return;
+                    }
+                    if (mos.hidingpointer || e)
+                    {
+                        return;
+                    }
+                    for (int i = 0; i < boxpos.Length; i++)
+                    {
+                        if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
                         {
                             return;
                         }
                     }
-                    if (e || mos.hidingpointer)
+                    if (Input.GetAxis("Mouse X") > 1.5f)
                     {
-                        return;
+                        toofast = true;
                     }
-                    Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+                    if(!toofast)
+                    {
+                        makeingtrail = true;
+                        var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, temp.transform);
+                        t.name = "trail";
+                        t.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
                     break;
                 case 1: //erase
                     if (e)
                     {
-                        Destroy(e.collider.gameObject);
+                        if(e.collider.gameObject.name == "trail")
+                        {
+                            Destroy(e.collider.gameObject.transform.parent.gameObject);
+                        }
+                        else
+                        {
+                            Destroy(e.collider.gameObject);
+
+                        }
                     }
                     break;
             };
-        } 
-        if(Input.GetMouseButtonDown(0) && mode == 2)//box edit
+        }
+        if (Input.GetMouseButtonUp(0) && (!makemadi.chart || !Makenote.chartmode)) { makeingtrail = false; }
+        if (Input.GetMouseButtonDown(0) && mode == 2)//box edit
         {
             var e = Physics2D.Raycast(mospos, Vector3.forward, 2);
             if (holding)
@@ -151,7 +225,6 @@ public class Maketile : MonoBehaviour
                 holding = true;
             }
         }
-        repaint();
         #region shortcuts
         if (Input.GetKeyDown(keys[0]))
         {
@@ -186,6 +259,7 @@ public class Maketile : MonoBehaviour
 
     void repaint() //box
     {
+
         if(gameObject.transform.childCount == 0)
         {
             Array.Resize(ref boxpos, 0);

@@ -12,6 +12,8 @@ public class Makemadi : MonoBehaviour
     public Audio audio_;
     public GameObject madi;
     public GameObject getendtime;
+    public GameObject getmiddletime;
+    public GameObject getstarttime;
     [Space(20)]
     [Header("Settings")]
     public GameObject ui;
@@ -35,6 +37,7 @@ public class Makemadi : MonoBehaviour
     public float madimultiplyer;
     [Space(20)]
     public bool chart; //마디 범위 내에 들어와 있습니다.
+    public float anchorpos = 4.014713f;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,13 +48,11 @@ public class Makemadi : MonoBehaviour
 
     void madiset()
     {
-        for (int i = 0; i < note.notesobj.Length; i++)
+        for (int i = 0; i < note.notedata.Count; i++)
         {
-            Destroy(note.notesobj[i]);
+            Destroy(note.notedata[i].noteobj);
         }
-        Array.Resize(ref note.notedata, 0);
-        Array.Resize(ref note.notesobj, 0);
-        Array.Resize(ref note.noteduration, 0);
+        note.notedata.Clear();
         Maketile.instance.initile();
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
     }
@@ -59,27 +60,27 @@ public class Makemadi : MonoBehaviour
     void madirefresh()
     {
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
-        for(int i = 0; i < note.notesobj.Length;i++)
+        for(int i = 0; i < note.notedata.Count;i++)
         {
-            note.notesobj[i].transform.localPosition = new Vector2( (float)note.notedata[i] * madimultiplyer, 0);
-            if (note.noteduration[i] > 0)
+            note.notedata[i].noteobj.GetComponent<RectTransform>().anchoredPosition = new Vector2( (float)note.notedata[i].notedata * madimultiplyer, 0);
+            if (note.notedata[i].noteduration > 0)
             {
-                var mid = note.notesobj[i].transform.GetChild(1);
-                var over = note.notesobj[i].transform.GetChild(2);
-                var end = note.notesobj[i].transform.GetChild(3);
-                mid.GetComponent<RectTransform>().sizeDelta = new Vector2(note.noteduration[i] * madimultiplyer, 103.87f);
-                note.notesobj[i].GetComponent<BoxCollider2D>().size = new Vector2(note.noteduration[i]* madimultiplyer + 0.6f, 201.7123f);
-                note.notesobj[i].GetComponent<BoxCollider2D>().offset = new Vector2((note.noteduration[i] * madimultiplyer / 2) + 0.15f, 15.45131f);
-                over.GetComponent<BoxCollider2D>().size = new Vector2(note.noteduration[i]* madimultiplyer + 3, 201.7123f);
-                over.GetComponent<BoxCollider2D>().offset = new Vector2(note.noteduration[i] * madimultiplyer / 2, 15.45131f);
-                end.GetComponent<RectTransform>().localPosition = new Vector2(note.noteduration[i] * madimultiplyer, 0);
+                var mid = note.notedata[i].noteobj.transform.GetChild(1);
+                var over = note.notedata[i].noteobj.transform.GetChild(2);
+                var end = note.notedata[i].noteobj.transform.GetChild(3);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2(note.notedata[i].noteduration * madimultiplyer, 103.87f);
+                note.notedata[i].noteobj.GetComponent<BoxCollider2D>().size = new Vector2(note.notedata[i].noteduration * madimultiplyer + 0.6f, 201.7123f);
+                note.notedata[i].noteobj.GetComponent<BoxCollider2D>().offset = new Vector2((note.notedata[i].noteduration * madimultiplyer / 2) + 0.15f, 15.45131f);
+                over.GetComponent<BoxCollider2D>().size = new Vector2(note.notedata[i].noteduration * madimultiplyer + 3, 201.7123f);
+                over.GetComponent<BoxCollider2D>().offset = new Vector2(note.notedata[i].noteduration * madimultiplyer / 2, 15.45131f);
+                end.GetComponent<RectTransform>().anchoredPosition = new Vector2(note.notedata[i].noteduration * madimultiplyer + 2, 0);
             }
         }
     }
     // Update is called once per frame
     void Update()
     {
-        noteidx.text = Maketile.instance.makenote.notedata.Length.ToString();
+        noteidx.text = Maketile.instance.makenote.notedata.Count.ToString();
         boxidx.text = Maketile.instance.boxpos.Length.ToString();
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Chart"));
@@ -97,48 +98,67 @@ public class Makemadi : MonoBehaviour
 
             if(Input.mouseScrollDelta.y < 0) //for - **
             {
-                if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
-                    if(madimultiplyer <= 1)
-                    {
-                        return;
-                    }
-                    madimultiplyer--;
-                    madirefresh();
-                    if ((sec / 2) < madi.transform.InverseTransformPoint(getendtime.transform.position.x, getendtime.transform.position.y, 0).x / madimultiplyer)
-                    {
-                        madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, 38.8f - sec * madimultiplyer);
-                    }
-                    return;
-                }
-                if(- (38.8f - sec * madimultiplyer) + (pos.y - madimultiplyer) < madimultiplyer)
-                {
-                     madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, 38.8f - sec * madimultiplyer);
-                }
-                else
-                {
-                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y - madimultiplyer);
-                }
-            }
-            if (Input.mouseScrollDelta.y > 0) //back +
-            {
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
-                {
-                    if(madimultiplyer >= 5)
+                    if (madimultiplyer >= 5)
                     {
                         return;
                     }
                     madimultiplyer++;
+                    var pivot = new Vector2(0, -madi.transform.InverseTransformPoint(getmiddletime.transform.position.x, getmiddletime.transform.position.y, 0).x);
+                    var posy = madi.GetComponent<RectTransform>().anchoredPosition.y;
+                    madi.GetComponent<RectTransform>().pivot = pivot;
+                    anchorpos = (pivot.y - 6.1682188789645f) / -1.4120789173537f;
+                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, posy);
                     madirefresh();
+                    if (0 > madi.transform.InverseTransformPoint(getstarttime.transform.position.x, getstarttime.transform.position.y, 0).x / madimultiplyer)
+                    {
+                        madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, 0);
+                    }
                     return;
                 }
-                if (-39 - (pos.y + madimultiplyer) < 2)
+
+                if(sec * madimultiplyer + (pos.y - madimultiplyer) - 78< madimultiplyer)
                 {
-                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, -39);
+                     madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, - sec * madimultiplyer + 78);
                 }
                 else
                 {
-                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y + madimultiplyer);
+                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, pos.y - madimultiplyer);
+                }
+            }
+            if (Input.mouseScrollDelta.y > 0) //back +
+            {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    if (madimultiplyer <= 1)
+                    {
+                        return;
+                    }
+                    madimultiplyer--;
+                    var pivot = new Vector2(0, -madi.transform.InverseTransformPoint(getmiddletime.transform.position.x, getmiddletime.transform.position.y, 0).x);
+                    var posy = madi.GetComponent<RectTransform>().anchoredPosition.y;
+                    madi.GetComponent<RectTransform>().pivot = pivot;
+                    anchorpos = (pivot.y - 6.1682188789645f) / -1.4120789173537f;
+                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, posy);
+                    madirefresh();
+                    if (sec < madi.transform.InverseTransformPoint(getendtime.transform.position.x, getendtime.transform.position.y, 0).x / madimultiplyer)
+                    {
+                        madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, - sec * madimultiplyer + 78);
+                    }
+                    if (0 > madi.transform.InverseTransformPoint(getstarttime.transform.position.x, getstarttime.transform.position.y, 0).x / madimultiplyer)
+                    {
+                        madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, 0);
+                    }
+                    return;
+                }
+                if (- (pos.y + madimultiplyer) < 2)
+                {
+                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, 0);
+                }
+                else
+                {
+                    madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, pos.y + madimultiplyer);
                 }
             }
         }
@@ -193,6 +213,7 @@ public class Makemadi : MonoBehaviour
 
     void madisetforload()
     {
+        Maketile.instance.initile();
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
         note.noteload();
     }

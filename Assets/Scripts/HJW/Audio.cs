@@ -31,18 +31,17 @@ public class Audio : MonoBehaviour
             gameObject.GetComponent<Image>().sprite = play;
             mainmusic.Pause();
             playing = false;
-            Maketile.instance.showtile();
+            note.merge();
         }
         else //stop -> play
         {
-            mainmusic.time = (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y + 39) / -Makemadi.instance.madimultiplyer;
+            mainmusic.time = Mathf.Abs( Makemadi.instance.madi.transform.InverseTransformPoint(Makemadi.instance.getstarttime.transform.position.x, Makemadi.instance.getstarttime.transform.position.y, 0).x / Makemadi.instance.madimultiplyer);
             gameObject.GetComponent<Image>().sprite = resume;
             mainmusic.Play();
             playing = true;
-            Maketile.instance.hidetile();
-            for(int i = 0; i < note.notedata.Length; i++)
+            for(int i = 0; i < note.notedata.Count; i++)
             {
-                if(note.notedata[i] > mainmusic.time)
+                if(note.notedata[i].notedata > mainmusic.time)
                 {
                     noteindx = i;
                     break;
@@ -55,21 +54,18 @@ public class Audio : MonoBehaviour
         time = mainmusic.time;
         if (playing)
         {
-            if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -((Makemadi.instance.sec * Makemadi.instance.madimultiplyer) + 39 - 77.8f))
+            if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -(Makemadi.instance.sec * Makemadi.instance.madimultiplyer- 77.8f))
             {
-                Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(3.5f, (-Makemadi.instance.madimultiplyer * mainmusic.time) - 39);
+                Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, -Makemadi.instance.madimultiplyer * mainmusic.time);
             }
             if(Mathf.Abs( mainmusic.time - Makemadi.instance.sec )< 0.05f) //end
             {
                 resetmusic();
             }
-            if(note.notedata.Length > 0 && note.notedata[0] - time < 0.05f && note.notedata[0] - time > 0)
+            if(note.notedata.Count > 0 && note.notedata[0].notedata - time < 0.05f && note.notedata[0].notedata - time > 0)
             {
-                Destroy(note.notesobj[0]);
-                note.notesobj = Array.FindAll(note.notesobj, num => num != note.notesobj[0]).ToArray();
-                note.notedata = Array.FindAll(note.notedata, num => num != note.notedata[0]).ToArray();
-                note.noteduration[0] = -1;
-                note.noteduration = Array.FindAll(note.noteduration, num => num != note.noteduration[0]).ToArray();
+                Destroy(note.notedata[0].noteobj);
+                note.notedata.RemoveAt(0);
             }
         }
     }
@@ -79,7 +75,7 @@ public class Audio : MonoBehaviour
         gameObject.GetComponent<Image>().sprite = play;
         mainmusic.time = 0;
         playing = false;
-        Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(3.5f, -39f);
+        Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, 0);
         noteindx = 0;
     }
     int a = 0;

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 public class DataManager : MonoBehaviour
 {
@@ -215,21 +216,23 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
-            Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
-            Array.Resize(ref Makemadi.instance.note.noteduration, editordata.noteduration.Length);
             Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
 
-            for (int a = 0; a < editordata.notedata.Length; a++)
+            for (int a = 0; a < Makemadi.instance.note.notedata.Count; a++)
             {
-                Makemadi.instance.note.notedata[a] = editordata.notedata[a];
+                Destroy(Makemadi.instance.note.notedata[a].noteobj);
+            }
+            Makemadi.instance.note.notedata.Clear();
+            for (int a = 0; a < editordata.notedata.Count; a++)
+            {
+                Notedata tempdata = new Notedata();
+                Makemadi.instance.note.notedata.Add(tempdata);
+                Makemadi.instance.note.notedata[a].notedata = editordata.notedata[a];
+                Makemadi.instance.note.notedata[a].noteduration = editordata.noteduration[a];
             }
             for (int a = 0; a < editordata.boxpos.Length; a++)
             {
                 Maketile.instance.boxpos[a] = editordata.boxpos[a];
-            }
-            for (int a = 0; a < editordata.noteduration.Length; a++)
-            {
-                Makemadi.instance.note.noteduration[a] = editordata.noteduration[a];
             }
 
             Maketile.instance.boxposload();
