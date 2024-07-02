@@ -216,7 +216,7 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
-            Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
+            Array.Resize(ref Maketile.instance.boxdata, editordata.boxdata.Length);
 
             for (int a = 0; a < Makemadi.instance.note.notedata.Count; a++)
             {
@@ -230,9 +230,9 @@ public class DataManager : MonoBehaviour
                 Makemadi.instance.note.notedata[a].notedata = editordata.notedata[a];
                 Makemadi.instance.note.notedata[a].noteduration = editordata.noteduration[a];
             }
-            for (int a = 0; a < editordata.boxpos.Length; a++)
+            for (int a = 0; a < editordata.boxdata.Length; a++)
             {
-                Maketile.instance.boxpos[a] = editordata.boxpos[a];
+                Maketile.instance.boxdata[a] = editordata.boxdata[a];
             }
 
             Maketile.instance.boxposload();
@@ -358,7 +358,7 @@ public class DataManager : MonoBehaviour
 
             PlayManager.instance.projectname.text = editordata.projectname;
             PlayManager.instance.bgmname.text = editordata.musicname;
-            PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
+            PlayManager.instance.notecount.text = editordata.boxdata.Length + " Notes".ToString();
             string min = (Mathf.Floor((float)editordata.sec / 60)).ToString();
             string sec = (editordata.sec % 60).ToString();
             if((editordata.sec / 60) < 10)

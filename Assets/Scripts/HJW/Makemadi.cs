@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Makemadi : MonoBehaviour
@@ -11,6 +13,7 @@ public class Makemadi : MonoBehaviour
     public static Makemadi instance;
     public Audio audio_;
     public GameObject madi;
+    public GameObject Slider;
     public GameObject getendtime;
     public GameObject getmiddletime;
     public GameObject getstarttime;
@@ -38,6 +41,8 @@ public class Makemadi : MonoBehaviour
     [Space(20)]
     public bool chart; //마디 범위 내에 들어와 있습니다.
     public float anchorpos = 4.014713f;
+    public bool slidermoving;
+    bool noslider;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +59,20 @@ public class Makemadi : MonoBehaviour
         }
         note.notedata.Clear();
         Maketile.instance.initile();
+        madi.GetComponent<RectTransform>().pivot = new Vector2(0, 0.5f);
+        madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(4.014713f, 0);
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
+        if(sec < 40)
+        {
+            Slider.SetActive(false);
+            noslider = true;
+        }
+        else
+        {
+            Slider.SetActive(true);
+            noslider = false;
+            sliderefresh();
+        }
     }
 
     void madirefresh()
@@ -76,12 +94,23 @@ public class Makemadi : MonoBehaviour
                 end.GetComponent<RectTransform>().anchoredPosition = new Vector2(note.notedata[i].noteduration * madimultiplyer + 2, 0);
             }
         }
+        if(madi.GetComponent<RectTransform>().sizeDelta.x < 78)
+        {
+            noslider = true;
+            Slider.SetActive(false);
+        }
+        else
+        {
+            noslider=false;
+            Slider.SetActive(true);
+            sliderefresh();
+        }
     }
     // Update is called once per frame
     void Update()
     {
         noteidx.text = Maketile.instance.makenote.notedata.Count.ToString();
-        boxidx.text = Maketile.instance.boxpos.Length.ToString();
+        boxidx.text = Maketile.instance.boxdata.Length.ToString();
         var mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
         var a = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("Chart"));
         if (a)
@@ -117,14 +146,19 @@ public class Makemadi : MonoBehaviour
                     }
                     return;
                 }
-
-                if(sec * madimultiplyer + (pos.y - madimultiplyer) - 78< madimultiplyer)
+                if (madi.GetComponent<RectTransform>().sizeDelta.x < 78)
+                {
+                    return;
+                }
+                if (sec * madimultiplyer + (pos.y - madimultiplyer) - 78< madimultiplyer)
                 {
                      madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, - sec * madimultiplyer + 78);
+                    sliderefresh();
                 }
                 else
                 {
                     madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, pos.y - madimultiplyer);
+                    sliderefresh();
                 }
             }
             if (Input.mouseScrollDelta.y > 0) //back +
@@ -152,16 +186,71 @@ public class Makemadi : MonoBehaviour
                     }
                     return;
                 }
+                if(madi.GetComponent<RectTransform>().sizeDelta.x < 78)
+                {
+                    return;
+                }
                 if (- (pos.y + madimultiplyer) < 2)
                 {
                     madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, 0);
+                    sliderefresh();
                 }
                 else
                 {
                     madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, pos.y + madimultiplyer);
+                    sliderefresh();
                 }
             }
         }
+        var sliderpos = Slider.GetComponent<RectTransform>().anchoredPosition.y;
+        var madipos = madi.GetComponent<RectTransform>().anchoredPosition;
+        if (sliderpos < 0 && madi.GetComponent<RectTransform>().sizeDelta.x > 78)
+        {
+            Slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(6.8f, 0);
+            madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(madipos.x, 0);
+        }
+        else if (sliderpos > 78 - (1 / (sec * madimultiplyer * 0.0005f)) && madi.GetComponent<RectTransform>().sizeDelta.x > 78)
+        {
+            Slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(6.8f, 78 - (1 / (sec * madimultiplyer * 0.0005f)));
+            madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(madipos.x, -sec * madimultiplyer + 78);
+        }
+    }
+    public void slidermovestart()
+    {
+        if(noslider)
+        {
+            return;
+        }
+        slidermoving = true;
+        StartCoroutine(slidermovestartcor());
+    }
+    IEnumerator slidermovestartcor()
+    {
+        var mospos = gameObject.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
+        var madipos = madi.GetComponent<RectTransform>().anchoredPosition;
+        var slidertrans = Slider.GetComponent<RectTransform>();
+        while (slidermoving)
+        {
+            mospos = gameObject.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
+            slidertrans.anchoredPosition = new Vector2(6.8f, mospos);
+            madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(madipos.x, slidertrans.anchoredPosition.y * ((-sec * madimultiplyer + 78) / (78 - (1 / (sec * madimultiplyer * 0.0005f)))));
+            yield return null;
+        }
+    }
+    public void slidermovend()
+    {
+        slidermoving = false;
+        StopCoroutine(slidermovestartcor());
+    }
+    public void sliderefresh() 
+    {
+        var slidertrans =Slider.GetComponent<RectTransform>();
+        var madipos = madi.GetComponent<RectTransform>().anchoredPosition.y;
+        slidertrans.sizeDelta = new Vector2(1, 1 / (sec*madimultiplyer * 0.0005f));
+        //0 ~ -sec * madimultiplyer + 78
+        //0 ~ 78
+        //madipos * (78-sliderlength) /end
+        slidertrans.anchoredPosition = new Vector2(6.8f, madipos * ((78 - (1 / (sec * madimultiplyer * 0.0005f))) / (-sec * madimultiplyer + 78)));
     }
     public void uiset()
     {
@@ -183,7 +272,7 @@ public class Makemadi : MonoBehaviour
     public void check()
     {
         int result;
-        if(!int.TryParse(length_ui.text, out result) && !int.TryParse(bpm_ui.text, out result))
+        if((!int.TryParse(length_ui.text, out result) && !int.TryParse(bpm_ui.text, out result)) || Convert.ToInt64(length_ui.text) < 1)
         {
             err.SetActive(true);
             return;
@@ -213,7 +302,6 @@ public class Makemadi : MonoBehaviour
 
     void madisetforload()
     {
-        Maketile.instance.initile();
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
         note.noteload();
     }

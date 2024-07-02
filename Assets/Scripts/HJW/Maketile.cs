@@ -1,7 +1,14 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+[System.Serializable]
+public class boxroute
+{
+    public Vector2 boxpos;
+    public List<Vector2> boxroute_ = new List<Vector2>();
+}
 
 public class Maketile : MonoBehaviour
 {
@@ -22,7 +29,16 @@ public class Maketile : MonoBehaviour
     public int mode;
     public TextMeshProUGUI curtime;
     [Space(20)]
-    public Vector2[] boxpos;
+    public boxroute[] boxdata;
+    Vector3 u = Vector3.up;
+    Vector3 d = Vector3.down;
+    Vector3 l = Vector3.left;
+    Vector3 r = Vector3.right;
+    Vector3 ur = new Vector3(1,1,0);
+    Vector3 ul = new Vector3(-1,1,0);
+    Vector3 dr = new Vector3(1,-1,0);
+    Vector3 dl = new Vector3(-1,-1,0);
+    Vector3 n = Vector3.zero;
     private bool holding;
     [Space(20)]
     [Header("shortcuts")]
@@ -98,49 +114,37 @@ public class Maketile : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && mode == 0) //box
         {
-            if (makemadi.chart || Makenote.chartmode)
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer)
             {
                 return;
             }
             toofast = false;
-            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
-            for (int i = 0; i < boxpos.Length; i++)
-            {
-                if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
-                {
-                    return;
-                }
-            }
-            if (e || mos.hidingpointer)
-            {
-                return;
-            }
             var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
             temp = t;
+            repaint();
         }
-        repaint();
         if (Input.GetMouseButton(0) && mode == 0 && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) //box
         {
-            if (makemadi.chart || Makenote.chartmode)
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer)
             {
                 return;
             }
             toofast = false;
-            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
-            for (int i = 0; i < boxpos.Length; i++)
-            {
-                if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
-                {
-                    return;
-                }
-            }
-            if (e || mos.hidingpointer)
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tileoverlap"));
+            if (e)
             {
                 return;
             }
             makeingtrail = true;
             var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
             temp = t;
+            if (gameObject.transform.childCount > 1)
+            {
+                for (int i = 0; i < gameObject.transform.childCount - 1; i++)
+                {
+                    gameObject.transform.GetChild(i).gameObject.layer = 0;
+                }
+            }
         }
 
         if (Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) //longbox
@@ -149,60 +153,74 @@ public class Maketile : MonoBehaviour
             {
                 return;
             }
-            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tileoverlap"));
+            var o = Physics2D.Raycast(mospos, Vector3.forward, 2);
             switch (mode)
             {
                 case 0: //make
-                    if (makemadi.chart || Makenote.chartmode)
+                    if (temp && temp.transform.childCount > 1)
                     {
-                        return;
-                    }
-                    if (mos.hidingpointer || e)
-                    {
-                        return;
-                    }
-                    for (int i = 0; i < boxpos.Length; i++)
-                    {
-                        if (new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                        temp.layer = 0;
+                        for (int i = 1; i < temp.transform.childCount - 1; i++)
                         {
-                            return;
+                            temp.transform.GetChild(i).gameObject.layer = 0;
                         }
                     }
-                    if (Input.GetAxis("Mouse X") > 1.5f)
+                    if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || e || makemadi.slidermoving)
+                    {
+                        return;
+                    }
+                    if (Input.GetAxis("Mouse X") > 5)
                     {
                         toofast = true;
                     }
-                    if(!toofast)
+                    if(!toofast && !makemadi.slidermoving && !e)
                     {
                         makeingtrail = true;
                         var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, temp.transform);
                         t.name = "trail";
                         t.GetComponentInChildren<TextMeshPro>().text = "";
                     }
+
+
                     break;
                 case 1: //erase
-                    if (e)
+                    if (o && o.collider.tag == "tile")
                     {
-                        if(e.collider.gameObject.name == "trail")
+                    repaint();
+                        if(o.collider.gameObject.name == "trail")
                         {
-                            Destroy(e.collider.gameObject.transform.parent.gameObject);
+                            Destroy(o.collider.gameObject.transform.parent.gameObject);
                         }
                         else
                         {
-                            Destroy(e.collider.gameObject);
+                            Destroy(o.collider.gameObject);
 
                         }
                     }
                     break;
             };
         }
-        if (Input.GetMouseButtonUp(0) && (!makemadi.chart || !Makenote.chartmode)) { makeingtrail = false; }
+        if (Input.GetMouseButtonUp(0) && (!makemadi.chart || !Makenote.chartmode)) 
+        { 
+            makeingtrail = false; repaint();
+            if(gameObject.transform.childCount > 0)
+            {
+            gameObject.transform.GetChild(gameObject.transform.childCount- 1).gameObject.layer = 0; 
+
+            }
+            if(temp)
+            {
+            temp.transform.GetChild(temp.transform.childCount-1).gameObject.layer = 0; 
+
+            }
+        }
         if (Input.GetMouseButtonDown(0) && mode == 2)//box edit
         {
             var e = Physics2D.Raycast(mospos, Vector3.forward, 2);
             if (holding)
             {
-                if (e && e.collider.tag == "tile")  //switch
+                if (e &&e.collider.name !="trail" &&e.collider.tag == "tile")  //switch
                 {
                     curpointer.GetComponent<BoxCollider2D>().enabled = true;
                     curpointer = e.collider.gameObject;
@@ -215,12 +233,21 @@ public class Maketile : MonoBehaviour
                     curpointer = tile;
                     curpointer.GetComponent<SpriteRenderer>().enabled = true;
                     holding = false;
+                    repaint();
                 }
             }
-            else if (e && e.collider.tag == "tile") //hold
+            else if (e  && e.collider.tag == "tile") //hold
             {
-                curpointer = e.collider.gameObject;
-                e.collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                if (e.collider.name == "trail")
+                {
+                    curpointer = e.collider.transform.parent.gameObject;
+                }
+                else
+                {
+                    curpointer = e.collider.gameObject;
+
+                }
+                curpointer.GetComponent<BoxCollider2D>().enabled = false;
                 tile.GetComponent<SpriteRenderer>().enabled = false;
                 holding = true;
             }
@@ -259,25 +286,112 @@ public class Maketile : MonoBehaviour
 
     void repaint() //box
     {
-
         if(gameObject.transform.childCount == 0)
         {
-            Array.Resize(ref boxpos, 0);
+            Array.Resize(ref boxdata, 0);
         }
         for (int i = 0; i < gameObject.transform.childCount; i++)
         {
+            Array.Resize(ref boxdata, gameObject.transform.childCount);
+            if (boxdata[i] == null)
+            {
+                boxdata[i] = new boxroute();
+            }
             gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
-            Array.Resize(ref boxpos, gameObject.transform.childCount);
-            boxpos[i] = new Vector2( MathF.Round( gameObject.transform.GetChild(i).position.x + 0.496885f), MathF.Round(gameObject.transform.GetChild(i).position.y - 0.48292f));
+            var child = gameObject.transform.GetChild(i);
+            boxdata[i].boxpos = new Vector2( MathF.Round( child.position.x + 0.496885f), MathF.Round(child.position.y - 0.48292f));
+            boxdata[i].boxroute_.Clear();
+            for (int j = 1; j < child.gameObject.transform.childCount; j++)
+            {
+                if(j == 1)
+                {
+                     var childpos = child.gameObject.transform.GetChild(j).GetComponent<RectTransform>().anchoredPosition;
+
+                    if (childpos.x > 0 && childpos.y > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(ur);
+                    }
+                    else if (childpos.x > 0 && childpos.y < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(dr);
+                    }
+                    else if (childpos.x < 0 && childpos.y < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(dl);
+                    }
+                    else if (childpos.x < 0 && childpos.y > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(ul);
+                    }
+                    else if (childpos.x < 0) //l
+                    {
+                        boxdata[i].boxroute_.Add(l);
+                    }
+                    else if (childpos.x > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(r);
+                    }
+                    else if(childpos.y < 0)
+                    {
+                        boxdata[i].boxroute_.Add(d);
+                    }
+                    else if (childpos.y > 0)
+                    {
+                        boxdata[i].boxroute_.Add(u);
+                    }
+                }
+                else
+                {
+                    var prechildpos = child.gameObject.transform.GetChild(j-1).GetComponent<RectTransform>().anchoredPosition;
+                    var childpos = child.gameObject.transform.GetChild(j).GetComponent<RectTransform>().anchoredPosition;
+                    if (prechildpos.x - childpos.x < 0 && prechildpos.y - childpos.y < 0) //ur
+                    {
+                        boxdata[i].boxroute_.Add(ur);
+                    }
+                    else if (prechildpos.x - childpos.x < 0 && prechildpos.y - childpos.y > 0) //dr
+                    {
+                        boxdata[i].boxroute_.Add(dr);
+                    }
+                    else if (prechildpos.x - childpos.x > 0 && prechildpos.y - childpos.y > 0) //dl
+                    {
+                        boxdata[i].boxroute_.Add(dl);
+                    }
+                    else if (prechildpos.x - childpos.x > 0 && prechildpos.y - childpos.y < 0) //ul
+                    {
+                        boxdata[i].boxroute_.Add(ul);
+                    }
+                    else if (prechildpos.x - childpos.x > 0) //l
+                    {
+                        boxdata[i].boxroute_.Add(l);
+                    }
+                    else if (prechildpos.x - childpos.x < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(r);
+                    }
+                    else if (prechildpos.y - childpos.y > 0)
+                    {
+                        boxdata[i].boxroute_.Add(d);
+                    }
+                    else if (prechildpos.y - childpos.y < 0)
+                    {
+                        boxdata[i].boxroute_.Add(u);
+                    }
+                }
+            }
+            if(child.gameObject.transform.childCount > 1)
+            {
+                boxdata[i].boxroute_.Add(n);
+
+            }
         }
     }
 
     public void Saveboxpos()
     {
-        Array.Resize(ref editordata.boxpos, boxpos.Length);
-        for(int i = 0; i < boxpos.Length;i++)
+        Array.Resize(ref editordata.boxdata, boxdata.Length);
+        for(int i = 0; i < boxdata.Length;i++)
         {
-            editordata.boxpos[i] = boxpos[i];
+            editordata.boxdata[i] = boxdata[i];
         }
         showtile();
     }
@@ -288,9 +402,31 @@ public class Maketile : MonoBehaviour
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
-        for(int i=0;i < boxpos.Length;i++)
+        for(int i=0;i < boxdata.Length;i++)
         {
-            Instantiate(tileprefeb, new Vector2(boxpos[i].x - 0.496885f, boxpos[i].y + 0.48292f), Quaternion.identity ,gameObject.transform);
+            var par = Instantiate(tileprefeb, new Vector2(boxdata[i].boxpos.x - 0.496885f, boxdata[i].boxpos.y + 0.48292f), Quaternion.identity ,gameObject.transform);
+            if(boxdata[i].boxroute_.Count > 0)
+            {
+                var trailpos = boxdata[i].boxroute_[0];
+                for (int j = 0; j < boxdata[i].boxroute_.Count - 1; j++)
+                {
+                    if (j == 0)
+                    {
+                        var trail = Instantiate(tileprefeb, new Vector2(0, 0), Quaternion.identity, par.transform);
+                        trail.transform.localPosition = new Vector2(boxdata[i].boxroute_[j].x, boxdata[i].boxroute_[j].y);
+                        trail.name = "trail";
+                        trail.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                    else
+                    {
+                        trailpos += boxdata[i].boxroute_[j];
+                        var trail = Instantiate(tileprefeb, new Vector2(0, 0), Quaternion.identity, par.transform);
+                        trail.transform.localPosition = new Vector2(trailpos.x, trailpos.y);
+                        trail.name = "trail";
+                        trail.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                }
+            }
         }
     }
 
@@ -316,7 +452,7 @@ public class Maketile : MonoBehaviour
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
-        Array.Resize(ref boxpos, 0);
+        Array.Resize(ref boxdata, 0);
     }
     #region switch
     //make 0 erase 1 edit 2

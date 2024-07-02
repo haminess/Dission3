@@ -2009,8 +2009,8 @@ public class MainGame : MonoBehaviour
         {
             chart[i] = new float[3] { 0, 0, 0 };
             chart[i][0] = (float)dataMan.editordata.notedata[i];
-            chart[i][1] = (int)dataMan.editordata.boxpos[i].x;
-            chart[i][2] = (int)dataMan.editordata.boxpos[i].y;
+            chart[i][1] = (int)dataMan.editordata.boxdata[i].boxpos.x;
+            chart[i][2] = (int)dataMan.editordata.boxdata[i].boxpos.y;
         }
         GetComponent<NoteMan>().SetChart(chart);
 

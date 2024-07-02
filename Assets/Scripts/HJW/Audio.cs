@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class Audio : MonoBehaviour
 {
     public static bool playing;
-    public NoteGeneratorforeditor notegen;
     public Makenote note;
     public AudioSource mainmusic;
     public AudioSource hitsound;
@@ -54,6 +53,7 @@ public class Audio : MonoBehaviour
         time = mainmusic.time;
         if (playing)
         {
+            Makemadi.instance.sliderefresh();
             if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -(Makemadi.instance.sec * Makemadi.instance.madimultiplyer- 77.8f))
             {
                 Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, -Makemadi.instance.madimultiplyer * mainmusic.time);
@@ -77,6 +77,7 @@ public class Audio : MonoBehaviour
         playing = false;
         Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, 0);
         noteindx = 0;
+        Makemadi.instance.Slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(7, 0);
     }
     int a = 0;
     public void musicchange()

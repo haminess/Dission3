@@ -13,7 +13,7 @@ public class Notedata
 public class Makenote : MonoBehaviour
 {
     EditorData editordata => DataManager.Instance.editordata;
-
+    //assigns
     public Makemadi makemadi;
     public static bool chartmode; //현재 음표를 수정하고 있습니다.
     public GameObject previewbox;
@@ -27,28 +27,28 @@ public class Makenote : MonoBehaviour
     [Space(20)]
     public List<Notedata> notedata = new List<Notedata>();
     public List<Notedata> notedata_space = new List<Notedata>();
-
+    //datas
     public static bool hold;
     public bool movinglongnote;
     public float dur;
-
-    int curindexx;
-    bool edit_overwritten;
     GameObject n;
     Transform mid;
     Transform end;
     Transform over;
     bool holding;
-    bool overwritten;
+    int curindexx;
     float temp;
-    public bool tooshort;
-    bool toofast;
-    bool overlock;
     RaycastHit2D a;
     RaycastHit2D b;
     double data;
     Vector2 firstmospos;
-
+    //fucking exceptions
+    bool edit_overwritten;
+    bool overwritten;
+    public bool tooshort;
+    bool toofast;
+    bool overlock;
+    //audios
     float timetemp;
     float audiodur;
 
@@ -214,16 +214,22 @@ public class Makenote : MonoBehaviour
                     }
                 }
                 //here comes a after overlap part (fuck)
-                for(int i = 0; i < notedata.Count; i++)
+                for(int i = 0; i < notedata.Count; i++) //delete weird ones
                 {
                     if (notedata[i].noteobj.transform.GetChild(1).gameObject.activeInHierarchy && notedata[i].noteobj.transform.GetChild(2).GetComponent<Image>() && notedata[i].noteobj.transform.GetChild(2).GetComponent<Image>().enabled ==false )
                     {
                         overwritten = true;
                         Destroy(notedata[i].noteobj);
                         notedata.RemoveAt(i);
-                        return;
+                    }
+                    if (notedata[curindexx].notedata < notedata[i].notedata && notedata[i].notedata < notedata[curindexx].notedata + notedata[curindexx].noteduration)
+                    {
+                        overwritten = true;
+                        Destroy(notedata[curindexx].noteobj);
+                        notedata.RemoveAt(curindexx);
                     }
                 }
+
             }
             
         }
