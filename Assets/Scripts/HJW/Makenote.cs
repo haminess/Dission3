@@ -55,7 +55,6 @@ public class Makenote : MonoBehaviour
     private void Start()
     {
         chartmode = false;
-        previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
     private void Update()
     {
@@ -385,6 +384,10 @@ public class Makenote : MonoBehaviour
                 }
             }
         }
+        for(int i = 0;i < notedata.Count;i++)
+        {
+            notedata[i].noteobj.name = i.ToString();
+        }
     }
     public void merge()
     {
@@ -392,6 +395,17 @@ public class Makenote : MonoBehaviour
         notedata.AddRange(notedata_space);
         notedata_space.Clear();
         sort();
+    }
+
+    public void showpreviewbox(int i)
+    {
+        if(i < Maketile.instance.boxdata.Length)
+        {
+            previewbox.GetComponent<SpriteRenderer>().enabled = true;
+            previewbox.transform.localPosition = Maketile.instance.gameObject.transform.GetChild(i+1).localPosition;
+
+        }
+        else { previewbox.GetComponent<SpriteRenderer>().enabled = false; }
     }
     private void OnDrawGizmos()
     {
@@ -417,6 +431,7 @@ public class Makenote : MonoBehaviour
     public void tochart()
     {
         Maketile.instance.curpointer.transform.position = new Vector3 (-11.11f, -5.3f);
+        previewbox.GetComponent<SpriteRenderer>().enabled = true;
         Maketile.instance.curpointer = Maketile.instance.note;
         switch(Maketile.instance.mode)
         {

@@ -140,7 +140,7 @@ public class Maketile : MonoBehaviour
             temp = t;
             if (gameObject.transform.childCount > 1)
             {
-                for (int i = 0; i < gameObject.transform.childCount - 1; i++)
+                for (int i = 1; i < gameObject.transform.childCount - 1; i++)
                 {
                     gameObject.transform.GetChild(i).gameObject.layer = 0;
                 }
@@ -290,15 +290,15 @@ public class Maketile : MonoBehaviour
         {
             Array.Resize(ref boxdata, 0);
         }
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 0; i < gameObject.transform.childCount-1; i++)
         {
-            Array.Resize(ref boxdata, gameObject.transform.childCount);
+            Array.Resize(ref boxdata, gameObject.transform.childCount - 1);
             if (boxdata[i] == null)
             {
                 boxdata[i] = new boxroute();
             }
-            gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
-            var child = gameObject.transform.GetChild(i);
+            gameObject.transform.GetChild(i + 1).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
+            var child = gameObject.transform.GetChild(i + 1);
             boxdata[i].boxpos = new Vector2( MathF.Round( child.position.x + 0.496885f), MathF.Round(child.position.y - 0.48292f));
             boxdata[i].boxroute_.Clear();
             for (int j = 1; j < child.gameObject.transform.childCount; j++)
@@ -398,7 +398,7 @@ public class Maketile : MonoBehaviour
 
     public void boxposload()
     {
-        for(int i=0; i < gameObject.transform.childCount; i++)
+        for(int i=1; i < gameObject.transform.childCount; i++)
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
@@ -432,7 +432,7 @@ public class Maketile : MonoBehaviour
 
     public void hidetile()
     {
-        for(int i = 0; i < gameObject.transform.childCount; i++)
+        for(int i = 1; i < gameObject.transform.childCount; i++)
         {
             gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
         }
@@ -440,7 +440,7 @@ public class Maketile : MonoBehaviour
 
     public void showtile()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 1; i < gameObject.transform.childCount; i++)
         {
             gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
         }
@@ -448,7 +448,7 @@ public class Maketile : MonoBehaviour
 
     public void initile()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 1; i < gameObject.transform.childCount; i++)
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }

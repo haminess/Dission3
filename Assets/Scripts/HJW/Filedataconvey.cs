@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,10 @@ public class Filedataconvey : MonoBehaviour
     {
         if(GameObject.Find("Data"))
             dataManager = GameObject.Find("Data").GetComponent<DataManager>();
+    }
+    public void noteidxconvey()
+    {
+        Makemadi.instance.note.showpreviewbox(Convert.ToInt32( gameObject.name));
     }
     public void dataconvey()
     {
