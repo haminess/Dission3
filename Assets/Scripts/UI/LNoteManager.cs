@@ -29,7 +29,7 @@ public class LNoteManager : MonoBehaviour
 
     // 상태 변수
     float[][] chart = new float[100][];
-    Note[] note = new Note[300];
+    public Note[] note = new Note[300];
     public float time;
     public int route_idx;   // show chart idx
     public int judge_idx;  // judge chart idx

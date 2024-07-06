@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Makemadi : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class Makemadi : MonoBehaviour
     public GameObject getendtime;
     public GameObject getmiddletime;
     public GameObject getstarttime;
+    [Space(20)]
+    public GameObject editmodeui;
+    public Image editmodeiconimg;
+    public Sprite[] editmodeicon;
     [Space(20)]
     [Header("Settings")]
     public GameObject ui;
@@ -217,7 +222,7 @@ public class Makemadi : MonoBehaviour
     }
     public void slidermovestart()
     {
-        if(noslider)
+        if(noslider || Audio.playing)
         {
             return;
         }

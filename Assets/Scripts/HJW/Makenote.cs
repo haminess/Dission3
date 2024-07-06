@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Notedata
 {
-    public double notedata;
+    public float notedata;
     public GameObject noteobj;
     public float noteduration;
 }
@@ -15,6 +15,7 @@ public class Makenote : MonoBehaviour
     EditorData editordata => DataManager.Instance.editordata;
     //assigns
     public Makemadi makemadi;
+    public Editornotegen notegen;
     public static bool chartmode; //현재 음표를 수정하고 있습니다.
     public GameObject previewbox;
     public Image transitionicon;
@@ -40,7 +41,7 @@ public class Makenote : MonoBehaviour
     float temp;
     RaycastHit2D a;
     RaycastHit2D b;
-    double data;
+    float data;
     Vector2 firstmospos;
     //fucking exceptions
     bool edit_overwritten;
@@ -58,7 +59,7 @@ public class Makenote : MonoBehaviour
     }
     private void Update()
     {
-
+        if(Filedataconvey.playmode) { return; }
         if (Audio.playing && Input.GetKeyDown(KeyCode.Space))
         {
             tooshort = false;
@@ -359,6 +360,7 @@ public class Makenote : MonoBehaviour
             }
             n.transform.localPosition = newpos;
             notedata[i].noteobj = n;
+            n.name = i.ToString();
         }
     }
 
@@ -399,6 +401,7 @@ public class Makenote : MonoBehaviour
 
     public void showpreviewbox(int i)
     {
+        if (Filedataconvey.playmode) { return; }
         if(i < Maketile.instance.boxdata.Length)
         {
             previewbox.GetComponent<SpriteRenderer>().enabled = true;
@@ -431,7 +434,6 @@ public class Makenote : MonoBehaviour
     public void tochart()
     {
         Maketile.instance.curpointer.transform.position = new Vector3 (-11.11f, -5.3f);
-        previewbox.GetComponent<SpriteRenderer>().enabled = true;
         Maketile.instance.curpointer = Maketile.instance.note;
         switch(Maketile.instance.mode)
         {

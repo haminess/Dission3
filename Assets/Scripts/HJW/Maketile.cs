@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class boxroute
 {
     public Vector2 boxpos;
-    public List<Vector2> boxroute_ = new List<Vector2>();
+    public List<Vector3> boxroute_ = new List<Vector3>();
 }
 
 public class Maketile : MonoBehaviour
@@ -64,7 +64,7 @@ public class Maketile : MonoBehaviour
         {
             curtime.text = "Time: " + float.Parse(audio_.mainmusic.time.ToString("N2"));
         }
-        if (Makenote.chartmode && !Settings.popup)
+        if (Makenote.chartmode && !Settings.popup && !Filedataconvey.playmode)
         {
             curpointer.transform.position = new Vector2(mospos.x, mospos.y);
             if(makemadi.chart)
@@ -90,31 +90,31 @@ public class Maketile : MonoBehaviour
 
         else
         {
-            if(Settings.popup)
+            if(Settings.popup || Filedataconvey.playmode)
             {
                 return;
             }
             if (mospos.y < 0 && mospos.x > 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y - 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x + 0.5f), (int)(mospos.y- 0.5f));
             }
             else if (mospos.y > 0 && mospos.x < 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x - 0.5f, (int)mospos.y + 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x - 0.5f), (int)(mospos.y+ 0.5f) );
             }
             else if (mospos.y < 0 && mospos.x < 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x - 0.5f, (int)mospos.y - 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x - 0.5f), (int)(mospos.y-0.5f ));
             }
             else
             {
-                curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y + 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x + 0.5f), (int)(mospos.y + 0.5f));
             }
         }//box move
 
         if (Input.GetMouseButtonDown(0) && mode == 0) //box
         {
-            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer)
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || Filedataconvey.playmode)
             {
                 return;
             }
@@ -125,7 +125,7 @@ public class Maketile : MonoBehaviour
         }
         if (Input.GetMouseButton(0) && mode == 0 && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) //box
         {
-            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer)
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || Filedataconvey.playmode)
             {
                 return;
             }
@@ -149,7 +149,7 @@ public class Maketile : MonoBehaviour
 
         if (Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) //longbox
         {
-            if (makemadi.chart || Makenote.chartmode )
+            if (makemadi.chart || Makenote.chartmode || Filedataconvey.playmode)
             {
                 return;
             }
@@ -203,6 +203,7 @@ public class Maketile : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0) && (!makemadi.chart || !Makenote.chartmode)) 
         { 
+            if(Filedataconvey.playmode) { return; }
             makeingtrail = false; repaint();
             if(gameObject.transform.childCount > 0)
             {
@@ -217,6 +218,7 @@ public class Maketile : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && mode == 2)//box edit
         {
+            if (Filedataconvey.playmode) { return; }
             var e = Physics2D.Raycast(mospos, Vector3.forward, 2);
             if (holding)
             {
@@ -299,13 +301,13 @@ public class Maketile : MonoBehaviour
             }
             gameObject.transform.GetChild(i + 1).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
             var child = gameObject.transform.GetChild(i + 1);
-            boxdata[i].boxpos = new Vector2( MathF.Round( child.position.x + 0.496885f), MathF.Round(child.position.y - 0.48292f));
+            boxdata[i].boxpos = new Vector2( child.localPosition.x, child.localPosition.y);
             boxdata[i].boxroute_.Clear();
             for (int j = 1; j < child.gameObject.transform.childCount; j++)
             {
                 if(j == 1)
                 {
-                     var childpos = child.gameObject.transform.GetChild(j).GetComponent<RectTransform>().anchoredPosition;
+                     var childpos = child.gameObject.transform.GetChild(j).transform.localPosition;
 
                     if (childpos.x > 0 && childpos.y > 0) //r
                     {
@@ -342,8 +344,8 @@ public class Maketile : MonoBehaviour
                 }
                 else
                 {
-                    var prechildpos = child.gameObject.transform.GetChild(j-1).GetComponent<RectTransform>().anchoredPosition;
-                    var childpos = child.gameObject.transform.GetChild(j).GetComponent<RectTransform>().anchoredPosition;
+                    var prechildpos = child.gameObject.transform.GetChild(j-1).transform.position;
+                    var childpos = child.gameObject.transform.GetChild(j).transform.position;
                     if (prechildpos.x - childpos.x < 0 && prechildpos.y - childpos.y < 0) //ur
                     {
                         boxdata[i].boxroute_.Add(ur);
@@ -404,7 +406,8 @@ public class Maketile : MonoBehaviour
         }
         for(int i=0;i < boxdata.Length;i++)
         {
-            var par = Instantiate(tileprefeb, new Vector2(boxdata[i].boxpos.x - 0.496885f, boxdata[i].boxpos.y + 0.48292f), Quaternion.identity ,gameObject.transform);
+            var par = Instantiate(tileprefeb, new Vector2(boxdata[i].boxpos.x, boxdata[i].boxpos.y), Quaternion.identity ,gameObject.transform);
+            par.transform.localPosition = boxdata[i].boxpos;
             if(boxdata[i].boxroute_.Count > 0)
             {
                 var trailpos = boxdata[i].boxroute_[0];
@@ -434,7 +437,17 @@ public class Maketile : MonoBehaviour
     {
         for(int i = 1; i < gameObject.transform.childCount; i++)
         {
-            gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
+            var obj = gameObject.transform.GetChild(i);
+            if(obj.childCount > 1)
+            {
+                for (int j = 1; j < obj.childCount; j++)
+                {
+                    obj.GetChild(j).GetComponent<SpriteRenderer>().enabled = false;
+                }
+                obj.GetComponent<SpriteRenderer>().enabled = false;
+            }
+                obj.GetComponent<SpriteRenderer>().enabled = false;
+
         }
     }
 
@@ -442,7 +455,17 @@ public class Maketile : MonoBehaviour
     {
         for (int i = 1; i < gameObject.transform.childCount; i++)
         {
-            gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
+            var obj = gameObject.transform.GetChild(i);
+            if (obj.childCount > 1)
+            {
+                for (int j = 1; j < obj.childCount; j++)
+                {
+                    obj.GetChild(j).GetComponent<SpriteRenderer>().enabled = true;
+                }
+                obj.GetComponent<SpriteRenderer>().enabled = true;
+            }
+                obj.GetComponent<SpriteRenderer>().enabled = true;
+
         }
     }
 

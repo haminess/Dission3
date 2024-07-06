@@ -1,6 +1,7 @@
 
 using System;
-using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class Audio : MonoBehaviour
 {
     public static bool playing;
     public Makenote note;
+    public Camaracontrol camaracontrol;
     public AudioSource mainmusic;
     public AudioSource hitsound;
     public Sprite play; //stopping
@@ -43,6 +45,7 @@ public class Audio : MonoBehaviour
                 if(note.notedata[i].notedata > mainmusic.time)
                 {
                     noteindx = i;
+                    note.notegen.route_idx = i;
                     break;
                 }
             }
@@ -62,10 +65,33 @@ public class Audio : MonoBehaviour
             {
                 resetmusic();
             }
-            if(note.notedata.Count > 0 && note.notedata[0].notedata - time < 0.05f && note.notedata[0].notedata - time > 0)
+            if(!Filedataconvey.playmode && (note.notedata.Count > 0 && note.notedata[0].notedata - time < 0.05f && note.notedata[0].notedata - time > 0))
             {
                 Destroy(note.notedata[0].noteobj);
                 note.notedata.RemoveAt(0);
+            }
+            if (noteindx >= note.notedata.Count) return;
+            if(Filedataconvey.playmode && note.notedata.Count > 0)
+            {
+                var a = GameObject.Find("note" + noteindx.ToString());
+                var b = GameObject.Find("route" + noteindx.ToString());
+                var pos = Maketile.instance.gameObject.transform.GetChild(noteindx + 1).position;
+                if (b&& a)
+                {
+                    camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(a.transform.position.x, a.transform.position.y, -10), 0.1f);
+                }
+                else
+                {
+                    camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(pos.x, pos.y, -10), 0.1f);
+                }
+            }
+            if(Filedataconvey.playmode&& note.notedata.Count > 0 && note.notedata[noteindx].notedata + note.notedata[noteindx].noteduration - time < 0.05f && note.notedata[noteindx].notedata + note.notedata[noteindx].noteduration - time > 0)
+            {
+                noteindx++;
+            }
+            if (noteindx < note.notedata.Count &&Filedataconvey.playmode && note.notedata.Count > 0 && note.notedata[noteindx].notedata- time < 0.05f && note.notedata[noteindx].notedata - time > 0)
+            {
+                hitsound.Play();
             }
         }
     }
