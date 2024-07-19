@@ -14,6 +14,7 @@ public class Note
     public readonly float duration;
     public GameObject note;
 
+
     public Note()
     {
         time = 0;
@@ -47,5 +48,8 @@ public class Note
         }
         duration = _duration;
     }
+
+
+    
 }
 

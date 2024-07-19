@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class NoteMan : MonoBehaviour
 {
-    
-    public int note_idx;                   // 채보 포인터(0 ~ 노트 개수)
-    float[][] chart;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
-    Note[] note;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
-    public GameObject notePrefab;           // 바닥에 뿌릴 노트 프리팹
+    MainMan main;
+
+    public float time;
+    public int note_idx;            // 채보 포인터(0 ~ 노트 개수)
+    float[][] chart;                // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
+    Note[] note;                    // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
+    public GameObject notePrefab;   // 바닥에 뿌릴 노트 프리팹
     public GameObject routePrefab;
     public GameObject maskPrefab;
 
@@ -19,30 +21,37 @@ public class NoteMan : MonoBehaviour
     Vector3 r = Vector3.right;
     Vector3 n = Vector3.zero;
 
+    // [setting]
+    // 위치 수정 요망 -> 한 곳에서 관리
+    float dptime = 1;   // note display time
+
     // Start is called before the first frame update
     void Start()
     {
         // 채보 불러오기
         //SetChart(MainManager.instance.note);
+        main = GetComponent<MainMan>();
+        time = 0;
+        note_idx = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         // 게임 시작하면
-        if (MainMan.instance.isGame)
+        if (main.isGame)
         {
             // 바닥에 노트 생성
             ShowNote();
         }
-        else if(MainMan.instance.isStart && !MainMan.instance.isGame)
+        else if(main.isStart && !main.isGame)
         {
             // 설정 및 중단 시 발생
             // 설정 해제 후 continue할 때 노래 5초 전으로 당기기
             // 대기 상태에서 첫 노트 표시해주기
             OnSetting();
         }
-        else if(!MainMan.instance.isStart && !MainMan.instance.isGame)
+        else if(!main.isStart && !main.isGame)
         {
             //Start();
         }
@@ -54,27 +63,27 @@ public class NoteMan : MonoBehaviour
         if (note_idx > note.Length - 1) return;
 
         // 처음 경로 4칸 띄우기
-        if (!MainMan.instance.bgm.isPlaying)
+        if (!main.bgm.isPlaying)
         {
             if (GameObject.Find("route")) return;
-            MakeRoute(ref note[0]).name = "route";
-            MakeRoute(ref note[1]);
-            MakeRoute(ref note[2]);
-            MakeRoute(ref note[3]);
-            MakeRoute(ref note[4]);
+            MakeRoute(ref note[0], 1).name = "route";
+            MakeRoute(ref note[1], 1);
+            MakeRoute(ref note[2], 1);
+            MakeRoute(ref note[3], 1);
+            MakeRoute(ref note[4], 1);
         }
 
         // 노트가 1초 내인 경우만 따로 처리
-        if (note[note_idx].time - 1 - MainMan.instance.notesynkRange < 0)
+        if (note[note_idx].time - 1 - main.notesynkRange < 0)
         {
-            if(MainMan.instance.gameTime > note[note_idx].time)
+            if(main.gameTime > note[note_idx].time)
             {
                 MakeNote(ref note[note_idx]);
                 MakeRoute(ref note[note_idx + 4]).name = "route" + (note_idx + 4);
             }
             return;
         }
-        else if (MainMan.instance.bgm.time > note[note_idx].time - 1 - MainMan.instance.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
+        else if (main.bgm.time > note[note_idx].time - 1 - main.notesynkRange)       // 현재 시간이 시작시간 이후로 데이터 시간이 지나면 생성
         {
             // 4칸 앞 경로 띄우기
             if (note_idx < note.Length - 4)
@@ -89,7 +98,7 @@ public class NoteMan : MonoBehaviour
 
     void OnSetting()
     {
-        note_idx = MainMan.instance.noteIndex;
+        note_idx = main.noteIndex;
     }
 
     void MakeNote()
@@ -124,13 +133,13 @@ public class NoteMan : MonoBehaviour
         route.transform.position = new Vector2(chart[_index][1], chart[_index][2]);
 
         // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-        Destroy(route, chart[_index][0] - MainMan.instance.bgm.time);
+        Destroy(route, chart[_index][0] - main.bgm.time);
 
         return route;
     }
 
 
-    GameObject MakeRoute(ref Note _note)
+    GameObject MakeRoute(ref Note _note, float _offset = 0)
     {
         GameObject route = null;
 
@@ -142,7 +151,7 @@ public class NoteMan : MonoBehaviour
             route = MakeLongRoute(_note);
 
             // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-            Destroy(route, _note.time - MainMan.instance.bgm.time);
+            Destroy(route, _note.time - main.bgm.time + _note.duration + 0.5f + _offset);
         }
         // 숏노트
         else
@@ -154,7 +163,7 @@ public class NoteMan : MonoBehaviour
             route.transform.position = _note.pos + (0.5f * Vector3.down);
 
             // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-            Destroy(route, _note.time - MainMan.instance.bgm.time);
+            Destroy(route, _note.time - main.bgm.time + 0.5f);
         }
 
         return route;
@@ -257,10 +266,14 @@ public class NoteMan : MonoBehaviour
     public void SetChart(ref Note[] _note)
     {
         note = _note;
+    }
 
-        //for(int i = 0; i < _note.Length; i++)
-        //{
-        //    note[i] = _note[i];
-        //}
+    public float GetNoteDisplayTime()
+    {
+        return dptime;
+    }
+    public void SetNoteDisplayTime(float _time)
+    {
+        dptime = _time;
     }
 }

@@ -40,16 +40,17 @@ public class StoryManager : MonoBehaviour
 
     public bool showButton;
 
-    // ?? ???????
+    // game object
     public GameObject player;
     public GameObject playerCam;
     public GameObject storyCamera;
     public GameObject gameCanvas;
     public GameObject playerPrefab;
-    public GameObject[] stageObject;     // ???????? ???? ???????
+    public GameObject[] stageObject;    
     public Transform storyObject;
 
-    // ��???? ????? ?????????
+    // story object
+    public GameObject pack;
     public GameObject[] characterprefeb; //0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
     public Sprite baby;
     public Sprite student;
@@ -60,26 +61,18 @@ public class StoryManager : MonoBehaviour
 
     public GameObject ChatPrefab;
 
-    // ?????? ????
+    // character line
     public float chatSpeed = 2;
     Dictionary<int, string[]> scripts = new Dictionary<int, string[]>();
     int[][] npcNum;
 
-    // ?????? ????
-
-    // Start is called before the first frame update
     void Start()
     {
         playerCam.SetActive(true);
-        storyCamera.SetActive(false);
-        gameCanvas.SetActive(false);
+        //storyCamera.SetActive(false);
         CreateScripts();
-
-        // ???????? ??
-        // ?? ??????? ????
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (showButton)
@@ -314,7 +307,7 @@ public class StoryManager : MonoBehaviour
     {
         yield return StartCoroutine(OffStory());
 
-        if (MainMan.instance.MainMode == MainMan.PLAY_MODE.STAGE)
+        if (MainMan.instance.playMode == PLAY_MODE.STAGE)
         {
             yield return StartCoroutine(MainMan.instance.OffStoryMusic());
             if (!MainMan.instance.isEnd)
@@ -336,24 +329,20 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Story()
     {
-        // Story On
-        // ???? ????
+        // camera in setting
         yield return StartCoroutine(SetCam(true, 0, 0));
 
 
-        // ��???? ????
+        // create npc
         GameObject teacher = NPC(3, 6, 0);
-        // ��???? ????
         Destroy(teacher);
-        // ��???? ???
         yield return StartCoroutine(Move(teacher, Vector3.left, 6));
-        // ��???? ???
         yield return StartCoroutine(Typing(teacher, scripts[sID][0]));
 
-        // Story Off
+        
         yield return StartCoroutine(Fade(black));
-
-        // ???? ???????
+        
+        // camera out setting
         yield return StartCoroutine(SetCam(false));
 
     }

@@ -20,8 +20,6 @@ public class LMove : MonoBehaviour
 
     // 설정
     public MoveMode moveMode = MoveMode.Default;
-    public Coroutine slideCo = null;
-    public Transform slide_note;
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
@@ -42,19 +40,6 @@ public class LMove : MonoBehaviour
         Move();
     }
 
-    IEnumerator Slide(Vector3 _head)
-    {
-        while(moveMode == MoveMode.Slide)
-        {
-            CurPos += _head * moveDistance * 0.1f;
-            yield return null;
-        }
-    }
-
-    public void StopSlide()
-    {
-        CurPos = new Vector3(Mathf.Round(CurPos.x), Mathf.Round(CurPos.y), CurPos.z);
-    }
 
     public void Move()
     {
@@ -83,9 +68,13 @@ public class LMove : MonoBehaviour
 
         // 캐릭터 좌표 이동
         if (moveMode == MoveMode.Default)
-            //transform.position = Vector3.Lerp(transform.position, CurPos, speed);
-            //transform.position = Vector3.Lerp(transform.position, CurPos, speed * 2);
-            transform.position = CurPos;
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
+            if (transform.localPosition == CurPos)
+            {
+                transform.localPosition = CurPos;
+            }
+        }
 
     }
 
@@ -106,12 +95,6 @@ public class LMove : MonoBehaviour
                 CurPos += _head * moveDistance;
                 noteManager.NewJudge(noteManager.bgm.time, CurPos.x, CurPos.y);
             }
-
-            //// long note
-            //if (CurPos == slide_note.position)
-            //    moveMode = MoveMode.Slide;
-            //else
-            //    moveMode = MoveMode.Default;
         }
     }
 

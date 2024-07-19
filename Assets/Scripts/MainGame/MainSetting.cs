@@ -42,7 +42,7 @@ public class MainSetting : MonoBehaviour
 // Update Hp Bar
     private void OnNoteRnageChanged()
     {
-        MainGame.instance.notesynkRange = noteRange.value;
+        MainMan.instance.notesynkRange = noteRange.value;
         tNoteRange.text = noteRange.value.ToString("0.00") + "ms";
 
         // 로컬 저장
@@ -50,7 +50,7 @@ public class MainSetting : MonoBehaviour
     }
     private void OnRangeChanged()
     {
-        MainGame.instance.judgeRange = judgeRange.value;
+        MainMan.instance.judgeRange = judgeRange.value;
         tJudgeRange.text = judgeRange.value.ToString("0.00") + "ms";
 
         // 로컬 저장
@@ -60,7 +60,7 @@ public class MainSetting : MonoBehaviour
 
     private void OnVolumeChanged()
     {
-        MainGame.instance.bgm.volume = musicVolume.value;
+        MainMan.instance.bgm.volume = musicVolume.value;
         tMusicVolume.text = (musicVolume.value * 100).ToString("0");
 
         // 로컬 저장

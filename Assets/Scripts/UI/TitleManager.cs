@@ -10,7 +10,19 @@ public class TitleManager : MonoBehaviour
     public GameObject[] OptionButton;
     public GameObject[] SynkButton;
     public int arrowPoint;
-    public int mode;
+
+    public enum TITLE_MODE
+    {
+        START,
+        TITLE,
+        OPTION,
+        SYNK,
+        TUTORIAL,
+        SOURCE,
+        NONE
+    }
+
+    public TITLE_MODE mode = TITLE_MODE.START;
 
     public SoundManager soundmanager;
 
@@ -67,47 +79,47 @@ public class TitleManager : MonoBehaviour
     {
         switch(mode)
         {
-            case 0:
+            case TITLE_MODE.START:
                 if(Input.anyKeyDown)
                 {
-                    mode = 1;
+                    mode = TITLE_MODE.TITLE;
                     titleLogo.Play("title_title_logo");
                     titleUI.Play("title_titleui");
                 }
                 break;
-            case 1:
+            case TITLE_MODE.TITLE:
                 // title mode
                 ArrowControl(TitleButton);
                 break;
-            case 2:
+            case TITLE_MODE.OPTION:
                 // option mode
                 ArrowControl(OptionButton);
                 break;
-            case 3:
+            case TITLE_MODE.SYNK:
                 ArrowControl(SynkButton);
                 // synk mode
                 break;
-            case 4:
-                GameObject.Find("CharacterManager").GetComponent<CharacterManager_SJY>().CharacterControl();
-                break;
+            //case 4:
+            //    GameObject.Find("CharacterManager").GetComponent<CharacterManager_SJY>().CharacterControl();
+            //    break;
 
 
-            case 99:
+            case TITLE_MODE.NONE:
                 // none mode
                 break;
         }
     }
 
-    public void SetMode(int _mode)
+    public void SetMode(TITLE_MODE _mode)
     {
         mode = _mode;
         arrowPoint = 0;
         switch(mode)
         {
-            case 1:
+            case TITLE_MODE.TITLE:
                 arrow.transform.position = TitleButton[0].transform.position;
                 break;
-            case 2:
+            case TITLE_MODE.OPTION:
                 arrow.transform.position = OptionButton[0].transform.position;
                 OptionButton[arrowPoint].GetComponent<Button>().onClick.Invoke();
                 break;
@@ -117,8 +129,6 @@ public class TitleManager : MonoBehaviour
     
     public void MoveArrow(GameObject _button)
     {
-        // �̿ϼ�
-        // arrowpoint ���� ����ǰ� �ϱ�
         arrow.transform.position = _button.transform.position;
     }
 

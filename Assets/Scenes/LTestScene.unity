@@ -702,7 +702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &75795947
 Transform:
   m_ObjectHideFlags: 0
@@ -4370,7 +4370,7 @@ MonoBehaviour:
   lRouteNote: {fileID: 5051146150574558401, guid: 60b2254519286bd489cf41bed3f7325e, type: 3}
   maskPrefab: {fileID: 2907293329281871576, guid: 744179cd906e0b241bd974d7dbebd74e, type: 3}
   time: 0
-  root_idx: 0
+  route_idx: 0
   judge_idx: 0
   perfect_range: 0.05
   good_range: 0.1
@@ -14301,7 +14301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2464535124320205488, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2464535124320205500, guid: e539b58a934e7e046bf588d82a6ec8e7, type: 3}
       propertyPath: m_RootOrder
@@ -15089,7 +15089,6 @@ MonoBehaviour:
   sprite: {fileID: 3062581096985325907}
   noteManager: {fileID: 361523109}
   moveMode: 0
-  slide_note: {fileID: 0}
   CurPos: {x: 0, y: 0, z: 0}
   moveDistance: 1
   speed: 0.1
