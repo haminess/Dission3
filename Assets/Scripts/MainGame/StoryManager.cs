@@ -32,7 +32,8 @@ public class StoryManager : MonoBehaviour
         s5,
         s5_1,
         s5_2,
-        s5_3
+        s5_3,
+        sample = 99,
     }
 
     public int sID = 0;
@@ -284,6 +285,9 @@ public class StoryManager : MonoBehaviour
             case 0015:
                 yield return StartCoroutine(Story5Sad());
                 break;
+            case 0099:
+                yield return StartCoroutine(SampleStory());
+                break;
         }
 
 
@@ -390,6 +394,31 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
         }
+    }
+
+    IEnumerator SampleStory()
+    {
+        // 스토리 시작 세팅
+        yield return StartCoroutine(SetCam(true, 8, -27));
+
+        // npc 생성
+        GameObject npc = NPC(0, 8, -27);
+
+        // 스크립트 불러오기
+        var data = GetComponent<JsonReader>().data;
+
+        // 대사 실행
+        foreach (var i in data.script)
+        {
+            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(Typing(npc, i.name + ": " + i.line));
+        }
+
+        // 스토리 종료
+        yield return StartCoroutine(Fade(black));
+        Destroy(npc);
+
+        yield return StartCoroutine(SetCam(false));
     }
 
     IEnumerator Story1()
@@ -1079,7 +1108,7 @@ public class StoryManager : MonoBehaviour
         npc.GetComponentInChildren<Animator>().SetBool("Walk", false);
     }
 
-    // npc ��???? ????
+
     public GameObject NPC(int npcidx, float _x, float _y)
     {
         GameObject npc = Instantiate(characterprefeb[npcidx]);
