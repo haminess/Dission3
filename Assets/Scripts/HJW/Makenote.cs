@@ -47,6 +47,7 @@ public class Makenote : MonoBehaviour
     bool edit_overwritten;
     bool overwritten;
     public bool tooshort;
+    public int previewindex;
     bool toofast;
     bool overlock;
     //audios
@@ -402,11 +403,11 @@ public class Makenote : MonoBehaviour
     public void showpreviewbox(int i)
     {
         if (Filedataconvey.playmode) { return; }
-        if(i < Maketile.instance.boxdata.Length)
+        if(i < Maketile.instance.boxdata.Length && Maketile.instance.gameObject.transform.childCount > 1)
         {
             previewbox.GetComponent<SpriteRenderer>().enabled = true;
             previewbox.transform.localPosition = Maketile.instance.gameObject.transform.GetChild(i+1).localPosition;
-
+            previewindex = i;
         }
         else { previewbox.GetComponent<SpriteRenderer>().enabled = false; }
     }

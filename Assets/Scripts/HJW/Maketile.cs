@@ -187,16 +187,20 @@ public class Maketile : MonoBehaviour
                 case 1: //erase
                     if (o && o.collider.tag == "tile")
                     {
+                        int curidx;
                     repaint();
                         if(o.collider.gameObject.name == "trail")
                         {
+                            curidx = Convert.ToInt32(o.transform.parent.GetComponentInChildren<TextMeshPro>().text);
                             Destroy(o.collider.gameObject.transform.parent.gameObject);
                         }
                         else
                         {
+                            curidx = Convert.ToInt32(o.transform.parent.GetComponentInChildren<TextMeshPro>().text);
                             Destroy(o.collider.gameObject);
 
                         }
+                        if(curidx - 1 == makenote.previewindex) { makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false; }
                     }
                     break;
             };
@@ -288,7 +292,7 @@ public class Maketile : MonoBehaviour
 
     void repaint() //box
     {
-        if(gameObject.transform.childCount == 0)
+        if(gameObject.transform.childCount == 1)
         {
             Array.Resize(ref boxdata, 0);
         }
