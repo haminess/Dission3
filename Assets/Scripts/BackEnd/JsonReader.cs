@@ -40,11 +40,6 @@ public class JsonReader : MonoBehaviour
         if (jsonFile != null)
         {
             data = JsonUtility.FromJson<LineList>(jsonFile.text);
-
-            //foreach (var data in myScript.script)
-            //{
-            //    Debug.Log(data.name + ": " + data.line);
-            //}
         }
         else
         {
