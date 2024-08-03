@@ -408,10 +408,10 @@ public class StoryManager : MonoBehaviour
         var data = GetComponent<JsonReader>().data;
 
         // 대사 실행
-        foreach (var i in data.script)
+        foreach (var i in data)
         {
             yield return new WaitForSeconds(1);
-            yield return StartCoroutine(Typing(npc, i.name + ": " + i.line));
+            yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
         }
 
         // 스토리 종료

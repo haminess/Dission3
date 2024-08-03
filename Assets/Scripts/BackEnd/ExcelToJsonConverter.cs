@@ -15,18 +15,18 @@ public class ExcelToJsonConverter : MonoBehaviour
         ConvertExcelToJson();
     }
 
-    void ConvertExcelToJson()
+    private void ConvertExcelToJson()
     {
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        using (var stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
+        using (FileStream stream = File.Open(excelFilePath, FileMode.Open, FileAccess.Read))
         {
             using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
-                var result = reader.AsDataSet();
-                var dataTable = result.Tables[0];
+                DataSet result = reader.AsDataSet();
+                DataTable dataTable = result.Tables[0];
 
-                var jsonData = JsonConvert.SerializeObject(dataTable, Formatting.Indented);
+                string jsonData = JsonConvert.SerializeObject(dataTable, Formatting.Indented);
                 File.WriteAllText(jsonFilePath, jsonData);
 
                 Debug.Log("Conversion completed. JSON file saved at: " + jsonFilePath);
