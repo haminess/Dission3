@@ -14,10 +14,15 @@ public class Player : MonoBehaviour
     public SoundManager soundMan;
     public AudioSource bgm;
     public AudioSource effect;
+    public GameObject[] model;
+
+    // 정보
+    public int characterNum = 0;
 
     // 오브젝트 참조
     public GameObject settingUI;
     bool isSetOn = false;
+
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
@@ -48,13 +53,26 @@ public class Player : MonoBehaviour
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
 
+        // character change
+        if (GameObject.Find("Data"))
+        {
+            print("데이터 오브젝트 연결");
+            characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
+        }
+
+        for (int i = 0; i < model.Length; i++)
+        {
+            model[i].SetActive(false);
+        }
+        model[characterNum].SetActive(true);
+        sprite = model[characterNum].GetComponent<SpriteRenderer>();
 
         // 설정창 숨김
         settingUI.SetActive(false);
 
         // 스테이지 별
         // 캐릭터 초기 위치 설정
-        switch(MainMan.instance.stageNum)
+        switch (MainMan.instance.stageNum)
         {
             case 1:
                 MainMan.instance.PlayerReposition();
@@ -79,7 +97,7 @@ public class Player : MonoBehaviour
         // 움직임 제어
         if (Movable)
         {
-            if(moveMode == MOVE_MODE.MAP)
+            if (moveMode == MOVE_MODE.MAP)
             {
                 GameMove();
             }
@@ -89,7 +107,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(waitTime > 0)
+        if (waitTime > 0)
         {
             waitTime -= Time.deltaTime;
         }
@@ -103,6 +121,8 @@ public class Player : MonoBehaviour
                 OnSetting();
             }
         }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
     }
 
     public void PlayMove()
@@ -146,17 +166,17 @@ public class Player : MonoBehaviour
         Vector3 vHead = Vector3.zero;
         float fSpeed = 5;
 
-        animator.SetBool("IsMove", false);
-        animator.SetFloat("DirX", 0);
-        animator.SetFloat("DirY", 0);
+        animator?.SetBool("IsMove", false);
+        animator?.SetFloat("DirX", 0);
+        animator?.SetFloat("DirY", 0);
 
         // 이동
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             // 좌우 반전
-            animator.SetBool("IsMove", true);
-            animator.SetFloat("DirX", 1);
-            animator.SetFloat("DirY", 0);
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 1);
+            animator?.SetFloat("DirY", 0);
             sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             vHead = Vector3.left;
 
@@ -164,24 +184,24 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             // 좌우 반전
-            animator.SetBool("IsMove", true);
-            animator.SetFloat("DirX", 1);
-            animator.SetFloat("DirY", 0);
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 1);
+            animator?.SetFloat("DirY", 0);
             sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
             vHead = Vector3.right;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            animator.SetBool("IsMove", true);
-            animator.SetFloat("DirX", 0);
-            animator.SetFloat("DirY", 1);
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 0);
+            animator?.SetFloat("DirY", 1);
             vHead = Vector3.up;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            animator.SetBool("IsMove", true);
-            animator.SetFloat("DirX", 0);
-            animator.SetFloat("DirY", 1);
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 0);
+            animator?.SetFloat("DirY", 1);
             vHead = Vector3.down;
         }
 
@@ -202,7 +222,7 @@ public class Player : MonoBehaviour
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
         // 애니메이션
-        animator.SetTrigger("Jump");
+        animator?.SetTrigger("Jump");
         // 효과음
         //soundMan.SetEffect(0);
 
@@ -212,7 +232,7 @@ public class Player : MonoBehaviour
             CurPos += _head * moveDistance;
 
             // judge
-            if(MainMan.instance && MainMan.instance.isGame)
+            if (MainMan.instance && MainMan.instance.isGame)
             {
                 MainMan.instance.NewJudge(bgm.time, CurPos);
             }
@@ -272,12 +292,12 @@ public class Player : MonoBehaviour
 
     public void ChangeMode(MOVE_MODE _mode)
     {
-        cam.enabled = false;
-        cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
+        //cam.enabled = false;
+        //cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
 
         if (moveMode != MOVE_MODE.GAME_NORMAL && _mode == MOVE_MODE.GAME_NORMAL)
         {
-            cam.enabled = true;
+            //cam.enabled = true;
             CurPos.x = Mathf.Round(transform.position.x);
             CurPos.y = Mathf.Round(transform.position.y);
         }

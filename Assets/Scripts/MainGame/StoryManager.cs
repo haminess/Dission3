@@ -33,7 +33,8 @@ public class StoryManager : MonoBehaviour
         s5_1,
         s5_2,
         s5_3,
-        sample = 99,
+        sample = 100,
+        moveTest = 101,
     }
 
     public int sID = 0;
@@ -285,8 +286,11 @@ public class StoryManager : MonoBehaviour
             case 0015:
                 yield return StartCoroutine(Story5Sad());
                 break;
-            case 0099:
+            case 0100:
                 yield return StartCoroutine(SampleStory());
+                break;
+            case 0101:
+                yield return StartCoroutine(MoveStory());
                 break;
         }
 
@@ -412,6 +416,44 @@ public class StoryManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
+        }
+
+        // 스토리 종료
+        yield return StartCoroutine(Fade(black));
+        Destroy(npc);
+
+        yield return StartCoroutine(SetCam(false));
+    }
+    IEnumerator MoveStory()
+    {
+        // 스토리 시작 세팅
+        yield return StartCoroutine(SetCam(true, 8, -27));
+
+        // npc 생성
+        GameObject npc = NPC(0, 8, -27);
+
+        // 스크립트 불러오기
+        var data = GetComponent<JsonReader>().data;
+
+        // 대사 실행
+        foreach (JsonReader.DataItem i in data)
+        {
+            yield return new WaitForSeconds(1);
+            if ("talk" == i.Column0)
+            {
+                yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
+            }
+            else if("move" == i.Column0)
+            {
+                if("x" == i.Column1)
+                {
+                    yield return StartCoroutine(Move(npc, new Vector3(float.Parse(i.Column2), 0, 0)));
+                }
+                else if("y" == i.Column1)
+                {
+                    yield return StartCoroutine(Move(npc, new Vector3(0, float.Parse(i.Column2), 0)));
+                }
+            }
         }
 
         // 스토리 종료

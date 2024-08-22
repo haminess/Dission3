@@ -1,40 +1,25 @@
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public GameObject Target;               // 카메라가 따라다닐 타겟
+    public GameObject Target;             // 따라다닐 타겟 오브젝트
+    public float follow_speed = 4.0f;    // 따라가는 속도
+    public float x = 0f;
+    public float y = 0f;
+    public float z = -10.0f;            // 고정시킬 카메라의 z축의 값
 
-    public float offsetX = 0.0f;            // 카메라의 x좌표
-    public float offsetY = 10.0f;           // 카메라의 y좌표
-    public float offsetZ = -10.0f;          // 카메라의 z좌표
+    private Transform this_transform;            // 카메라의 좌표
+    private Transform Target_transform;         // 타겟의 좌표
 
-    public float CameraSpeed = 10.0f;       // 카메라의 속도
-    Vector3 TargetPos;                      // 타겟의 위치
-
-    public MOVE_MODE moveMode;
-
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Start()
     {
-        // 타겟의 x, y, z 좌표에 카메라의 좌표를 더하여 카메라의 위치를 결정
-        TargetPos = new Vector3(
-            Target.transform.position.x + offsetX,
-            Target.transform.position.y + offsetY,
-            Target.transform.position.z + offsetZ
-            );
-
-        if (moveMode == MOVE_MODE.GAME_NORMAL)
-        {
-
-            // 카메라의 움직임을 부드럽게 하는 함수(Lerp)
-            transform.position = Vector3.Lerp(transform.position, TargetPos, Time.deltaTime * CameraSpeed);
-        }
-        else if(moveMode == MOVE_MODE.GAME_SLIDE)
-        {
-            transform.position = TargetPos;
-        }
+        this_transform = GetComponent<Transform>();
+        Target_transform = Target.GetComponent<Transform>();
+    }
+    private void FixedUpdate()
+    {
+        this_transform.position = Vector2.Lerp(this_transform.position, Target_transform.position + new Vector3(x, y), follow_speed * Time.deltaTime);
+        this_transform.Translate(0, 0, z); //카메라를 원래 z축으로 이동
     }
 }

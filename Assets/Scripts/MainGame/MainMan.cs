@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
+using UnityEditor;
+
 using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
+
+[CustomEditor(typeof(MainMan))]
 public class MainMan : MonoBehaviour
 {
     // 메인게임 싱글톤
@@ -104,17 +109,6 @@ public class MainMan : MonoBehaviour
     // 가이드 오브젝트
     public GameObject guidePrefab;
 
-    // 설계
-    // 멤버
-
-    // 함수
-    // 1. Start() : Main Scene 진입 시 호출
-    // - 하위 컴포넌트, 매니저 관리(사운드 매니저)
-    // 2. Mode() : stage mode, play mode 호출 메서드
-    // - stage면,    story->play()
-    // - play면,     play->play()
-    // 0. Exit() : Main Scene 탈출 시 호출
-   
 
 
     public void Start()
