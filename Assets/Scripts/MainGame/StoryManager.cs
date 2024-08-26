@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class StoryManager : MonoBehaviour
 {
@@ -32,7 +33,8 @@ public class StoryManager : MonoBehaviour
         s5,
         s5_1,
         s5_2,
-        s5_3
+        s5_3,
+        TEST
     }
 
     public int sID = 0;
@@ -48,13 +50,16 @@ public class StoryManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject[] stageObject;     // ???????? ???? ???????
     public Transform storyObject;
-
+    [Space(30)]
+    [Header("ScreenEffect")]
+    public GameObject black;
+    public GameObject SplashScreen;
+    [Space(30)]
     // ��???? ????? ?????????
     public GameObject[] characterprefeb; //0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
     public Sprite baby;
     public Sprite student;
     public Sprite friend1;
-    public GameObject black;
     public GameObject Credits;
     public float scrollspeed;
 
@@ -291,6 +296,9 @@ public class StoryManager : MonoBehaviour
             case 0015:
                 yield return StartCoroutine(Story5Sad());
                 break;
+            case 0016:
+                yield return StartCoroutine(Test());
+                break;
         }
 
 
@@ -401,6 +409,12 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
         }
+    }
+    IEnumerator Test()
+    {
+        yield return Fade(black);
+        yield return Fade(black, false);
+        yield return Splash(Color.blue);
     }
 
     IEnumerator Story1()
@@ -984,60 +998,27 @@ public class StoryManager : MonoBehaviour
 
         yield return StartCoroutine(SetCam(false));
     }
-
+    IEnumerator Splash(Color color)
+    {
+        SplashScreen.GetComponent<Image>().color = color;
+        SplashScreen.GetComponent<Animation>().Play();
+        yield return null;
+    }
+   
     IEnumerator Fade(GameObject obj, bool IsShowing = true)
     {
-        {
-            //// time?? ?????????? ????? ??
-            //float time = 0f;
-
-            //// ????? ??????
-            //Image sprite = obj.GetComponentInChildren<Image>();
-
-            //// ?��? ??????
-            //Color color = sprite.color;
-
-            //if (IsShowing)
-            //{
-            //    color.a = 0f;
-            //    sprite.color = color;
-
-            //    // 1?? ?????? ????? ????? ????
-            //    while (color.a < 1f)
-            //    {
-            //        time += 0.02f;
-            //        color.a = Mathf.Lerp(0, 1, time);
-            //        sprite.color = color;
-            //        yield return null;
-            //    }
-            //}
-            //else if (!IsShowing)
-            //{
-            //    // ???????? ?????? ?????? ????? ?? ????
-            //    while (color.a > 0f)
-            //    {
-            //        time += Time.deltaTime;
-            //        color.a = Mathf.Lerp(1, 0, time);
-            //        sprite.color = color;
-            //        yield return null;
-            //    }
-            //}
-        }
-
         Animation anim = obj.GetComponentInChildren<Animation>();
-
-        anim.enabled = false;
         anim.enabled = true;
 
         if (IsShowing)
         {
-            anim.Play("FadeAnim");
-            yield return new WaitForSeconds(anim.GetClip("FadeAnim").length);
+            anim.Play("FadeOutAnim");
+            yield return new WaitForSeconds(anim.GetClip("FadeOutAnim").length);
         }
         else
         {
-            anim.Play("FadeOutAnim");
-            yield return new WaitForSeconds(anim.GetClip("FadeOutAnim").length);
+            anim.Play("FadeInAnim");
+            yield return new WaitForSeconds(anim.GetClip("FadeInAnim").length);
         }
 
     }

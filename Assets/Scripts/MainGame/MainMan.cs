@@ -2023,8 +2023,19 @@ public class MainMan : MonoBehaviour
         note = new Note[dataMan.editordata.notedata.Count];
         for (int i = 0; i < dataMan.editordata.notedata.Count; i++)
         {
-            note[i] = new Note((float)dataMan.editordata.notedata[i],
-                      new Vector3((int)dataMan.editordata.boxdata[i].boxpos.x, (int)dataMan.editordata.boxdata[i].boxpos.y));
+            if (dataMan.editordata.noteduration[i] > 0)
+            {
+                note[i] = new Note((float)dataMan.editordata.notedata[i],
+                new Vector3((int)dataMan.editordata.boxdata[i].boxpos.x, (int)dataMan.editordata.boxdata[i].boxpos.y),
+                dataMan.editordata.boxdata[i].boxroute_.ToArray(),
+                dataMan.editordata.noteduration[i]);
+
+            }
+            else
+            {
+                note[i] = new Note((float)dataMan.editordata.notedata[i],
+                new Vector3((int)dataMan.editordata.boxdata[i].boxpos.x, (int)dataMan.editordata.boxdata[i].boxpos.y));
+            }
         }
         GetComponent<NoteMan>().SetChart(ref note);
 

@@ -32,6 +32,7 @@ public class Filedataconvey : MonoBehaviour
             Maketile.instance.curpointer.SetActive(false);
             Maketile.instance.makenote.previewbox.SetActive(false);
             Maketile.instance.makenote.notegen.dataconvey();
+            Maketile.instance.audio_.resetmusic();
             Maketile.instance.hidetile();
         }
     }

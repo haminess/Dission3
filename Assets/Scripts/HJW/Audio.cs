@@ -73,8 +73,8 @@ public class Audio : MonoBehaviour
             if (noteindx >= note.notedata.Count) return;
             if(Filedataconvey.playmode && note.notedata.Count > 0)
             {
-                var a = GameObject.Find("note" + noteindx.ToString());
-                var b = GameObject.Find("route" + noteindx.ToString());
+                var a = GameObject.Find("note" + (noteindx - 1).ToString());
+                var b = GameObject.Find("route" + (noteindx - 1).ToString());
                 var pos = Maketile.instance.gameObject.transform.GetChild(noteindx + 1).position;
                 if (b&& a)
                 {
@@ -85,12 +85,9 @@ public class Audio : MonoBehaviour
                     camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(pos.x, pos.y, -10), 0.1f);
                 }
             }
-            if(Filedataconvey.playmode&& note.notedata.Count > 0 && note.notedata[noteindx].notedata + note.notedata[noteindx].noteduration - time < 0.05f && note.notedata[noteindx].notedata + note.notedata[noteindx].noteduration - time > 0)
+            if(Filedataconvey.playmode&& note.notedata.Count > 0 && note.notedata[noteindx].notedata - time < 0.05f && note.notedata[noteindx].notedata - time > 0)
             {
                 noteindx++;
-            }
-            if (noteindx < note.notedata.Count &&Filedataconvey.playmode && note.notedata.Count > 0 && note.notedata[noteindx].notedata- time < 0.05f && note.notedata[noteindx].notedata - time > 0)
-            {
                 hitsound.Play();
             }
         }

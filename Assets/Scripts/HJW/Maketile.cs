@@ -508,6 +508,7 @@ public class Maketile : MonoBehaviour
             Mouseevent.nopointer = true;
             makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
     public void make()
     {
@@ -523,6 +524,7 @@ public class Maketile : MonoBehaviour
             Mouseevent.nopointer = false;
             makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void edit()
@@ -539,6 +541,7 @@ public class Maketile : MonoBehaviour
             Mouseevent.nopointer = true;
             makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void exitchart()

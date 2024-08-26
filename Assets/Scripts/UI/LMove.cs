@@ -16,7 +16,6 @@ public class LMove : MonoBehaviour
     Rigidbody2D rigid;
     public SpriteRenderer sprite;
     Animator animator;
-    public LNoteManager noteManager;
 
     // ¼³Á¤
     public MoveMode moveMode = MoveMode.Default;
@@ -104,7 +103,7 @@ public class LMove : MonoBehaviour
             if(moveMode == MoveMode.Default)
             {
                 CurPos += _head * moveDistance;
-                noteManager.NewJudge(noteManager.bgm.time, CurPos.x, CurPos.y);
+                //noteManager.NewJudge(noteManager.bgm.time, CurPos.x, CurPos.y);
             }
 
             //// long note

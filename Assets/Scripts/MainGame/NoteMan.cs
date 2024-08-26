@@ -7,7 +7,7 @@ public class NoteMan : MonoBehaviour
     
     public int note_idx;                   // 채보 포인터(0 ~ 노트 개수)
     float[][] chart;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
-    Note[] note;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
+    [SerializeField]Note[] note;                  // 채보, 행: 채보 노트 인스턴스, 열: {time, x, y}
     public GameObject notePrefab;           // 바닥에 뿌릴 노트 프리팹
     public GameObject routePrefab;
     public GameObject maskPrefab;
@@ -81,7 +81,7 @@ public class NoteMan : MonoBehaviour
             {
                 MakeRoute(ref note[note_idx + 4]).name = "route" + (note_idx + 4);
             }
-
+            
             // 실제 노트 뿌리기
             MakeNote(ref note[note_idx]);
         }
@@ -142,7 +142,7 @@ public class NoteMan : MonoBehaviour
             route = MakeLongRoute(_note);
 
             // 삭제될 시간 = 판정시간 - 현재시간 (판정될때 사라짐)
-            Destroy(route, _note.time - MainMan.instance.bgm.time);
+            Destroy(route, _note.time + _note.duration - MainMan.instance.bgm.time);
         }
         // 숏노트
         else

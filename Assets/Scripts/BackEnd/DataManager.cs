@@ -334,12 +334,7 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
-            char[] musicname = editordata.music.ToString().ToCharArray(); //24
-            for (int j = musicname.Length - 1; j > musicname.Length - 24; j--)
-            {
-                musicname[j] = ' ';
-            }
-            a.GetComponentsInChildren<TextMeshProUGUI>()[1].text = String.Join("", musicname);
+            a.GetComponentsInChildren<TextMeshProUGUI>()[1].text = editordata.musicname.ToString();
             a.GetComponentsInChildren<TextMeshProUGUI>()[2].text = editordata.creator;
         }
     }
