@@ -2278,7 +2278,7 @@ public class MainMan : MonoBehaviour
             }
         }
         GetComponent<NoteMan>().SetChart(ref note);
-
+        print(dataMan.editordata.music);
         // Load Music
         bgm.clip = dataMan.editordata.music;
 

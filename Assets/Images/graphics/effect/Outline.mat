@@ -11,6 +11,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 62505ee61d20098489c6f861ed25cce1, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _OUTLINEENABLED_ON
   - _OUTLINEMODE_SOLID
   - _OUTLINEPOSITION_INSIDE_UNDER_SPRITE
   - _OUTLINESHAPE_CONTOUR
@@ -50,11 +51,11 @@ Material:
     - _Angle: 45
     - _ConnectedAlpha: 0
     - _EnableExternalAlpha: 0
-    - _OutlineEnabled: 0
+    - _OutlineEnabled: 1
     - _OutlineMode: 0
     - _OutlinePosition: 0
     - _OutlineShape: 0
-    - _Thickness: 1.07
+    - _Thickness: 7.35
     - _TileMode: 0
     - _Weight: 0.3
     m_Colors:
@@ -64,5 +65,5 @@ Material:
     - _GradientOutline2: {r: 1, g: 1, b: 1, a: 1}
     - _ImageOutline: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SolidOutline: {r: 1, g: 1, b: 1, a: 1}
+    - _SolidOutline: {r: 0.9960785, g: 0.9058824, b: 0.73333335, a: 1}
   m_BuildTextureStacks: []

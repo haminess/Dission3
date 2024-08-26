@@ -12219,6 +12219,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7807456969782453904, guid: be8f441dc4bdbf84cb492d1f4123f747, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d41753a3ee6baba4d9f3de0a06967069, type: 2}
     - target: {fileID: 7807456969782453910, guid: be8f441dc4bdbf84cb492d1f4123f747, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -13338,6 +13342,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6996428390681222734, guid: 9d4d25b91bd1fd84a89cf2d0dfc07480, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 550d4054c751c454790712c1754680b1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d4d25b91bd1fd84a89cf2d0dfc07480, type: 3}
 --- !u!4 &959743947 stripped
@@ -19699,6 +19707,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5002466840804342432, guid: fcf072f5be4674f429728ecf33e56cef, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 550d4054c751c454790712c1754680b1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcf072f5be4674f429728ecf33e56cef, type: 3}
 --- !u!4 &1305455983 stripped
@@ -20243,6 +20255,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5237838072372634715, guid: 382b79779e65c08458e5ec6a0dfb0308, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 550d4054c751c454790712c1754680b1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 382b79779e65c08458e5ec6a0dfb0308, type: 3}
 --- !u!4 &1356364393 stripped
@@ -23738,6 +23754,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6793866308457422657, guid: 8a130151528811d448cf7030bf2ae2f3, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 550d4054c751c454790712c1754680b1, type: 2}
     - target: {fileID: 6793866308457422659, guid: 8a130151528811d448cf7030bf2ae2f3, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -30537,7 +30557,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 550d4054c751c454790712c1754680b1, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

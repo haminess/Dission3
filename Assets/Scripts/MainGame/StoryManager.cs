@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class StoryManager : MonoBehaviour
 {
@@ -35,6 +37,7 @@ public class StoryManager : MonoBehaviour
         s5_3,
         sample = 100,
         moveTest = 101,
+        TEST
     }
 
     public int sID = 0;
@@ -58,6 +61,9 @@ public class StoryManager : MonoBehaviour
     public Sprite student;
     public Sprite friend1;
     public GameObject black;
+    public GameObject splash;
+    public UnityEngine.Rendering.Volume volume;
+
     public GameObject Credits;
     public float scrollspeed;
 
@@ -292,6 +298,9 @@ public class StoryManager : MonoBehaviour
             case 0101:
                 yield return StartCoroutine(MoveStory());
                 break;
+            case 0102:
+                yield return StartCoroutine(Effectest());
+                break;
         }
 
 
@@ -398,6 +407,13 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
         }
+    }
+    IEnumerator Effectest()
+    {
+        yield return StartCoroutine( Fade(black));
+        yield return StartCoroutine( Fade(black, false));
+        yield return StartCoroutine( Splash(Color.white));
+        yield return StartCoroutine(PostProssess());
     }
 
     IEnumerator SampleStory()
@@ -1091,15 +1107,33 @@ public class StoryManager : MonoBehaviour
 
         if (IsShowing)
         {
-            anim.Play("FadeAnim");
-            yield return new WaitForSeconds(anim.GetClip("FadeAnim").length);
-        }
-        else
-        {
             anim.Play("FadeOutAnim");
             yield return new WaitForSeconds(anim.GetClip("FadeOutAnim").length);
         }
+        else
+        {
+            anim.Play("FadeInAnim");
+            yield return new WaitForSeconds(anim.GetClip("FadeInAnim").length);
+        }
 
+    }
+
+    IEnumerator PostProssess()
+    {
+        Bloom bloom;
+        if (volume.profile.TryGet(out bloom))
+        {
+            bloom.intensity.Override(10);
+        }
+        
+        yield return null;
+    }
+    IEnumerator Splash(Color color)
+    {
+        splash.GetComponent<Image>().color = color;
+        var anim = splash.GetComponent<Animation>();
+        anim.Play();
+        yield return new WaitForSeconds(anim.clip.length);
     }
 
     public void Talk(GameObject talker, string chat, float tDestroy = 2)

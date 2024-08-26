@@ -164,7 +164,7 @@ public class TitleManager : MonoBehaviour
         cam.Move();
 
         // move arrow
-        GameObject parent = UI[(int)mode].transform.Find("button").gameObject;
+        GameObject parent = GameObject.Find("button").gameObject;
         if(parent == null)
             parent = UI[(int)mode].transform.GetChild(0).Find("button").gameObject;
 
