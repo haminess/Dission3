@@ -5,49 +5,50 @@ using UnityEngine;
 public class LNote : MonoBehaviour
 {
     public Note note;
-    public Vector3 start;
-    public Vector3 end;
-    public float time; 
-    public bool ltype;   // 0: short, 1: long
 
     // Long Note Data
-    public Vector3 head;
+    public Vector3[] route;
+
+    // Setting Value
+    Animator anim;
+
     Vector3 u = Vector3.up;
     Vector3 d = Vector3.down;
     Vector3 l = Vector3.left;
     Vector3 r = Vector3.right;
-    public Vector3[] route;
-    public int length;
-
-    public float s_time = 1;        // destroy time
-    public float e_time = 1;     // destroy time
-    Animator anim;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
 
-        time = 0;
-
-        // 생성 후 1.5초 뒤 삭제
+        // Init
+        if (null == note)
+        {
+            InitNote();
+        }
 
         // 생성시간 1초 (생성 1초 후 판정)
-        // 사라지는 시간 0.5초 (판정 0.5초 후 삭제)*
+        Invoke(nameof(OnDestroyAnim), note.duration + 1);
 
-        if(ltype)
+        // 생성 후 1.5초 뒤 삭제
+        // 사라지는 시간 0.5초 (판정 0.5초 후 삭제)*
+        Destroy(gameObject, note.duration + 1 + 0.5f);
+
+        // Long Note Progress
+        if (note.ltype)
         {
             DirectionToPos();
             StartCoroutine(Slide());
         }
 
-        Invoke(nameof(OnDestroyAnim), e_time);
-        Destroy(gameObject, e_time + 0.5f);
     }
 
 
     void DirectionToPos()
     {
+        route = new Vector3[note.route.Length];
+
         Vector3 inroute = note.pos;
         route[0] = inroute;
         for (int i = 1; i < note.route.Length; i++)
@@ -87,27 +88,6 @@ public class LNote : MonoBehaviour
     public void LongNote(Note _note)
     {
         note = _note;
-
-        // state
-        ltype = _note.ltype;
-
-        // long note
-        if (!ltype) return;
-
-        route = new Vector3[_note.route.Length];
-
-        // position
-        start = _note.pos;
-        end = start;
-        for (int i = 0; i < route.Length; i++)
-        {
-            route[i] = _note.route[i];
-            end += route[i];
-        }
-
-        // time
-        s_time = 1;
-        e_time = note.duration + 1;
     }
 
     void OnDestroyAnim()
@@ -115,4 +95,13 @@ public class LNote : MonoBehaviour
         anim.SetTrigger("Destroy");
     }
 
+    void InitNote()
+    {
+        note = new Note(0, new Vector3(0, 0));
+    }
+
 }
+
+
+// Check Debug List
+// 1. 채보 중 0, 0에 뜨는 노트 있는 지

@@ -10,6 +10,7 @@ TagManager:
   - ui
   - tile
   - previewnote
+  - Debug
   layers:
   - Default
   - TransparentFX
@@ -42,7 +43,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Debug
   m_SortingLayers:
   - name: Default
     uniqueID: 0

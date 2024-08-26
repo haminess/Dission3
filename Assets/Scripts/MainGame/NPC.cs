@@ -16,6 +16,11 @@ public class NPC : MonoBehaviour
     void Start()
     {
         storyManager = GameObject.Find("GameManager").GetComponent<StoryManager>();
+        Animator anim = GetComponent<Animator>();
+        if(anim)
+        {
+            anim.SetBool(0, true);
+        }
     }
 
     private void Update()

@@ -186,6 +186,7 @@ public class MainGame : MonoBehaviour
 
         // 배경음악 진행바
         MusicProgress();
+
     }
 
     // 메인게임 시작

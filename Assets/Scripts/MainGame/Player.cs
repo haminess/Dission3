@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class Player : MonoBehaviour
 {
     // 컴포넌트 참조
     Rigidbody2D rigid;
-    public SpriteRenderer sprite;
     Animator animator;
+    public PlayerCamera cam;
+    public SpriteRenderer sprite;
     public SoundManager soundMan;
     public AudioSource bgm;
     public AudioSource effect;
+    public GameObject[] model;
+
+    // 정보
+    public int characterNum = 0;
 
     // 오브젝트 참조
     public GameObject settingUI;
     bool isSetOn = false;
+
 
     // 내부값 위치
     public Vector3 CurPos = new Vector3(0, 0, 0);
@@ -26,6 +33,7 @@ public class Player : MonoBehaviour
     public bool Settable = false;
     public float waitTime = 0;
     public float speed = 0.1f;
+    public MOVE_MODE moveMode = MOVE_MODE.MAP;
 
     public float setTime = 10;
 
@@ -45,13 +53,26 @@ public class Player : MonoBehaviour
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
 
+        // character change
+        if (GameObject.Find("Data"))
+        {
+            print("데이터 오브젝트 연결");
+            characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
+        }
+
+        for (int i = 0; i < model.Length; i++)
+        {
+            model[i].SetActive(false);
+        }
+        model[characterNum].SetActive(true);
+        sprite = model[characterNum].GetComponent<SpriteRenderer>();
 
         // 설정창 숨김
         settingUI.SetActive(false);
 
         // 스테이지 별
         // 캐릭터 초기 위치 설정
-        switch(MainMan.instance.stageNum)
+        switch (MainMan.instance.stageNum)
         {
             case 1:
                 MainMan.instance.PlayerReposition();
@@ -76,25 +97,35 @@ public class Player : MonoBehaviour
         // 움직임 제어
         if (Movable)
         {
-            Move();
+            if (moveMode == MOVE_MODE.MAP)
+            {
+                GameMove();
+            }
+            else
+            {
+                PlayMove();
+            }
         }
 
-        if(waitTime > 0)
+        if (waitTime > 0)
         {
             waitTime -= Time.deltaTime;
         }
 
-        // 메인게임 아닐 때 리턴
-        if (SceneManager.GetActiveScene().name != "MainManager") return;
-
-        // 시작 후 설정창
-        if (Input.GetKeyDown(KeyCode.Escape) && MainMan.instance.isStart)
+        // 메인게임에서
+        if (SceneManager.GetActiveScene().name == "MainManager")
         {
-            OnSetting();
+            // 시작 후 설정창
+            if (Input.GetKeyDown(KeyCode.Escape) && MainMan.instance.isStart)
+            {
+                OnSetting();
+            }
         }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
     }
 
-    public void Move()
+    public void PlayMove()
     {
         // 이동
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -118,12 +149,71 @@ public class Player : MonoBehaviour
         {
             Head(Vector3.down);
         }
+
         // 캐릭터 좌표 이동
-        transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
-        if (transform.localPosition == CurPos)
+        if (moveMode == MOVE_MODE.GAME_NORMAL)
         {
-            transform.localPosition = CurPos;
+            transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
+
+            if (transform.localPosition == CurPos)
+            {
+                transform.localPosition = CurPos;
+            }
         }
+    }
+    public void GameMove()
+    {
+        Vector3 vHead = Vector3.zero;
+        float fSpeed = 5;
+
+        animator?.SetBool("IsMove", false);
+        animator?.SetFloat("DirX", 0);
+        animator?.SetFloat("DirY", 0);
+
+        // 이동
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            // 좌우 반전
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 1);
+            animator?.SetFloat("DirY", 0);
+            sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+            vHead = Vector3.left;
+
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            // 좌우 반전
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 1);
+            animator?.SetFloat("DirY", 0);
+            sprite.gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
+            vHead = Vector3.right;
+        }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 0);
+            animator?.SetFloat("DirY", 1);
+            vHead = Vector3.up;
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            animator?.SetBool("IsMove", true);
+            animator?.SetFloat("DirX", 0);
+            animator?.SetFloat("DirY", 1);
+            vHead = Vector3.down;
+        }
+
+        // 벽 이동불가
+        LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
+        RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, vHead, 0.5f * moveDistance, mask);
+        if (!rayHit)
+        {
+            // 캐릭터 좌표 이동
+            transform.Translate(vHead * Time.deltaTime * fSpeed);
+        }
+
     }
 
     public void Head(Vector3 _head)
@@ -132,7 +222,7 @@ public class Player : MonoBehaviour
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
         // 애니메이션
-        animator.SetTrigger("Jump");
+        animator?.SetTrigger("Jump");
         // 효과음
         //soundMan.SetEffect(0);
 
@@ -141,11 +231,11 @@ public class Player : MonoBehaviour
         {
             CurPos += _head * moveDistance;
 
-            // 메인게임 아니면 리턴
-            if (SceneManager.GetActiveScene().name != "MainGame") return;
-            // 판정
-            if (MainMan.instance.isGame)
-                MainMan.instance.Judge(bgm.time, CurPos);
+            // judge
+            if (MainMan.instance && MainMan.instance.isGame)
+            {
+                MainMan.instance.NewJudge(bgm.time, CurPos);
+            }
         }
     }
 
@@ -197,5 +287,20 @@ public class Player : MonoBehaviour
 
         // 설정창 비활성화
         settingUI.SetActive(false);
+    }
+
+
+    public void ChangeMode(MOVE_MODE _mode)
+    {
+        //cam.enabled = false;
+        //cam.transform.localPosition = new Vector3(0, 0, cam.transform.localPosition.z);
+
+        if (moveMode != MOVE_MODE.GAME_NORMAL && _mode == MOVE_MODE.GAME_NORMAL)
+        {
+            //cam.enabled = true;
+            CurPos.x = Mathf.Round(transform.position.x);
+            CurPos.y = Mathf.Round(transform.position.y);
+        }
+        moveMode = _mode;
     }
 }

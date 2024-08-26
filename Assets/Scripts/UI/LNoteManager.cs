@@ -29,7 +29,7 @@ public class LNoteManager : MonoBehaviour
 
     // 상태 변수
     float[][] chart = new float[100][];
-    public Note[] note = new Note[300];
+    Note[] note = new Note[300];
     public float time;
     public int route_idx;   // show chart idx
     public int judge_idx;  // judge chart idx
@@ -78,38 +78,39 @@ public class LNoteManager : MonoBehaviour
         ResetTotal();
         ResetChart();
 
-        //{
+        {
 
-        //    chart[0] = new float[5] { 1, 1, 0, 5, 3 };
-        //    chart[1] = new float[5] { 3, 6, 0, 4, 3 };
-        //    chart[2] = new float[5] { 5, 10, 0, 3, 3 };
-        //    chart[3] = new float[5] { 7, 13, 0, 2, 3 };
-        //    chart[4] = new float[5] { 9, 15, 0, 1, 3 };
-        //    chart[5] = new float[5] { 10, 16, 0, 1, 3 };
-        //    chart[6] = new float[5] { 11, 17, 0, 2, 3 };
-        //    chart[7] = new float[5] { 13, 19, 0, 3, 3 };
-        //    chart[8] = new float[5] { 15, 22, 0, 4, 3 };
-        //    chart[9] = new float[5] { 17, 26, 0, 5, 3 };
-        //}
+            //chart[0] = new float[5] { 1, 1, 0, 5, 3 };
+            //chart[1] = new float[5] { 3, 6, 0, 4, 3 };
+            //chart[2] = new float[5] { 5, 10, 0, 3, 3 };
+            //chart[3] = new float[5] { 7, 13, 0, 2, 3 };
+            //chart[4] = new float[5] { 9, 15, 0, 1, 3 };
+            //chart[5] = new float[5] { 10, 16, 0, 1, 3 };
+            //chart[6] = new float[5] { 11, 17, 0, 2, 3 };
+            //chart[7] = new float[5] { 13, 19, 0, 3, 3 };
+            //chart[8] = new float[5] { 15, 22, 0, 4, 3 };
+            //chart[9] = new float[5] { 17, 26, 0, 5, 3 };
 
-        //// right, left, up, down
+        }
 
-        //// 채보 1
-        //{
+        // right, left, up, down
 
-        //    //note[0] = new Note(1, new Vector3(1, 0), new Vector3[] { r, d, r, u, u, n }, 1); // long
-        //    //note[1] = new Note(7, new Vector3(7, 0), new Vector3[] { l, u, r, d, n }, 1);
-        //    //note[2] = new Note(12, new Vector3(12, 0), new Vector3[] { r, r, r, n }, 1);
-        //    //note[3] = new Note(16, new Vector3(16, 0), new Vector3[] { r, r, n }, 1);
-        //    //note[4] = new Note(19, new Vector3(19, 0), new Vector3[] { r, n }, 1);
-        //    //note[5] = new Note(21, new Vector3(21, 0));    // short
-        //    //note[6] = new Note(22, new Vector3(22, 0), new Vector3[] { r, n }, 1);
-        //    //note[7] = new Note(24, new Vector3(24, 0), new Vector3[] { r, r, n }, 1);
-        //    //note[8] = new Note(27, new Vector3(27, 0), new Vector3[] { r, r, r, n }, 1);
-        //    //note[9] = new Note(31, new Vector3(31, 0), new Vector3[] { r, r, r, r, n }, 1);
-        //    //note[10] = new Note(36, new Vector3(36, 0), new Vector3[] { r, r, r, r, r, n }, 1);
+        // 채보 1
+        {
 
-        //}
+            note[0] = new Note(1, new Vector3(1, 0), new Vector3[] { r, d, r, u, u, n }, 1); // long
+            note[1] = new Note(7, new Vector3(7, 0), new Vector3[] { l, u, r, d, n }, 1);
+            note[2] = new Note(12, new Vector3(12, 0), new Vector3[] { r, r, r, n }, 1);
+            note[3] = new Note(16, new Vector3(16, 0), new Vector3[] { r, r, n }, 1);
+            note[4] = new Note(19, new Vector3(19, 0), new Vector3[] { r, n }, 1);
+            note[5] = new Note(21, new Vector3(21, 0));    // short
+            note[6] = new Note(22, new Vector3(22, 0), new Vector3[] { r, n }, 1);
+            note[7] = new Note(24, new Vector3(24, 0), new Vector3[] { r, r, n }, 1);
+            note[8] = new Note(27, new Vector3(27, 0), new Vector3[] { r, r, r, n }, 1);
+            note[9] = new Note(31, new Vector3(31, 0), new Vector3[] { r, r, r, r, n }, 1);
+            note[10] = new Note(36, new Vector3(36, 0), new Vector3[] { r, r, r, r, r, n }, 1);
+
+        }
 
 
         //// 채보 2
@@ -605,10 +606,6 @@ public class LNoteManager : MonoBehaviour
 
             LNote longnote = newnote.GetComponent<LNote>();
 
-            longnote.ltype = true;
-            longnote.length = (int)chart[route_idx][3];
-            longnote.s_time = chart[route_idx][0] - time;
-            longnote.e_time = chart[route_idx + 1][0] - 1 - time;
             Vector3 head = Vector3.up;
             switch (chart[route_idx][4])
             {
@@ -625,7 +622,6 @@ public class LNoteManager : MonoBehaviour
                     head = Vector3.right;
                     break;
             }
-            longnote.head = head;
         }
 
         route_idx++;
@@ -1108,14 +1104,5 @@ public class LNoteManager : MonoBehaviour
         isNext = 0;
         //if(player != null) player.enabled = false;
         //CreateExplain();
-    }
-    public void SetChart(ref Note[] _note)
-    {
-        note = _note;
-
-        //for(int i = 0; i < _note.Length; i++)
-        //{
-        //    note[i] = _note[i];
-        //}
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 public class StoryManager : MonoBehaviour
 {
@@ -34,7 +33,8 @@ public class StoryManager : MonoBehaviour
         s5_1,
         s5_2,
         s5_3,
-        TEST
+        sample = 100,
+        moveTest = 101,
     }
 
     public int sID = 0;
@@ -42,49 +42,39 @@ public class StoryManager : MonoBehaviour
 
     public bool showButton;
 
-    // ?? ???????
+    // game object
     public GameObject player;
     public GameObject playerCam;
     public GameObject storyCamera;
     public GameObject gameCanvas;
     public GameObject playerPrefab;
-    public GameObject[] stageObject;     // ???????? ???? ???????
+    public GameObject[] stageObject;    
     public Transform storyObject;
-    [Space(30)]
-    [Header("ScreenEffect")]
-    public GameObject black;
-    public GameObject SplashScreen;
-    [Space(30)]
-    // ��???? ????? ?????????
+
+    // story object
+    public GameObject pack;
     public GameObject[] characterprefeb; //0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
     public Sprite baby;
     public Sprite student;
     public Sprite friend1;
+    public GameObject black;
     public GameObject Credits;
     public float scrollspeed;
 
     public GameObject ChatPrefab;
 
-    // ?????? ????
+    // character line
     public float chatSpeed = 2;
     Dictionary<int, string[]> scripts = new Dictionary<int, string[]>();
     int[][] npcNum;
 
-    // ?????? ????
-
-    // Start is called before the first frame update
     void Start()
     {
         playerCam.SetActive(true);
-        storyCamera.SetActive(false);
-        gameCanvas.SetActive(false);
+        //storyCamera.SetActive(false);
         CreateScripts();
-
-        // ???????? ??
-        // ?? ??????? ????
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (showButton)
@@ -296,8 +286,11 @@ public class StoryManager : MonoBehaviour
             case 0015:
                 yield return StartCoroutine(Story5Sad());
                 break;
-            case 0016:
-                yield return StartCoroutine(Test());
+            case 0100:
+                yield return StartCoroutine(SampleStory());
+                break;
+            case 0101:
+                yield return StartCoroutine(MoveStory());
                 break;
         }
 
@@ -322,7 +315,7 @@ public class StoryManager : MonoBehaviour
     {
         yield return StartCoroutine(OffStory());
 
-        if (MainMan.instance.MainMode == MainMan.PLAY_MODE.STAGE)
+        if (MainMan.instance.playMode == PLAY_MODE.STAGE)
         {
             yield return StartCoroutine(MainMan.instance.OffStoryMusic());
             if (!MainMan.instance.isEnd)
@@ -344,24 +337,20 @@ public class StoryManager : MonoBehaviour
 
     IEnumerator Story()
     {
-        // Story On
-        // ???? ????
+        // camera in setting
         yield return StartCoroutine(SetCam(true, 0, 0));
 
 
-        // ��???? ????
+        // create npc
         GameObject teacher = NPC(3, 6, 0);
-        // ��???? ????
         Destroy(teacher);
-        // ��???? ???
         yield return StartCoroutine(Move(teacher, Vector3.left, 6));
-        // ��???? ???
         yield return StartCoroutine(Typing(teacher, scripts[sID][0]));
 
-        // Story Off
+        
         yield return StartCoroutine(Fade(black));
-
-        // ???? ???????
+        
+        // camera out setting
         yield return StartCoroutine(SetCam(false));
 
     }
@@ -410,11 +399,68 @@ public class StoryManager : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
     }
-    IEnumerator Test()
+
+    IEnumerator SampleStory()
     {
-        yield return Fade(black);
-        yield return Fade(black, false);
-        yield return Splash(Color.blue);
+        // 스토리 시작 세팅
+        yield return StartCoroutine(SetCam(true, 8, -27));
+
+        // npc 생성
+        GameObject npc = NPC(0, 8, -27);
+
+        // 스크립트 불러오기
+        var data = GetComponent<JsonReader>().data;
+
+        // 대사 실행
+        foreach (var i in data)
+        {
+            yield return new WaitForSeconds(1);
+            yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
+        }
+
+        // 스토리 종료
+        yield return StartCoroutine(Fade(black));
+        Destroy(npc);
+
+        yield return StartCoroutine(SetCam(false));
+    }
+    IEnumerator MoveStory()
+    {
+        // 스토리 시작 세팅
+        yield return StartCoroutine(SetCam(true, 8, -27));
+
+        // npc 생성
+        GameObject npc = NPC(0, 8, -27);
+
+        // 스크립트 불러오기
+        var data = GetComponent<JsonReader>().data;
+
+        // 대사 실행
+        foreach (JsonReader.DataItem i in data)
+        {
+            yield return new WaitForSeconds(1);
+            if ("talk" == i.Column0)
+            {
+                yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
+            }
+            else if("move" == i.Column0)
+            {
+                if("x" == i.Column1)
+                {
+                    yield return StartCoroutine(Move(npc, new Vector3(float.Parse(i.Column2), 0, 0)));
+                }
+                else if("y" == i.Column1)
+                {
+                    yield return StartCoroutine(Move(npc, new Vector3(0, float.Parse(i.Column2), 0)));
+                }
+            }
+        }
+
+        // 스토리 종료
+        yield return StartCoroutine(Fade(black));
+        Destroy(npc);
+
+        yield return StartCoroutine(SetCam(false));
     }
 
     IEnumerator Story1()
@@ -998,27 +1044,60 @@ public class StoryManager : MonoBehaviour
 
         yield return StartCoroutine(SetCam(false));
     }
-    IEnumerator Splash(Color color)
-    {
-        SplashScreen.GetComponent<Image>().color = color;
-        SplashScreen.GetComponent<Animation>().Play();
-        yield return null;
-    }
-   
+
     IEnumerator Fade(GameObject obj, bool IsShowing = true)
     {
+        {
+            //// time?? ?????????? ????? ??
+            //float time = 0f;
+
+            //// ????? ??????
+            //Image sprite = obj.GetComponentInChildren<Image>();
+
+            //// ?��? ??????
+            //Color color = sprite.color;
+
+            //if (IsShowing)
+            //{
+            //    color.a = 0f;
+            //    sprite.color = color;
+
+            //    // 1?? ?????? ????? ????? ????
+            //    while (color.a < 1f)
+            //    {
+            //        time += 0.02f;
+            //        color.a = Mathf.Lerp(0, 1, time);
+            //        sprite.color = color;
+            //        yield return null;
+            //    }
+            //}
+            //else if (!IsShowing)
+            //{
+            //    // ???????? ?????? ?????? ????? ?? ????
+            //    while (color.a > 0f)
+            //    {
+            //        time += Time.deltaTime;
+            //        color.a = Mathf.Lerp(1, 0, time);
+            //        sprite.color = color;
+            //        yield return null;
+            //    }
+            //}
+        }
+
         Animation anim = obj.GetComponentInChildren<Animation>();
+
+        anim.enabled = false;
         anim.enabled = true;
 
         if (IsShowing)
         {
-            anim.Play("FadeOutAnim");
-            yield return new WaitForSeconds(anim.GetClip("FadeOutAnim").length);
+            anim.Play("FadeAnim");
+            yield return new WaitForSeconds(anim.GetClip("FadeAnim").length);
         }
         else
         {
-            anim.Play("FadeInAnim");
-            yield return new WaitForSeconds(anim.GetClip("FadeInAnim").length);
+            anim.Play("FadeOutAnim");
+            yield return new WaitForSeconds(anim.GetClip("FadeOutAnim").length);
         }
 
     }
@@ -1071,7 +1150,7 @@ public class StoryManager : MonoBehaviour
         npc.GetComponentInChildren<Animator>().SetBool("Walk", false);
     }
 
-    // npc ��???? ????
+
     public GameObject NPC(int npcidx, float _x, float _y)
     {
         GameObject npc = Instantiate(characterprefeb[npcidx]);

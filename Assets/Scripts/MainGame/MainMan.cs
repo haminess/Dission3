@@ -3,27 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
+using UnityEditor;
+
 using Unity.VisualScripting;
 using UnityEngine.Rendering.Universal;
 
+
+[CustomEditor(typeof(MainMan))]
 public class MainMan : MonoBehaviour
 {
-    public enum PLAY_MODE
-    {
-        DEBUG,
-        STAGE,
-        PLAY,
-        END
-    }
-    public enum JUDGE
-    {
-        MISS,
-        BAD,
-        GOOD,
-        PERFECT,
-        END
-    }
-
     // 메인게임 싱글톤
     public static MainMan instance;
 
@@ -57,7 +46,7 @@ public class MainMan : MonoBehaviour
     // 메인 상태 데이터
     [Header("Game State")]
     public bool startButton = false;
-    public PLAY_MODE MainMode = PLAY_MODE.DEBUG;
+    public PLAY_MODE playMode = PLAY_MODE.DEBUG;
     public int stageNum = 1;
     public List<bool> state;
     public bool isStart = false;
@@ -69,7 +58,7 @@ public class MainMan : MonoBehaviour
 
     // 메인 유저점수 데이터
     [Header("Score")]
-    public int score;
+    public float score;
     public int combo;
     public int curCombo;
     public int perfect;
@@ -94,12 +83,11 @@ public class MainMan : MonoBehaviour
     public float judgeRange = 0f;
 
     // 메인 점수범위 관리
-    public int perfectScore = 500;
-    public int goodScore = 300;
-    public int badScore = 100;
-    public int missScore = 0;
-    public int comboScore = 10;
-
+    public float perfectScore = 500;
+    public float goodScore = 300;
+    public float badScore = 100;
+    public float missScore = 0;
+    public float comboScore = 10;
 
     // 유저 UI
     [Header("UI")]
@@ -111,6 +99,7 @@ public class MainMan : MonoBehaviour
     // 게임 UI
     public GameObject gameCanvas;
     public GameObject screenCanvas;
+    public GameObject resultUI;
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI countUI;
     public Slider progressUI;
@@ -120,7 +109,8 @@ public class MainMan : MonoBehaviour
     // 가이드 오브젝트
     public GameObject guidePrefab;
 
-    // Start is called before the first frame update
+
+
     public void Start()
     {
         // 메인게임 스크립트 싱글톤
@@ -137,22 +127,21 @@ public class MainMan : MonoBehaviour
         GetMainData();
 
         // 스테이지(실행) 모드이면 바로 시작
-        if (MainMode == PLAY_MODE.STAGE)
+        if (playMode == PLAY_MODE.STAGE)
         {
             StageStart();
         }
-        else if(MainMode == PLAY_MODE.PLAY)
+        else if(playMode == PLAY_MODE.PLAY)
         {
             GameStart();
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (startButton)
         {
-            if(MainMode == PLAY_MODE.STAGE)
+            if(playMode == PLAY_MODE.STAGE)
             {
                 StageStart();
             }
@@ -179,7 +168,7 @@ public class MainMan : MonoBehaviour
         // 게임 종료
         if ((noteIndex > note.Length - 1 && !isEnd) /*|| (life <= 0 && !isEnd)*/)  // 편의 위해 생명 시스템 off
         {
-            if (MainMode == PLAY_MODE.STAGE)
+            if (playMode == PLAY_MODE.STAGE)
             {
                 StageEnd();
             }
@@ -188,14 +177,20 @@ public class MainMan : MonoBehaviour
                 GameEnd();
             }
             isEnd = true;
+            player.GetComponentInChildren<Animator>().SetBool("IsGame", false);
+            player.moveMode = MOVE_MODE.MAP;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            print("롱노트" + noteIndex);
+        }
 
         // 배경음악 진행바
         MusicProgress();
     }
 
-    // 메인게임 시작
+    // start game
     public void GameStart()
     {
         StartCoroutine(GameStartCo());
@@ -209,14 +204,25 @@ public class MainMan : MonoBehaviour
         // 로컬데이터 불러오기
         GetMainData();
 
-        if(MainMode == PLAY_MODE.STAGE)
+        if(playMode == PLAY_MODE.STAGE)
         {
             SetStage();
         }
-        else if(MainMode == PLAY_MODE.PLAY)
+        else if(playMode == PLAY_MODE.PLAY)
         {
             SetChart();
         }
+
+        // 점수 계산
+        int NoteMaxCount = note.Length;
+        missScore = 0;
+        badScore = 2700f / NoteMaxCount;
+        goodScore = 6300f / NoteMaxCount;
+        perfectScore = 9000f / NoteMaxCount;
+
+        // 점수 식
+        // 일반 점수 : 만점 기준 / 노트 수
+        // 콤보 점수 : 2000 / (노트 수)(노트 수 - 1) * (콤보 - 1)
 
         gameCanvas.SetActive(true);
         scoreUI.text = "";
@@ -234,8 +240,12 @@ public class MainMan : MonoBehaviour
         yield return StartCoroutine(TimeCountCo(judgeUI));
 
         // 占쏙옙占쌈쏙옙占쏙옙
-        isStart = true;        // 占쏙옙占쏙옙 占쌩댐옙占쏙옙
-        isGame = true;         // 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙
+        isStart = true;        
+        isGame = true;
+
+        player.GetComponentInChildren<Animator>().SetBool("IsGame", true);
+        player.moveMode = MOVE_MODE.GAME_NORMAL;
+ 
 
         // 占쏙옙占쏙옙 占십깍옙화
         bgm.Stop();                  
@@ -274,6 +284,7 @@ public class MainMan : MonoBehaviour
         yield return StartCoroutine(GameStartCo());
     }
 
+    // story
     public IEnumerator OnStoryMusic()
     {
         // 스토리 노래 틀어주기
@@ -298,7 +309,7 @@ public class MainMan : MonoBehaviour
         }
     }
 
-    // 占쏙옙占쏙옙 占쏙옙占썅도
+    // ui
     public void MusicProgress()
     {
         // 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占썅도
@@ -309,7 +320,7 @@ public class MainMan : MonoBehaviour
             progressUI.value = bgm.time / note[note.Length - 1].time;
     }
 
-    // 占쏙옙占쏙옙 占쏙옙占쏙옙
+    // end game
     public void GameEnd()
     {
         StartCoroutine(GameEndCo());
@@ -329,7 +340,7 @@ public class MainMan : MonoBehaviour
         judgeUI.color = Color.yellow;
 
         // 결과 씬에 점수 보내기
-        GameObject.Find("ResultData").GetComponent<ResultManager>().GetResult();
+        //GameObject.Find("ResultData").GetComponent<ResultManager>().GetResult();
 
         // 5占쏙옙 占쏙옙 占쏙옙占쏙옙 占쏙옙占?
         yield return new WaitForSeconds(5);
@@ -345,10 +356,26 @@ public class MainMan : MonoBehaviour
 
         // 결과 씬 이동
         yield return new WaitForSeconds(3);
-        if (MainMode == PLAY_MODE.PLAY)
+        if (playMode == PLAY_MODE.PLAY)
         {
-            sceneManager.ToScoreScene();
+            //sceneManager.ToScoreScene();
         }
+        gameCanvas.SetActive(false);
+        screenCanvas.SetActive(true);
+        ShowResult();
+    }
+
+    public void ShowResult()
+    {
+        resultUI.GetComponent<Animator>().Play("UI_UP");
+        TextMeshProUGUI judgeUI = resultUI.transform.GetChild(1).GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI scoreUI = resultUI.transform.GetChild(1).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>();
+        judgeUI.text = perfect.ToString() + "\n";
+        judgeUI.text += good.ToString() + "\n";
+        judgeUI.text += bad.ToString() + "\n";
+        judgeUI.text += miss.ToString() + "\n";
+        judgeUI.text += combo.ToString();
+        scoreUI.text = score.ToString();
     }
 
     // life 0돼서 게임 오버됐을 때
@@ -395,7 +422,7 @@ public class MainMan : MonoBehaviour
 
         // 결과창으로 넘어가기
         yield return new WaitForSeconds(1);
-        sceneManager.ToScoreScene();
+        //sceneManager.ToScoreScene();
     }
 
 
@@ -425,6 +452,192 @@ public class MainMan : MonoBehaviour
         }
     }
 
+    // game progress
+    public void NewJudge(float time, Vector3 pos)
+    {
+        // 판정 함수
+        if (!isGame) return;
+
+        // 현재 ~ 10개 노트 판정 검사
+        for (int i = noteIndex; i < noteIndex + 10; i++)
+        {
+            if (i > note.Length - 1) break; // 채보 끝이면 리턴
+            if (pos == note[i].pos) // 좌표 일치 확인
+            {
+                float addScore = 0;
+
+                // 판정시간 일치 확인
+                if (time < (note[i].time + perfectRange + judgeRange) && time > (note[i].time - perfectRange + judgeRange))  // PERFECT
+                {
+                    // judge
+                    perfect++;
+                    judgeUI.text = "PERFECT!";
+                    judgeUI.color = color[0];
+                    judgeeff.Play();
+                    cameff.Play();
+
+                    // combo
+                    curCombo++;
+                    comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
+                    comboeff.Play();
+
+                    // score
+                    //score = score + perfectScore + comboScore * curCombo;
+                    addScore = perfectScore;
+
+                    // effect
+                    GameObject effect = Instantiate(judgeEffect);
+                    effect.transform.localPosition = note[i].pos;
+                    Destroy(effect, 0.5f);
+
+                }
+                else if (time < (note[i].time + goodRange + judgeRange) && time > (note[i].time - goodRange + judgeRange))   // GOOD
+                {
+                    // judge
+                    good++;
+                    judgeUI.text = "GOOD";
+                    judgeUI.color = color[1];
+                    judgeeff.Play();
+
+                    // combo
+                    curCombo++;
+                    comboUI.text = curCombo.ToString();
+                    combotext.text = "Combo";
+                    comboeff.Play();
+
+                    // score
+                    addScore = goodScore;
+
+                    // effect
+                    GameObject effect = Instantiate(judgeEffect);
+                    effect.transform.localPosition = note[i].pos;
+                    Destroy(effect, 0.5f);
+
+                }
+                else if (time < (note[i].time + badRange + judgeRange) && time > (note[i].time - badRange + judgeRange))    // BAD
+                {
+                    // judge
+                    bad++;
+                    judgeUI.text = "BAD";
+                    judgeUI.color = color[2];
+                    scoreUI.text = score.ToString();
+                    noteIndex++;
+                    judgeeff.Play();
+
+                    // combo
+                    combo = curCombo;
+                    curCombo = 0;
+                    comboUI.text = "";
+                    combotext.text = "";
+
+                    // score
+                    addScore = badScore;
+
+
+                }
+                else if (time < (note[i].time + missRange + judgeRange) && time > (note[i].time - missRange + judgeRange))  // MISS
+                {
+                    // miss 처리
+                    miss++;
+                    judgeUI.text = "MISS";
+                    judgeUI.color = color[3];
+
+                    // combo 처리
+                    combo += curCombo;
+                    curCombo = 0;
+                    comboUI.text = "";
+                    combotext.text = "";
+
+                    // score 처리
+                    addScore = missScore;
+
+                    // life 감소
+                    life--;
+                    lifeUI.value = life;
+
+                    // 이펙트
+                    noteIndex++;
+                    judgeeff.Play();
+
+                    return;
+                }
+                else
+                {
+                    // 좌표는 일치하나 시간 범위에 맞지 않음
+                    continue; 
+                }
+
+                // 콤보 점수 계산
+                if(curCombo > 0)
+                    addScore += 2000 / ((note.Length) * (note.Length - 1)) * (curCombo - 1);
+                score += addScore;
+                scoreUI.text = "SCORE\n" + score.ToString();
+
+                // 롱노트 판정
+                if (note[i].ltype)
+                {
+                    StartCoroutine(LongJudge(i));
+                }
+
+                judgeUI.text = ((time - (note[i].time + judgeRange)) * 1000).ToString("0");
+                scoreUI.text = "SCORE\n" + score.ToString();
+                noteIndex++;
+                judgeeff.Play();
+            }
+        }
+    }
+
+    IEnumerator LongJudge(int _idx)
+    {
+        float curScore = score;
+        LNote lnote = note[_idx].note.GetComponent<LNote>();
+        Vector3 endPos = lnote.route[lnote.route.Length - 1];
+
+
+        int maxScore = (note[_idx].route.Length -1) * 100;
+        float maxTime = note[_idx].time + note[_idx].duration;
+
+        int longScore = 0;
+
+        player.ChangeMode(MOVE_MODE.GAME_SLIDE);
+        while (Input.anyKey && note[_idx].note)
+        {
+            if (bgm.time > maxTime) break;
+
+            player.transform.position = note[_idx].note.transform.position;
+
+            // score
+
+            longScore = (int)Mathf.Floor(maxScore * (bgm.time / maxTime));
+            score = curScore + longScore;
+            scoreUI.text = "SCORE\n" + score.ToString();
+            judgeUI.text = longScore.ToString();
+
+            if (0 == bgm.time % 0.5f)
+            {
+                judgeeff.Play();
+            }
+
+            yield return null;
+        }
+
+        player.ChangeMode(MOVE_MODE.GAME_NORMAL);
+        if (player.CurPos == endPos)
+        {
+            longScore = maxScore;
+            score = curScore + longScore;
+
+            // 끝까지 오면 추가 점수
+            score += 100;
+        }
+
+        scoreUI.text = "SCORE\n" + score.ToString();
+        judgeUI.text = longScore.ToString();
+        judgeeff.Play();
+
+
+    }
     public void Judge(float time, Vector3 pos)
     {
         // 판정 함수
@@ -625,6 +838,8 @@ public class MainMan : MonoBehaviour
         yield return new WaitForSeconds(1);
         bgm.Play();
     }
+
+    // count
     public void TimeCount(TextMeshProUGUI textUI)
     {
         StartCoroutine(TimeCountCo(textUI));
@@ -656,6 +871,8 @@ public class MainMan : MonoBehaviour
         yield return new WaitForSeconds(1);
         textUI.text = "";
     }
+
+    // before start
     public void ShowNextNote()
     {
         StartCoroutine(ShowNextNoteCo());
@@ -692,11 +909,15 @@ public class MainMan : MonoBehaviour
             player.CurPos += Vector3.right;
         }
     }
+
+    // ingame setting
     public void Settable(bool _isCan)
     {
         gameCanvas.transform.GetChild(0).gameObject.SetActive(_isCan);
         player.GetComponent<Player>().Settable = _isCan;
     }
+
+    // start setting
     public void ResetMain()
     {
         // 게임 초기화
@@ -705,7 +926,7 @@ public class MainMan : MonoBehaviour
         isGame = false;
         isEnd = false;
         bgm.Stop();
-        Settable(false);     // 占쏙옙占쏙옙창 占쏙옙占?
+        Settable(false);
         GetComponent<NoteMan>().note_idx = 0;
         collections.Clear();
 
@@ -736,6 +957,8 @@ public class MainMan : MonoBehaviour
     public void SetStage()
     {
         // 스테이지 데이터 세팅
+
+
 
         // 스테이지 음악 세팅
         bgm.clip = soundMan.bgmClip[stageNum - 1];
@@ -769,13 +992,13 @@ public class MainMan : MonoBehaviour
             dataMan.LoadMainGameData();
             dataMan.LoadSoundData();
 
-            MainMode = (PLAY_MODE)(int)dataMan.mode;
-            if (MainMode == PLAY_MODE.STAGE)
+            playMode = (PLAY_MODE)(int)dataMan.mode;
+            if (playMode == PLAY_MODE.STAGE)
             {
                 stageNum = dataMan.stageNum;
                 SetStage();
             }
-            if (MainMode == PLAY_MODE.PLAY)
+            if (playMode == PLAY_MODE.PLAY)
             {
                 dataMan.LoadEditorDataToMain(dataMan.chartNum);
                 SetChart();
@@ -2006,12 +2229,29 @@ public class MainMan : MonoBehaviour
             chart[304] = new float[3] { 143.9573f, 59.0f, -9.0f };
         }
 
+
         note = new Note[chart.Length];
         for(int i = 0; i < note.Length; i++)
         {
             note[i] = new Note(chart[i][0], new Vector3(chart[i][1], chart[i][2]));
         }
 
+
+
+        if (stageNum == 1)
+        {
+            Vector3 u = Vector3.up;
+            Vector3 d = Vector3.down;
+            Vector3 l = Vector3.left;
+            Vector3 r = Vector3.right;
+            Vector3 n = Vector3.zero;
+            ShortToLong(2, new Vector3[] { u, r, n }, 0.5f);
+            ShortToLong(4, new Vector3[] { d, d, d, r, u, u, n }, 1.5f);
+            ShortToLong(6, new Vector3[] { d, r, n }, 0.5f);
+            ShortToLong(15, new Vector3[] { u, r, n }, 0.2f);
+            ShortToLong(17, new Vector3[] { d, r, n }, 0.2f);
+            //ShortToLong();
+        }
         GetComponent<NoteMan>().SetChart(ref note);
     }
     public void SetChart()
@@ -2041,5 +2281,15 @@ public class MainMan : MonoBehaviour
 
         // Load Music
         bgm.clip = dataMan.editordata.music;
+
+    }
+
+    public void ShortToLong(int _idx, Vector3[] _route, float _duration)
+    {
+        note[_idx] = new Note(note[_idx].time, note[_idx].pos, _route, _duration);
+    }
+    public void LongToShort(int _idx)
+    {
+        note[_idx] = new Note(note[_idx].time, note[_idx].pos);
     }
 }

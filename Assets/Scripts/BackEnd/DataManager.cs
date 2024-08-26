@@ -402,5 +402,10 @@ public class DataManager : MonoBehaviour
     {
 
     }
+
+    public void SetCharacterNum(int _num)
+    {
+        characterNum = _num;
+    }
 }
 
