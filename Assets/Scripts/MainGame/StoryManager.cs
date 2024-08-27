@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Unity.VisualScripting;
 
 public class StoryManager : MonoBehaviour
 {
@@ -413,7 +413,18 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine( Fade(black));
         yield return StartCoroutine( Fade(black, false));
         yield return StartCoroutine( Splash(Color.white));
-        yield return StartCoroutine(PostProssess());
+        yield return StartCoroutine( PostProssess(POSTPROCESS.Bloom, 10, 0.05f, Color.red));
+        yield return StartCoroutine( PostProssess(POSTPROCESS.Bloom, 1, 0.05f, Color.white));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0.3f, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 2, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 5, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 230, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 50, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
     }
 
     IEnumerator SampleStory()
@@ -1117,16 +1128,128 @@ public class StoryManager : MonoBehaviour
         }
 
     }
-
-    IEnumerator PostProssess()
+    /// <summary>
+    /// Bloom, Vignette, Chormatic Aberration, Noise 는 0 ~ 1, Lens Distortion -1 ~ 1, Blur 1 ~ 300    
+    /// </summary>
+    /// <param name="Efftype"></param>
+    /// <param name="intensity"></param>
+    /// <param name="interptime"></param>
+    /// <returns></returns>
+    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime)
+    {
+        switch(Efftype)
+        {
+            case POSTPROCESS.Bloom:
+                Bloom bloom;
+                if( volume.profile.TryGet(out bloom))
+                {
+                    while(Mathf.Abs(bloom.intensity.value - intensity) > 0.01f)
+                    {
+                        bloom.intensity.Interp(bloom.intensity.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+            case POSTPROCESS.Vignette:
+                Vignette vignette;
+                if(volume.profile.TryGet(out vignette))
+                {
+                    while(Mathf.Abs(vignette.intensity.value - intensity) > 0.01f)
+                    {
+                        vignette.intensity.Interp(vignette.intensity.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+            case POSTPROCESS.Chromatic_Aberration:
+                ChromaticAberration chromaticAberration;
+                if (volume.profile.TryGet(out chromaticAberration))
+                {
+                    while(Mathf.Abs(chromaticAberration.intensity.value - intensity) > 0.01f)
+                    {
+                        chromaticAberration.intensity.Interp(chromaticAberration.intensity.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+            case POSTPROCESS.Lens_Distortion:
+                LensDistortion lensDistortion;
+                if (volume.profile.TryGet(out lensDistortion))
+                {
+                    while(Mathf.Abs(lensDistortion.intensity.value - intensity) > 0.01f)
+                    {
+                        lensDistortion.intensity.Interp(lensDistortion.intensity.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+            case POSTPROCESS.Blur:
+                DepthOfField depthOfField;
+                if (volume.profile.TryGet(out depthOfField))
+                {
+                    while(Mathf.Abs(depthOfField.focalLength.value - intensity) > 0.01f)
+                    {
+                        depthOfField.focalLength.Interp(depthOfField.focalLength.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+            case POSTPROCESS.Noise:
+                FilmGrain filmGrain;
+                if (volume.profile.TryGet(out filmGrain))
+                {
+                    while (Mathf.Abs(filmGrain.intensity.value - intensity) > 0.01f)
+                    {
+                        filmGrain.intensity.Interp(filmGrain.intensity.value, intensity, interptime);
+                        yield return null;
+                    }
+                }
+                break;
+        }
+    }
+    /// <summary>
+    /// color 값에 따라 화면이 발광함, 0 ~ 80
+    /// </summary>
+    /// <param name="Efftype"></param>
+    /// <param name="intensity"></param>
+    /// <param name="interptime"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
     {
         Bloom bloom;
         if (volume.profile.TryGet(out bloom))
         {
-            bloom.intensity.Override(10);
+            while (Mathf.Abs(bloom.intensity.value - intensity) > 0.01f)
+            {
+                bloom.intensity.Interp(bloom.intensity.value, intensity, interptime);
+                bloom.tint.Interp(bloom.tint.value, color, interptime);
+                yield return null;
+            }
         }
-        
-        yield return null;
+    }
+    /// <summary>
+    /// 화면의 색상을 보정할 수 있음, Contrast 대비 -100 ~ 100, Hue 색조 -180 ~ 180, Saturation 채도 -100 ~ 100
+    /// </summary>
+    /// <param name="Efftype"></param>
+    /// <param name="contrast"></param>
+    /// <param name="hue"></param>
+    /// <param name="saturation"></param>
+    /// <param name="interptime"></param>
+    /// <returns></returns>
+    IEnumerator PostProssess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
+    {
+        ColorAdjustments colorAdjustments;
+        if (volume.profile.TryGet(out colorAdjustments))
+        {
+            while (Mathf.Abs(colorAdjustments.contrast.value - contrast) > 0.01f || Mathf.Abs(colorAdjustments.hueShift.value - hue) > 0.01f || Mathf.Abs(colorAdjustments.saturation.value - saturation) > 0.01f)
+            {
+                colorAdjustments.contrast.Interp(colorAdjustments.contrast.value, contrast, interptime);
+                colorAdjustments.hueShift.Interp(colorAdjustments.hueShift.value, hue, interptime);
+                colorAdjustments.saturation.Interp(colorAdjustments.saturation.value, saturation, interptime);
+                yield return null;
+            }
+        }
     }
     IEnumerator Splash(Color color)
     {
