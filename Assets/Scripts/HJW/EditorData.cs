@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EditorData //: MonoBehaviour
 {
-    public Vector2[] boxpos;
-    public double[] notedata;
-    public Vector2[] notepos;
+    public boxroute[] boxdata;
+    public List<float> notedata = new List<float>();
+    public List<float> noteduration = new List<float>();
 
     public float length;
     public string projectname;

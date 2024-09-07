@@ -1,12 +1,15 @@
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Audio : MonoBehaviour
 {
     public static bool playing;
-    public NoteGeneratorforeditor notegen;
     public Makenote note;
+    public Camaracontrol camaracontrol;
     public AudioSource mainmusic;
     public AudioSource hitsound;
     public Sprite play; //stopping
@@ -23,29 +26,29 @@ public class Audio : MonoBehaviour
     }
     public void playmus()
     {
+        if (Makenote.hold) { return; }
         if (playing == true) //play -> stop
         {
             gameObject.GetComponent<Image>().sprite = play;
             mainmusic.Pause();
             playing = false;
-            Maketile.instance.showtile();
+            note.merge();
         }
         else //stop -> play
         {
-            mainmusic.time = (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y + 39) / -Makemadi.instance.madimultiplyer;
+            mainmusic.time = Mathf.Abs( Makemadi.instance.madi.transform.InverseTransformPoint(Makemadi.instance.getstarttime.transform.position.x, Makemadi.instance.getstarttime.transform.position.y, 0).x / Makemadi.instance.madimultiplyer);
             gameObject.GetComponent<Image>().sprite = resume;
             mainmusic.Play();
             playing = true;
-            Maketile.instance.hidetile();
-            for(int i = 0; i < note.notedata.Length; i++)
+            for(int i = 0; i < note.notedata.Count; i++)
             {
-                if(note.notedata[i] > mainmusic.time)
+                if(note.notedata[i].notedata > mainmusic.time)
                 {
                     noteindx = i;
+                    note.notegen.route_idx = i;
                     break;
                 }
             }
-            notegen.refresh();
         }
     }
     private void Update()
@@ -53,22 +56,39 @@ public class Audio : MonoBehaviour
         time = mainmusic.time;
         if (playing)
         {
-            if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -((Makemadi.instance.sec * Makemadi.instance.madimultiplyer) + 39 - 77.8f))
+            Makemadi.instance.sliderefresh();
+            if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -(Makemadi.instance.sec * Makemadi.instance.madimultiplyer- 77.8f))
             {
-                Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(3.5f, (-Makemadi.instance.madimultiplyer * mainmusic.time) - 39);
+                Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, -Makemadi.instance.madimultiplyer * mainmusic.time);
             }
-            if(Mathf.Abs( mainmusic.time - Makemadi.instance.sec )< 0.05f)
+            if(Mathf.Abs( mainmusic.time - Makemadi.instance.sec )< 0.05f) //end
             {
                 resetmusic();
             }
-            if(note.notedata.Length > 0 && note.notedata[noteindx] - time < 0.05f && note.notedata[noteindx] - time > 0)
+            if(!Filedataconvey.playmode && (note.notedata.Count > 0 && note.notedata[0].notedata - time < 0.05f && note.notedata[0].notedata - time > 0))
             {
-                notesound.Play();
-                if(note.notedata.Length - 1 == noteindx)
+                Destroy(note.notedata[0].noteobj);
+                note.notedata.RemoveAt(0);
+            }
+            if (noteindx >= note.notedata.Count) return;
+            if(Filedataconvey.playmode && note.notedata.Count > 0)
+            {
+                var a = GameObject.Find("note" + (noteindx - 1).ToString());
+                var b = GameObject.Find("route" + (noteindx - 1).ToString());
+                var pos = Maketile.instance.gameObject.transform.GetChild(noteindx + 1).position;
+                if (b&& a)
                 {
-                    noteindx = 0;
+                    camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(a.transform.position.x, a.transform.position.y, -10), 0.1f);
                 }
+                else
+                {
+                    camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(pos.x, pos.y, -10), 0.1f);
+                }
+            }
+            if(Filedataconvey.playmode&& note.notedata.Count > 0 && note.notedata[noteindx].notedata - time < 0.05f && note.notedata[noteindx].notedata - time > 0)
+            {
                 noteindx++;
+                hitsound.Play();
             }
         }
     }
@@ -78,8 +98,9 @@ public class Audio : MonoBehaviour
         gameObject.GetComponent<Image>().sprite = play;
         mainmusic.time = 0;
         playing = false;
-        Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(3.5f, -39f);
+        Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, 0);
         noteindx = 0;
+        Makemadi.instance.Slider.GetComponent<RectTransform>().anchoredPosition = new Vector2(7, 0);
     }
     int a = 0;
     public void musicchange()
@@ -118,10 +139,5 @@ public class Audio : MonoBehaviour
         Makemadi.instance.uiset();
         Makemadi.instance.check();
         resetmusic();
-    }
-
-    public void notegenrefresh()
-    {
-        notegen.refresh();
     }
 }

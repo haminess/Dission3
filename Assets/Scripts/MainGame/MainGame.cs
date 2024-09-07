@@ -2005,13 +2005,13 @@ public class MainGame : MonoBehaviour
     {
         // Load Chart
         dataMan.LoadEditorDataToMain(dataMan.chartNum);
-        chart = new float[dataMan.editordata.notedata.Length][];
-        for(int i = 0; i < dataMan.editordata.notedata.Length; i++)
+        chart = new float[dataMan.editordata.notedata.Count][];
+        for(int i = 0; i < dataMan.editordata.notedata.Count; i++)
         {
             chart[i] = new float[3] { 0, 0, 0 };
             chart[i][0] = (float)dataMan.editordata.notedata[i];
-            chart[i][1] = (int)dataMan.editordata.boxpos[i].x;
-            chart[i][2] = (int)dataMan.editordata.boxpos[i].y;
+            chart[i][1] = (int)dataMan.editordata.boxdata[i].boxpos.x;
+            chart[i][2] = (int)dataMan.editordata.boxdata[i].boxpos.y;
         }
         GetComponent<NoteMan>().SetChart(chart);
 

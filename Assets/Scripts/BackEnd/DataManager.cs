@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 public class DataManager : MonoBehaviour
 {
@@ -215,23 +216,24 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
-            Array.Resize(ref Makemadi.instance.note.notedata, editordata.notedata.Length);
-            Array.Resize(ref Maketile.instance.boxpos, editordata.boxpos.Length);
-            Array.Resize(ref Makemadi.instance.note.notepos, editordata.notepos.Length);
+            Array.Resize(ref Maketile.instance.boxdata, editordata.boxdata.Length);
 
-            for (int a = 0; a < editordata.notedata.Length; a++)
+            for (int a = 0; a < Makemadi.instance.note.notedata.Count; a++)
             {
-                Makemadi.instance.note.notedata[a] = editordata.notedata[a];
+                Destroy(Makemadi.instance.note.notedata[a].noteobj);
             }
-            for (int a = 0; a < editordata.boxpos.Length; a++)
+            Makemadi.instance.note.notedata.Clear();
+            for (int a = 0; a < editordata.notedata.Count; a++)
             {
-                Maketile.instance.boxpos[a] = editordata.boxpos[a];
+                Notedata tempdata = new Notedata();
+                Makemadi.instance.note.notedata.Add(tempdata);
+                Makemadi.instance.note.notedata[a].notedata = editordata.notedata[a];
+                Makemadi.instance.note.notedata[a].noteduration = editordata.noteduration[a];
             }
-            for (int a = 0; a < editordata.notepos.Length; a++)
+            for (int a = 0; a < editordata.boxdata.Length; a++)
             {
-                Makemadi.instance.note.notepos[a] = editordata.notepos[a];
+                Maketile.instance.boxdata[a] = editordata.boxdata[a];
             }
-
 
             Maketile.instance.boxposload();
             Makemadi.instance.Loadinfo();
@@ -332,12 +334,7 @@ public class DataManager : MonoBehaviour
             string FromJsonData = File.ReadAllText(filePath);
             editordata = JsonUtility.FromJson<EditorData>(FromJsonData);
 
-            char[] musicname = editordata.music.ToString().ToCharArray(); //24
-            for (int j = musicname.Length - 1; j > musicname.Length - 24; j--)
-            {
-                musicname[j] = ' ';
-            }
-            a.GetComponentsInChildren<TextMeshProUGUI>()[1].text = String.Join("", musicname);
+            a.GetComponentsInChildren<TextMeshProUGUI>()[1].text = editordata.musicname.ToString();
             a.GetComponentsInChildren<TextMeshProUGUI>()[2].text = editordata.creator;
         }
     }
@@ -356,7 +353,7 @@ public class DataManager : MonoBehaviour
 
             PlayManager.instance.projectname.text = editordata.projectname;
             PlayManager.instance.bgmname.text = editordata.musicname;
-            PlayManager.instance.notecount.text = editordata.boxpos.Length + " Notes".ToString();
+            PlayManager.instance.notecount.text = editordata.boxdata.Length + " Notes".ToString();
             string min = (Mathf.Floor((float)editordata.sec / 60)).ToString();
             string sec = (editordata.sec % 60).ToString();
             if((editordata.sec / 60) < 10)

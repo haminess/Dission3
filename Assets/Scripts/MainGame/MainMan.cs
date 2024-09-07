@@ -2260,14 +2260,25 @@ public class MainMan : MonoBehaviour
         dataMan.LoadEditorDataToMain(dataMan.chartNum);
 
         // new note system
-        note = new Note[dataMan.editordata.notedata.Length];
-        for (int i = 0; i < dataMan.editordata.notedata.Length; i++)
+        note = new Note[dataMan.editordata.notedata.Count];
+        for (int i = 0; i < dataMan.editordata.notedata.Count; i++)
         {
-            note[i] = new Note((float)dataMan.editordata.notedata[i],
-                      new Vector3((int)dataMan.editordata.boxpos[i].x, (int)dataMan.editordata.boxpos[i].y));
+            if (dataMan.editordata.noteduration[i] > 0)
+            {
+                note[i] = new Note((float)dataMan.editordata.notedata[i],
+                new Vector3((int)dataMan.editordata.boxdata[i].boxpos.x, (int)dataMan.editordata.boxdata[i].boxpos.y),
+                dataMan.editordata.boxdata[i].boxroute_.ToArray(),
+                dataMan.editordata.noteduration[i]);
+
+            }
+            else
+            {
+                note[i] = new Note((float)dataMan.editordata.notedata[i],
+                new Vector3((int)dataMan.editordata.boxdata[i].boxpos.x, (int)dataMan.editordata.boxdata[i].boxpos.y));
+            }
         }
         GetComponent<NoteMan>().SetChart(ref note);
-
+        print(dataMan.editordata.music);
         // Load Music
         bgm.clip = dataMan.editordata.music;
 

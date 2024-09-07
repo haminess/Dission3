@@ -1,7 +1,14 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+[System.Serializable]
+public class boxroute
+{
+    public Vector2 boxpos;
+    public List<Vector3> boxroute_ = new List<Vector3>();
+}
 
 public class Maketile : MonoBehaviour
 {
@@ -22,11 +29,23 @@ public class Maketile : MonoBehaviour
     public int mode;
     public TextMeshProUGUI curtime;
     [Space(20)]
-    public Vector2[] boxpos;
+    public boxroute[] boxdata;
+    Vector3 u = Vector3.up;
+    Vector3 d = Vector3.down;
+    Vector3 l = Vector3.left;
+    Vector3 r = Vector3.right;
+    Vector3 ur = new Vector3(1,1,0);
+    Vector3 ul = new Vector3(-1,1,0);
+    Vector3 dr = new Vector3(1,-1,0);
+    Vector3 dl = new Vector3(-1,-1,0);
+    Vector3 n = Vector3.zero;
     private bool holding;
     [Space(20)]
     [Header("shortcuts")]
     public KeyCode[] keys;
+    GameObject temp;
+    bool toofast;
+    public bool makeingtrail;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,77 +60,173 @@ public class Maketile : MonoBehaviour
     void Update()
     {
         mospos = Camera.main.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 9);
-        if (Makenote.chartmode && !Settings.popup)
+        if (Audio.playing)
+        {
+            curtime.text = "Time: " + float.Parse(audio_.mainmusic.time.ToString("N2"));
+        }
+        if (Makenote.chartmode && !Settings.popup && !Filedataconvey.playmode)
         {
             curpointer.transform.position = new Vector2(mospos.x, mospos.y);
             if(makemadi.chart)
             {
-                curpointer.transform.localPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint( mospos.x, mospos.y, 0).x, 0);
-                curtime.text = "Time: " + (curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer).ToString();
+                if(makenote.movinglongnote)
+                {
+                    var a = 0.5026326221305f * makenote.dur - 0.7692264517454f;
+                    var start = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x + makenote.dur * makemadi.madimultiplyer / 4 + a, 0);
+                    curpointer.GetComponent<RectTransform>().anchoredPosition = start;
+                }
+                else
+                {
+                    curpointer.GetComponent<RectTransform>().anchoredPosition = new Vector2(makemadi.madi.transform.InverseTransformPoint(mospos.x, mospos.y, 0).x, 0);
+                }
+
+                if(curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer > 0 && !Audio.playing)
+                {
+                    curtime.text = "Time: " + float.Parse( (curpointer.transform.localPosition.x / Makemadi.instance.madimultiplyer).ToString("N2"));
+
+                }
             }
         }
+
         else
         {
-            if(Settings.popup)
+            if(Settings.popup || Filedataconvey.playmode)
             {
                 return;
             }
             if (mospos.y < 0 && mospos.x > 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y - 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x + 0.5f), (int)(mospos.y- 0.5f));
             }
             else if (mospos.y > 0 && mospos.x < 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x - 0.5f, (int)mospos.y + 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x - 0.5f), (int)(mospos.y+ 0.5f) );
             }
             else if (mospos.y < 0 && mospos.x < 0)
             {
-                curpointer.transform.position = new Vector2((int)mospos.x - 0.5f, (int)mospos.y - 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x - 0.5f), (int)(mospos.y-0.5f ));
             }
             else
             {
-                curpointer.transform.position = new Vector2((int)mospos.x + 0.5f, (int)mospos.y + 0.5f);
+                curpointer.transform.position = new Vector2((int)(mospos.x + 0.5f), (int)(mospos.y + 0.5f));
             }
         }//box move
 
-
-        if (Input.GetMouseButton(0)) //box
+        if (Input.GetMouseButtonDown(0) && mode == 0) //box
         {
-            if (makemadi.chart || Makenote.chartmode )
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || Filedataconvey.playmode)
             {
                 return;
             }
-            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tile"));
+            toofast = false;
+            var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+            temp = t;
+            repaint();
+        }
+        if (Input.GetMouseButton(0) && mode == 0 && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) //box
+        {
+            if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || Filedataconvey.playmode)
+            {
+                return;
+            }
+            toofast = false;
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tileoverlap"));
+            if (e)
+            {
+                return;
+            }
+            makeingtrail = true;
+            var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+            temp = t;
+            if (gameObject.transform.childCount > 1)
+            {
+                for (int i = 1; i < gameObject.transform.childCount - 1; i++)
+                {
+                    gameObject.transform.GetChild(i).gameObject.layer = 0;
+                }
+            }
+        }
+
+        if (Input.GetMouseButton(0) && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) //longbox
+        {
+            if (makemadi.chart || Makenote.chartmode || Filedataconvey.playmode)
+            {
+                return;
+            }
+            var e = Physics2D.Raycast(mospos, Vector3.forward, 2, LayerMask.GetMask("tileoverlap"));
+            var o = Physics2D.Raycast(mospos, Vector3.forward, 2);
             switch (mode)
             {
                 case 0: //make
-                    for(int i = 0; i < boxpos.Length; i++)
+                    if (temp && temp.transform.childCount > 1)
                     {
-                        if(new Vector2(curpointer.transform.position.x, curpointer.transform.position.y) == boxpos[i])
+                        temp.layer = 0;
+                        for (int i = 1; i < temp.transform.childCount - 1; i++)
                         {
-                            return;
+                            temp.transform.GetChild(i).gameObject.layer = 0;
                         }
                     }
-                    if (e || mos.hidingpointer)
+                    if (makemadi.chart || Makenote.chartmode || mos.hidingpointer || e || makemadi.slidermoving)
                     {
                         return;
                     }
-                    Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, gameObject.transform);
+                    if (Input.GetAxis("Mouse X") > 5)
+                    {
+                        toofast = true;
+                    }
+                    if(!toofast && !makemadi.slidermoving && !e)
+                    {
+                        makeingtrail = true;
+                        var t = Instantiate(tileprefeb, new Vector2(curpointer.transform.position.x, curpointer.transform.position.y), Quaternion.identity, temp.transform);
+                        t.name = "trail";
+                        t.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+
+
                     break;
                 case 1: //erase
-                    if (e)
+                    if (o && o.collider.tag == "tile")
                     {
-                        Destroy(e.collider.gameObject);
+                        int curidx;
+                    repaint();
+                        if(o.collider.gameObject.name == "trail")
+                        {
+                            curidx = Convert.ToInt32(o.transform.parent.GetComponentInChildren<TextMeshPro>().text);
+                            Destroy(o.collider.gameObject.transform.parent.gameObject);
+                        }
+                        else
+                        {
+                            curidx = Convert.ToInt32(o.transform.parent.GetComponentInChildren<TextMeshPro>().text);
+                            Destroy(o.collider.gameObject);
+
+                        }
+                        if(curidx - 1 == makenote.previewindex) { makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false; }
                     }
                     break;
             };
-        } 
-        if(Input.GetMouseButtonDown(0) && mode == 2)//box edit
+        }
+        if (Input.GetMouseButtonUp(0) && (!makemadi.chart || !Makenote.chartmode)) 
+        { 
+            if(Filedataconvey.playmode) { return; }
+            makeingtrail = false; repaint();
+            if(gameObject.transform.childCount > 0)
+            {
+            gameObject.transform.GetChild(gameObject.transform.childCount- 1).gameObject.layer = 0; 
+
+            }
+            if(temp)
+            {
+            temp.transform.GetChild(temp.transform.childCount-1).gameObject.layer = 0; 
+
+            }
+        }
+        if (Input.GetMouseButtonDown(0) && mode == 2)//box edit
         {
+            if (Filedataconvey.playmode) { return; }
             var e = Physics2D.Raycast(mospos, Vector3.forward, 2);
             if (holding)
             {
-                if (e && e.collider.tag == "tile")  //switch
+                if (e &&e.collider.name !="trail" &&e.collider.tag == "tile")  //switch
                 {
                     curpointer.GetComponent<BoxCollider2D>().enabled = true;
                     curpointer = e.collider.gameObject;
@@ -124,17 +239,25 @@ public class Maketile : MonoBehaviour
                     curpointer = tile;
                     curpointer.GetComponent<SpriteRenderer>().enabled = true;
                     holding = false;
+                    repaint();
                 }
             }
-            else if (e && e.collider.tag == "tile") //hold
+            else if (e  && e.collider.tag == "tile") //hold
             {
-                curpointer = e.collider.gameObject;
-                e.collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                if (e.collider.name == "trail")
+                {
+                    curpointer = e.collider.transform.parent.gameObject;
+                }
+                else
+                {
+                    curpointer = e.collider.gameObject;
+
+                }
+                curpointer.GetComponent<BoxCollider2D>().enabled = false;
                 tile.GetComponent<SpriteRenderer>().enabled = false;
                 holding = true;
             }
         }
-        repaint();
         #region shortcuts
         if (Input.GetKeyDown(keys[0]))
         {
@@ -169,63 +292,194 @@ public class Maketile : MonoBehaviour
 
     void repaint() //box
     {
-        if(gameObject.transform.childCount == 0)
+        if(gameObject.transform.childCount == 1)
         {
-            Array.Resize(ref boxpos, 0);
+            Array.Resize(ref boxdata, 0);
         }
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 0; i < gameObject.transform.childCount-1; i++)
         {
-            gameObject.transform.GetChild(i).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
-            Array.Resize(ref boxpos, gameObject.transform.childCount);
-            boxpos[i] = new Vector2( MathF.Round( gameObject.transform.GetChild(i).position.x + 0.496885f), MathF.Round(gameObject.transform.GetChild(i).position.y - 0.48292f));
+            Array.Resize(ref boxdata, gameObject.transform.childCount - 1);
+            if (boxdata[i] == null)
+            {
+                boxdata[i] = new boxroute();
+            }
+            gameObject.transform.GetChild(i + 1).GetComponentInChildren<TextMeshPro>().text = (i + 1).ToString();
+            var child = gameObject.transform.GetChild(i + 1);
+            boxdata[i].boxpos = new Vector2( child.localPosition.x, child.localPosition.y);
+            boxdata[i].boxroute_.Clear();
+            for (int j = 1; j < child.gameObject.transform.childCount; j++)
+            {
+                if(j == 1)
+                {
+                     var childpos = child.gameObject.transform.GetChild(j).transform.localPosition;
+
+                    if (childpos.x > 0 && childpos.y > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(ur);
+                    }
+                    else if (childpos.x > 0 && childpos.y < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(dr);
+                    }
+                    else if (childpos.x < 0 && childpos.y < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(dl);
+                    }
+                    else if (childpos.x < 0 && childpos.y > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(ul);
+                    }
+                    else if (childpos.x < 0) //l
+                    {
+                        boxdata[i].boxroute_.Add(l);
+                    }
+                    else if (childpos.x > 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(r);
+                    }
+                    else if(childpos.y < 0)
+                    {
+                        boxdata[i].boxroute_.Add(d);
+                    }
+                    else if (childpos.y > 0)
+                    {
+                        boxdata[i].boxroute_.Add(u);
+                    }
+                }
+                else
+                {
+                    var prechildpos = child.gameObject.transform.GetChild(j-1).transform.position;
+                    var childpos = child.gameObject.transform.GetChild(j).transform.position;
+                    if (prechildpos.x - childpos.x < 0 && prechildpos.y - childpos.y < 0) //ur
+                    {
+                        boxdata[i].boxroute_.Add(ur);
+                    }
+                    else if (prechildpos.x - childpos.x < 0 && prechildpos.y - childpos.y > 0) //dr
+                    {
+                        boxdata[i].boxroute_.Add(dr);
+                    }
+                    else if (prechildpos.x - childpos.x > 0 && prechildpos.y - childpos.y > 0) //dl
+                    {
+                        boxdata[i].boxroute_.Add(dl);
+                    }
+                    else if (prechildpos.x - childpos.x > 0 && prechildpos.y - childpos.y < 0) //ul
+                    {
+                        boxdata[i].boxroute_.Add(ul);
+                    }
+                    else if (prechildpos.x - childpos.x > 0) //l
+                    {
+                        boxdata[i].boxroute_.Add(l);
+                    }
+                    else if (prechildpos.x - childpos.x < 0) //r
+                    {
+                        boxdata[i].boxroute_.Add(r);
+                    }
+                    else if (prechildpos.y - childpos.y > 0)
+                    {
+                        boxdata[i].boxroute_.Add(d);
+                    }
+                    else if (prechildpos.y - childpos.y < 0)
+                    {
+                        boxdata[i].boxroute_.Add(u);
+                    }
+                }
+            }
+            if(child.gameObject.transform.childCount > 1)
+            {
+                boxdata[i].boxroute_.Add(n);
+
+            }
         }
     }
 
     public void Saveboxpos()
     {
-        Array.Resize(ref editordata.boxpos, boxpos.Length);
-        for(int i = 0; i < boxpos.Length;i++)
+        Array.Resize(ref editordata.boxdata, boxdata.Length);
+        for(int i = 0; i < boxdata.Length;i++)
         {
-            editordata.boxpos[i] = boxpos[i];
+            editordata.boxdata[i] = boxdata[i];
         }
         showtile();
     }
 
     public void boxposload()
     {
-        for(int i=0; i < gameObject.transform.childCount; i++)
+        for(int i=1; i < gameObject.transform.childCount; i++)
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
-        for(int i=0;i < boxpos.Length;i++)
+        for(int i=0;i < boxdata.Length;i++)
         {
-            Instantiate(tileprefeb, new Vector2(boxpos[i].x - 0.496885f, boxpos[i].y + 0.48292f), Quaternion.identity ,gameObject.transform);
+            var par = Instantiate(tileprefeb, new Vector2(boxdata[i].boxpos.x, boxdata[i].boxpos.y), Quaternion.identity ,gameObject.transform);
+            par.transform.localPosition = boxdata[i].boxpos;
+            if(boxdata[i].boxroute_.Count > 0)
+            {
+                var trailpos = boxdata[i].boxroute_[0];
+                for (int j = 0; j < boxdata[i].boxroute_.Count - 1; j++)
+                {
+                    if (j == 0)
+                    {
+                        var trail = Instantiate(tileprefeb, new Vector2(0, 0), Quaternion.identity, par.transform);
+                        trail.transform.localPosition = new Vector2(boxdata[i].boxroute_[j].x, boxdata[i].boxroute_[j].y);
+                        trail.name = "trail";
+                        trail.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                    else
+                    {
+                        trailpos += boxdata[i].boxroute_[j];
+                        var trail = Instantiate(tileprefeb, new Vector2(0, 0), Quaternion.identity, par.transform);
+                        trail.transform.localPosition = new Vector2(trailpos.x, trailpos.y);
+                        trail.name = "trail";
+                        trail.GetComponentInChildren<TextMeshPro>().text = "";
+                    }
+                }
+            }
         }
     }
 
     public void hidetile()
     {
-        for(int i = 0; i < gameObject.transform.childCount; i++)
+        for(int i = 1; i < gameObject.transform.childCount; i++)
         {
-            gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
+            var obj = gameObject.transform.GetChild(i);
+            if(obj.childCount > 1)
+            {
+                for (int j = 1; j < obj.childCount; j++)
+                {
+                    obj.GetChild(j).GetComponent<SpriteRenderer>().enabled = false;
+                }
+                obj.GetComponent<SpriteRenderer>().enabled = false;
+            }
+                obj.GetComponent<SpriteRenderer>().enabled = false;
+
         }
     }
 
     public void showtile()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 1; i < gameObject.transform.childCount; i++)
         {
-            gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
+            var obj = gameObject.transform.GetChild(i);
+            if (obj.childCount > 1)
+            {
+                for (int j = 1; j < obj.childCount; j++)
+                {
+                    obj.GetChild(j).GetComponent<SpriteRenderer>().enabled = true;
+                }
+                obj.GetComponent<SpriteRenderer>().enabled = true;
+            }
+                obj.GetComponent<SpriteRenderer>().enabled = true;
+
         }
     }
 
     public void initile()
     {
-        for (int i = 0; i < gameObject.transform.childCount; i++)
+        for (int i = 1; i < gameObject.transform.childCount; i++)
         {
             Destroy(gameObject.transform.GetChild(i).gameObject);
         }
-        Array.Resize(ref boxpos, 0);
+        Array.Resize(ref boxdata, 0);
     }
     #region switch
     //make 0 erase 1 edit 2
@@ -252,8 +506,9 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = true;
-            makenote.buttoninteraction(true);
+            makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
     public void make()
     {
@@ -267,8 +522,9 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = false;
-            makenote.buttoninteraction(false);
+            makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void edit()
@@ -283,8 +539,9 @@ public class Maketile : MonoBehaviour
         if (Makenote.chartmode)
         {
             Mouseevent.nopointer = true;
-            makenote.buttoninteraction(true);
+            makenote.movinglongnote = false;
         }
+        makenote.previewbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void exitchart()

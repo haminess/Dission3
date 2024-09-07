@@ -50,3 +50,14 @@ public enum Step
     Synk,
     None
 }
+
+public enum POSTPROCESS
+{
+    Bloom,
+    Vignette,
+    Chromatic_Aberration,
+    Lens_Distortion,
+    Blur,
+    Noise,
+    Color_Adjestment
+}

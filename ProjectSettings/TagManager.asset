@@ -18,14 +18,14 @@ TagManager:
   - Player
   - Water
   - UI
-  - tile
+  - tileoverlap
   - note
   - Platform
   - Wall
   - Object
   - Chart
   - notesound
-  - 
+  - overwrite
   - 
   - 
   - 
