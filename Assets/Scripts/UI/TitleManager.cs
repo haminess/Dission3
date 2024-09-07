@@ -70,14 +70,14 @@ public class TitleManager : MonoBehaviour
     
     void ArrowControl()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow) && arrow.transform.position.y > ArrowList[ArrowList.Length - 1].transform.position.y)
+        if (Input.GetKeyDown(KeyCode.DownArrow) && arrowPoint < ArrowList.Length - 1)
         {
             arrowPoint += 1;
             arrow.transform.position = ArrowList[arrowPoint].transform.position;
             soundmanager.SetEffect(2);
             soundmanager.PlayEffect();
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && arrow.transform.position.y < ArrowList[0].transform.position.y)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && arrowPoint > 0)
         {
             arrowPoint -= 1;
             arrow.transform.position = ArrowList[arrowPoint].transform.position;
@@ -85,6 +85,10 @@ public class TitleManager : MonoBehaviour
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.Return))
+        {
+            ArrowList[arrowPoint].GetComponent<Button>().onClick.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ArrowList[arrowPoint].GetComponent<Button>().onClick.Invoke();
         }
@@ -164,9 +168,12 @@ public class TitleManager : MonoBehaviour
         cam.Move();
 
         // move arrow
-        GameObject parent = UI[(int)mode].transform.Find("button").gameObject;
+        GameObject parent = UI[(int)mode].transform.Find("button")?.gameObject;
         if(parent == null)
-            parent = UI[(int)mode].transform.GetChild(0).Find("button").gameObject;
+            parent = UI[(int)mode].transform.GetChild(0).Find("button")?.gameObject;
+
+        print("버튼 찾기");
+        print(parent);
 
         if (parent)
         {

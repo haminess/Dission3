@@ -60,12 +60,14 @@ public class Player : MonoBehaviour
             characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
         }
 
+        // select character
         for (int i = 0; i < model.Length; i++)
         {
             model[i].SetActive(false);
         }
         model[characterNum].SetActive(true);
         sprite = model[characterNum].GetComponent<SpriteRenderer>();
+        animator = model[characterNum].GetComponent<Animator>();
 
         // ¼³Á¤Ã¢ ¼û±è
         settingUI.SetActive(false);
@@ -104,6 +106,12 @@ public class Player : MonoBehaviour
             else
             {
                 PlayMove();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //animator?.ResetTrigger("Jump");
+                animator?.SetTrigger("Jump");
             }
         }
 
@@ -164,7 +172,7 @@ public class Player : MonoBehaviour
     public void GameMove()
     {
         Vector3 vHead = Vector3.zero;
-        float fSpeed = 5;
+        float fSpeed = 3;
 
         animator?.SetBool("IsMove", false);
         animator?.SetFloat("DirX", 0);
@@ -204,6 +212,7 @@ public class Player : MonoBehaviour
             animator?.SetFloat("DirY", 1);
             vHead = Vector3.down;
         }
+
 
         // º® ÀÌµ¿ºÒ°¡
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
@@ -300,6 +309,18 @@ public class Player : MonoBehaviour
             //cam.enabled = true;
             CurPos.x = Mathf.Round(transform.position.x);
             CurPos.y = Mathf.Round(transform.position.y);
+        }
+
+        if(MainMan.instance.isGame)
+        {
+            if (_mode == MOVE_MODE.GAME_SLIDE)
+            {
+                animator.SetBool("Slide", true);
+            }
+            else
+            {
+                animator.SetBool("Slide", false);
+            }
         }
         moveMode = _mode;
     }
