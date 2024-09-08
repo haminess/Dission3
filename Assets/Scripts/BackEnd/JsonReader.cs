@@ -41,8 +41,6 @@ public class JsonReader : MonoBehaviour
     // File과 Sheet로 구분
     public string filePath = "파일 경로를 입력해주세요";   // 필수 입력
     public string sheetName;    // 필수 입력
-    public string folderPath = "폴더 경로를 입력해주세요";
-    public string fileName = "파일 이름을 입력해주세요";
     public Dictionary<string, List<DataItem>> dataList;
     public List<DataItem> data;
 

@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                //animator?.ResetTrigger("Jump");
+                animator?.ResetTrigger("Jump");
                 animator?.SetTrigger("Jump");
             }
         }
@@ -202,7 +202,7 @@ public class Player : MonoBehaviour
         {
             animator?.SetBool("IsMove", true);
             animator?.SetFloat("DirX", 0);
-            animator?.SetFloat("DirY", 1);
+            animator?.SetFloat("DirY", -1);
             vHead = Vector3.up;
         }
         if (Input.GetKey(KeyCode.DownArrow))
@@ -231,6 +231,7 @@ public class Player : MonoBehaviour
         LayerMask mask = LayerMask.GetMask("Wall") | LayerMask.GetMask("Object");
 
         // 애니메이션
+        animator?.ResetTrigger("Jump");
         animator?.SetTrigger("Jump");
         // 효과음
         //soundMan.SetEffect(0);
