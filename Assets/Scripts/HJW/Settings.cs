@@ -94,6 +94,7 @@ public class Settings : MonoBehaviour
     public void Saveeditordatadele()
     {
         DataManager.Instance.SaveEditorData();
+        listloaddele();
     }
     public void listloaddele()
     {

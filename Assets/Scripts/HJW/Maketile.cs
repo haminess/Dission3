@@ -394,11 +394,13 @@ public class Maketile : MonoBehaviour
 
     public void Saveboxpos()
     {
+        if (boxdata.Length != makenote.notedata.Count) { makemadi.Dismatch_ui.SetActive(true); return; }
         Array.Resize(ref editordata.boxdata, boxdata.Length);
         for(int i = 0; i < boxdata.Length;i++)
         {
             editordata.boxdata[i] = boxdata[i];
         }
+        makenote.Savenotepos();
         showtile();
     }
 

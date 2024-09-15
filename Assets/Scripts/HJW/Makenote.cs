@@ -223,7 +223,7 @@ public class Makenote : MonoBehaviour
                         Destroy(notedata[i].noteobj);
                         notedata.RemoveAt(i);
                     }
-                    if (notedata[curindexx].notedata < notedata[i].notedata && notedata[i].notedata < notedata[curindexx].notedata + notedata[curindexx].noteduration)
+                    if (makemadi.chart && notedata[curindexx].notedata < notedata[i].notedata && notedata[i].notedata < notedata[curindexx].notedata + notedata[curindexx].noteduration)
                     {
                         overwritten = true;
                         Destroy(notedata[curindexx].noteobj);
@@ -374,6 +374,7 @@ public class Makenote : MonoBehaviour
             editordata.notedata.Add(notedata[i].notedata);
             editordata.noteduration.Add(notedata[i].noteduration);
         }
+        makemadi.Saveinfo();
     }
     void sort()
     {
