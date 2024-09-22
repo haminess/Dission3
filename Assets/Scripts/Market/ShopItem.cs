@@ -122,6 +122,7 @@ public class ShopItem : MonoBehaviour
             Button decreaseButton = newItem.transform.Find("DecreaseButton").GetComponent<Button>();
 
             // + 버튼을 클릭할 때 수량 증가
+            increaseButton.onClick.AddListener(() => ChangeQuantity(quantityText, 1));
 
             // - 버튼을 클릭할 때 수량 감소
             decreaseButton.onClick.AddListener(() => ChangeQuantity(quantityText, -1));
