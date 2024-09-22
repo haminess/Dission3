@@ -34,64 +34,64 @@ public class ShopItem : MonoBehaviour
         // 아이템 리스트에 항목 추가
         itemList.Add(new ItemInfo
         {
-            itemName = "Sword",
-            description = "A sharp blade.",
+            itemName = "테스트 1",
+            description = "리스트 테스트 중",
             price = 500
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Shield",
-            description = "A sturdy shield.",
+            itemName = "테스트 2",
+            description = "리스트 테스트 중",
             price = 300
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Potion",
-            description = "Restores health.",
+            itemName = "테스트 3",
+            description = "리스트 테스트 중",
             price = 50
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Sword",
-            description = "A sharp blade.",
+            itemName = "테스트 4",
+            description = "리스트 테스트 중",
             price = 500
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Shield",
-            description = "A sturdy shield.",
+            itemName = "테스트 5",
+            description = "리스트 테스트 중",
             price = 300
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Potion",
-            description = "Restores health.",
+            itemName = "테스트 6",
+            description = "리스트 테스트 중",
             price = 50
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Sword",
-            description = "A sharp blade.",
+            itemName = "테스트 7",
+            description = "리스트 테스트 중",
             price = 500
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Shield",
-            description = "A sturdy shield.",
+            itemName = "테스트 8",
+            description = "리스트 테스트 중",
             price = 300
         });
 
         itemList.Add(new ItemInfo
         {
-            itemName = "Potion",
-            description = "Restores health.",
+            itemName = "테스트 9",
+            description = "리스트 테스트 중",
             price = 50
         });
 
