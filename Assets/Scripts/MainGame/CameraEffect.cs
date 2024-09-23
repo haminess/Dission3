@@ -48,7 +48,7 @@ public class CameraEffect : MonoBehaviour
     }
     public void Move(Vector2 _pos)
     {
-        StartCoroutine(OnMove(new Vector3(_pos.x, _pos.y, transform.position.z)));
+        StartCoroutine(OnMove(new Vector3(_pos.x, _pos.y, -8)));
     }
 
     IEnumerator OnMove(Vector3 _pos)
@@ -57,7 +57,7 @@ public class CameraEffect : MonoBehaviour
         while(true)
         {
             accTime += Time.deltaTime;
-            transform.position = Vector2.Lerp(transform.position, _pos, accTime * MoveSpeed);
+            transform.position = Vector2.Lerp(new Vector3(transform.position.x, transform.position.y, -8), _pos, accTime * MoveSpeed);
 
             if (Vector2.Distance(_pos, transform.position) < 0.001f)
                 break;

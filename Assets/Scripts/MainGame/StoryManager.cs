@@ -423,8 +423,8 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 0, 0.05f));
         yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 230, 0.05f));
         yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 50, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0, 0.05f));
     }
 
     IEnumerator SampleStory()
@@ -1235,21 +1235,23 @@ public class StoryManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// 화면의 색상을 보정할 수 있음, Contrast 대비 -100 ~ 100, Hue 색조 -180 ~ 180, Saturation 채도 -100 ~ 100
+    /// 화면의 색상을 보정할 수 있음, Contrast 대비 -100 ~ 100, Hue 색조 -180 ~ 180, Saturation 채도 -100 ~ 100, PostExposure 명도 -10 ~ 10
     /// </summary>
     /// <param name="Efftype"></param>
     /// <param name="contrast"></param>
     /// <param name="hue"></param>
     /// <param name="saturation"></param>
     /// <param name="interptime"></param>
+    /// <param name="postexposure"></param>
     /// <returns></returns>
-    IEnumerator PostProssess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
+    IEnumerator PostProssess(POSTPROCESS Efftype, float contrast = 0, float hue = 0, float saturation = 0, float postexposure = 0, float interptime = 0)
     {
         ColorAdjustments colorAdjustments;
         if (volume.profile.TryGet(out colorAdjustments))
         {
             while (Mathf.Abs(colorAdjustments.contrast.value - contrast) > 0.01f || Mathf.Abs(colorAdjustments.hueShift.value - hue) > 0.01f || Mathf.Abs(colorAdjustments.saturation.value - saturation) > 0.01f)
             {
+                colorAdjustments.postExposure.Interp(colorAdjustments.postExposure.value, postexposure, interptime);
                 colorAdjustments.contrast.Interp(colorAdjustments.contrast.value, contrast, interptime);
                 colorAdjustments.hueShift.Interp(colorAdjustments.hueShift.value, hue, interptime);
                 colorAdjustments.saturation.Interp(colorAdjustments.saturation.value, saturation, interptime);

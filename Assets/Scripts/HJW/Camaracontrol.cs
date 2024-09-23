@@ -17,14 +17,14 @@ public class Camaracontrol : MonoBehaviour
         {
             cam.transform.position += new Vector3( mosposanchor.x - Maketile.instance.mospos.x, mosposanchor.y - Maketile.instance.mospos.y);
         }
-        if(Input.mouseScrollDelta.y > 0 && !Makemadi.instance.chart)
+        if(Input.mouseScrollDelta.y > 0 && !Makemadi.instance.chart && !Settings.popup)
         {
             if(cam.orthographicSize > 1.6f)
             {
                 cam.orthographicSize -= 2;
             }
         }
-        if (Input.mouseScrollDelta.y < 0 && !Makemadi.instance.chart)
+        if (Input.mouseScrollDelta.y < 0 && !Makemadi.instance.chart && !Settings.popup)
         {
             cam.orthographicSize += 2;
         }

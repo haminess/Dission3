@@ -272,6 +272,7 @@ public class Makemadi : MonoBehaviour
         sec = Convert.ToInt64(length_ui.text);
         projectname = name_ui.text;
         bpm = Convert.ToInt32(bpm_ui.text);
+        note.previewbox.GetComponent<SpriteRenderer>().enabled = false;
         madiset();
     }
 

@@ -1,13 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
     public static bool popup;
+    public bool inputup;
     public GameObject popupui;
+    public GameObject pleaseinput;
     public GameObject inputwindow;
     public TextMeshProUGUI[] keyinputext;
 
@@ -25,7 +25,12 @@ public class Settings : MonoBehaviour
     }
     private void Update()
     {
-        if(popup && Input.GetKeyDown(KeyCode.Escape))
+        if (inputup && Input.GetKeyDown(KeyCode.Escape))
+        {
+            inputwindow.SetActive(false);
+            hideinput();
+        }
+        else if (popup && Input.GetKeyDown(KeyCode.Escape))
         {
             popupui.SetActive(false);
             close();
@@ -52,10 +57,15 @@ public class Settings : MonoBehaviour
     }
     public void showinput()
     {
+        inputup = true;
         for (int i = 0; i < keyinputext.Length; i++)
         {
             keyinputext[i].text = Maketile.instance.keys[i].ToString();
         }
+    }
+    public void hideinput()
+    {
+        inputup = false;
     }
     public void getInput(int w)
     {
@@ -69,7 +79,7 @@ public class Settings : MonoBehaviour
         {
             if (found)
             {
-                inputwindow.SetActive(false);
+                pleaseinput.SetActive(false);
                 break;
             }
             yield return null;
