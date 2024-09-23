@@ -34,8 +34,8 @@ public class ShopItem : MonoBehaviour
         // 아이템 리스트에 항목 추가
         itemList.Add(new ItemInfo
         {
-            itemName = "테스트 1",
-            description = "리스트 테스트 중",
+            itemName = "딸기우유",
+            description = "[딸기우유]\n\n딸기 맛이 나는 우유",
             price = 500
         });
 
@@ -91,6 +91,13 @@ public class ShopItem : MonoBehaviour
         itemList.Add(new ItemInfo
         {
             itemName = "테스트 9",
+            description = "리스트 테스트 중",
+            price = 50
+        });
+
+        itemList.Add(new ItemInfo
+        {
+            itemName = "테스트 10",
             description = "리스트 테스트 중",
             price = 50
         });
