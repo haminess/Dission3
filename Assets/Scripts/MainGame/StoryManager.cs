@@ -1072,6 +1072,7 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(SetCam(false));
     }
 
+
     IEnumerator Fade(GameObject obj, bool IsShowing = true)
     {
         {
@@ -1128,6 +1129,9 @@ public class StoryManager : MonoBehaviour
         }
 
     }
+
+
+    [ContextMenu("PostProssess")]
     /// <summary>
     /// Bloom, Vignette, Chormatic Aberration, Noise 는 0 ~ 1, Lens Distortion -1 ~ 1, Blur 1 ~ 300    
     /// </summary>
@@ -1207,6 +1211,7 @@ public class StoryManager : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// color 값에 따라 화면이 발광함, 0 ~ 80
     /// </summary>
@@ -1215,6 +1220,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="interptime"></param>
     /// <param name="color"></param>
     /// <returns></returns>
+    /// 
     IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
     {
         Bloom bloom;
