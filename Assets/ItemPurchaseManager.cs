@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
 
 public class ItemPurchaseManager : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class ItemPurchaseManager : MonoBehaviour
     public Text messageText;  // 메시지를 표시할 Text UI
     public ShopItem shopItemManager;  // ShopItem 스크립트를 참조
     public GameObject itemContainer;  // 아이템들을 담고 있는 부모 오브젝트
-
     private int balance = 10000;  // 보유 금액 (Inspector에서 설정 가능)
 
     void Start()
@@ -30,6 +30,7 @@ public class ItemPurchaseManager : MonoBehaviour
     {
         int totalPrice = 0;
         bool hasSelectedQuantity = false;  // 수량이 선택되었는지 확인
+        StringBuilder purchasedItems = new StringBuilder();
 
         // ShopItem의 아이템 프리팹을 순회하며 가격과 수량 계산
         for (int i = 0; i < shopItemManager.itemContainer.childCount; i++)
@@ -44,13 +45,16 @@ public class ItemPurchaseManager : MonoBehaviour
             if (quantity > 0)
             {
                 hasSelectedQuantity = true;  // 하나 이상의 수량이 선택된 경우
+
+                // 아이템의 가격 가져오기
+                int price = shopItemManager.itemList[i].price;
+
+                // 총 가격 계산
+                totalPrice += price * quantity;
+
+                // 구매한 아이템 정보 추가
+                purchasedItems.AppendLine($"{shopItemManager.itemList[i].itemName} x {quantity}");
             }
-
-            // 아이템의 가격 가져오기
-            int price = shopItemManager.itemList[i].price;
-
-            // 총 가격 계산
-            totalPrice += price * quantity;
         }
 
         if (!hasSelectedQuantity)
@@ -69,7 +73,10 @@ public class ItemPurchaseManager : MonoBehaviour
             balance -= totalPrice;  // 구매 후 보유 금액 감소
             UpdateBalanceDisplay();  // 보유 금액 업데이트
             ShowMessage("구매 성공!");
-            Debug.Log("총 구매 가격: " + totalPrice + "원");  // 로그창에 총 구매 가격 출력
+
+            // 구매 정보 로그 출력
+            Debug.Log($"총 구매 가격: {totalPrice}원");
+            Debug.Log("구매한 아이템 목록:\n" + purchasedItems.ToString());
 
             // 모든 수량을 0으로 초기화
             ResetQuantities();
