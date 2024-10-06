@@ -113,8 +113,10 @@ public class CameraEffect : MonoBehaviour
         StartCoroutine(ShakeEffect());
     }
 
-    private IEnumerator ShakeEffect()
+    private IEnumerator ShakeEffect(float shakeamount = 0.5f , float shaketime = 1)
     {
+        ShakeTime = shaketime;
+        ShakeAmount = shakeamount;
         Vector3 oldPos = transform.position;
 
         float elapsedTime = 0.0f;
@@ -139,7 +141,7 @@ public class CameraEffect : MonoBehaviour
         StartCoroutine(ZoomEffect());
     }
 
-    private IEnumerator ZoomEffect()
+    private IEnumerator ZoomEffect(float ZoomFactor = 3.5f, float ZoomTime = 0.5f)
     {
         float oldSize = camera.orthographicSize;
         float Size = camera.orthographicSize + ZoomFactor;
