@@ -14,7 +14,7 @@ public class Filedataconvey : MonoBehaviour
     }
     public void toplaymode()
     {
-        if(playmode)//play -> edit
+        if (playmode)//play -> edit
         {
             playmode = false;
             Makemadi.instance.editmodeui.SetActive(true);

@@ -19,6 +19,7 @@ public class Audio : MonoBehaviour
     public int noteindx;
     [Space(20)]
     public AudioClip[] defaultmusic;
+    Vector3 pos;
     private void Start()
     {
         DataManager.Instance.LoadSoundData();
@@ -75,7 +76,7 @@ public class Audio : MonoBehaviour
             {
                 var a = GameObject.Find("note" + (noteindx - 1).ToString());
                 var b = GameObject.Find("route" + (noteindx - 1).ToString());
-                var pos = Maketile.instance.gameObject.transform.GetChild(noteindx + 1).position;
+                if (Maketile.instance.gameObject.transform.childCount > noteindx + 1) { pos = Maketile.instance.gameObject.transform.GetChild(noteindx + 1).position; }
                 if (b&& a)
                 {
                     camaracontrol.cam.transform.position = Vector3.Lerp(camaracontrol.cam.transform.position, new Vector3(a.transform.position.x, a.transform.position.y, -10), 0.1f);
