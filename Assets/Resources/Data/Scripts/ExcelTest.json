@@ -71,5 +71,28 @@
       "Column1": "이동 후 말합니다",
       "Column2": null
     }
+  ],
+  "CommandList": [
+    {
+      "Column0": "command",
+      "Column1": 1.0,
+      "Column2": 2.0,
+      "Column3": 3.0,
+      "Column4": 4.0
+    },
+    {
+      "Column0": "talk",
+      "Column1": null,
+      "Column2": null,
+      "Column3": null,
+      "Column4": null
+    },
+    {
+      "Column0": "move",
+      "Column1": null,
+      "Column2": null,
+      "Column3": null,
+      "Column4": null
+    }
   ]
 }
