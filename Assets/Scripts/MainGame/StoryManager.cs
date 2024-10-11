@@ -39,6 +39,7 @@ public class StoryManager : MonoBehaviour
         moveTest = 101,
         TEST
     }
+
     public enum CommandList
     {
         /// 1: float camPosX, 2: float camPosY
