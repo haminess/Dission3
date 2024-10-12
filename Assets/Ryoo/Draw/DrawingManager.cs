@@ -21,6 +21,7 @@ public class DrawingManager : MonoBehaviour
     public SpriteRenderer chalkboardRenderer;
     private Color customChalkboardColor = new Color(101f / 255f, 144f / 255f, 115f / 255f); // #659073
     private Color penColor = Color.white; // 펜 색상
+    private GameObject penCursor; // 펜 커서
 
     public GameObject drawingPaper;
 
@@ -66,6 +67,8 @@ public class DrawingManager : MonoBehaviour
 
         // 게임이 시작될 때 원본 스프라이트를 업데이트
         UpdateChalkboard();
+
+        CreatePenCursor(); // 펜 커서 초기화
     }
 
     void Update()
@@ -82,30 +85,39 @@ public class DrawingManager : MonoBehaviour
                 isPreviousPointSet = false; // 마우스를 뗐을 때 이전 점 초기화
             }
 
-            // 지우개 크기 조절
-            if (Input.GetKeyDown(KeyCode.Equals))
+            // 펜 또는 지우개의 크기 조절
+            if (isPenActive)
             {
-                IncreaseEraserSize();
+                if (Input.GetKeyDown(KeyCode.RightBracket))
+                {
+                    IncreasePenSize();
+                }
+                if (Input.GetKeyDown(KeyCode.LeftBracket))
+                {
+                    DecreasePenSize();
+                }
             }
-            if (Input.GetKeyDown(KeyCode.Minus))
+            else if (isEraserActive)
             {
-                DecreaseEraserSize();
-            }
-
-            // 펜 굵기 조절
-            if (Input.GetKeyDown(KeyCode.RightBracket))
-            {
-                IncreasePenSize();
-            }
-            if (Input.GetKeyDown(KeyCode.LeftBracket))
-            {
-                DecreasePenSize();
+                if (Input.GetKeyDown(KeyCode.RightBracket))
+                {
+                    IncreaseEraserSize();
+                }
+                if (Input.GetKeyDown(KeyCode.LeftBracket))
+                {
+                    DecreaseEraserSize();
+                }
             }
 
             // 지우개 커서 위치 업데이트
             if (isEraserActive)
             {
                 UpdateEraserCursor();
+            }
+
+            if (isPenActive)
+            {
+                UpdatePenCursor(); // 펜 커서 위치 업데이트
             }
         }
     }
@@ -142,6 +154,7 @@ public class DrawingManager : MonoBehaviour
         }
         else
         {
+            DeactivatePen();
             ActivateEraser();
         }
     }
@@ -154,12 +167,17 @@ public class DrawingManager : MonoBehaviour
 
         penButton.image.color = Color.green;
         eraserButton.image.color = Color.white;
+
+        UpdatePenCursorSize(); // 펜 커서 크기 업데이트
+        penCursor.SetActive(true); // 펜 커서를 활성화
     }
 
     void DeactivatePen()
     {
         isPenActive = false;
         penButton.image.color = Color.white;
+
+        penCursor.SetActive(false); // 펜 커서를 숨김
     }
 
     void ActivateEraser()
@@ -199,12 +217,14 @@ public class DrawingManager : MonoBehaviour
     void IncreasePenSize()
     {
         penSize = Mathf.Min(penSize + 1, 20); // 펜 굵기를 최대 20까지
+        UpdatePenCursorSize(); // 펜 커서 크기 업데이트
         Debug.Log($"Pen size increased: {penSize}");
     }
 
     void DecreasePenSize()
     {
         penSize = Mathf.Max(penSize - 1, 1); // 펜 굵기를 최소 1까지
+        UpdatePenCursorSize(); // 펜 커서 크기 업데이트
         Debug.Log($"Pen size decreased: {penSize}");
     }
 
@@ -381,4 +401,41 @@ public class DrawingManager : MonoBehaviour
         // 스프라이트 렌더러의 머티리얼을 투명을 지원하는 것으로 변경
         chalkboardRenderer.material = new Material(Shader.Find("Sprites/Default"));
     }
+
+    void CreatePenCursor()
+    {
+        // 펜 커서를 위한 게임오브젝트 생성
+        penCursor = new GameObject("PenCursor");
+        penCursor.transform.SetParent(drawingPanel.transform);
+
+        // 커서 이미지를 설정
+        Image cursorImage = penCursor.AddComponent<Image>();
+        cursorImage.color = new Color(1f, 1f, 1f, 0.5f); // 반투명 흰색 원형 커서
+        cursorImage.raycastTarget = false;
+
+        // 초기 크기 및 위치 설정
+        UpdatePenCursorSize();
+        penCursor.SetActive(false);
+    }
+
+    void UpdatePenCursorSize()
+    {
+        if (penCursor != null)
+        {
+            // 펜 크기에 맞게 커서 크기 조정
+            penCursor.GetComponent<RectTransform>().sizeDelta = new Vector2(penSize * 2, penSize * 2);
+        }
+    }
+
+    void UpdatePenCursor()
+    {
+        if (penCursor != null)
+        {
+            // 마우스 위치에 맞게 펜 커서를 이동
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(drawingPanel.GetComponent<RectTransform>(), Input.mousePosition, null, out localPoint);
+            penCursor.GetComponent<RectTransform>().localPosition = localPoint;
+        }
+    }
+
 }
