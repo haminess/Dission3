@@ -7,6 +7,8 @@ public class ChalkboardTrigger : MonoBehaviour
     private bool isPlayerNearChalkboard = false;
     public DrawingManager drawingManager;  // DrawingManager 스크립트를 참조
 
+    public GameObject qKeyImage; // Q키 변수
+
     void Update()
     {
         // Q 키를 눌렀을 때, 플레이어가 칠판에 가까이 있으면 그림판 창을 켜고 끄기
@@ -22,6 +24,7 @@ public class ChalkboardTrigger : MonoBehaviour
         if (other.gameObject.CompareTag("Player")) // 플레이어 태그 확인
         {
             isPlayerNearChalkboard = true;  // 플레이어가 트리거 안에 있을 때
+            qKeyImage.SetActive(true);
             Debug.Log("inDraw");
         }
     }
@@ -32,6 +35,7 @@ public class ChalkboardTrigger : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isPlayerNearChalkboard = false;  // 플레이어가 트리거 밖으로 나갔을 때
+            qKeyImage.SetActive(false);
             Debug.Log("outDraw");
         }
     }

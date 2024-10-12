@@ -9,6 +9,8 @@ public class PianoInteraction : MonoBehaviour
     private bool isPlayerNearPiano = false;  // 플레이어가 피아노 근처에 있는지 확인
     private bool isPianoMiniGameActive = false;  // 피아노 미니게임이 활성화되었는지 확인
 
+    public GameObject qKeyImage; // Q키 변수
+
     void Update()
     {
         // 플레이어가 피아노 근처에 있고 Q 키를 누를 때 미니게임을 토글
@@ -33,6 +35,7 @@ public class PianoInteraction : MonoBehaviour
         if (other.gameObject.CompareTag("Player")) // 플레이어 태그 확인
         {
             isPlayerNearPiano = true;  // 플레이어가 트리거 안에 있을 때
+            qKeyImage.SetActive(true);
             Debug.Log("inPiano");
         }
     }
@@ -43,6 +46,7 @@ public class PianoInteraction : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isPlayerNearPiano = false;  // 플레이어가 트리거 밖으로 나갔을 때
+            qKeyImage.SetActive(false);
             Debug.Log("outPiano");
 
             // 플레이어가 피아노 근처에서 나가면 미니게임을 강제로 종료

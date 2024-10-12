@@ -14,10 +14,15 @@ public class DrawingManager : MonoBehaviour
     private bool isPenActive = false;
     private Image drawingImage;
     private Vector2 previousDrawPoint;
+    private bool isPreviousPointSet = false; // 이전 점이 설정되었는지 여부
     private int eraserSize = 10; // 기본 지우개 크기
+    private int penSize = 2; // 기본 펜 크기
     private GameObject eraserCursor;
     public SpriteRenderer chalkboardRenderer;
     private Color customChalkboardColor = new Color(101f / 255f, 144f / 255f, 115f / 255f); // #659073
+    private Color penColor = Color.white; // 펜 색상
+
+    public GameObject drawingPaper;
 
     void Start()
     {
@@ -32,16 +37,16 @@ public class DrawingManager : MonoBehaviour
         int width = (int)panelWidth;
         int height = (int)panelHeight;
 
-        // Texture2D 객체 생성
-        drawingTexture = new Texture2D(width, height);
+        // Texture2D 객체 생성 (알파 채널 지원을 위해 RGBA32 형식 사용)
+        drawingTexture = new Texture2D(width, height, TextureFormat.RGBA32, false);
 
-        // drawingTexture를 customChalkboardColor로 초기화
-        Color[] fillPixels = new Color[width * height];
-        for (int i = 0; i < fillPixels.Length; i++)
+        // drawingTexture를 투명하게 초기화
+        Color[] clearPixels = new Color[width * height];
+        for (int i = 0; i < clearPixels.Length; i++)
         {
-            fillPixels[i] = customChalkboardColor;
+            clearPixels[i] = Color.clear;
         }
-        drawingTexture.SetPixels(fillPixels);
+        drawingTexture.SetPixels(clearPixels);
         drawingTexture.Apply();
 
         // 초기화
@@ -65,17 +70,16 @@ public class DrawingManager : MonoBehaviour
 
     void Update()
     {
-
         // 그림판이 활성화된 상태에서 마우스 클릭으로 그림 그리기
         if (isDrawingPanelActive && (isPenActive || isEraserActive))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Draw(true);
-            }
-            else if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0))
             {
                 Draw(false);
+            }
+            else
+            {
+                isPreviousPointSet = false; // 마우스를 뗐을 때 이전 점 초기화
             }
 
             // 지우개 크기 조절
@@ -86,6 +90,16 @@ public class DrawingManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Minus))
             {
                 DecreaseEraserSize();
+            }
+
+            // 펜 굵기 조절
+            if (Input.GetKeyDown(KeyCode.RightBracket))
+            {
+                IncreasePenSize();
+            }
+            if (Input.GetKeyDown(KeyCode.LeftBracket))
+            {
+                DecreasePenSize();
             }
 
             // 지우개 커서 위치 업데이트
@@ -100,6 +114,7 @@ public class DrawingManager : MonoBehaviour
     {
         isDrawingPanelActive = !isDrawingPanelActive;
         drawingPanel.SetActive(isDrawingPanelActive);
+        drawingPaper.SetActive(isDrawingPanelActive);
 
         if (!isDrawingPanelActive)
         {
@@ -181,6 +196,18 @@ public class DrawingManager : MonoBehaviour
         Debug.Log($"Eraser size decreased: {eraserSize}");
     }
 
+    void IncreasePenSize()
+    {
+        penSize = Mathf.Min(penSize + 1, 20); // 펜 굵기를 최대 20까지
+        Debug.Log($"Pen size increased: {penSize}");
+    }
+
+    void DecreasePenSize()
+    {
+        penSize = Mathf.Max(penSize - 1, 1); // 펜 굵기를 최소 1까지
+        Debug.Log($"Pen size decreased: {penSize}");
+    }
+
     void Draw(bool isNewLine)
     {
         if (!isPenActive && !isEraserActive) return; // 펜과 지우개가 모두 비활성화된 경우
@@ -197,12 +224,12 @@ public class DrawingManager : MonoBehaviour
         int x = Mathf.Clamp((int)(relativeX * drawingTexture.width), 0, drawingTexture.width - 1);
         int y = Mathf.Clamp((int)(relativeY * drawingTexture.height), 0, drawingTexture.height - 1);
 
-        if (isNewLine)
+        if (!isPreviousPointSet)
         {
             previousDrawPoint = new Vector2(x, y);
+            isPreviousPointSet = true;
         }
 
-        // 선이 끊기지 않도록
         DrawLine(previousDrawPoint, new Vector2(x, y));
 
         previousDrawPoint = new Vector2(x, y);
@@ -233,13 +260,12 @@ public class DrawingManager : MonoBehaviour
         {
             if (isEraserActive)
             {
-                EraseCircle(x0, y0, customChalkboardColor);
+                EraseCircle(x0, y0, Color.clear);  // 지우개는 투명하게 만듦
             }
             else if (isPenActive)
             {
-                drawingTexture.SetPixel(x0, y0, Color.black);  // 펜 기능
+                DrawCircle(x0, y0, penSize, penColor);
             }
-
             if (x0 == x1 && y0 == y1) break;
 
             e2 = err * 2;
@@ -255,14 +281,23 @@ public class DrawingManager : MonoBehaviour
                 err += dx;
                 y0 += sy;
             }
+        }
+    }
 
-            if (isPenActive)
+    void DrawCircle(int centerX, int centerY, int radius, Color color)
+    {
+        for (int y = -radius; y <= radius; y++)
+        {
+            for (int x = -radius; x <= radius; x++)
             {
-                drawingTexture.SetPixel(x0, y0, Color.black);
+                if (x * x + y * y <= radius * radius)
+                {
+                    int drawX = Mathf.Clamp(centerX + x, 0, drawingTexture.width - 1);
+                    int drawY = Mathf.Clamp(centerY + y, 0, drawingTexture.height - 1);
+                    drawingTexture.SetPixel(drawX, drawY, color);
+                }
             }
         }
-
-        drawingTexture.Apply();
     }
 
     void EraseCircle(int centerX, int centerY, Color eraseColor)
@@ -284,13 +319,13 @@ public class DrawingManager : MonoBehaviour
 
     void ResetDrawing()
     {
-        // 그림판을 customChalkboardColor로 초기화
-        Color[] fillPixels = new Color[drawingTexture.width * drawingTexture.height];
-        for (int i = 0; i < fillPixels.Length; i++)
+        // 그림판을 투명하게 초기화
+        Color[] clearPixels = new Color[drawingTexture.width * drawingTexture.height];
+        for (int i = 0; i < clearPixels.Length; i++)
         {
-            fillPixels[i] = customChalkboardColor;
+            clearPixels[i] = Color.clear;
         }
-        drawingTexture.SetPixels(fillPixels);
+        drawingTexture.SetPixels(clearPixels);
         drawingTexture.Apply();
     }
 
@@ -334,14 +369,16 @@ public class DrawingManager : MonoBehaviour
     void UpdateChalkboard()
     {
         // 현재 drawingTexture를 사용하여 새로운 스프라이트 생성
-        float pixelsPerUnit = chalkboardRenderer.sprite.pixelsPerUnit; // 원본 스프라이트의 pixelsPerUnit 값을 가져옴
+        float pixelsPerUnit = chalkboardRenderer.sprite.pixelsPerUnit;
 
         Sprite updatedSprite = Sprite.Create(drawingTexture,
             new Rect(0, 0, drawingTexture.width, drawingTexture.height),
-            new Vector2(0.5f, 0.5f), pixelsPerUnit); // pixelsPerUnit 값을 사용하여 크기 조정
+            new Vector2(0.5f, 0.5f), pixelsPerUnit);
 
         // 스프라이트 렌더러에 업데이트된 스프라이트 적용
         chalkboardRenderer.sprite = updatedSprite;
-    }
 
+        // 스프라이트 렌더러의 머티리얼을 투명을 지원하는 것으로 변경
+        chalkboardRenderer.material = new Material(Shader.Find("Sprites/Default"));
+    }
 }
