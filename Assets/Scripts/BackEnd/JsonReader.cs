@@ -29,6 +29,9 @@ public class JsonReader : MonoBehaviour
         public string Column0;
         public string Column1;
         public string Column2;
+        public string Column3;
+        public string Column4;
+        public string Column5;
     }
 
     // DataItem 사용 예제
@@ -39,23 +42,43 @@ public class JsonReader : MonoBehaviour
 
     // 스토리 id는 무엇을 기준으로 구분하나?
     // File과 Sheet로 구분
-    public string filePath = "파일 경로를 입력해주세요";   // 필수 입력
-    public string sheetName;    // 필수 입력
+    private string folderPath = "Assets/Data/Json/";
+    public string fileName = "읽으려는 Json 파일의 이름을 입력해주세요";    // 필수 입력
+    public string sheetName = "읽어올 Sheet 이름을 입력해주세요";           // 필수 입력
     public Dictionary<string, List<DataItem>> dataList;
     public List<DataItem> data;
 
 
     private void Start()
     {
+        data.Clear();
+    }
+
+    [ContextMenu("ReadExcel")]
+    public void ReadJson()
+    {
+        string filePath = folderPath + fileName + ".json";
         ReadJsonFromPath(filePath);
         data = dataList[sheetName];
     }
-
-    [ContextMenu("ReadData")]
-    public void ReadData()
+    [ContextMenu("ReadSheet")]
+    public void ReadInst()
     {
-        ReadJsonFromPath(filePath);
         data = dataList[sheetName];
+    }
+    public void ReadData(string _fileName, string _SheetName)
+    {
+        sheetName = _SheetName;
+
+        if (fileName != _fileName)
+        {
+            fileName = _fileName;
+            ReadJson();
+        }
+        else
+        {
+            data = dataList[sheetName];
+        }
     }
 
     public void ReadJsonFromPath(string path)

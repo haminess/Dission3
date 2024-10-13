@@ -139,20 +139,6 @@ public class MainMan : MonoBehaviour
 
     void Update()
     {
-        if (startButton)
-        {
-            if(playMode == PLAY_MODE.STAGE)
-            {
-                StageStart();
-            }
-            else
-            {
-                GameStart();
-            }
-            startButton = false;
-        }
-
-
         if (!isGame)
             return;
 
@@ -191,6 +177,19 @@ public class MainMan : MonoBehaviour
     }
 
     // start game
+    [ContextMenu("Play")]
+    public void TestPlay()
+    {
+        if (playMode == PLAY_MODE.STAGE)
+        {
+            StageStart();
+        }
+        else
+        {
+            GameStart();
+        }
+    }
+
     public void GameStart()
     {
         StartCoroutine(GameStartCo());

@@ -8,17 +8,26 @@ using System.Collections.Generic;
 
 public class ExcelToJsonConverter : MonoBehaviour
 {
-    public string excelFilePath = "Assets/YourExcelFile.xlsx";
-    public string jsonFilePath = "Assets/ConvertedFile.json";
+    private string excelFolder = "Assets/Data/Excel/";
+    private string jsonFolder = "Assets/Data/Json/";
+    public string excelName = "변환할 Excel 파일의 이름을 입력해주세요";
 
-    void Start()
+    
+    [ContextMenu("Convert")]
+    public void Convert()
     {
+        ConvertExcelToJson();
+    }
+    public void Convert(string _ExcelName)
+    {
+        excelName = _ExcelName;
         ConvertExcelToJson();
     }
 
     private void ConvertExcelToJson()
     {
-        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        string excelFilePath = excelFolder + excelName + ".xlsx";
+        string jsonFilePath = jsonFolder + excelName + ".json";
 
         Dictionary<string, object> allSheets = new Dictionary<string, object>();
 

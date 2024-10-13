@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-using Unity.VisualScripting;
 
 public class StoryManager : MonoBehaviour
 {
@@ -35,9 +34,9 @@ public class StoryManager : MonoBehaviour
         s5_1,
         s5_2,
         s5_3,
-        sample = 100,
-        moveTest = 101,
-        TEST
+        talkTest = 100,
+        storyTest = 101,
+        POSTPROCESS_TEST
     }
 
     public enum CommandList
@@ -64,15 +63,29 @@ public class StoryManager : MonoBehaviour
         ParamClear,
     }
 
+    public string[] CommandList_String =
+    {
+        "StoryStart",
+        "StoryEnd",
+        "CreateCharacter",
+        "Talk",
+        "Move",
+        "CameraMove",
+        "FadeIn",
+        "FadeOut",
+        "ParamClear",
+    };
+
     [HideInInspector] public int sID = 0;
     public StoryNum sId = StoryNum.s1;
 
     public CommandList cmdId = CommandList.Talk;
     public List<string> cmdParam;
-    List<GameObject> tempObjects;
 
-    public bool showAction;
-    public bool showButton;
+    public string storyName = "스토리 이름을 입력하세요(엑셀 파일)";
+    public string storyID = "시트 이름을 입력하세요";
+    private List<GameObject> tempObjects = new List<GameObject>();
+    private List<JsonReader.DataItem> data = new List<JsonReader.DataItem>();
 
     // game object
     public GameObject player;
@@ -98,6 +111,9 @@ public class StoryManager : MonoBehaviour
 
     public GameObject ChatPrefab;
 
+    private ExcelToJsonConverter excelConverter;
+    private JsonReader jsonReader;
+
     // character line
     float chatSpeed = 2;
     Dictionary<int, string[]> scripts = new();
@@ -105,23 +121,10 @@ public class StoryManager : MonoBehaviour
 
     void Start()
     {
-        playerCam.SetActive(true);
-        //storyCamera.SetActive(false);
-        CreateScripts();
-    }
+        excelConverter = GetComponent<ExcelToJsonConverter>();
+        jsonReader = GetComponent<JsonReader>();
 
-    void Update()
-    {
-        if (showButton)
-        {
-            showButton = false;
-            ShowStory(sId);
-        }
-        if (showAction)
-        {
-            showAction = false;
-            ShowAction(cmdId);
-        }
+        playerCam.SetActive(true);
     }
 
     void CreateScripts()
@@ -252,12 +255,29 @@ public class StoryManager : MonoBehaviour
         npcNum[15] = new int[] { 0, 0, 0, 0 };
     }
 
+    [ContextMenu("Load Story")]
+    public void LoadStory()
+    {
+        excelConverter.Convert(storyName);
+        jsonReader.ReadData(storyName, storyID);
+        data = jsonReader.data;
+    }
+
+    [ContextMenu("Show Story")]
+    public void ShowStory()
+    {
+        ShowStory(sId);
+    }
+    [ContextMenu("Show Action")]
+    public void ShowAction()
+    {
+        ShowAction(cmdId);
+    }
     public void ShowAction(CommandList _cmdNum)
     {
         this.cmdId = _cmdNum;
         StartCoroutine(ShowActionCo());
     }
-
     IEnumerator ShowActionCo()
     {
         switch (cmdId)
@@ -265,13 +285,13 @@ public class StoryManager : MonoBehaviour
             // 스토리 시작 세팅
             // 스크립트 불러오기
             case CommandList.StoryStart:
-                yield return StartCoroutine(SetCam(true, int.Parse(cmdParam[0]), int.Parse(cmdParam[1])));
+                yield return StartCoroutine(SetCam(true, float.Parse(cmdParam[0]), float.Parse(cmdParam[1])));
                 break;
 
             // 스토리 종료
             case CommandList.StoryEnd:
                 yield return StartCoroutine(Fade(black));
-                for (int i = 0; i < tempObjects.Count; ++i)
+                for (int i = 0; i < tempObjects?.Count; ++i)
                 {
                     Destroy(tempObjects[i]);
                 }
@@ -282,7 +302,7 @@ public class StoryManager : MonoBehaviour
 
             // npc 생성
             case CommandList.CreateCharacter:
-                GameObject npc = NPC(int.Parse(cmdParam[0]), int.Parse(cmdParam[1]), int.Parse(cmdParam[2]));
+                GameObject npc = NPC((int)float.Parse(cmdParam[0]), float.Parse(cmdParam[1]), float.Parse(cmdParam[2]));
                 tempObjects.Add(npc);
                 break;
 
@@ -346,22 +366,18 @@ public class StoryManager : MonoBehaviour
     }
     public void ShowStory(StoryNum _stroyID)
     {
-        this.sId = _stroyID;
-        this.sID = (int)this.sId;
+        sId = _stroyID;
+        sID = (int)sId;
         StartCoroutine(ShowStoryCo());
     }
-
     public IEnumerator ShowStoryCo()
     {
         this.sId = (StoryNum)this.sID;
-        // ?��???? ?????? Off
         player.GetComponent<Player>().enabled = false;
         player.GetComponentInChildren<SpriteRenderer>().enabled = false;
 
-        // ???? UI Off
         gameCanvas.SetActive(false);
 
-        // ???? ????
         switch ((int)sId)
         {
             case 0000:
@@ -416,7 +432,7 @@ public class StoryManager : MonoBehaviour
                 yield return StartCoroutine(SampleStory());
                 break;
             case 0101:
-                yield return StartCoroutine(MoveStory());
+                yield return StartCoroutine(StoryCo());
                 break;
             case 0102:
                 yield return StartCoroutine(Effectest());
@@ -432,7 +448,6 @@ public class StoryManager : MonoBehaviour
         gameCanvas.SetActive(true);
     }
 
-    // ???? ???
     public void Skip()
     {
         // skip coroutine
@@ -483,6 +498,34 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(SetCam(false));
 
     }
+    IEnumerator StoryCo()
+    {
+        // 데이터 읽기
+        foreach (var item in data)
+        {
+            yield return new WaitForSeconds(1);
+            for(int i = 0; i < CommandList_String.Length; ++i)
+            {
+                if (item.Column0 == CommandList_String[i])
+                {
+                    cmdId = (CommandList)i;
+                    cmdParam.Clear();
+                    if(item.Column1 != null)
+                        cmdParam.Add(item.Column1);
+                    if(item.Column1 != null)
+                        cmdParam.Add(item.Column2);
+                    if(item.Column1 != null)
+                        cmdParam.Add(item.Column3);
+                    if(item.Column1 != null)
+                        cmdParam.Add(item.Column4);
+                    if(item.Column1 != null)
+                        cmdParam.Add(item.Column5);
+                }
+            }
+
+            yield return StartCoroutine(ShowActionCo());
+        }
+    }
     public IEnumerator OffStory()
     {
         yield return StartCoroutine(Fade(black));
@@ -507,9 +550,9 @@ public class StoryManager : MonoBehaviour
             yield return StartCoroutine(Fade(black));
         }
 
+        // camera on
         if (_isOn)
         {
-            // ???? ????
             playerCam.SetActive(false);
             storyCamera.SetActive(true);
             storyCamera.transform.position = new Vector3(_x, _y, -8);
@@ -518,6 +561,8 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
         }
+
+        // camera off
         else
         {
             storyCamera.SetActive(false);
@@ -533,18 +578,18 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Fade(black));
         yield return StartCoroutine(Fade(black, false));
         yield return StartCoroutine(Splash(Color.white));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Bloom, 10, 0.05f, Color.red));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Bloom, 1, 0.05f, Color.white));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0.3f, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 2, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 5, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 230, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 50, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Bloom, 10, 0.05f, Color.red));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Bloom, 1, 0.05f, Color.white));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Vignette, 0.3f, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Vignette, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Chromatic_Aberration, 2, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Chromatic_Aberration, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Noise, 5, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Noise, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Blur, 230, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Blur, 50, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
     }
 
     IEnumerator SampleStory()
@@ -1251,7 +1296,7 @@ public class StoryManager : MonoBehaviour
     }
 
 
-    [ContextMenu("PostProssess")]
+    [ContextMenu("PostProcess")]
     /// <summary>
     /// Bloom, Vignette, Chormatic Aberration, Noise 는 0 ~ 1, Lens Distortion -1 ~ 1, Blur 1 ~ 300    
     /// </summary>
@@ -1259,7 +1304,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="intensity"></param>
     /// <param name="interptime"></param>
     /// <returns></returns>
-    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float intensity, float interptime)
     {
         switch (Efftype)
         {
@@ -1341,7 +1386,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="color"></param>
     /// <returns></returns>
     /// 
-    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
     {
         Bloom bloom;
         if (volume.profile.TryGet(out bloom))
@@ -1363,7 +1408,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="saturation"></param>
     /// <param name="interptime"></param>
     /// <returns></returns>
-    IEnumerator PostProssess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
     {
         ColorAdjustments colorAdjustments;
         if (volume.profile.TryGet(out colorAdjustments))
