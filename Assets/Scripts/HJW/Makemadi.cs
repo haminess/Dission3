@@ -26,6 +26,7 @@ public class Makemadi : MonoBehaviour
     [Header("Settings")]
     public GameObject ui;
     public GameObject err;
+    public GameObject Dismatch_ui;
     public GameObject delete_ui;
     public GameObject delete_obj;
     public TMP_InputField name_ui;
@@ -271,6 +272,7 @@ public class Makemadi : MonoBehaviour
         sec = Convert.ToInt64(length_ui.text);
         projectname = name_ui.text;
         bpm = Convert.ToInt32(bpm_ui.text);
+        note.previewbox.GetComponent<SpriteRenderer>().enabled = false;
         madiset();
     }
 
@@ -293,6 +295,7 @@ public class Makemadi : MonoBehaviour
         editordata.musicname = musicnamee;
         editordata.creator = creator_ui.text;
         editordata.bpm = Convert.ToInt32(bpm_ui.text);
+        settings.Saveeditordatadele();
     }
     public void Loadinfo()
     {

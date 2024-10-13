@@ -64,6 +64,34 @@ public class Maketile : MonoBehaviour
         {
             curtime.text = "Time: " + float.Parse(audio_.mainmusic.time.ToString("N2"));
         }
+        #region shortcuts
+
+        if (Input.GetKeyDown(keys[5]))
+        {
+            if (Filedataconvey.playmode)//play -> edit
+            {
+                Filedataconvey.playmode = false;
+                Makemadi.instance.editmodeui.SetActive(true);
+                Makemadi.instance.editmodeiconimg.sprite = Makemadi.instance.editmodeicon[1];
+                curpointer.SetActive(true);
+                makenote.previewbox.SetActive(true);
+                audio_.resetmusic();
+                showtile();
+            }
+            else//edit -> play
+            {
+                Filedataconvey.playmode = true;
+                Makemadi.instance.editmodeui.SetActive(false);
+                Makemadi.instance.editmodeiconimg.sprite = Makemadi.instance.editmodeicon[0];
+                curpointer.SetActive(false);
+                makenote.previewbox.SetActive(false);
+                makenote.notegen.dataconvey();
+                audio_.resetmusic();
+                hidetile();
+            }
+        }
+
+        #endregion
         if (Makenote.chartmode && !Settings.popup && !Filedataconvey.playmode)
         {
             curpointer.transform.position = new Vector2(mospos.x, mospos.y);
@@ -279,7 +307,7 @@ public class Maketile : MonoBehaviour
         {
             audio_.playmus();
         }
-        if (Input.GetKeyDown(keys[5]))
+        if (Input.GetKeyDown(keys[6]))
         {
             Saveboxpos();
             makenote.Savenotepos();
@@ -394,11 +422,13 @@ public class Maketile : MonoBehaviour
 
     public void Saveboxpos()
     {
+        if (boxdata.Length != makenote.notedata.Count) { makemadi.Dismatch_ui.SetActive(true); return; }
         Array.Resize(ref editordata.boxdata, boxdata.Length);
         for(int i = 0; i < boxdata.Length;i++)
         {
             editordata.boxdata[i] = boxdata[i];
         }
+        makenote.Savenotepos();
         showtile();
     }
 
