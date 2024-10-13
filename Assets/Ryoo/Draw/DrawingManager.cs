@@ -25,6 +25,13 @@ public class DrawingManager : MonoBehaviour
 
     public GameObject drawingPaper;
 
+    public Sprite penDefaultSprite;
+    public Sprite penPressedSprite;
+    public Sprite eraserDefaultSprite;
+    public Sprite eraserPressedSprite;
+    public Sprite resetDefaultSprite;
+    public Sprite resetPressedSprite;
+
     void Start()
     {
         // 원본 이미지의 크기 가져오기
@@ -69,6 +76,15 @@ public class DrawingManager : MonoBehaviour
         UpdateChalkboard();
 
         CreatePenCursor(); // 펜 커서 초기화
+
+        // Pen Button 설정
+        SetButtonSprites(penButton, penDefaultSprite, penPressedSprite);
+
+        // Eraser Button 설정
+        SetButtonSprites(eraserButton, eraserDefaultSprite, eraserPressedSprite);
+
+        // Reset Button 설정
+        SetButtonSprites(resetButton, resetDefaultSprite, resetPressedSprite);
     }
 
     void Update()
@@ -165,19 +181,21 @@ public class DrawingManager : MonoBehaviour
         isEraserActive = false;
         eraserCursor.SetActive(false);
 
-        penButton.image.color = Color.green;
-        eraserButton.image.color = Color.white;
-
         UpdatePenCursorSize(); // 펜 커서 크기 업데이트
         penCursor.SetActive(true); // 펜 커서를 활성화
+
+        // 버튼 이미지 업데이트
+        penButton.image.sprite = penPressedSprite;
+        eraserButton.image.sprite = eraserDefaultSprite;
     }
 
     void DeactivatePen()
     {
         isPenActive = false;
-        penButton.image.color = Color.white;
-
         penCursor.SetActive(false); // 펜 커서를 숨김
+
+        // 버튼 이미지 업데이트
+        penButton.image.sprite = penDefaultSprite;
     }
 
     void ActivateEraser()
@@ -185,19 +203,22 @@ public class DrawingManager : MonoBehaviour
         isEraserActive = true;
         isPenActive = false;
         eraserSize = 10; // 지우개 크기를 기본값으로
+
         UpdateEraserCursorSize(); // 지우개 커서 크기를 초기화된 값으로 설정
         eraserCursor.SetActive(true);
 
-        // 버튼의 색상을 변경
-        penButton.image.color = Color.white;
-        eraserButton.image.color = Color.green;
+        // 버튼 이미지 업데이트
+        eraserButton.image.sprite = eraserPressedSprite;
+        penButton.image.sprite = penDefaultSprite;
     }
 
     void DeactivateEraser()
     {
         isEraserActive = false;
         eraserCursor.SetActive(false); // 지우개 커서를 숨김
-        eraserButton.image.color = Color.white;
+
+        // 버튼 이미지 업데이트
+        eraserButton.image.sprite = eraserDefaultSprite;
     }
 
     void IncreaseEraserSize()
@@ -339,6 +360,16 @@ public class DrawingManager : MonoBehaviour
 
     void ResetDrawing()
     {
+        // 펜과 지우개가 초기화되었는지 확인하고 비활성화
+        if (penButton != null && penCursor != null)
+        {
+            DeactivatePen();
+        }
+        if (eraserButton != null && eraserCursor != null)
+        {
+            DeactivateEraser();
+        }
+
         // 그림판을 투명하게 초기화
         Color[] clearPixels = new Color[drawingTexture.width * drawingTexture.height];
         for (int i = 0; i < clearPixels.Length; i++)
@@ -438,4 +469,17 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
+    void SetButtonSprites(Button button, Sprite defaultSprite, Sprite pressedSprite)
+    {
+        Image buttonImage = button.GetComponent<Image>();
+        buttonImage.sprite = defaultSprite;
+
+        SpriteState spriteState = new SpriteState
+        {
+            pressedSprite = pressedSprite,
+            highlightedSprite = defaultSprite, // 강조 시에도 기본 스프라이트 사용
+            disabledSprite = defaultSprite // 비활성화 시에도 기본 스프라이트 사용
+        };
+        button.spriteState = spriteState;
+    }
 }
