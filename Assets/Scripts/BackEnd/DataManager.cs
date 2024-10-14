@@ -366,7 +366,7 @@ public class DataManager : MonoBehaviour
             }
             PlayManager.instance.sec.text = min + ":" + sec.ToString();
             PlayManager.instance.creator.text = editordata.creator;
-            PlayManager.instance.music.clip = Resources.Load(editordata.musicname) as AudioClip;
+            PlayManager.instance.music.clip = Resources.Load("Sound/" + editordata.musicname) as AudioClip;
             PlayManager.instance.music.Play();
         }
     }

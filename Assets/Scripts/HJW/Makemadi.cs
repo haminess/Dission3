@@ -53,8 +53,8 @@ public class Makemadi : MonoBehaviour
     void Start()
     {
         instance = this;
-        madiset();
         projectname = "New Project";
+        madiset();
     }
 
     void madiset()
@@ -64,7 +64,6 @@ public class Makemadi : MonoBehaviour
             Destroy(note.notedata[i].noteobj);
         }
         note.notedata.Clear();
-        Maketile.instance.initile();
         madi.GetComponent<RectTransform>().pivot = new Vector2(0, 0.5f);
         madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(4.014713f, 0);
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
