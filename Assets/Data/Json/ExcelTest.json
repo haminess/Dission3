@@ -78,49 +78,56 @@
       "Column1": 0.0,
       "Column2": 0.0,
       "Column3": null,
-      "Column4": null
+      "Column4": null,
+      "Column5": null
     },
     {
       "Column0": "CreateCharacter",
       "Column1": 1.0,
       "Column2": 1.0,
       "Column3": -1.0,
-      "Column4": null
+      "Column4": null,
+      "Column5": null
     },
     {
       "Column0": "Move",
       "Column1": "x",
       "Column2": 1.0,
       "Column3": "y",
-      "Column4": -1.0
+      "Column4": -1.0,
+      "Column5": null
     },
     {
       "Column0": "FadeIn",
       "Column1": null,
       "Column2": null,
       "Column3": null,
-      "Column4": null
+      "Column4": null,
+      "Column5": null
     },
     {
       "Column0": "FadeOut",
       "Column1": null,
       "Column2": null,
       "Column3": null,
-      "Column4": null
+      "Column4": null,
+      "Column5": null
     },
     {
       "Column0": "Talk",
       "Column1": "안녕하세요",
       "Column2": "엑셀 스토리 출력 테스트 중입니다",
       "Column3": "다들 파이팅!",
-      "Column4": null
+      "Column4": "마지막 말입니다.",
+      "Column5": "한번 더!"
     },
     {
       "Column0": "StoryEnd",
       "Column1": 0.0,
       "Column2": 0.0,
       "Column3": null,
-      "Column4": null
+      "Column4": null,
+      "Column5": null
     }
   ]
 }

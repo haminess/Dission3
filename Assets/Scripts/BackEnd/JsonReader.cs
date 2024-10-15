@@ -32,6 +32,7 @@ public class JsonReader : MonoBehaviour
         public string Column3;
         public string Column4;
         public string Column5;
+        public string Column6;
     }
 
     // DataItem 사용 예제

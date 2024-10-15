@@ -41,20 +41,20 @@ public class StoryManager : MonoBehaviour
 
     public enum CommandList
     {
-        /// 1: float camPosX, 2: float camPosY
+        /// 1: float camera-posx, 2: float camera-posy
         StoryStart,
         StoryEnd,
 
-        // 1: int chaNum, 2: float posX, 3: float posY
+        // 1: string prefabfile-name, 2: character-key 3: float posx, 4: float posy
         CreateCharacter,
 
-        // 1...: string line
+        // 1: string character-key, 2...: string line
         Talk,
 
-        // 1: string _dir (ex; x, y), 2: float distance, 3..:
+        // 1: string dir (ex; x, y), 2: float distance, 3..:
         Move,
 
-        // 1: string _dir (ex; x, y), 2: float distance, 3..:
+        // 1: string dir (ex; x, y), 2: float distance, 3..:
         CameraMove,
 
         FadeIn,
@@ -86,6 +86,7 @@ public class StoryManager : MonoBehaviour
     public string storyID = "시트 이름을 입력하세요";
     private List<GameObject> tempObjects = new List<GameObject>();
     private List<JsonReader.DataItem> data = new List<JsonReader.DataItem>();
+    private Dictionary<string, int> characObjects = new Dictionary<string, int>();
 
     // game object
     public GameObject player;
@@ -302,17 +303,21 @@ public class StoryManager : MonoBehaviour
 
             // npc 생성
             case CommandList.CreateCharacter:
-                GameObject npc = NPC((int)float.Parse(cmdParam[0]), float.Parse(cmdParam[1]), float.Parse(cmdParam[2]));
+                GameObject npc = NPC(Resources.Load<GameObject>("Story/" + cmdParam[0]), float.Parse(cmdParam[2]), float.Parse(cmdParam[3]));
                 tempObjects.Add(npc);
+                characObjects.Add(cmdParam[1], tempObjects.Count - 1);
                 break;
 
             // 대사 실행
             case CommandList.Talk:
-                GameObject npc1 = tempObjects[0];
-                for (int i = 0; i < cmdParam.Count; ++i)
+                GameObject npc1 = tempObjects[characObjects[cmdParam[0]]];
+                for (int i = 1; i < cmdParam.Count; ++i)
                 {
-                    yield return new WaitForSeconds(1);
-                    yield return StartCoroutine(Typing(npc1, cmdParam[i]));
+                    if(null != cmdParam[i])
+                    {
+                        yield return new WaitForSeconds(1);
+                        yield return StartCoroutine(Typing(npc1, cmdParam[i]));
+                    }
                 }
                 break;
 
@@ -510,16 +515,19 @@ public class StoryManager : MonoBehaviour
                 {
                     cmdId = (CommandList)i;
                     cmdParam.Clear();
-                    if(item.Column1 != null)
-                        cmdParam.Add(item.Column1);
-                    if(item.Column1 != null)
-                        cmdParam.Add(item.Column2);
-                    if(item.Column1 != null)
-                        cmdParam.Add(item.Column3);
-                    if(item.Column1 != null)
-                        cmdParam.Add(item.Column4);
-                    if(item.Column1 != null)
-                        cmdParam.Add(item.Column5);
+
+                    if (item.Column6 != null)
+                        cmdParam.Insert(5, item.Column6);
+                    if (item.Column1 != null)
+                        cmdParam.Insert(0, item.Column1);
+                    if (item.Column2 != null)
+                        cmdParam.Insert(1, item.Column2);
+                    if (item.Column3 != null)
+                        cmdParam.Insert(2, item.Column3);
+                    if (item.Column4 != null)
+                        cmdParam.Insert(3, item.Column4);
+                    if (item.Column5 != null)
+                        cmdParam.Insert(4, item.Column5);
                 }
             }
 
@@ -1416,7 +1424,7 @@ public class StoryManager : MonoBehaviour
         {
             while (Mathf.Abs(colorAdjustments.contrast.value - contrast) > 0.01f || Mathf.Abs(colorAdjustments.hueShift.value - hue) > 0.01f || Mathf.Abs(colorAdjustments.saturation.value - saturation) > 0.01f)
             {
-                colorAdjustments.postExposure.Interp(colorAdjustments.postExposure.value, postexposure, interptime);
+                //colorAdjustments.postExposure.Interp(colorAdjustments.postExposure.value, postexposure, interptime);
                 colorAdjustments.contrast.Interp(colorAdjustments.contrast.value, contrast, interptime);
                 colorAdjustments.hueShift.Interp(colorAdjustments.hueShift.value, hue, interptime);
                 colorAdjustments.saturation.Interp(colorAdjustments.saturation.value, saturation, interptime);
@@ -1484,6 +1492,14 @@ public class StoryManager : MonoBehaviour
     public GameObject NPC(int npcidx, float _x, float _y)
     {
         GameObject npc = Instantiate(characterprefeb[npcidx]);
+        npc.transform.position = new Vector2(_x, _y);
+        npc.transform.SetParent(storyObject);
+
+        return npc;
+    }
+    public GameObject NPC(GameObject _prefab, float _x, float _y)
+    {
+        GameObject npc = Instantiate(_prefab);
         npc.transform.position = new Vector2(_x, _y);
         npc.transform.SetParent(storyObject);
 
