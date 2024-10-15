@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
-    public GameObject arrow;
-    public GameObject[] TitleButton;
-    public GameObject[] OptionButton;
-    public GameObject[] SynkButton;
+    // ¹Ì»ç¿ë
+    GameObject arrow;
+    GameObject[] TitleButton;
+    GameObject[] OptionButton;
+    GameObject[] SynkButton;
     public GameObject[] UI;
     public GameObject[] ArrowList;
     public int arrowPoint;
