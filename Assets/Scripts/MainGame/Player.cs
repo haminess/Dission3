@@ -37,9 +37,14 @@ public class Player : MonoBehaviour
 
     public float setTime = 10;
 
+    // 메뉴
+    private GameObject menu;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        // 컴포넌트 연결
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
@@ -48,6 +53,8 @@ public class Player : MonoBehaviour
             bgm = MainMan.instance.bgm;
             effect = MainMan.instance.effect;
         }
+
+        menu = GameObject.Find("MenuUI");
 
 
         // 메인게임 아닐 때 리턴
@@ -60,14 +67,7 @@ public class Player : MonoBehaviour
             characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
         }
 
-        // select character
-        for (int i = 0; i < model.Length; i++)
-        {
-            model[i].SetActive(false);
-        }
-        model[characterNum].SetActive(true);
-        sprite = model[characterNum].GetComponent<SpriteRenderer>();
-        animator = model[characterNum].GetComponent<Animator>();
+        SetCharacterModel();
 
         // 설정창 숨김
         settingUI.SetActive(false);
@@ -131,7 +131,37 @@ public class Player : MonoBehaviour
         }
 
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
+
+        // 메뉴 관리
+        ControlMenu();
     }
+
+    [ContextMenu("ChangeCharacter")]
+    public void SetCharacterModel()
+    {
+        // select character
+        for (int i = 0; i < model.Length; i++)
+        {
+            model[i].SetActive(false);
+        }
+        model[characterNum].SetActive(true);
+        sprite = model[characterNum].GetComponent<SpriteRenderer>();
+        animator = model[characterNum].GetComponent<Animator>();
+    }
+
+    void ControlMenu()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            menu.SetActive(!menu.activeSelf);
+        }
+
+        if(menu)
+        {
+            print("메뉴 켜짐");
+        }
+    }
+
 
     public void PlayMove()
     {
