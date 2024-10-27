@@ -187,17 +187,11 @@ public class Player : MonoBehaviour
         {
             Head(Vector3.down);
         }
-
-        // 캐릭터 좌표 이동
-        if (moveMode == MOVE_MODE.GAME_NORMAL)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
-
-            if (transform.localPosition == CurPos)
-            {
-                transform.localPosition = CurPos;
-            }
+            animator.SetBool("Sit", true);
         }
+
     }
     public void GameMove()
     {
@@ -217,8 +211,8 @@ public class Player : MonoBehaviour
             animator?.SetFloat("DirY", 0);
             sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             vHead = Vector3.left;
-
         }
+
         if (Input.GetKey(KeyCode.RightArrow))
         {
             // 좌우 반전

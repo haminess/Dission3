@@ -8,10 +8,16 @@ public class ShopItem : MonoBehaviour
     [System.Serializable]
     public class ItemInfo
     {
-        public string itemName;
+        public string itemName; // Column0
         [TextArea(3, 10)]
-        public string description;
-        public int price;
+        public string description; // Column1
+        public int price; // Column2
+    }
+
+    [System.Serializable]
+    public class ItemInfoList
+    {
+        public List<ItemInfo> items; // ItemInfo 객체 리스트
     }
 
     public GameObject itemPrefab; // 아이템을 표시할 UI 프리팹
@@ -31,80 +37,43 @@ public class ShopItem : MonoBehaviour
     {
         canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
 
-        // 아이템 리스트에 항목 추가
-        itemList.Add(new ItemInfo
-        {
-            itemName = "딸기우유",
-            description = "[딸기우유]\n\n딸기 맛이 나는 우유",
-            price = 500
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 2",
-            description = "리스트 테스트 중",
-            price = 300
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 3",
-            description = "리스트 테스트 중",
-            price = 50
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 4",
-            description = "리스트 테스트 중",
-            price = 500
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 5",
-            description = "리스트 테스트 중",
-            price = 300
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 6",
-            description = "리스트 테스트 중",
-            price = 50
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 7",
-            description = "리스트 테스트 중",
-            price = 500
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 8",
-            description = "리스트 테스트 중",
-            price = 300
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 9",
-            description = "리스트 테스트 중",
-            price = 50
-        });
-
-        itemList.Add(new ItemInfo
-        {
-            itemName = "테스트 10",
-            description = "리스트 테스트 중",
-            price = 50
-        });
+        // JSON 데이터를 로드하여 itemList에 항목 추가
+        LoadItemsFromJson();
 
         // 모든 아이템 동적으로 생성 및 표시
         PopulateItemDisplay();
     }
+
+    // JSON 파일을 로드하여 itemList에 아이템을 추가하는 메서드
+    private void LoadItemsFromJson()
+    {
+        // Resources 폴더에서 JSON 파일을 불러옵니다. 경로에서 Resources/ 부분은 생략합니다.
+        TextAsset jsonFile = Resources.Load<TextAsset>("MarketData");
+
+        if (jsonFile != null)
+        {
+            // JSON 파일의 내용을 임시 구조체로 변환
+            Wrapper wrapper = JsonUtility.FromJson<Wrapper>(jsonFile.text);
+
+            // 각 항목을 itemList에 추가
+            foreach (var entry in wrapper.Sheet1)
+            {
+                ItemInfo newItem = new ItemInfo
+                {
+                    itemName = entry.Column0,
+                    description = entry.Column1.Replace("\\n", "\n"),  // 줄바꿈 문자 처리
+                    price = (int)entry.Column2 // float에서 int로 명시적 변환
+                };
+                itemList.Add(newItem); // itemList에 추가
+            }
+        }
+        else
+        {
+            Debug.LogError("JSON 파일을 찾을 수 없습니다.");
+        }
+    }
+
+
 
     private void PopulateItemDisplay()
     {
@@ -221,5 +190,20 @@ public class ShopItem : MonoBehaviour
 
             popupRectTransform.anchoredPosition = popupPosition;
         }
+    }
+
+    // JSON 데이터를 임시로 저장할 구조체 정의
+    [System.Serializable]
+    public class JsonEntry
+    {
+        public string Column0;
+        public string Column1;
+        public float Column2;
+    }
+
+    [System.Serializable]
+    public class Wrapper
+    {
+        public List<JsonEntry> Sheet1;
     }
 }
