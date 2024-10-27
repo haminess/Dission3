@@ -41,11 +41,13 @@ public class FileOpenDialog : MonoBehaviour
     private void CopyFileToAssets(string filepath)
     {
         string FileName = Path.GetFileName(filepath);
-        string des = Path.Combine("Assets/Resources", FileName);
+        string FileNameWithoutExtention = Path.GetFileNameWithoutExtension(filepath);
+        string des = Path.Combine("Assets/Resources/Sound", FileName);
         File.Copy(filepath, des, true);
         UnityEditor.AssetDatabase.Refresh();
-        music.clip = Resources.Load(Path.GetFileNameWithoutExtension(filepath)) as AudioClip;
-        Makemadi.instance.musicnamee = Path.GetFileNameWithoutExtension(filepath);
+        print("Sound/" + FileNameWithoutExtention);
+        music.clip = Resources.Load("Sound/" + FileNameWithoutExtention) as AudioClip;
+        Makemadi.instance.musicnamee = FileNameWithoutExtention;
         Makemadi.instance.musicname.text = Makemadi.instance.audio_.mainmusic.clip.ToString();
         Makemadi.instance.sec = Mathf.Round( music.clip.length);
         Makemadi.instance.uiset();

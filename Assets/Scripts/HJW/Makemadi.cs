@@ -26,6 +26,7 @@ public class Makemadi : MonoBehaviour
     [Header("Settings")]
     public GameObject ui;
     public GameObject err;
+    public GameObject Dismatch_ui;
     public GameObject delete_ui;
     public GameObject delete_obj;
     public TMP_InputField name_ui;
@@ -52,8 +53,8 @@ public class Makemadi : MonoBehaviour
     void Start()
     {
         instance = this;
-        madiset();
         projectname = "New Project";
+        madiset();
     }
 
     void madiset()
@@ -63,7 +64,6 @@ public class Makemadi : MonoBehaviour
             Destroy(note.notedata[i].noteobj);
         }
         note.notedata.Clear();
-        Maketile.instance.initile();
         madi.GetComponent<RectTransform>().pivot = new Vector2(0, 0.5f);
         madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(4.014713f, 0);
         madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
@@ -271,6 +271,7 @@ public class Makemadi : MonoBehaviour
         sec = Convert.ToInt64(length_ui.text);
         projectname = name_ui.text;
         bpm = Convert.ToInt32(bpm_ui.text);
+        note.previewbox.GetComponent<SpriteRenderer>().enabled = false;
         madiset();
     }
 
@@ -293,6 +294,7 @@ public class Makemadi : MonoBehaviour
         editordata.musicname = musicnamee;
         editordata.creator = creator_ui.text;
         editordata.bpm = Convert.ToInt32(bpm_ui.text);
+        settings.Saveeditordatadele();
     }
     public void Loadinfo()
     {

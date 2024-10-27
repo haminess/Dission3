@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-using Unity.VisualScripting;
 
 public class StoryManager : MonoBehaviour
 {
@@ -35,15 +34,59 @@ public class StoryManager : MonoBehaviour
         s5_1,
         s5_2,
         s5_3,
-        sample = 100,
-        moveTest = 101,
-        TEST
+        talkTest = 100,
+        storyTest = 101,
+        POSTPROCESS_TEST
     }
 
-    public int sID = 0;
+    public enum CommandList
+    {
+        /// 1: float camera-posx, 2: float camera-posy
+        StoryStart,
+        StoryEnd,
+
+        // 1: string prefabfile-name, 2: character-key 3: float posx, 4: float posy
+        CreateCharacter,
+
+        // 1: string character-key, 2...: string line
+        Talk,
+
+        // 1: string dir (ex; x, y), 2: float distance, 3..:
+        Move,
+
+        // 1: string dir (ex; x, y), 2: float distance, 3..:
+        CameraMove,
+
+        FadeIn,
+        FadeOut,
+
+        ParamClear,
+    }
+
+    public string[] CommandList_String =
+    {
+        "StoryStart",
+        "StoryEnd",
+        "CreateCharacter",
+        "Talk",
+        "Move",
+        "CameraMove",
+        "FadeIn",
+        "FadeOut",
+        "ParamClear",
+    };
+
+    [HideInInspector] public int sID = 0;
     public StoryNum sId = StoryNum.s1;
 
-    public bool showButton;
+    public CommandList cmdId = CommandList.Talk;
+    public List<string> cmdParam;
+
+    public string storyName = "스토리 이름을 입력하세요(엑셀 파일)";
+    public string storyID = "시트 이름을 입력하세요";
+    private List<GameObject> tempObjects = new List<GameObject>();
+    private List<JsonReader.DataItem> data = new List<JsonReader.DataItem>();
+    private Dictionary<string, int> characObjects = new Dictionary<string, int>();
 
     // game object
     public GameObject player;
@@ -51,12 +94,12 @@ public class StoryManager : MonoBehaviour
     public GameObject storyCamera;
     public GameObject gameCanvas;
     public GameObject playerPrefab;
-    public GameObject[] stageObject;    
+    public GameObject[] stageObject;
     public Transform storyObject;
 
     // story object
     public GameObject pack;
-    public GameObject[] characterprefeb; //0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
+    public GameObject[] characterprefeb; // 0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
     public Sprite baby;
     public Sprite student;
     public Sprite friend1;
@@ -69,25 +112,20 @@ public class StoryManager : MonoBehaviour
 
     public GameObject ChatPrefab;
 
+    private ExcelToJsonConverter excelConverter;
+    private JsonReader jsonReader;
+
     // character line
-    public float chatSpeed = 2;
-    Dictionary<int, string[]> scripts = new Dictionary<int, string[]>();
+    float chatSpeed = 2;
+    Dictionary<int, string[]> scripts = new();
     int[][] npcNum;
 
     void Start()
     {
-        playerCam.SetActive(true);
-        //storyCamera.SetActive(false);
-        CreateScripts();
-    }
+        excelConverter = GetComponent<ExcelToJsonConverter>();
+        jsonReader = GetComponent<JsonReader>();
 
-    void Update()
-    {
-        if (showButton)
-        {
-            showButton = false;
-            ShowStory(sId);
-        }
+        playerCam.SetActive(true);
     }
 
     void CreateScripts()
@@ -218,6 +256,113 @@ public class StoryManager : MonoBehaviour
         npcNum[15] = new int[] { 0, 0, 0, 0 };
     }
 
+    [ContextMenu("Load Story")]
+    public void LoadStory()
+    {
+        excelConverter.Convert(storyName);
+        jsonReader.ReadData(storyName, storyID);
+        data = jsonReader.data;
+    }
+
+    [ContextMenu("Show Story")]
+    public void ShowStory()
+    {
+        ShowStory(sId);
+    }
+    [ContextMenu("Show Action")]
+    public void ShowAction()
+    {
+        ShowAction(cmdId);
+    }
+    public void ShowAction(CommandList _cmdNum)
+    {
+        this.cmdId = _cmdNum;
+        StartCoroutine(ShowActionCo());
+    }
+    IEnumerator ShowActionCo()
+    {
+        switch (cmdId)
+        {
+            // 스토리 시작 세팅
+            // 스크립트 불러오기
+            case CommandList.StoryStart:
+                yield return StartCoroutine(SetCam(true, float.Parse(cmdParam[0]), float.Parse(cmdParam[1])));
+                break;
+
+            // 스토리 종료
+            case CommandList.StoryEnd:
+                yield return StartCoroutine(Fade(black));
+                for (int i = 0; i < tempObjects?.Count; ++i)
+                {
+                    Destroy(tempObjects[i]);
+                }
+                tempObjects.Clear();
+                yield return StartCoroutine(SetCam(false));
+
+                break;
+
+            // npc 생성
+            case CommandList.CreateCharacter:
+                GameObject npc = NPC(Resources.Load<GameObject>("Story/" + cmdParam[0]), float.Parse(cmdParam[2]), float.Parse(cmdParam[3]));
+                tempObjects.Add(npc);
+                characObjects.Add(cmdParam[1], tempObjects.Count - 1);
+                break;
+
+            // 대사 실행
+            case CommandList.Talk:
+                GameObject npc1 = tempObjects[characObjects[cmdParam[0]]];
+                for (int i = 1; i < cmdParam.Count; ++i)
+                {
+                    if(null != cmdParam[i])
+                    {
+                        yield return new WaitForSeconds(1);
+                        yield return StartCoroutine(Typing(npc1, cmdParam[i]));
+                    }
+                }
+                break;
+
+            case CommandList.Move:
+                {
+                    GameObject npc2 = tempObjects[0];
+                    for (int i = 0; i < cmdParam.Count; i += 2)
+                    {
+                        yield return new WaitForSeconds(1);
+                        if ("x" == cmdParam[i])
+                        {
+                            yield return StartCoroutine(Move(npc2, new Vector3(float.Parse(cmdParam[i + 1]), 0, 0)));
+                        }
+                        else if ("y" == cmdParam[i])
+                        {
+                            yield return StartCoroutine(Move(npc2, new Vector3(0, float.Parse(cmdParam[i + 1]), 0)));
+                        }
+                    }
+                    break;
+                }
+
+            case CommandList.CameraMove:
+                GameObject cam = storyCamera;
+                for (int i = 0; i < cmdParam.Count; i += 2)
+                {
+                    yield return new WaitForSeconds(1);
+                    yield return StartCoroutine(Move(cam, new Vector3(float.Parse(cmdParam[i]), float.Parse(cmdParam[i + 1]), 0)));
+                }
+                break;
+
+            case CommandList.FadeIn:
+                yield return StartCoroutine(Fade(black));
+                break;
+            case CommandList.FadeOut:
+                yield return StartCoroutine(Fade(black, false));
+                break;
+            case CommandList.ParamClear:
+                cmdParam.Clear();
+                break;
+        }
+
+
+
+    }
+
     public void ShowStory(int stroyID)
     {
         this.sID = stroyID;
@@ -226,22 +371,18 @@ public class StoryManager : MonoBehaviour
     }
     public void ShowStory(StoryNum _stroyID)
     {
-        this.sId = _stroyID;
-        this.sID = (int)this.sId;
+        sId = _stroyID;
+        sID = (int)sId;
         StartCoroutine(ShowStoryCo());
     }
-
     public IEnumerator ShowStoryCo()
     {
         this.sId = (StoryNum)this.sID;
-        // ?��???? ?????? Off
         player.GetComponent<Player>().enabled = false;
         player.GetComponentInChildren<SpriteRenderer>().enabled = false;
 
-        // ???? UI Off
         gameCanvas.SetActive(false);
 
-        // ???? ????
         switch ((int)sId)
         {
             case 0000:
@@ -296,7 +437,7 @@ public class StoryManager : MonoBehaviour
                 yield return StartCoroutine(SampleStory());
                 break;
             case 0101:
-                yield return StartCoroutine(MoveStory());
+                yield return StartCoroutine(StoryCo());
                 break;
             case 0102:
                 yield return StartCoroutine(Effectest());
@@ -312,7 +453,6 @@ public class StoryManager : MonoBehaviour
         gameCanvas.SetActive(true);
     }
 
-    // ???? ???
     public void Skip()
     {
         // skip coroutine
@@ -356,12 +496,43 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(Move(teacher, Vector3.left, 6));
         yield return StartCoroutine(Typing(teacher, scripts[sID][0]));
 
-        
+
         yield return StartCoroutine(Fade(black));
-        
+
         // camera out setting
         yield return StartCoroutine(SetCam(false));
 
+    }
+    IEnumerator StoryCo()
+    {
+        // 데이터 읽기
+        foreach (var item in data)
+        {
+            yield return new WaitForSeconds(1);
+            for(int i = 0; i < CommandList_String.Length; ++i)
+            {
+                if (item.Column0 == CommandList_String[i])
+                {
+                    cmdId = (CommandList)i;
+                    cmdParam.Clear();
+
+                    if (item.Column6 != null)
+                        cmdParam.Insert(5, item.Column6);
+                    if (item.Column1 != null)
+                        cmdParam.Insert(0, item.Column1);
+                    if (item.Column2 != null)
+                        cmdParam.Insert(1, item.Column2);
+                    if (item.Column3 != null)
+                        cmdParam.Insert(2, item.Column3);
+                    if (item.Column4 != null)
+                        cmdParam.Insert(3, item.Column4);
+                    if (item.Column5 != null)
+                        cmdParam.Insert(4, item.Column5);
+                }
+            }
+
+            yield return StartCoroutine(ShowActionCo());
+        }
     }
     public IEnumerator OffStory()
     {
@@ -387,9 +558,9 @@ public class StoryManager : MonoBehaviour
             yield return StartCoroutine(Fade(black));
         }
 
+        // camera on
         if (_isOn)
         {
-            // ???? ????
             playerCam.SetActive(false);
             storyCamera.SetActive(true);
             storyCamera.transform.position = new Vector3(_x, _y, -8);
@@ -398,6 +569,8 @@ public class StoryManager : MonoBehaviour
 
             yield return new WaitForSeconds(1);
         }
+
+        // camera off
         else
         {
             storyCamera.SetActive(false);
@@ -410,21 +583,21 @@ public class StoryManager : MonoBehaviour
     }
     IEnumerator Effectest()
     {
-        yield return StartCoroutine( Fade(black));
-        yield return StartCoroutine( Fade(black, false));
-        yield return StartCoroutine( Splash(Color.white));
-        yield return StartCoroutine( PostProssess(POSTPROCESS.Bloom, 10, 0.05f, Color.red));
-        yield return StartCoroutine( PostProssess(POSTPROCESS.Bloom, 1, 0.05f, Color.white));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0.3f, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Vignette, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 2, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Chromatic_Aberration, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 5, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Noise, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 230, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Blur, 50, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
-        yield return StartCoroutine(PostProssess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
+        yield return StartCoroutine(Fade(black));
+        yield return StartCoroutine(Fade(black, false));
+        yield return StartCoroutine(Splash(Color.white));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Bloom, 10, 0.05f, Color.red));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Bloom, 1, 0.05f, Color.white));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Vignette, 0.3f, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Vignette, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Chromatic_Aberration, 2, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Chromatic_Aberration, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Noise, 5, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Noise, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Blur, 230, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Blur, 50, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Color_Adjestment, 100, 0, 0, 0.05f));
+        yield return StartCoroutine(PostProcess(POSTPROCESS.Color_Adjestment, 0, 0, 0, 0.05f));
     }
 
     IEnumerator SampleStory()
@@ -470,13 +643,13 @@ public class StoryManager : MonoBehaviour
             {
                 yield return StartCoroutine(Typing(npc, i.Column0 + ": " + i.Column1));
             }
-            else if("move" == i.Column0)
+            else if ("move" == i.Column0)
             {
-                if("x" == i.Column1)
+                if ("x" == i.Column1)
                 {
                     yield return StartCoroutine(Move(npc, new Vector3(float.Parse(i.Column2), 0, 0)));
                 }
-                else if("y" == i.Column1)
+                else if ("y" == i.Column1)
                 {
                     yield return StartCoroutine(Move(npc, new Vector3(0, float.Parse(i.Column2), 0)));
                 }
@@ -1131,7 +1304,7 @@ public class StoryManager : MonoBehaviour
     }
 
 
-    [ContextMenu("PostProssess")]
+    [ContextMenu("PostProcess")]
     /// <summary>
     /// Bloom, Vignette, Chormatic Aberration, Noise 는 0 ~ 1, Lens Distortion -1 ~ 1, Blur 1 ~ 300    
     /// </summary>
@@ -1139,15 +1312,15 @@ public class StoryManager : MonoBehaviour
     /// <param name="intensity"></param>
     /// <param name="interptime"></param>
     /// <returns></returns>
-    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float intensity, float interptime)
     {
-        switch(Efftype)
+        switch (Efftype)
         {
             case POSTPROCESS.Bloom:
                 Bloom bloom;
-                if( volume.profile.TryGet(out bloom))
+                if (volume.profile.TryGet(out bloom))
                 {
-                    while(Mathf.Abs(bloom.intensity.value - intensity) > 0.01f)
+                    while (Mathf.Abs(bloom.intensity.value - intensity) > 0.01f)
                     {
                         bloom.intensity.Interp(bloom.intensity.value, intensity, interptime);
                         yield return null;
@@ -1156,9 +1329,9 @@ public class StoryManager : MonoBehaviour
                 break;
             case POSTPROCESS.Vignette:
                 Vignette vignette;
-                if(volume.profile.TryGet(out vignette))
+                if (volume.profile.TryGet(out vignette))
                 {
-                    while(Mathf.Abs(vignette.intensity.value - intensity) > 0.01f)
+                    while (Mathf.Abs(vignette.intensity.value - intensity) > 0.01f)
                     {
                         vignette.intensity.Interp(vignette.intensity.value, intensity, interptime);
                         yield return null;
@@ -1169,7 +1342,7 @@ public class StoryManager : MonoBehaviour
                 ChromaticAberration chromaticAberration;
                 if (volume.profile.TryGet(out chromaticAberration))
                 {
-                    while(Mathf.Abs(chromaticAberration.intensity.value - intensity) > 0.01f)
+                    while (Mathf.Abs(chromaticAberration.intensity.value - intensity) > 0.01f)
                     {
                         chromaticAberration.intensity.Interp(chromaticAberration.intensity.value, intensity, interptime);
                         yield return null;
@@ -1180,7 +1353,7 @@ public class StoryManager : MonoBehaviour
                 LensDistortion lensDistortion;
                 if (volume.profile.TryGet(out lensDistortion))
                 {
-                    while(Mathf.Abs(lensDistortion.intensity.value - intensity) > 0.01f)
+                    while (Mathf.Abs(lensDistortion.intensity.value - intensity) > 0.01f)
                     {
                         lensDistortion.intensity.Interp(lensDistortion.intensity.value, intensity, interptime);
                         yield return null;
@@ -1191,7 +1364,7 @@ public class StoryManager : MonoBehaviour
                 DepthOfField depthOfField;
                 if (volume.profile.TryGet(out depthOfField))
                 {
-                    while(Mathf.Abs(depthOfField.focalLength.value - intensity) > 0.01f)
+                    while (Mathf.Abs(depthOfField.focalLength.value - intensity) > 0.01f)
                     {
                         depthOfField.focalLength.Interp(depthOfField.focalLength.value, intensity, interptime);
                         yield return null;
@@ -1221,7 +1394,7 @@ public class StoryManager : MonoBehaviour
     /// <param name="color"></param>
     /// <returns></returns>
     /// 
-    IEnumerator PostProssess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float intensity, float interptime, Color color)
     {
         Bloom bloom;
         if (volume.profile.TryGet(out bloom))
@@ -1235,21 +1408,23 @@ public class StoryManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// 화면의 색상을 보정할 수 있음, Contrast 대비 -100 ~ 100, Hue 색조 -180 ~ 180, Saturation 채도 -100 ~ 100
+    /// 화면의 색상을 보정할 수 있음, Contrast 대비 -100 ~ 100, Hue 색조 -180 ~ 180, Saturation 채도 -100 ~ 100, PostExposure 명도 -10 ~ 10
     /// </summary>
     /// <param name="Efftype"></param>
     /// <param name="contrast"></param>
     /// <param name="hue"></param>
     /// <param name="saturation"></param>
     /// <param name="interptime"></param>
+    /// <param name="postexposure"></param>
     /// <returns></returns>
-    IEnumerator PostProssess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
+    IEnumerator PostProcess(POSTPROCESS Efftype, float contrast, float hue, float saturation, float interptime)
     {
         ColorAdjustments colorAdjustments;
         if (volume.profile.TryGet(out colorAdjustments))
         {
             while (Mathf.Abs(colorAdjustments.contrast.value - contrast) > 0.01f || Mathf.Abs(colorAdjustments.hueShift.value - hue) > 0.01f || Mathf.Abs(colorAdjustments.saturation.value - saturation) > 0.01f)
             {
+                //colorAdjustments.postExposure.Interp(colorAdjustments.postExposure.value, postexposure, interptime);
                 colorAdjustments.contrast.Interp(colorAdjustments.contrast.value, contrast, interptime);
                 colorAdjustments.hueShift.Interp(colorAdjustments.hueShift.value, hue, interptime);
                 colorAdjustments.saturation.Interp(colorAdjustments.saturation.value, saturation, interptime);
@@ -1279,7 +1454,7 @@ public class StoryManager : MonoBehaviour
         chatBox.transform.SetParent(talker.transform);
         TextMeshProUGUI chatUI = chatBox.gameObject.GetComponentInChildren<TextMeshProUGUI>();
 
-        for(int i = 0; i < chat.Length; i++)
+        for (int i = 0; i < chat.Length; i++)
         {
             chatUI.text += chat[i];
             yield return new WaitForSeconds(0.05f);
@@ -1322,12 +1497,20 @@ public class StoryManager : MonoBehaviour
 
         return npc;
     }
+    public GameObject NPC(GameObject _prefab, float _x, float _y)
+    {
+        GameObject npc = Instantiate(_prefab);
+        npc.transform.position = new Vector2(_x, _y);
+        npc.transform.SetParent(storyObject);
+
+        return npc;
+    }
 
     IEnumerator Jump(GameObject npc, float jumppower, float jumpspeed)
     {
         float goal = npc.transform.position.y + jumppower;
         float y = Mathf.Lerp(npc.transform.position.y, goal, jumpspeed);
-        while(Mathf.Abs( goal - y )> 0.1f)
+        while (Mathf.Abs(goal - y) > 0.1f)
         {
             y = Mathf.Lerp(npc.transform.position.y, goal, jumpspeed);
             npc.transform.position = new Vector2(npc.transform.position.x, y);
@@ -1337,7 +1520,7 @@ public class StoryManager : MonoBehaviour
 
         goal = npc.transform.position.y - jumppower;
         y = Mathf.Lerp(npc.transform.position.y, goal, jumpspeed);
-        while (Mathf.Abs( goal - y )> 0.1f)
+        while (Mathf.Abs(goal - y) > 0.1f)
         {
             y = Mathf.Lerp(npc.transform.position.y, goal, jumpspeed);
             npc.transform.position = new Vector2(npc.transform.position.x, y);
