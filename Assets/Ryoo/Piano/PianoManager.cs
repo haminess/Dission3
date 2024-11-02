@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -8,9 +7,23 @@ public class PianoManager : MonoBehaviour
 {
     public AudioSource[] pianoKeys; // 12개의 음을 포함한 배열 (도, 도#, 레, 레#, 미, 파, 파#, 솔, 솔#, 라, 라#, 시)
     public Button[] pianoButtons; // UI 버튼 배열
-    public int currentOctave = 4; // 초기 옥타브
-    public int minOctave = 1;
-    public int maxOctave = 7;
+    public Button octaveUpButton; // 옥타브 증가 버튼
+    public Button octaveDownButton; // 옥타브 감소 버튼
+    public Text octaveDisplayText; // 옥타브 표시용 UI 텍스트
+
+    public int currentOctave = 4; // 초기 옥타브 (기본값 4)
+    public int minOctave = 2; // 최소 옥타브
+    public int maxOctave = 6; // 최대 옥타브
+
+    void Start()
+    {
+        // 옥타브 조절 버튼 이벤트 연결
+        octaveUpButton.onClick.AddListener(IncreaseOctave);
+        octaveDownButton.onClick.AddListener(DecreaseOctave);
+
+        // 초기 옥타브 표시 업데이트
+        UpdateOctaveDisplay();
+    }
 
     void Update()
     {
@@ -19,6 +32,7 @@ public class PianoManager : MonoBehaviour
 
     void PlayPianoKeys()
     {
+        // 각 키를 눌렀을 때 현재 옥타브에 맞춰 소리를 재생
         if (Input.GetKeyDown(KeyCode.A)) { TriggerKey(0); }  // 도(C)
         if (Input.GetKeyDown(KeyCode.W)) { TriggerKey(1); }  // 도#(C#)
         if (Input.GetKeyDown(KeyCode.S)) { TriggerKey(2); }  // 레(D)
@@ -51,8 +65,9 @@ public class PianoManager : MonoBehaviour
 
     void TriggerKey(int keyIndex)
     {
-        // 해당하는 피아노 키의 소리를 재생하고 UI 버튼을 눌린 것처럼 보이도록 설정
-        pianoButtons[keyIndex].onClick.Invoke();
+        // 현재 옥타브에 맞춰 피아노 키의 소리를 조정하고 재생
+        pianoKeys[keyIndex].pitch = Mathf.Pow(2f, currentOctave - 4); // 주파수 조정
+        pianoKeys[keyIndex].Play();
         PressButton(pianoButtons[keyIndex]);
     }
 
@@ -78,6 +93,7 @@ public class PianoManager : MonoBehaviour
         if (currentOctave < maxOctave)
         {
             currentOctave++;
+            UpdateOctaveDisplay();
         }
     }
 
@@ -86,6 +102,14 @@ public class PianoManager : MonoBehaviour
         if (currentOctave > minOctave)
         {
             currentOctave--;
+            UpdateOctaveDisplay();
         }
+    }
+
+    void UpdateOctaveDisplay()
+    {
+        // 현재 옥타브를 4옥타브 기준으로 표시 (0은 기본값, -1, +1 등으로 표시)
+        int displayValue = currentOctave - 4;
+        octaveDisplayText.text = displayValue.ToString();
     }
 }
