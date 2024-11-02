@@ -4,15 +4,16 @@ using UnityEngine;
 public class ShopInteraction : MonoBehaviour
 {
     public GameObject shopUI; // 상점 UI 오브젝트
-    private bool isNearShop = false; // 플레이어가 상점 근처에 있는지 여부
-
     public GameObject qKeyImage; // Q키 변수
+    public GameObject outline; // 외곽선 오브젝트
 
+    private bool isNearShop = false; // 플레이어가 상점 근처에 있는지 여부
     private Animator qKeyAnimator;
 
     void Start()
     {
         qKeyAnimator = qKeyImage.GetComponent<Animator>();
+        outline.SetActive(false); // 시작 시 외곽선 비활성화
     }
 
     void Update()
@@ -30,6 +31,7 @@ public class ShopInteraction : MonoBehaviour
             isNearShop = true; // 플레이어가 상점 범위 내에 들어옴
             qKeyImage.SetActive(true);
             qKeyAnimator.enabled = true; // 애니메이션 활성화
+            outline.SetActive(true); // 외곽선 활성화
             Debug.Log("inMarket");
         }
     }
@@ -41,6 +43,7 @@ public class ShopInteraction : MonoBehaviour
             isNearShop = false; // 플레이어가 상점 범위를 벗어남
             qKeyImage.SetActive(false);
             qKeyAnimator.enabled = false; // 애니메이션 비활성화
+            outline.SetActive(false); // 외곽선 비활성화
             Debug.Log("outMarket");
         }
     }
