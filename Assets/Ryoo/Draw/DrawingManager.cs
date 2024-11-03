@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class DrawingManager : MonoBehaviour
 {
@@ -33,6 +34,10 @@ public class DrawingManager : MonoBehaviour
     public Sprite eraserPressedSprite;
     public Sprite resetDefaultSprite;
     public Sprite resetPressedSprite;
+
+    // 히스토리 리스트
+    private List<Color[]> undoHistory = new List<Color[]>();
+    private List<Color[]> redoHistory = new List<Color[]>();
 
     void Start()
     {
@@ -98,6 +103,11 @@ public class DrawingManager : MonoBehaviour
         // 그림판이 활성화된 상태에서 마우스 클릭으로 그림 그리기
         if (isDrawingPanelActive && (isPenActive || isEraserActive))
         {
+            if (Input.GetMouseButtonDown(0)) // 마우스를 눌렀을 때 히스토리 저장 시작
+            {
+                SaveToUndoHistory();
+            }
+
             if (Input.GetMouseButton(0))
             {
                 Draw(false);
@@ -141,6 +151,18 @@ public class DrawingManager : MonoBehaviour
             {
                 UpdatePenCursor(); // 펜 커서 위치 업데이트
             }
+        }
+
+        // Undo 단축키: Ctrl + Z
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        {
+            Undo();
+        }
+
+        // Redo 단축키: Ctrl + Y
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y))
+        {
+            Redo();
         }
     }
 
@@ -302,6 +324,37 @@ public class DrawingManager : MonoBehaviour
         previousDrawPoint = new Vector2(x, y);
 
         drawingTexture.Apply();
+    }
+
+    // Undo 기능
+    void Undo()
+    {
+        if (undoHistory.Count > 0)
+        {
+            redoHistory.Add(drawingTexture.GetPixels());
+            drawingTexture.SetPixels(undoHistory[undoHistory.Count - 1]);
+            undoHistory.RemoveAt(undoHistory.Count - 1);
+            drawingTexture.Apply();
+        }
+    }
+
+    // Redo 기능
+    void Redo()
+    {
+        if (redoHistory.Count > 0)
+        {
+            undoHistory.Add(drawingTexture.GetPixels());
+            drawingTexture.SetPixels(redoHistory[redoHistory.Count - 1]);
+            redoHistory.RemoveAt(redoHistory.Count - 1);
+            drawingTexture.Apply();
+        }
+    }
+
+    void SaveToUndoHistory()
+    {
+        if (undoHistory.Count > 20) undoHistory.RemoveAt(0);
+        undoHistory.Add(drawingTexture.GetPixels());
+        redoHistory.Clear();
     }
 
     void DrawLine(Vector2 start, Vector2 end)
