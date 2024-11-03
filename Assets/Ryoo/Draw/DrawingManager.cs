@@ -22,6 +22,8 @@ public class DrawingManager : MonoBehaviour
     private Color customChalkboardColor = new Color(101f / 255f, 144f / 255f, 115f / 255f); // #659073
     private Color penColor = Color.white; // 펜 색상
     private GameObject penCursor; // 펜 커서
+    public Text penSizeText; // 펜 굵기 표시용 텍스트
+    public Text eraserSizeText; // 지우개 굵기 표시용 텍스트
 
     public GameObject drawingPaper;
 
@@ -85,6 +87,10 @@ public class DrawingManager : MonoBehaviour
 
         // Reset Button 설정
         SetButtonSprites(resetButton, resetDefaultSprite, resetPressedSprite);
+
+        // 초기 UI 텍스트 설정
+        UpdatePenSizeText();
+        UpdateEraserSizeText();
     }
 
     void Update()
@@ -226,6 +232,7 @@ public class DrawingManager : MonoBehaviour
         eraserSize = Mathf.Min(eraserSize + 1, 50); // 지우개 크기를 최대 50까지
         UpdateEraserCursorSize();
         Debug.Log($"Eraser size increased: {eraserSize}");
+        UpdateEraserSizeText(); // UI 업데이트
     }
 
     void DecreaseEraserSize()
@@ -233,6 +240,7 @@ public class DrawingManager : MonoBehaviour
         eraserSize = Mathf.Max(eraserSize - 1, 1); // 지우개 크기를 최소 1까지
         UpdateEraserCursorSize();
         Debug.Log($"Eraser size decreased: {eraserSize}");
+        UpdateEraserSizeText(); // UI 업데이트
     }
 
     void IncreasePenSize()
@@ -240,6 +248,7 @@ public class DrawingManager : MonoBehaviour
         penSize = Mathf.Min(penSize + 1, 20); // 펜 굵기를 최대 20까지
         UpdatePenCursorSize(); // 펜 커서 크기 업데이트
         Debug.Log($"Pen size increased: {penSize}");
+        UpdatePenSizeText(); // UI 업데이트
     }
 
     void DecreasePenSize()
@@ -247,6 +256,23 @@ public class DrawingManager : MonoBehaviour
         penSize = Mathf.Max(penSize - 1, 1); // 펜 굵기를 최소 1까지
         UpdatePenCursorSize(); // 펜 커서 크기 업데이트
         Debug.Log($"Pen size decreased: {penSize}");
+        UpdatePenSizeText(); // UI 업데이트
+    }
+
+    void UpdatePenSizeText()
+    {
+        if (penSizeText != null)
+        {
+            penSizeText.text = "Pen Size: " + penSize;
+        }
+    }
+
+    void UpdateEraserSizeText()
+    {
+        if (eraserSizeText != null)
+        {
+            eraserSizeText.text = "Eraser Size: " + eraserSize;
+        }
     }
 
     void Draw(bool isNewLine)
