@@ -6,6 +6,8 @@ using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Tools;
+using UnityEngine.UI;
+using System;
 [System.Serializable]
 public struct NoteForUnity
 {
@@ -15,10 +17,13 @@ public struct NoteForUnity
 public class Midi : MonoBehaviour
 {
     VistaOpenFileDialog OpenDialog;
+    public GameObject MidiNote;
+    public GameObject MidiMadi;
     public AudioSource music;
     public string filepath;
     public MidiFile midi;
     public int trackrestriction;
+    public double TotalLength;
     public List<NoteForUnity> NoteForUnity = new List<NoteForUnity>();
     public List<MidiFile> Channels = new List<MidiFile>();
     private void Awake()
@@ -59,6 +64,7 @@ public class Midi : MonoBehaviour
     {
         ResetMididata();
         midi = MidiFile.Read(filepath);
+        TotalLength = TimeConverter.ConvertTo < MetricTimeSpan >(midi.GetDuration(TimeSpanType.Metric), midi.GetTempoMap()).TotalSeconds;
         foreach (var Splitedmidifiles in midi.SplitByChannel())
         {
             Channels.Add(Splitedmidifiles);
@@ -73,6 +79,7 @@ public class Midi : MonoBehaviour
             newnote.length = metricLengthSpan.TotalSeconds;
             NoteForUnity.Add(newnote);
         }
+        MidinoteLoad();
     }
     private void ChangeChannel()
     {
@@ -87,10 +94,33 @@ public class Midi : MonoBehaviour
             NoteForUnity.Add(newnote);
         }
     }
+    void MidinoteLoad()
+    {
+        foreach (var item in NoteForUnity)
+        {
+            var newpos = new Vector2((float)item.timeStamps * Makemadi.instance.madimultiplyer, 0);
+            var n = Instantiate(MidiNote, newpos, Quaternion.identity, MidiMadi.transform);
+            if(item.length > 0)
+            {
+                var mid = n.transform.GetChild(1);
+                var end = n.transform.GetChild(2);
+                mid.gameObject.SetActive(true);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2 ((float)item.length * Makemadi.instance.madimultiplyer, 103.87f);
+                end.gameObject.GetComponent<Image>().enabled = true;
+                end.GetComponent<RectTransform>().localPosition = new Vector2((float)item.length * Makemadi.instance.madimultiplyer, 0);
+                end.SetAsLastSibling();
+            }
+            n.transform.localPosition = newpos;
+        }
+    }
 
     private void ResetMididata()
     {
         Channels.Clear();
         NoteForUnity.Clear();
+        for (int i = 0; i < MidiMadi.transform.childCount; i++)
+        {
+            Destroy(MidiMadi.transform.GetChild(i).gameObject);
+        }
     }
 }

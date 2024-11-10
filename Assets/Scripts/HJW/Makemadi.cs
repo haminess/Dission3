@@ -231,12 +231,13 @@ public class Makemadi : MonoBehaviour
     }
     IEnumerator slidermovestartcor()
     {
-        var mospos = gameObject.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
+        Transform par = madi.transform.parent;
+        float mospos = par.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
         var madipos = madi.GetComponent<RectTransform>().anchoredPosition;
         var slidertrans = Slider.GetComponent<RectTransform>();
         while (slidermoving)
         {
-            mospos = gameObject.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
+            mospos = par.transform.InverseTransformPoint(Maketile.instance.mospos.x, Maketile.instance.mospos.y, 0).y + 20;
             slidertrans.anchoredPosition = new Vector2(6.8f, mospos);
             madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(madipos.x, slidertrans.anchoredPosition.y * ((-sec * madimultiplyer + 78) / (78 - (1 / (sec * madimultiplyer * 0.0005f)))));
             yield return null;
