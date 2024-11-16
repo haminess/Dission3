@@ -1,60 +1,77 @@
-using System.Collections;
 using UnityEngine;
 
 public class ShopInteraction : MonoBehaviour
 {
-    public GameObject shopUI; // 상점 UI 오브젝트
-    public GameObject qKeyImage; // Q키 변수
+    public GameObject shopUI; // 매점 UI 오브젝트
+    public GameObject qKeyImage; // Q키 UI 이미지
     public GameObject outline; // 외곽선 오브젝트
-
-    private bool isNearShop = false; // 플레이어가 상점 근처에 있는지 여부
-    private Animator qKeyAnimator;
+    private bool isNearShop = false; // 플레이어가 매점 근처에 있는지 여부
+    private bool isShopOpen = false; // 매점 창이 열려 있는지 여부
 
     void Start()
     {
-        qKeyAnimator = qKeyImage.GetComponent<Animator>();
         outline.SetActive(false); // 시작 시 외곽선 비활성화
+        qKeyImage.SetActive(false); // 시작 시 Q키 이미지 비활성화
     }
 
     void Update()
     {
+        // 플레이어가 매점 근처에 있고 Q키를 눌렀을 때 매점 열기/닫기
         if (isNearShop && Input.GetKeyDown(KeyCode.Q))
         {
             ToggleShop();
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        // 플레이어가 매점 근처에 들어왔을 때
         if (other.gameObject.CompareTag("Player"))
         {
-            isNearShop = true; // 플레이어가 상점 범위 내에 들어옴
-            qKeyImage.SetActive(true);
-            qKeyAnimator.enabled = true; // 애니메이션 활성화
+            isNearShop = true;
             outline.SetActive(true); // 외곽선 활성화
-            Debug.Log("inMarket");
+            qKeyImage.SetActive(true); // Q키 이미지 활성화
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
+        // 플레이어가 매점 범위를 벗어났을 때
         if (other.gameObject.CompareTag("Player"))
         {
-            isNearShop = false; // 플레이어가 상점 범위를 벗어남
-            qKeyImage.SetActive(false);
-            qKeyAnimator.enabled = false; // 애니메이션 비활성화
+            isNearShop = false;
             outline.SetActive(false); // 외곽선 비활성화
-            Debug.Log("outMarket");
+            qKeyImage.SetActive(false); // Q키 이미지 비활성화
+
+            // 매점이 열려 있으면 닫기
+            if (isShopOpen)
+            {
+                CloseShop();
+            }
         }
     }
 
-    void ToggleShop()
+    private void ToggleShop()
     {
-        shopUI.SetActive(!shopUI.activeSelf);
+        if (!isShopOpen)
+        {
+            OpenShop();
+        }
+        else
+        {
+            CloseShop();
+        }
     }
 
-    public void CloseShop()
+    private void OpenShop()
     {
-        shopUI.SetActive(false);  // 상점 창 닫기
+        shopUI.SetActive(true); // 매점 UI 활성화
+        isShopOpen = true;
+    }
+
+    private void CloseShop()
+    {
+        shopUI.SetActive(false); // 매점 UI 비활성화
+        isShopOpen = false;
     }
 }
