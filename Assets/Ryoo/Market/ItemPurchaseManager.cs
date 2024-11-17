@@ -149,11 +149,28 @@ public class ItemPurchaseManager : MonoBehaviour
 
     private IEnumerator ShowSpeechBubble(string text)
     {
-        speechBubbleText.text = text; // 말풍선 텍스트 설정
+        speechBubbleText.text = ""; // 텍스트를 초기화
         speechBubble.SetActive(true); // 말풍선 활성화
 
-        yield return new WaitForSeconds(2f); // 2초 동안 대기
+        RectTransform bubbleRect = speechBubble.GetComponent<RectTransform>(); // 말풍선 RectTransform 가져오기
+        float originalWidth = bubbleRect.sizeDelta.x; // 말풍선의 원래 크기
+        float padding = 20f; // 텍스트 양옆에 추가할 여백
 
+        foreach (char letter in text.ToCharArray())
+        {
+            speechBubbleText.text += letter; // 텍스트에 글자 추가
+            yield return new WaitForSeconds(0.05f); // 글자 출력 속도
+
+            // 텍스트 길이에 따라 말풍선 크기 업데이트
+            float textWidth = speechBubbleText.preferredWidth + padding;
+            bubbleRect.sizeDelta = new Vector2(Mathf.Max(originalWidth, textWidth), bubbleRect.sizeDelta.y);
+        }
+
+        // 텍스트 출력이 끝난 후 대기 시간
+        yield return new WaitForSeconds(2f);
+
+        // 말풍선과 텍스트 비활성화
+        speechBubbleText.text = ""; // 텍스트 초기화
         speechBubble.SetActive(false); // 말풍선 비활성화
     }
 }
