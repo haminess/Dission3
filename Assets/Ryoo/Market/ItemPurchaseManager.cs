@@ -149,28 +149,39 @@ public class ItemPurchaseManager : MonoBehaviour
 
     private IEnumerator ShowSpeechBubble(string text)
     {
+        // 말풍선 초기화
         speechBubbleText.text = ""; // 텍스트를 초기화
         speechBubble.SetActive(true); // 말풍선 활성화
 
         RectTransform bubbleRect = speechBubble.GetComponent<RectTransform>(); // 말풍선 RectTransform 가져오기
-        float originalWidth = bubbleRect.sizeDelta.x; // 말풍선의 원래 크기
-        float padding = 20f; // 텍스트 양옆에 추가할 여백
+        float paddingWidth = 80f; // 텍스트 양옆에 추가할 여백
+        float paddingHeight = 80f; // 텍스트 위아래에 추가할 여백
+        float minWidth = 100f; // 말풍선 최소 너비
+        float minHeight = 50f; // 말풍선 최소 높이
+
+        // 초기화: 말풍선의 크기를 최소 크기로 설정
+        bubbleRect.sizeDelta = new Vector2(minWidth, minHeight);
 
         foreach (char letter in text.ToCharArray())
         {
             speechBubbleText.text += letter; // 텍스트에 글자 추가
             yield return new WaitForSeconds(0.05f); // 글자 출력 속도
 
-            // 텍스트 길이에 따라 말풍선 크기 업데이트
-            float textWidth = speechBubbleText.preferredWidth + padding;
-            bubbleRect.sizeDelta = new Vector2(Mathf.Max(originalWidth, textWidth), bubbleRect.sizeDelta.y);
+            // 텍스트 크기 계산
+            float textWidth = speechBubbleText.preferredWidth + paddingWidth;
+            float textHeight = speechBubbleText.preferredHeight + paddingHeight;
+
+            // 말풍선 크기 업데이트
+            bubbleRect.sizeDelta = new Vector2(
+                Mathf.Max(minWidth, textWidth),
+                Mathf.Max(minHeight, textHeight)
+            );
         }
 
-        // 텍스트 출력이 끝난 후 대기 시간
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f); // 대기 시간
 
-        // 말풍선과 텍스트 비활성화
+        // 말풍선 비활성화
         speechBubbleText.text = ""; // 텍스트 초기화
-        speechBubble.SetActive(false); // 말풍선 비활성화
+        speechBubble.SetActive(false);
     }
 }
