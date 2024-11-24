@@ -12,22 +12,7 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource bgm;
     public AudioSource effect;
-
-    // bgm 관리
-    public int bgmId = 0;
-    public AudioClip[] bgmClip;
-    public float[] bgmHookTime; // 스테이지에서 bgm 훅부분부터 출력
-    public float[] bgmBpm;
-    public float[] bgmTempo;
-    public float[] bgmStartTime;
-
-    // metronome
-    public Metronome metro;
-    public Connector connector;
-
-    // effect 관리
-    public AudioClip[] effectClip;
-
+    
     public Slider bgmslider;    // 설정창 값 슬라이더
     public Slider effectslider;
     public float tempo1 = 4;
@@ -51,57 +36,64 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
 
-    }
+    public void SetBGM(string _name)
+    {
+        // 파일에서 clip 찾아 실행
+        AudioClip clip = null;
 
-    public void SetBgm(int _num)
-    {
-        bgmId = _num;
-        bgm.clip = bgmClip[_num];
+        if(clip != null)
+            bgm.clip = clip;
+        else
+            Debug.LogWarning($"SoundManager : {_name} 오디오 클립이 없습니다.");
     }
-    public void SetBgm(string _name)
+    public void SetBGM(AudioClip _clip)
     {
-        for(int i = 0; i < bgmClip.Length; i++)
-        {
-            if(bgmClip[i].name == _name)
-            {
-                bgmId = i;
-                bgm.clip = bgmClip[i];
-                return;
-            }
-        }
-        print("SoundManager : 해당 오디오 클립이 없습니다.");
-    }
-    public void SetBgm(AudioClip _clip)
-    {
-        for (int i = 0; i < bgmClip.Length; i++)
-        {
-            if (bgmClip[i].name == _clip.name)
-            {
-                bgmId = i;
-                return;
-            }
-        }
         bgm.clip = _clip;
     }
 
-    public void SetEffect(int _num)
+    public void PlayBGM()
     {
-        effect.clip = effectClip[_num];
+        if (bgm.isPlaying)
+        {
+            return;
+        }
+        else
+        {
+            bgm.Play();
+        }
     }
+    public void SwitchBGM()
+    {
+        if (bgm.isPlaying)
+        {
+            bgm.Stop();
+        }
+        else
+        {
+            bgm.Play();
+        }
+    }
+
+    public void PauseBGM()
+    {
+        bgm.Pause();
+    }
+
+    public void StopBGM()
+    {
+        bgm.Stop();
+    }
+
     public void SetEffect(string _name)
     {
-        for (int i = 0; i < effectClip.Length; i++)
-        {
-            if (effectClip[i].name == _name)
-            {
-                effect.clip = effectClip[i];
-                return;
-            }
-        }
-        print("SoundManager : 해당 오디오 클립이 없습니다.");
+        // 파일에서 clip 찾아 실행
+        AudioClip clip = null;
+
+        if (clip != null)
+            effect.clip = clip;
+        else
+            Debug.LogWarning($"SoundManager : {_name} 오디오 클립이 없습니다.");
     }
     public void SetEffect(AudioClip _clip)
     {
@@ -112,11 +104,7 @@ public class SoundManager : MonoBehaviour
     {
         effect.Play();
     }
-    public void PlayEffect(int _num)
-    {
-        SetEffect(_num);
-        effect.Play();
-    }
+
     public void PlayEffect(AudioClip _clip)
     {
         SetEffect(_clip);
@@ -193,71 +181,5 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void ConnectSoundManager()
-    {
-        // 현재 오디오소스 중지
-        //bgm.Stop();
-        //effect.Stop();
 
-        // 연결
-        connector.FindManager();
-        bgm = connector.soundMan.bgm;
-        effect = connector.soundMan.effect;
-
-        // 연결 후 오디오소스 중지
-        //bgm.Stop();
-        //effect.Stop();
-
-    }
-
-    public float GetBeatTime(int _bgm)
-    {
-        float sec = (60f / bgmBpm[_bgm]) * (tempo1 / tempo2);
-        
-        return sec;
-    }
-
-    public void PlayMetronome()
-    {
-        if (SceneManager.GetActiveScene().name != "MainGame")
-        {
-            return;
-        }
-        else
-        {
-
-        }
-        print(bgmId + " " + bgmStartTime.Length);
-        if(!bgm.isPlaying || bgm.time < bgmStartTime[bgmId] || metro.isMetroPlaying)
-        {
-            return;
-        }
-        metro.musicBPM = bgmBpm[bgmId];
-        metro.MakeBeat();
-        metro.PlayBeat();
-        metro.isMetroPlaying = true;
-    }
-
-    public void StopBGM()
-    {
-        if (bgm.isPlaying)
-        {
-            bgm.Stop();
-        }
-        else
-        {
-            bgm.Play();
-        }
-    }
-    public void PlayBGM()
-    {
-        if (bgm.isPlaying)
-        {
-            return;
-        }
-        else
-        {
-            bgm.Play();
-        }
-    }
 }

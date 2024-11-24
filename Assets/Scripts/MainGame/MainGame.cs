@@ -734,7 +734,7 @@ public class MainGame : MonoBehaviour
         // 스테이지 데이터 세팅
 
         // 스테이지 음악 세팅
-        bgm.clip = soundMan.bgmClip[stageNum - 1];
+        // *이곳에 코드를 작성하세요.
 
         // 스테이지 오브젝트 활성화
         for(int i = 0; i < stageObject.Length; i++)
