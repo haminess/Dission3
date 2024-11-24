@@ -175,8 +175,6 @@ public class TitleManager : MonoBehaviour
         if(parent == null)
             parent = UI[(int)mode].transform.GetChild(0).Find("button")?.gameObject;
 
-        print(parent);
-
         if (parent)
         {
             ArrowList = new GameObject[parent.transform.childCount];

@@ -19,7 +19,6 @@ public class Tutorial : MonoBehaviour
     public Metronome metronome;
     public GameObject note;
     public GameObject preNote;
-    public Connector connector;
 
     float[][] chart = new float[100][];
     public float time;
@@ -179,15 +178,12 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case Step.Synk:
-                synkRange = connector.maingamedata.synk;
-                judgeRange = connector.maingamedata.judge;
                 RunTime();
                 PlayerReposition();
                 ShowNote(1 - synkRange, transform);
         
                 if (Input.anyKeyDown)
                 {
-                    connector.UpdateData();
                     Judge(time + judgeRange);
                 }
                 break;

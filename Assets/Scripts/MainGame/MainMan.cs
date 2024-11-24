@@ -974,13 +974,6 @@ public class MainMan : MonoBehaviour
     }
     public void GetMainData()
     {
-        // 커넥터 연결하기
-        Connector connector = GetComponent<Connector>();
-        connector.UpdateData();
-        bgm.volume = connector.sounddata.bgm;
-        effect.volume = connector.sounddata.effect;
-        notesynkRange = connector.maingamedata.synk;
-        judgeRange = connector.maingamedata.judge;
 
         if (GameObject.Find("Data"))
         {

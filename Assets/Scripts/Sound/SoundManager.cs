@@ -5,22 +5,36 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using Ookii.Dialogs;
+using static ButtonSound;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using UnityEngine.Timeline;
 
 public class SoundManager : MonoBehaviour
 {
     private SoundData sounddata => DataManager.Instance.sounddata;
 
-    public AudioSource bgm;
-    public AudioSource effect;
-    
-    public Slider bgmslider;    // 설정창 값 슬라이더
-    public Slider effectslider;
-    public float tempo1 = 4;
-    public float tempo2 = 4;
-    public float tempo = 1;
+    [HideInInspector] public AudioSource bgm;
+    [HideInInspector] public AudioSource effect;
+
+    [Header("Button Sound")]
+    [SerializeField] private AudioClip hoverSound;
+    [SerializeField] private AudioClip clickSound;
+    [SerializeField] private AudioClip cancelHoverSound;
+    [SerializeField] private AudioClip cancelClickSound;
+    [SerializeField] private AudioClip confirmHoverSound;
+    [SerializeField] private AudioClip confirmClickSound;
 
     public void Start()
     {
+        // 오디오 소스 생성
+        GameObject bgmObj = new GameObject("BGM");
+        GameObject effObj = new GameObject("Effect");
+        bgm = bgmObj.AddComponent<AudioSource>();
+        effect = effObj.AddComponent<AudioSource>();
+        bgmObj.transform.SetParent(transform);
+        effObj.transform.SetParent(transform);
+
         // 데이터 불러오기
         DataManager.Instance.LoadSoundData();
 
@@ -28,11 +42,35 @@ public class SoundManager : MonoBehaviour
         bgm.volume = sounddata.bgm;
         effect.volume = sounddata.effect;
 
-        // 설정창
-        if (bgmslider)
+
+
+        // 매니저에서 디폴트 효과음 일괄 적용
+        ButtonSound[] buttons = GameObject.FindObjectsOfType<ButtonSound>();
+
+        foreach(ButtonSound bs in buttons)
         {
-            bgmslider.value = bgm.volume;
-            effectslider.value = effect.volume;
+            AudioSource AS = bs.GetComponent<AudioSource>();
+            AS.volume = effect.volume;
+
+        switch (bs.ButtonType)
+            {
+                case ButtonSoundType.Default:
+                    bs.HoverSound = hoverSound;
+                    bs.ClickSound = clickSound;
+                    break;
+                case ButtonSoundType.Confirm:
+                    bs.HoverSound = confirmHoverSound;
+                    bs.ClickSound = confirmClickSound;
+                    break;
+                case ButtonSoundType.Cancel:
+                    bs.HoverSound = cancelHoverSound;
+                    bs.ClickSound = cancelClickSound;
+                    break;
+                case ButtonSoundType.Custom:
+                    if(bs.HoverSound == null) bs.HoverSound = hoverSound;
+                    if(bs.ClickSound == null) bs.ClickSound = clickSound;
+                    break;
+            }
         }
     }
 
@@ -132,7 +170,6 @@ public class SoundManager : MonoBehaviour
         else if (set < 0)
             set = 0;
 
-        bgmslider.value = set;
         bgm.volume = set;
     }
     public void AddEffectVol(float _plus)
@@ -143,7 +180,6 @@ public class SoundManager : MonoBehaviour
         else if (set < 0)
             set = 0;
 
-        effectslider.value = set;
         effect.volume = set;
     }
     public void SubMusicVol(float _minus)
@@ -154,7 +190,6 @@ public class SoundManager : MonoBehaviour
         else if (set < 0)
             set = 0;
 
-        bgmslider.value = set;
         bgm.volume = set;
     }
     public void SubEffectVol(float _minus)
@@ -165,7 +200,6 @@ public class SoundManager : MonoBehaviour
         else if (set < 0)
             set = 0;
 
-        effectslider.value = set;
         effect.volume = set;
     }
 
