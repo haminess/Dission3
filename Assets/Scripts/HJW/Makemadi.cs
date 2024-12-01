@@ -57,7 +57,7 @@ public class Makemadi : MonoBehaviour
         madiset();
     }
 
-    void madiset()
+    public void madiset()
     {
         for (int i = 0; i < note.notedata.Count; i++)
         {
@@ -66,7 +66,7 @@ public class Makemadi : MonoBehaviour
         note.notedata.Clear();
         madi.GetComponent<RectTransform>().pivot = new Vector2(0, 0.5f);
         madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(4.014713f, 0);
-        madi.GetComponent<RectTransform>().sizeDelta = new Vector3(sec * madimultiplyer, 16.2721f);
+        madi.GetComponent<RectTransform>().sizeDelta = new Vector3((float)sec * madimultiplyer, 16.2721f);
         if(sec < 40)
         {
             Slider.SetActive(false);
