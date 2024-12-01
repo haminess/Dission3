@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+<<<<<<< Updated upstream
+guid: e2611b92221c0834a9c1d4f674a627f1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+=======
+guid: cae779aca3e415541b815f0ce3763b82
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - hoverSound: {fileID: 8300000, guid: 54ca87df3116a0f46b7404f6815652bd, type: 3}
+  - clickSound: {fileID: 8300000, guid: 163a4df6216d55d4b9f9c1576d624ba8, type: 3}
+>>>>>>> Stashed changes
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

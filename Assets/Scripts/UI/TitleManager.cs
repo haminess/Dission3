@@ -75,14 +75,16 @@ public class TitleManager : MonoBehaviour
         {
             arrowPoint += 1;
             arrow.transform.position = ArrowList[arrowPoint].transform.position;
-            soundmanager.SetEffect(2);
+
+            // 효과음을 설정하는 코드를 작성하세요.
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow) && arrowPoint > 0)
         {
             arrowPoint -= 1;
             arrow.transform.position = ArrowList[arrowPoint].transform.position;
-            soundmanager.SetEffect(2);
+
+            // 효과음을 설정하는 코드를 작성하세요.
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.Return))
@@ -100,14 +102,14 @@ public class TitleManager : MonoBehaviour
         {
             arrowPoint += 1;
             arrow.transform.position = _mode[arrowPoint].transform.position;
-            soundmanager.SetEffect(2);
+            //soundmanager.SetEffect(2);
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow) && arrow.transform.position.y < _mode[0].transform.position.y)
         {
             arrowPoint -= 1;
             arrow.transform.position = _mode[arrowPoint].transform.position;
-            soundmanager.SetEffect(2);
+            //soundmanager.SetEffect(2);
             soundmanager.PlayEffect();
         }
         if (Input.GetKeyDown(KeyCode.Return))
@@ -172,9 +174,6 @@ public class TitleManager : MonoBehaviour
         GameObject parent = UI[(int)mode].transform.Find("button")?.gameObject;
         if(parent == null)
             parent = UI[(int)mode].transform.GetChild(0).Find("button")?.gameObject;
-
-        print("버튼 찾기");
-        print(parent);
 
         if (parent)
         {
