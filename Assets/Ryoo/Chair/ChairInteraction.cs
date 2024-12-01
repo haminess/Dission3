@@ -10,18 +10,12 @@ public class ChairInteraction : MonoBehaviour
     private Rigidbody2D playerRigidbody; // 플레이어의 Rigidbody2D 참조
     private SpriteRenderer playerSprite; // 플레이어의 SpriteRenderer
 
-    public Transform chairPosition; // 의자 위치 (Inspector에서 설정)
-    public float moveSpeed = 3f; // 플레이어가 의자까지 이동하는 속도
-    public SpriteRenderer chairSprite; // 의자의 SpriteRenderer (Inspector에서 설정)
-    public SpriteRenderer deskSprite; // 책상의 SpriteRenderer (Inspector에서 설정)
+    public Transform chairTransform; // 의자의 Transform
+    public SpriteRenderer chairSprite; // 의자의 SpriteRenderer
+    public SpriteRenderer deskSprite; // 책상의 SpriteRenderer
     public GameObject outlineObject; // 의자의 외곽선 오브젝트
     public GameObject qKeyImage; // Q키 UI 오브젝트
     public Animator qKeyAnimator; // Q키 애니메이션
-
-    // 원래 레이어 저장용 변수
-    private int originalChairLayer;
-    private int originalPlayerLayer;
-    private int originalDeskLayer;
 
     void Start()
     {
@@ -32,11 +26,6 @@ public class ChairInteraction : MonoBehaviour
             playerRigidbody = player.GetComponent<Rigidbody2D>();
             playerSprite = player.GetComponentInChildren<SpriteRenderer>();
         }
-
-        // 원래 레이어 저장
-        if (chairSprite != null) originalChairLayer = chairSprite.sortingOrder;
-        if (playerSprite != null) originalPlayerLayer = playerSprite.sortingOrder;
-        if (deskSprite != null) originalDeskLayer = deskSprite.sortingOrder;
 
         // 초기 상태 설정
         outlineObject.SetActive(false); // 외곽선 비활성화
@@ -50,7 +39,7 @@ public class ChairInteraction : MonoBehaviour
         {
             if (!isPlayerSitting)
             {
-                StartCoroutine(SitOnChair());
+                SitOnChair();
             }
             else
             {
@@ -98,57 +87,42 @@ public class ChairInteraction : MonoBehaviour
         }
     }
 
-    private IEnumerator SitOnChair()
+    private void SitOnChair()
     {
-        if (player == null || playerRigidbody == null || playerSprite == null || chairSprite == null || deskSprite == null)
-        {
-            Debug.LogError("Player, SpriteRenderer, or Rigidbody2D is not set up correctly.");
-            yield break;
-        }
+        if (player == null) return;
 
-        // 플레이어 이동 중지
-        player.Movable = false;
-
-        // 원래 위치 저장
+        // 플레이어 원래 위치 저장
         originalPlayerPosition = player.transform.position;
 
-        // 플레이어가 의자 위치로 이동
-        while (Vector3.Distance(player.transform.position, chairPosition.position) > 0.1f)
+        // Character의 Animator 가져오기
+        Animator animator = player.GetComponentInChildren<Animator>();
+
+        // 앉는 애니메이션 즉시 시작
+        if (animator != null)
         {
-            player.transform.position = Vector3.Lerp(player.transform.position, chairPosition.position, moveSpeed * Time.deltaTime);
-            yield return null;
+            animator.SetBool("IsSitting", true);
         }
 
-        // 정확한 의자 위치로 정렬
-        player.transform.position = chairPosition.position;
-        isPlayerSitting = true;
+        // 즉시 의자 위치로 이동
+        player.transform.position = chairTransform.position;
 
-        //// 앉는 애니메이션 설정
-        //player.GetComponent<Animator>().SetBool("Sit", true);
-
-        // 레이어 설정: 의자 > 캐릭터 > 책상
-        chairSprite.sortingOrder = 1; // 의자 레이어
-        playerSprite.sortingOrder = 0; // 캐릭터 레이어
-        deskSprite.sortingOrder = -1; // 책상 레이어
+        // 레이어 설정: 의자(1) < 캐릭터(0) < 책상(-1)
+        if (chairSprite != null) chairSprite.sortingOrder = 1;
+        if (playerSprite != null) playerSprite.sortingOrder = 0;
+        if (deskSprite != null) deskSprite.sortingOrder = -1;
 
         // 외곽선 및 Q키 UI 비활성화
         outlineObject.SetActive(false);
         qKeyImage.SetActive(false);
+        if (qKeyAnimator != null) qKeyAnimator.enabled = false;
 
-        // Q키 애니메이션 비활성화
-        if (qKeyAnimator != null)
-        {
-            qKeyAnimator.enabled = false;
-        }
+        isPlayerSitting = true; // 앉은 상태로 설정
+        player.Movable = false; // 플레이어 이동 불가
     }
 
     private void StandUpFromChair()
     {
-        if (player == null || playerSprite == null)
-        {
-            Debug.LogError("Player or SpriteRenderer is not set up correctly.");
-            return;
-        }
+        if (player == null) return;
 
         // 플레이어 이동 가능
         player.Movable = true;
@@ -159,13 +133,17 @@ public class ChairInteraction : MonoBehaviour
         // 앉기 상태 해제
         isPlayerSitting = false;
 
-        //// 앉는 애니메이션 해제
-        //player.GetComponent<Animator>().SetBool("Sit", false);
+        // 앉는 애니메이션 해제
+        Animator animator = player.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("IsSitting", false);
+        }
 
-        // 레이어 복구
-        chairSprite.sortingOrder = originalChairLayer; // 의자 레이어 복구
-        playerSprite.sortingOrder = originalPlayerLayer; // 캐릭터 레이어 복구
-        deskSprite.sortingOrder = originalDeskLayer; // 책상 레이어 복구
+        // 레이어 복구: 의자(0), 캐릭터(0), 책상(0)
+        if (chairSprite != null) chairSprite.sortingOrder = 0;
+        if (playerSprite != null) playerSprite.sortingOrder = 0;
+        if (deskSprite != null) deskSprite.sortingOrder = 0;
 
         // 외곽선 및 Q키 UI 다시 활성화
         outlineObject.SetActive(true);
