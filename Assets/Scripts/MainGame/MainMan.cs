@@ -924,7 +924,7 @@ public class MainMan : MonoBehaviour
         isStart = false;
         isGame = false;
         isEnd = false;
-        bgm.Stop();
+        //bgm.Stop();
         Settable(false);
         GetComponent<NoteMan>().note_idx = 0;
         collections.Clear();
