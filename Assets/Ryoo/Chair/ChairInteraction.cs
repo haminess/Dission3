@@ -63,7 +63,6 @@ public class ChairInteraction : MonoBehaviour
             if (qKeyAnimator != null)
             {
                 qKeyAnimator.enabled = true;
-                qKeyAnimator.SetTrigger("Show");
             }
         }
     }
@@ -153,7 +152,6 @@ public class ChairInteraction : MonoBehaviour
         if (qKeyAnimator != null)
         {
             qKeyAnimator.enabled = true;
-            qKeyAnimator.SetTrigger("Show");
         }
     }
 }
