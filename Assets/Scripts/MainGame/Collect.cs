@@ -13,7 +13,7 @@ public class Collect : MonoBehaviour
     {
         MainMan.instance.collection += CNum;
         MainMan.instance.collections.Add(content);
-        MainMan.instance.effect.clip = MainMan.instance.soundMan.effectClip[1];
+        //MainMan.instance.effect.clip = MainMan.instance.soundMan.effectClip[1];
         MainMan.instance.effect.Play();
         Destroy(gameObject);
     }
