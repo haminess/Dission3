@@ -568,7 +568,7 @@ public class StoryManager : MonoBehaviour
             }
 
             float time = 0f;
-            if ("" != item.Column6)
+            if ("" != item.Column6 && null != item.Column6)
                 time = float.Parse(item.Column6);
 
             if(-1 == time)
