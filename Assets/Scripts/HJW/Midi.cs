@@ -7,6 +7,11 @@ using Melanchall.DryWetMidi.Interaction;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Tools;
 using UnityEngine.UI;
+using SimpleSynth.EventArguments;
+using SimpleSynth.Parameters;
+using SimpleSynth.Parsing;
+using SimpleSynth.Providers;
+using SimpleSynth.Synths;
 using System;
 [System.Serializable]
 public struct NoteForUnity
@@ -29,7 +34,7 @@ public class Midi : MonoBehaviour
     private void Awake()
     {
         OpenDialog = new VistaOpenFileDialog();
-        OpenDialog.Filter = "midi files(*.mid)|*.mid";
+        OpenDialog.Filter = "midi files(*.mid)|*.mid|midi files(*.midi)|*.midi";
         OpenDialog.Title = "Select Audio";
     }
     public string FileOpen()
@@ -51,13 +56,39 @@ public class Midi : MonoBehaviour
             ReadMidiData();
         }
     }
+    string FileNameWithoutExtention;
     private void CopyFileToAssets(string filepath)
     {
+
         string FileName = Path.GetFileName(filepath);
-        string FileNameWithoutExtention = Path.GetFileNameWithoutExtension(filepath);
+        FileNameWithoutExtention = Path.GetFileNameWithoutExtension(filepath);
+        Makemadi.instance.musicnamee = FileNameWithoutExtention;
         string des = Path.Combine("Assets/Resources/Midi", FileName);
         File.Copy(filepath, des, true);
+        var stream = File.OpenRead(filepath);
+        // Parse the provided MIDI file.
+        var interpretation = new MidiInterpretation(stream, new DefaultNoteSegmentProvider());
+
+        // Create a new synthesizer with default providers.
+        var synth = new BasicSynth(interpretation, new DefaultAdsrEnvelopeProvider(AdsrParameters.Short), new DefaultBalanceProvider());
+
+        // Generate the WAV file
+        MemoryStream result = synth.GenerateWAV();
+
+        string wavpath = Path.Combine("Assets/Resources/Wav", FileNameWithoutExtention + ".wav");
+        // Write WAV file to disk
+        var outputStream = File.OpenWrite(wavpath);
+        result.CopyTo(outputStream);
+
+        result.Dispose();
         UnityEditor.AssetDatabase.Refresh();
+        Invoke("ToAudioSource", 0.1f);
+    }
+    void ToAudioSource()
+    {
+        print("Wav/" + FileNameWithoutExtention);
+        Makemadi.instance.audio_.mainmusic.clip = Resources.Load("Wav/" + FileNameWithoutExtention) as AudioClip;
+
     }
 
     private void ReadMidiData()
@@ -69,12 +100,12 @@ public class Midi : MonoBehaviour
         {
             Channels.Add(Splitedmidifiles);
         }
-        print(Channels.Count);
         foreach (var note in Channels[trackrestriction].GetNotes())
         {
             var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midi.GetTempoMap());
             var metricLengthSpan = LengthConverter.ConvertTo<MetricTimeSpan>(note.Length,note.Time ,midi.GetTempoMap());
             var newnote = new NoteForUnity();
+
             newnote.timeStamps = metricTimeSpan.TotalSeconds;
             newnote.length = metricLengthSpan.TotalSeconds;
             NoteForUnity.Add(newnote);
@@ -96,6 +127,9 @@ public class Midi : MonoBehaviour
     }
     void MidinoteLoad()
     {
+        Makemadi.instance.sec = (float)TotalLength;
+        Makemadi.instance.bpm = (int)midi.GetTempoMap().GetTempoAtTime((MidiTimeSpan)0).BeatsPerMinute;
+        Makemadi.instance.madiset();
         foreach (var item in NoteForUnity)
         {
             var newpos = new Vector2((float)item.timeStamps * Makemadi.instance.madimultiplyer, 0);
