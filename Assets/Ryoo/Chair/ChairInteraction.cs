@@ -14,6 +14,9 @@ public class ChairInteraction : MonoBehaviour
     public float moveSpeed = 3f; // 플레이어가 의자까지 이동하는 속도
     public SpriteRenderer chairSprite; // 의자의 SpriteRenderer (Inspector에서 설정)
     public SpriteRenderer deskSprite; // 책상의 SpriteRenderer (Inspector에서 설정)
+    public GameObject outlineObject; // 의자의 외곽선 오브젝트
+    public GameObject qKeyImage; // Q키 UI 오브젝트
+    public Animator qKeyAnimator; // Q키 애니메이션
 
     // 원래 레이어 저장용 변수
     private int originalChairLayer;
@@ -34,6 +37,10 @@ public class ChairInteraction : MonoBehaviour
         if (chairSprite != null) originalChairLayer = chairSprite.sortingOrder;
         if (playerSprite != null) originalPlayerLayer = playerSprite.sortingOrder;
         if (deskSprite != null) originalDeskLayer = deskSprite.sortingOrder;
+
+        // 초기 상태 설정
+        outlineObject.SetActive(false); // 외곽선 비활성화
+        qKeyImage.SetActive(false); // Q키 UI 비활성화
     }
 
     void Update()
@@ -58,6 +65,17 @@ public class ChairInteraction : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNear = true;
+
+            // 외곽선 활성화 및 Q키 UI 표시
+            outlineObject.SetActive(true);
+            qKeyImage.SetActive(true);
+
+            // Q키 애니메이션 활성화
+            if (qKeyAnimator != null)
+            {
+                qKeyAnimator.enabled = true;
+                qKeyAnimator.SetTrigger("Show");
+            }
         }
     }
 
@@ -67,6 +85,16 @@ public class ChairInteraction : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNear = false;
+
+            // 외곽선 및 Q키 UI 비활성화
+            outlineObject.SetActive(false);
+            qKeyImage.SetActive(false);
+
+            // Q키 애니메이션 비활성화
+            if (qKeyAnimator != null)
+            {
+                qKeyAnimator.enabled = false;
+            }
         }
     }
 
@@ -102,6 +130,16 @@ public class ChairInteraction : MonoBehaviour
         chairSprite.sortingOrder = 1; // 의자 레이어
         playerSprite.sortingOrder = 0; // 캐릭터 레이어
         deskSprite.sortingOrder = -1; // 책상 레이어
+
+        // 외곽선 및 Q키 UI 비활성화
+        outlineObject.SetActive(false);
+        qKeyImage.SetActive(false);
+
+        // Q키 애니메이션 비활성화
+        if (qKeyAnimator != null)
+        {
+            qKeyAnimator.enabled = false;
+        }
     }
 
     private void StandUpFromChair()
@@ -128,5 +166,16 @@ public class ChairInteraction : MonoBehaviour
         chairSprite.sortingOrder = originalChairLayer; // 의자 레이어 복구
         playerSprite.sortingOrder = originalPlayerLayer; // 캐릭터 레이어 복구
         deskSprite.sortingOrder = originalDeskLayer; // 책상 레이어 복구
+
+        // 외곽선 및 Q키 UI 다시 활성화
+        outlineObject.SetActive(true);
+        qKeyImage.SetActive(true);
+
+        // Q키 애니메이션 다시 활성화
+        if (qKeyAnimator != null)
+        {
+            qKeyAnimator.enabled = true;
+            qKeyAnimator.SetTrigger("Show");
+        }
     }
 }
