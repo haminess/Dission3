@@ -734,7 +734,7 @@ public class MainGame : MonoBehaviour
         // 스테이지 데이터 세팅
 
         // 스테이지 음악 세팅
-        bgm.clip = soundMan.bgmClip[stageNum - 1];
+        // *이곳에 코드를 작성하세요.
 
         // 스테이지 오브젝트 활성화
         for(int i = 0; i < stageObject.Length; i++)
@@ -748,14 +748,6 @@ public class MainGame : MonoBehaviour
     }
     public void GetMainData()
     {
-        // 커넥터 연결하기
-        Connector connector = GetComponent<Connector>();
-        connector.UpdateData();
-        bgm.volume = connector.sounddata.bgm;
-        effect.volume = connector.sounddata.effect;
-        notesynkRange = connector.maingamedata.synk;
-        judgeRange = connector.maingamedata.judge;
-
         if (GameObject.Find("Data"))
         {
             print("데이터 오브젝트 연결");
