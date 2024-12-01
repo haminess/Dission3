@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 715aa44d04277cd46aa3563ee674158a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bgm: {instanceID: 0}
+  - effect: {instanceID: 0}
+  - hoverSound: {fileID: 8300000, guid: d8aa6885e191c6f4f8b4e27a30e16fac, type: 3}
+  - clickSound: {fileID: 8300000, guid: acaff9a7439c96c40bcde17439dff48f, type: 3}
+  - cancelHoverSound: {fileID: 8300000, guid: 3a6258318d9bb0c49b0213cbefd5a992, type: 3}
+  - cancelClickSound: {fileID: 8300000, guid: 75ff526dbe45c294a9cdd9c95f0b8fcc, type: 3}
+  - confirmHoverSound: {fileID: 8300000, guid: 3a6258318d9bb0c49b0213cbefd5a992, type: 3}
+  - confirmClickSound: {fileID: 8300000, guid: f1e3eff5dcb5bea46a08836bab69de08, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
