@@ -17,6 +17,8 @@ public class ChairInteraction : MonoBehaviour
     public GameObject qKeyImage; // Q키 UI 오브젝트
     public Animator qKeyAnimator; // Q키 애니메이션
 
+    public float moveDuration = 0.5f; // 플레이어가 이동하는 데 걸리는 시간
+
     void Start()
     {
         // Player 스크립트와 컴포넌트 찾기
@@ -39,11 +41,11 @@ public class ChairInteraction : MonoBehaviour
         {
             if (!isPlayerSitting)
             {
-                SitOnChair();
+                StartCoroutine(SitOnChair());
             }
             else
             {
-                StandUpFromChair();
+                StartCoroutine(StandUpFromChair());
             }
         }
     }
@@ -86,9 +88,9 @@ public class ChairInteraction : MonoBehaviour
         }
     }
 
-    private void SitOnChair()
+    private IEnumerator SitOnChair()
     {
-        if (player == null) return;
+        if (player == null) yield break;
 
         // 플레이어 원래 위치 저장
         originalPlayerPosition = player.transform.position;
@@ -102,35 +104,40 @@ public class ChairInteraction : MonoBehaviour
             animator.SetBool("IsSitting", true);
         }
 
-        // 즉시 의자 위치로 이동
-        player.transform.position = chairTransform.position;
+        // 외곽선 및 Q키 UI 비활성화
+        outlineObject.SetActive(false);
+        qKeyImage.SetActive(false);
+        if (qKeyAnimator != null) qKeyAnimator.enabled = false;
 
         // 레이어 설정: 의자(1) < 캐릭터(0) < 책상(-1)
         if (chairSprite != null) chairSprite.sortingOrder = 1;
         if (playerSprite != null) playerSprite.sortingOrder = 0;
         if (deskSprite != null) deskSprite.sortingOrder = -1;
 
-        // 외곽선 및 Q키 UI 비활성화
-        outlineObject.SetActive(false);
-        qKeyImage.SetActive(false);
-        if (qKeyAnimator != null) qKeyAnimator.enabled = false;
+        // 이동 애니메이션 (Lerp 사용)
+        float elapsedTime = 0f;
+        Vector3 startPos = player.transform.position;
+        Vector3 endPos = chairTransform.position;
 
-        isPlayerSitting = true; // 앉은 상태로 설정
-        player.Movable = false; // 플레이어 이동 불가
+        while (elapsedTime < moveDuration)
+        {
+            player.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        player.transform.position = chairTransform.position; // 최종 위치 설정
+
+        // 앉은 상태로 설정 및 이동 불가
+        isPlayerSitting = true;
+        player.Movable = false;
     }
 
-    private void StandUpFromChair()
+    private IEnumerator StandUpFromChair()
     {
-        if (player == null) return;
+        if (player == null) yield break;
 
         // 플레이어 이동 가능
         player.Movable = true;
-
-        // 원래 위치로 복귀
-        player.transform.position = originalPlayerPosition;
-
-        // 앉기 상태 해제
-        isPlayerSitting = false;
 
         // 앉는 애니메이션 해제
         Animator animator = player.GetComponentInChildren<Animator>();
@@ -138,6 +145,22 @@ public class ChairInteraction : MonoBehaviour
         {
             animator.SetBool("IsSitting", false);
         }
+
+        // 이동 애니메이션 (Lerp 사용)
+        float elapsedTime = 0f;
+        Vector3 startPos = player.transform.position;
+        Vector3 endPos = originalPlayerPosition;
+
+        while (elapsedTime < moveDuration)
+        {
+            player.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        player.transform.position = originalPlayerPosition; // 최종 위치 설정
+
+        // 앉기 상태 해제
+        isPlayerSitting = false;
 
         // 레이어 복구: 의자(0), 캐릭터(0), 책상(0)
         if (chairSprite != null) chairSprite.sortingOrder = 0;
