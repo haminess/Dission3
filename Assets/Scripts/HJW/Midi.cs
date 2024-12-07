@@ -7,21 +7,22 @@ using Melanchall.DryWetMidi.Interaction;
 using System.Collections.Generic;
 using Melanchall.DryWetMidi.Tools;
 using UnityEngine.UI;
-using SimpleSynth.EventArguments;
 using SimpleSynth.Parameters;
 using SimpleSynth.Parsing;
 using SimpleSynth.Providers;
 using SimpleSynth.Synths;
 using System;
 [System.Serializable]
-public struct NoteForUnity
+public class NoteForUnity
 {
     public double timeStamps;
     public double length;
+    public GameObject obj;
 }
 public class Midi : MonoBehaviour
 {
     VistaOpenFileDialog OpenDialog;
+    public GameObject MidiLongNote;
     public GameObject MidiNote;
     public GameObject MidiMadi;
     public AudioSource music;
@@ -104,8 +105,8 @@ public class Midi : MonoBehaviour
         {
             var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midi.GetTempoMap());
             var metricLengthSpan = LengthConverter.ConvertTo<MetricTimeSpan>(note.Length,note.Time ,midi.GetTempoMap());
-            var newnote = new NoteForUnity();
 
+            NoteForUnity newnote = new NoteForUnity();
             newnote.timeStamps = metricTimeSpan.TotalSeconds;
             newnote.length = metricLengthSpan.TotalSeconds;
             NoteForUnity.Add(newnote);
@@ -130,21 +131,29 @@ public class Midi : MonoBehaviour
         Makemadi.instance.sec = (float)TotalLength;
         Makemadi.instance.bpm = (int)midi.GetTempoMap().GetTempoAtTime((MidiTimeSpan)0).BeatsPerMinute;
         Makemadi.instance.madiset();
-        foreach (var item in NoteForUnity)
+        for (int i = 0; i < NoteForUnity.Count; i++)
         {
-            var newpos = new Vector2((float)item.timeStamps * Makemadi.instance.madimultiplyer, 0);
-            var n = Instantiate(MidiNote, newpos, Quaternion.identity, MidiMadi.transform);
-            if(item.length > 0)
+            var newpos = new Vector2((float)NoteForUnity[i].timeStamps * Makemadi.instance.madimultiplyer, 0);
+            GameObject n = null;
+            if(NoteForUnity[i].length > 0.2f)
             {
+                n = Instantiate(MidiLongNote, newpos, Quaternion.identity, MidiMadi.transform);
                 var mid = n.transform.GetChild(1);
                 var end = n.transform.GetChild(2);
                 mid.gameObject.SetActive(true);
-                mid.GetComponent<RectTransform>().sizeDelta = new Vector2 ((float)item.length * Makemadi.instance.madimultiplyer, 103.87f);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer, 103.87f);
                 end.gameObject.GetComponent<Image>().enabled = true;
-                end.GetComponent<RectTransform>().localPosition = new Vector2((float)item.length * Makemadi.instance.madimultiplyer, 0);
+                end.GetComponent<RectTransform>().localPosition = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer + 0.49f, 0);
                 end.SetAsLastSibling();
             }
+            else
+            {
+                n = Instantiate(MidiNote, newpos, Quaternion.identity, MidiMadi.transform);
+
+            }
             n.transform.localPosition = newpos;
+            NoteForUnity[i].obj = n;
+
         }
     }
 

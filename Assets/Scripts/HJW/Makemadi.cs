@@ -11,8 +11,9 @@ public class Makemadi : MonoBehaviour
 
     public Makenote note;
     public Settings settings;
-    public static Makemadi instance;
     public Audio audio_;
+    public Midi midi;
+    public static Makemadi instance;
     public GameObject madi;
     public GameObject Slider;
     public GameObject getendtime;
@@ -99,7 +100,18 @@ public class Makemadi : MonoBehaviour
                 end.GetComponent<RectTransform>().anchoredPosition = new Vector2(note.notedata[i].noteduration * madimultiplyer + 2, 0);
             }
         }
-        if(madi.GetComponent<RectTransform>().sizeDelta.x < 78)
+        for (int i = 0; i < midi.NoteForUnity.Count; i++)
+        {
+            midi.NoteForUnity[i].obj.GetComponent<RectTransform>().anchoredPosition = new Vector2((float)midi.NoteForUnity[i].timeStamps * madimultiplyer, 0);
+            if (midi.NoteForUnity[i].length > 0.2f)
+            {
+                var mid = midi.NoteForUnity[i].obj.transform.GetChild(1);
+                var end = midi.NoteForUnity[i].obj.transform.GetChild(3);
+                mid.GetComponent<RectTransform>().sizeDelta = new Vector2((float)midi.NoteForUnity[i].length * madimultiplyer, 103.87f);
+                end.GetComponent<RectTransform>().anchoredPosition = new Vector2((float)midi.NoteForUnity[i].length * madimultiplyer + 2.45f, 0);
+            }
+        }
+        if (madi.GetComponent<RectTransform>().sizeDelta.x < 78)
         {
             noslider = true;
             Slider.SetActive(false);
