@@ -71,7 +71,7 @@ public class StoryManager : MonoBehaviour
         ParamClear,
     }
 
-    public string[] CommandList_String =
+    private string[] CommandList_String =
     {
         "StoryStart",
         "StoryEnd",
