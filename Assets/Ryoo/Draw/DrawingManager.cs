@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class DrawingManager : MonoBehaviour
 {
@@ -16,12 +17,17 @@ public class DrawingManager : MonoBehaviour
     private Vector2 previousDrawPoint;
     private bool isPreviousPointSet = false; // 이전 점이 설정되었는지 여부
     private int eraserSize = 10; // 기본 지우개 크기
-    private int penSize = 2; // 기본 펜 크기
+    private int penSize = 4; // 기본 펜 크기
     private GameObject eraserCursor;
     public SpriteRenderer chalkboardRenderer;
     private Color customChalkboardColor = new Color(101f / 255f, 144f / 255f, 115f / 255f); // #659073
     private Color penColor = Color.white; // 펜 색상
     private GameObject penCursor; // 펜 커서
+    public Text penSizeText; // 펜 굵기 표시용 텍스트
+    public Text eraserSizeText; // 지우개 굵기 표시용 텍스트
+
+    public Slider penSizeSlider; // 펜 사이즈 조절 슬라이더
+    public Slider eraserSizeSlider; // 지우개 사이즈 조절 슬라이더
 
     public GameObject drawingPaper;
 
@@ -31,6 +37,10 @@ public class DrawingManager : MonoBehaviour
     public Sprite eraserPressedSprite;
     public Sprite resetDefaultSprite;
     public Sprite resetPressedSprite;
+
+    // 히스토리 리스트
+    private List<Color[]> undoHistory = new List<Color[]>();
+    private List<Color[]> redoHistory = new List<Color[]>();
 
     void Start()
     {
@@ -85,13 +95,37 @@ public class DrawingManager : MonoBehaviour
 
         // Reset Button 설정
         SetButtonSprites(resetButton, resetDefaultSprite, resetPressedSprite);
+
+        // 펜, 지우개 사이즈 슬라이더 초기화
+        penSizeSlider.minValue = 1;
+        penSizeSlider.maxValue = 20;
+        penSizeSlider.value = penSize;
+
+        eraserSizeSlider.minValue = 1;
+        eraserSizeSlider.maxValue = 50;
+        eraserSizeSlider.value = eraserSize;
+
+        // 슬라이더 값 변경 시 호출될 이벤트 설정
+        penSizeSlider.onValueChanged.AddListener(OnPenSizeSliderChanged);
+        eraserSizeSlider.onValueChanged.AddListener(OnEraserSizeSliderChanged);
+
+        // 초기 텍스트 UI
+        UpdatePenSizeText();
+        UpdateEraserSizeText();
     }
 
     void Update()
     {
+        bool allowDrawing = IsPointerInDrawingPanel();
+
         // 그림판이 활성화된 상태에서 마우스 클릭으로 그림 그리기
-        if (isDrawingPanelActive && (isPenActive || isEraserActive))
+        if (isDrawingPanelActive && allowDrawing && (isPenActive || isEraserActive))
         {
+            if (Input.GetMouseButtonDown(0)) // 마우스를 눌렀을 때 히스토리 저장 시작
+            {
+                SaveToUndoHistory();
+            }
+
             if (Input.GetMouseButton(0))
             {
                 Draw(false);
@@ -136,6 +170,26 @@ public class DrawingManager : MonoBehaviour
                 UpdatePenCursor(); // 펜 커서 위치 업데이트
             }
         }
+
+        // Undo 단축키: Ctrl + Z
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        {
+            Undo();
+        }
+
+        // Redo 단축키: Ctrl + Y
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Y))
+        {
+            Redo();
+        }
+    }
+
+    // 마우스가 drawingPanel 내부에 있는지 확인
+    bool IsPointerInDrawingPanel()
+    {
+        RectTransform rectTransform = drawingPanel.GetComponent<RectTransform>();
+        Vector2 localMousePosition = rectTransform.InverseTransformPoint(Input.mousePosition);
+        return rectTransform.rect.Contains(localMousePosition);
     }
 
     public void ToggleDrawingPanel()
@@ -173,6 +227,19 @@ public class DrawingManager : MonoBehaviour
             DeactivatePen();
             ActivateEraser();
         }
+    }
+
+    // 슬라이더 값 변경 시 펜/지우개 크기 업데이트
+    private void OnPenSizeSliderChanged(float newSize)
+    {
+        penSize = (int)newSize;
+        UpdatePenSizeText();
+    }
+
+    private void OnEraserSizeSliderChanged(float newSize)
+    {
+        eraserSize = (int)newSize;
+        UpdateEraserSizeText();
     }
 
     void ActivatePen()
@@ -223,30 +290,55 @@ public class DrawingManager : MonoBehaviour
 
     void IncreaseEraserSize()
     {
-        eraserSize = Mathf.Min(eraserSize + 1, 50); // 지우개 크기를 최대 50까지
-        UpdateEraserCursorSize();
-        Debug.Log($"Eraser size increased: {eraserSize}");
+        eraserSize = Mathf.Min(eraserSize + 1, 50);
+        eraserSizeSlider.value = eraserSize; // 슬라이더에 값 업데이트
+        UpdateEraserSizeText();
     }
 
     void DecreaseEraserSize()
     {
-        eraserSize = Mathf.Max(eraserSize - 1, 1); // 지우개 크기를 최소 1까지
-        UpdateEraserCursorSize();
-        Debug.Log($"Eraser size decreased: {eraserSize}");
+        eraserSize = Mathf.Max(eraserSize - 1, 1);
+        eraserSizeSlider.value = eraserSize; // 슬라이더에 값 업데이트
+        UpdateEraserSizeText();
     }
 
     void IncreasePenSize()
     {
-        penSize = Mathf.Min(penSize + 1, 20); // 펜 굵기를 최대 20까지
-        UpdatePenCursorSize(); // 펜 커서 크기 업데이트
-        Debug.Log($"Pen size increased: {penSize}");
+        penSize = Mathf.Min(penSize + 1, 20);
+        penSizeSlider.value = penSize; // 슬라이더에 값 업데이트
+        UpdatePenSizeText();
     }
 
     void DecreasePenSize()
     {
-        penSize = Mathf.Max(penSize - 1, 1); // 펜 굵기를 최소 1까지
-        UpdatePenCursorSize(); // 펜 커서 크기 업데이트
-        Debug.Log($"Pen size decreased: {penSize}");
+        penSize = Mathf.Max(penSize - 1, 1);
+        penSizeSlider.value = penSize; // 슬라이더에 값 업데이트
+        UpdatePenSizeText();
+    }
+
+    void UpdatePenSize(int newSize)
+    {
+        penSize = newSize;
+        UpdatePenSizeText();
+        UpdatePenCursorSize();
+    }
+
+    void UpdateEraserSize(int newSize)
+    {
+        eraserSize = newSize;
+        UpdateEraserSizeText();
+        UpdateEraserCursorSize();
+    }
+
+    // UI 텍스트 업데이트
+    void UpdatePenSizeText()
+    {
+        penSizeText.text = "펜 크기 : " + penSize;
+    }
+
+    void UpdateEraserSizeText()
+    {
+        eraserSizeText.text = "지우개 크기 : " + eraserSize;
     }
 
     void Draw(bool isNewLine)
@@ -276,6 +368,37 @@ public class DrawingManager : MonoBehaviour
         previousDrawPoint = new Vector2(x, y);
 
         drawingTexture.Apply();
+    }
+
+    // Undo 기능
+    void Undo()
+    {
+        if (undoHistory.Count > 0)
+        {
+            redoHistory.Add(drawingTexture.GetPixels());
+            drawingTexture.SetPixels(undoHistory[undoHistory.Count - 1]);
+            undoHistory.RemoveAt(undoHistory.Count - 1);
+            drawingTexture.Apply();
+        }
+    }
+
+    // Redo 기능
+    void Redo()
+    {
+        if (redoHistory.Count > 0)
+        {
+            undoHistory.Add(drawingTexture.GetPixels());
+            drawingTexture.SetPixels(redoHistory[redoHistory.Count - 1]);
+            redoHistory.RemoveAt(redoHistory.Count - 1);
+            drawingTexture.Apply();
+        }
+    }
+
+    void SaveToUndoHistory()
+    {
+        if (undoHistory.Count > 20) undoHistory.RemoveAt(0);
+        undoHistory.Add(drawingTexture.GetPixels());
+        redoHistory.Clear();
     }
 
     void DrawLine(Vector2 start, Vector2 end)
