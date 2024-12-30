@@ -26,6 +26,6 @@ public class CharacterManager : MonoBehaviour
     public void CharacterSelect(int _character)
     {
         if (!find) return;
-        data.characterNum = _character;
+        //data.characterNum = _character;
     }
 }
