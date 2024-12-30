@@ -57,8 +57,8 @@ public class StageManager : MonoBehaviour
     public void SetStage(int _stage)
     {
         curStage = _stage;
-        if(data)
-            data.stageNum = _stage;
+        //if(data)
+            //data.stageNum = _stage;
     }
     public void SetHighLight(float _highlight)
     {
@@ -68,7 +68,7 @@ public class StageManager : MonoBehaviour
     public void StageSelect()
     {
         if (!find) return;
-        data.stageNum = curStage;
+        //data.stageNum = curStage;
     }
 
     public void ShowStage()

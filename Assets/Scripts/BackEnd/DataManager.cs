@@ -16,14 +16,7 @@ public class DataManager : MonoBehaviour
 
     static GameObject container;
 
-    //�̱������� ����
-    static DataManager instance;
 
-    // ���� ������ dontdestroy ����
-    public int characterNum;
-    public int stageNum;
-    public int difficulty;
-    public Mode mode = Mode.Debug;
     public string chartNum;
 
     //����� Ŭ���� ����
@@ -32,28 +25,40 @@ public class DataManager : MonoBehaviour
     public EditorData editordata = new EditorData();
 
 
+    private static DataManager instance;
     public static DataManager Instance
     {
         get
         {
-            if (!instance)
+            if (instance == null)
             {
+                // 1. 먼저 씬에서 찾아보기
                 instance = FindObjectOfType<DataManager>();
 
-                if (!instance)
+                // 2. 씬에도 없다면 프리팹에서 생성
+                if (instance == null)
                 {
-                    container = new GameObject();
+                    // Resources 폴더에서 프리팹 로드
+                    GameObject prefab = Resources.Load<GameObject>("Prefabs/DataManager");
+                    if (prefab == null)
+                    {
+                        Debug.LogError("DataManager 프리팹을 찾을 수 없습니다!");
+                        return null;
+                    }
+
+                    GameObject container = Instantiate(prefab);
+                    instance = container.GetComponent<DataManager>();
                     container.name = "DataManager";
-                    instance = container.AddComponent(typeof(DataManager)) as DataManager;
-                    DontDestroyOnLoad(container);
                 }
+
+                DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
     }
 
-    //���� �̸� ����
-    string MainGameDataFileName = "MainGameData.json"; //������ �����ε� ä�� �ø��ų� �� �� ����ڰ� �Է��� �� �ְ�
+
+    string MainGameDataFileName = "MainGameData.json"; 
     string SoundDataFileName = "SoundData.json";
     string EditorDataFileName = "EditorData.json";
 
@@ -72,28 +77,15 @@ public class DataManager : MonoBehaviour
         }
         maingamedata = new MainGameData();
         sounddata = new SoundData();
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        // ���� �ʱ�ȭ
-        characterNum = 0;
-        stageNum = 1;
-        difficulty = 0;
-
-
-
         LoadMainGameData();
         LoadSoundData();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void LoadMainGameData()
     {
@@ -102,7 +94,6 @@ public class DataManager : MonoBehaviour
 
         if(File.Exists(filePath))
         {
-            //�ҷ�����
             string FromJsonData = File.ReadAllText(filePath);
             maingamedata = JsonUtility.FromJson<MainGameData>(FromJsonData);
             if (maingamedata.score.Length == 4 && maingamedata.collection.Length == 4 && maingamedata.stageNum.Length == 4)
@@ -112,10 +103,8 @@ public class DataManager : MonoBehaviour
         }
         else
         {
-            // ��� �ʱ�ȭ �ڵ�
-            maingamedata = new MainGameData(); // �Ǵ� �ٸ� �ʱⰪ���� ������ �� ����
+            maingamedata = new MainGameData();
 
-            // �ʱ�ȭ
             for (int i = 0; i < 4; i++)
             {
                 maingamedata.stageNum[i] = i + 1;
@@ -392,20 +381,86 @@ public class DataManager : MonoBehaviour
         File.WriteAllText(listfilePath, editorlistcon);
     }
 
-    public void SetMode(int _mode)
+
+
+    private string SavePath => Application.persistentDataPath;
+
+    // 제네릭을 사용한 저장 함수
+    public void Save<T>(T data) where T : ISaveData
     {
-        GameObject.Find("Data").GetComponent<DataManager>().mode = (Mode)_mode;
-        mode = (Mode)_mode;
+        try
+        {
+            string json = JsonUtility.ToJson(data, true);
+            string filePath = Path.Combine(SavePath, data.GetFileName());
+            File.WriteAllText(filePath, json);
+            Debug.Log($"Data saved successfully: {filePath}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to save data: {e.Message}");
+        }
     }
 
-    public void ShowRank(GameObject _RankButton)
+    // 제네릭을 사용한 로드 함수
+    public T Load<T>() where T : ISaveData, new()
     {
+        T data = new T();
+        string filePath = Path.Combine(SavePath, data.GetFileName());
 
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                data = JsonUtility.FromJson<T>(json);
+                return data;
+            }
+            else
+            {
+                // 파일이 없다면 기본값을 반환
+                Debug.LogWarning($"Save file not found: {filePath}");
+                return data;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to load data: {e.Message}");
+            return data;
+        }
     }
 
-    public void SetCharacterNum(int _num)
+
+    // 저장 로드 예시
+    void SaveExample()
     {
-        characterNum = _num;
+        // 플레이어 데이터 저장
+        PlayerData playerData = new PlayerData
+        {
+            playerName = "Player1",
+            level = 10,
+            health = 100f,
+            position = new Vector3(1f, 2f, 3f)
+        };
+        DataManager.Instance.Save(playerData);
+
+        // 게임 설정 저장
+        GameSettingsData settingsData = new GameSettingsData
+        {
+            masterVolume = 0.8f,
+            bgmVolume = 0.7f,
+            sfxVolume = 0.9f,
+            isFullScreen = true
+        };
+        DataManager.Instance.Save(settingsData);
+    }
+
+    void LoadExample()
+    {
+        // 플레이어 데이터 로드
+        PlayerData playerData = DataManager.Instance.Load<PlayerData>();
+
+        // 게임 설정 로드
+        GameSettingsData settingsData = DataManager.Instance.Load<GameSettingsData>();
     }
 }
 
