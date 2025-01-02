@@ -16,7 +16,7 @@ public class AnimationSound : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         audioSource = gameObject.AddComponent<AudioSource>();
-        //audioSource.volume = FindObjectOfType<SoundManager>().effect.volume;
+        audioSource.volume = FindObjectOfType<SoundManager>().effect.volume;
     }
 
     public void PlaySound()

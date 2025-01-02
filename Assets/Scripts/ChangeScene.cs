@@ -8,7 +8,7 @@ public class ChangeScene : MonoBehaviour
 {
     public void ToTitleScene()
     {
-        SceneManager.LoadScene("StartScene");
+        SceneManager.LoadScene("TitleScene");
     }
 
     public void ToSelectScene()
@@ -43,11 +43,6 @@ public class ChangeScene : MonoBehaviour
     public void ToPlayScene()
     {
         SceneManager.LoadScene("PlayScene");
-    }
-
-    public void ToScene(string _MoveScene)
-    {
-        SceneManager.LoadScene(_MoveScene);
     }
 
 }

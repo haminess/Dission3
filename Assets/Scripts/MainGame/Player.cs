@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         if (GameObject.Find("Data"))
         {
             print("데이터 오브젝트 연결");
-            //characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
+            characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
         }
 
         SetCharacterModel();
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
 
         // 메뉴 관리
         ControlMenu();
