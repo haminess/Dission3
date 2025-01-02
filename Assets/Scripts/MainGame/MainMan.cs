@@ -983,10 +983,10 @@ public class MainMan : MonoBehaviour
             dataMan.LoadMainGameData();
             dataMan.LoadSoundData();
 
-            playMode = (PLAY_MODE)(int)dataMan.mode;
+            //playMode = (PLAY_MODE)(int)dataMan.mode;
             if (playMode == PLAY_MODE.STAGE)
             {
-                stageNum = dataMan.stageNum;
+                //stageNum = dataMan.stageNum;
                 SetStage();
             }
             if (playMode == PLAY_MODE.PLAY)

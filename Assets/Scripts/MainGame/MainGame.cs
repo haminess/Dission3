@@ -756,10 +756,10 @@ public class MainGame : MonoBehaviour
             dataMan.LoadMainGameData();
             dataMan.LoadSoundData();
 
-            mode = (Mode)(int)dataMan.mode;
+            //mode = (Mode)(int)dataMan.mode;
             if (mode == Mode.Stage)
             {
-                stageNum = dataMan.stageNum;
+                //stageNum = dataMan.stageNum;
                 SetStage();
             }
             if (mode == Mode.Play)
