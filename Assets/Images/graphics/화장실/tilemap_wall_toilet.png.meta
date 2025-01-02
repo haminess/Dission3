@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Images/graphics/화장실/tilemap_wall_toilet.png.meta
 guid: 56159c7ed2f27f54f95a5890f8960fcf
+========
+guid: 7499add305575204f8b1533c70bc8b76
+>>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4):Assets/Images_total/Asset 36.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -113,6 +117,7 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+<<<<<<<< HEAD:Assets/Images/graphics/화장실/tilemap_wall_toilet.png.meta
   - serializedVersion: 3
     buildTarget: iPhone
     maxTextureSize: 2048
@@ -128,6 +133,137 @@ TextureImporter:
   spriteSheet:
     serializedVersion: 2
     sprites: []
+========
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Asset 36_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 131
+        width: 101
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 20, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 481ea7a6f1e8b614eaccf32098638a58
+      internalID: 580236932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 36_1
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 131
+        width: 101
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 20, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b905c7fc3078bbd4294bc8ad7bc1a009
+      internalID: 758220177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 36_2
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 131
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 20, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 058fd4f903b3a1a4190c884cca18d28b
+      internalID: 2854481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 36_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 105
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 36, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a5c7c44ad5301343965aa7f274bdfa3
+      internalID: 2113442707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 36_4
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 0
+        width: 105
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 36, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fae6c94dd046a8f46863c506bd7ed484
+      internalID: -1710325237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Asset 36_5
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 0
+        width: 105
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 36, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78a543090336c884c8e36f27296a05aa
+      internalID: -361603563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+>>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4):Assets/Images_total/Asset 36.png.meta
     outline: []
     physicsShape: []
     bones: []
@@ -138,7 +274,17 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+<<<<<<<< HEAD:Assets/Images/graphics/화장실/tilemap_wall_toilet.png.meta
     nameFileIdTable: {}
+========
+    nameFileIdTable:
+      Asset 36_0: 580236932
+      Asset 36_1: 758220177
+      Asset 36_2: 2854481
+      Asset 36_3: 2113442707
+      Asset 36_4: -1710325237
+      Asset 36_5: -361603563
+>>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4):Assets/Images_total/Asset 36.png.meta
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
