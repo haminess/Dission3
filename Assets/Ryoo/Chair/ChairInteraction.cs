@@ -136,16 +136,6 @@ public class ChairInteraction : MonoBehaviour
     {
         if (player == null) yield break;
 
-        // 플레이어 이동 가능
-        player.Movable = true;
-
-        // 앉는 애니메이션 해제
-        Animator animator = player.GetComponentInChildren<Animator>();
-        if (animator != null)
-        {
-            animator.SetBool("IsSitting", false);
-        }
-
         // 이동 애니메이션 (Lerp 사용)
         float elapsedTime = 0f;
         Vector3 startPos = player.transform.position;
@@ -159,8 +149,18 @@ public class ChairInteraction : MonoBehaviour
         }
         player.transform.position = originalPlayerPosition; // 최종 위치 설정
 
+        // 플레이어 이동 가능
+        player.Movable = true;
+
         // 앉기 상태 해제
         isPlayerSitting = false;
+
+        // 앉는 애니메이션 해제
+        Animator animator = player.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("IsSitting", false);
+        }
 
         // 레이어 복구: 의자(0), 캐릭터(0), 책상(0)
         if (chairSprite != null) chairSprite.sortingOrder = 0;
