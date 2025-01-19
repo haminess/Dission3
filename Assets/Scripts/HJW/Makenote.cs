@@ -61,7 +61,7 @@ public class Makenote : MonoBehaviour
     private void Update()
     {
         if(Filedataconvey.playmode) { return; }
-        if (Audio.playing && Input.GetKeyDown(KeyCode.Space))
+        if (Audio.playing && Input.GetKeyDown(KeyCode.F))
         {
             tooshort = false;
             timetemp = Maketile.instance.audio_.time;
@@ -81,7 +81,7 @@ public class Makenote : MonoBehaviour
             end = n.transform.GetChild(2);
             over = n.transform.GetChild(3);
         }
-        if (Audio.playing && Input.GetKey(KeyCode.Space))
+        if (Audio.playing && Input.GetKey(KeyCode.F))
         {
             audiodur = Maketile.instance.audio_.time - timetemp;
             if(audiodur < 2 / makemadi.madimultiplyer) //short note
@@ -96,7 +96,7 @@ public class Makenote : MonoBehaviour
                 mid.GetComponent<RectTransform>().sizeDelta = new Vector2(audiodur*makemadi.madimultiplyer + 0.6f, 103.87f);
             }
         }
-        if (Audio.playing && Input.GetKeyUp(KeyCode.Space)&& !tooshort)
+        if (Audio.playing && Input.GetKeyUp(KeyCode.F)&& !tooshort)
         {
             end.gameObject.GetComponent<RectTransform>().localPosition = new Vector2(audiodur * makemadi.madimultiplyer + 0.6f, 0);
             end.gameObject.GetComponent<Image>().enabled = true;
@@ -170,7 +170,7 @@ public class Makenote : MonoBehaviour
             }
             if (Input.GetMouseButton(0) && Input.GetAxis("Mouse X") != 0 && makemadi.chart && chartmode&& !overwritten && !a && !toofast && !overlock) //hold //moving
             {
-                if(Input.GetAxis("Mouse X") > 1.5f)
+                if(Input.GetAxis("Mouse X") > 2)
                 {
                     toofast = true;
                     Destroy(notedata[curindexx].noteobj);
