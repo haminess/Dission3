@@ -1,17 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[System.Serializable]
+
+[Serializable]
 public class Note
 {
     // [default]
-    public readonly float time;         // judge time
-    public readonly Vector3 pos;
+    public float time;         // judge time
+    public Vector3 pos;
 
     // [long]
-    public readonly bool ltype;         // note type: short(false), long(true)
-    public readonly Vector3[] route;
-    public readonly float duration;
+    public bool ltype;         // note type: short(false), long(true)
+    public Vector3[] route;
+    public float duration;
     public GameObject note;
 
 
@@ -48,8 +50,6 @@ public class Note
         }
         duration = _duration;
     }
-
-
     
 }
 

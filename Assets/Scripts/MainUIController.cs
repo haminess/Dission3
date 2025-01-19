@@ -30,4 +30,10 @@ public class MainUIController : MonoBehaviour
             }
         }
     }
+
+    public void OffUI()
+    {
+        MenuUI.SetActive(false);
+        PopupUI.SetActive(false);
+    }
 }
