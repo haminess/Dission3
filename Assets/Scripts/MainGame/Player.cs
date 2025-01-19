@@ -37,14 +37,9 @@ public class Player : MonoBehaviour
 
     public float setTime = 10;
 
-    // 메뉴
-    private GameObject menu;
-
-
     // Start is called before the first frame update
     void Start()
     {
-        // 컴포넌트 연결
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
@@ -54,8 +49,6 @@ public class Player : MonoBehaviour
             effect = MainMan.instance.effect;
         }
 
-        menu = GameObject.Find("MenuUI");
-
 
         // 메인게임 아닐 때 리턴
         if (SceneManager.GetActiveScene().name != "MainGame") return;
@@ -64,10 +57,17 @@ public class Player : MonoBehaviour
         if (GameObject.Find("Data"))
         {
             print("데이터 오브젝트 연결");
-            //characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
+            characterNum = GameObject.Find("Data").GetComponent<DataManager>().characterNum;
         }
 
-        SetCharacterModel();
+        // select character
+        for (int i = 0; i < model.Length; i++)
+        {
+            model[i].SetActive(false);
+        }
+        model[characterNum].SetActive(true);
+        sprite = model[characterNum].GetComponent<SpriteRenderer>();
+        animator = model[characterNum].GetComponent<Animator>();
 
         // 설정창 숨김
         settingUI.SetActive(false);
@@ -130,38 +130,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
-
-        // 메뉴 관리
-        ControlMenu();
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
     }
-
-    [ContextMenu("ChangeCharacter")]
-    public void SetCharacterModel()
-    {
-        // select character
-        for (int i = 0; i < model.Length; i++)
-        {
-            model[i].SetActive(false);
-        }
-        model[characterNum].SetActive(true);
-        sprite = model[characterNum].GetComponent<SpriteRenderer>();
-        animator = model[characterNum].GetComponent<Animator>();
-    }
-
-    void ControlMenu()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            menu.SetActive(!menu.activeSelf);
-        }
-
-        if(menu)
-        {
-            print("메뉴 켜짐");
-        }
-    }
-
 
     public void PlayMove()
     {
@@ -187,11 +157,17 @@ public class Player : MonoBehaviour
         {
             Head(Vector3.down);
         }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            animator.SetBool("Sit", true);
-        }
 
+        // 캐릭터 좌표 이동
+        if (moveMode == MOVE_MODE.GAME_NORMAL)
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, CurPos, speed);
+
+            if (transform.localPosition == CurPos)
+            {
+                transform.localPosition = CurPos;
+            }
+        }
     }
     public void GameMove()
     {
@@ -211,8 +187,8 @@ public class Player : MonoBehaviour
             animator?.SetFloat("DirY", 0);
             sprite.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
             vHead = Vector3.left;
-        }
 
+        }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             // 좌우 반전

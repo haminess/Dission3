@@ -57,8 +57,8 @@ public class StageManager : MonoBehaviour
     public void SetStage(int _stage)
     {
         curStage = _stage;
-        //if(data)
-            //data.stageNum = _stage;
+        if(data)
+            data.stageNum = _stage;
     }
     public void SetHighLight(float _highlight)
     {
@@ -68,7 +68,7 @@ public class StageManager : MonoBehaviour
     public void StageSelect()
     {
         if (!find) return;
-        //data.stageNum = curStage;
+        data.stageNum = curStage;
     }
 
     public void ShowStage()
@@ -76,14 +76,21 @@ public class StageManager : MonoBehaviour
         // ������ �ҷ�����
         DataManager.Instance.LoadMainGameData();
 
-        // 배경음악을 설정하는 코드를 작성하세요.
+        // ���� ���
+        bgm.clip = soundMan.bgmClip[curStage - 1];
+        bgm.time = soundMan.bgmHookTime[curStage - 1];
         bgm.Play();
 
+        // �������� ���� ���
+        // �������� ��ȣ
         stageInfo[0].text = "stage " + curStage.ToString();
+        // ���
         stageInfo[1].text = location[curStage - 1].ToString();
-
-        // 스테이지에 해당하는 배경음악 정보를 출력하는 코드를 작성하세요.
-
+        // �� �̸�
+        stageInfo[2].text = soundMan.bgmClip[curStage - 1].name.ToString();
+        // �� �ð�
+        stageInfo[3].text = (Mathf.Floor(soundMan.bgmClip[curStage - 1].length / 60.0f)).ToString("00") + ":" + (soundMan.bgmClip[curStage - 1].length % 60).ToString("00");
+        // ���̵�
         stageInfo[4].text = "Difficulty";
 
         switch (difficulty[curStage - 1])

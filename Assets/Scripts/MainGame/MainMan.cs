@@ -924,7 +924,7 @@ public class MainMan : MonoBehaviour
         isStart = false;
         isGame = false;
         isEnd = false;
-        //bgm.Stop();
+        bgm.Stop();
         Settable(false);
         GetComponent<NoteMan>().note_idx = 0;
         collections.Clear();
@@ -958,8 +958,9 @@ public class MainMan : MonoBehaviour
         // 스테이지 데이터 세팅
 
 
+
         // 스테이지 음악 세팅
-        // *코드를 작성하세요.
+        bgm.clip = soundMan.bgmClip[stageNum - 1];
 
         // 스테이지 오브젝트 활성화
         for(int i = 0; i < stageObject.Length; i++)
@@ -974,6 +975,13 @@ public class MainMan : MonoBehaviour
     }
     public void GetMainData()
     {
+        // 커넥터 연결하기
+        Connector connector = GetComponent<Connector>();
+        connector.UpdateData();
+        bgm.volume = connector.sounddata.bgm;
+        effect.volume = connector.sounddata.effect;
+        notesynkRange = connector.maingamedata.synk;
+        judgeRange = connector.maingamedata.judge;
 
         if (GameObject.Find("Data"))
         {
@@ -983,10 +991,10 @@ public class MainMan : MonoBehaviour
             dataMan.LoadMainGameData();
             dataMan.LoadSoundData();
 
-            //playMode = (PLAY_MODE)(int)dataMan.mode;
+            playMode = (PLAY_MODE)(int)dataMan.mode;
             if (playMode == PLAY_MODE.STAGE)
             {
-                //stageNum = dataMan.stageNum;
+                stageNum = dataMan.stageNum;
                 SetStage();
             }
             if (playMode == PLAY_MODE.PLAY)

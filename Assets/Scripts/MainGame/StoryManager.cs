@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-using System;
 
 public class StoryManager : MonoBehaviour
 {
@@ -46,9 +45,8 @@ public class StoryManager : MonoBehaviour
         StoryStart,
         StoryEnd,
 
-        // 1: string prefabfile-name, 2: character-key, 3: float posx, 4: float posy
+        // 1: string prefabfile-name, 2: character-key 3: float posx, 4: float posy
         CreateCharacter,
-        DeleteCharacter,
 
         // 1: string character-key, 2...: string line
         Talk,
@@ -59,31 +57,22 @@ public class StoryManager : MonoBehaviour
         // 1: string dir (ex; x, y), 2: float distance, 3..:
         CameraMove,
 
-        // 1: string character-key (non-use "NULL")
-        CameraFocus,
-
         FadeIn,
         FadeOut,
-
-        // Postprocess
-        Postprocess,
 
         ParamClear,
     }
 
-    private string[] CommandList_String =
+    public string[] CommandList_String =
     {
         "StoryStart",
         "StoryEnd",
         "CreateCharacter",
-        "DeleteCharacter",
         "Talk",
         "Move",
         "CameraMove",
-        "CameraFocus",
         "FadeIn",
         "FadeOut",
-        "Postprocess",
         "ParamClear",
     };
 
@@ -95,8 +84,9 @@ public class StoryManager : MonoBehaviour
 
     public string storyName = "스토리 이름을 입력하세요(엑셀 파일)";
     public string storyID = "시트 이름을 입력하세요";
+    private List<GameObject> tempObjects = new List<GameObject>();
     private List<JsonReader.DataItem> data = new List<JsonReader.DataItem>();
-    private Dictionary<string, GameObject> characters = new Dictionary<string, GameObject>();
+    private Dictionary<string, int> characObjects = new Dictionary<string, int>();
 
     // game object
     public GameObject player;
@@ -107,15 +97,12 @@ public class StoryManager : MonoBehaviour
     public GameObject[] stageObject;
     public Transform storyObject;
 
-    // camera
-    private Coroutine coCamFocus;
-
     // story object
     public GameObject pack;
-    private GameObject[] characterprefeb; // 0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
-    private Sprite baby;
-    private Sprite student;
-    private Sprite friend1;
+    public GameObject[] characterprefeb; // 0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
+    public Sprite baby;
+    public Sprite student;
+    public Sprite friend1;
     public GameObject black;
     public GameObject splash;
     public UnityEngine.Rendering.Volume volume;
@@ -305,33 +292,25 @@ public class StoryManager : MonoBehaviour
             // 스토리 종료
             case CommandList.StoryEnd:
                 yield return StartCoroutine(Fade(black));
-                // 딕셔너리에 있는 모든 GameObject 삭제
-                foreach (var pair in characters)
+                for (int i = 0; i < tempObjects?.Count; ++i)
                 {
-                    Destroy(pair.Value);
+                    Destroy(tempObjects[i]);
                 }
-                characters.Clear();
+                tempObjects.Clear();
                 yield return StartCoroutine(SetCam(false));
+
                 break;
 
             // npc 생성
             case CommandList.CreateCharacter:
                 GameObject npc = NPC(Resources.Load<GameObject>("Story/" + cmdParam[0]), float.Parse(cmdParam[2]), float.Parse(cmdParam[3]));
-                characters.Add(cmdParam[1], npc);
-                break;
-
-            // npc 생성
-            case CommandList.DeleteCharacter:
-                if (characters.ContainsKey(cmdParam[0]))
-                {
-                    Destroy(characters[cmdParam[0]]);
-                    characters.Remove(cmdParam[0]);
-                }
+                tempObjects.Add(npc);
+                characObjects.Add(cmdParam[1], tempObjects.Count - 1);
                 break;
 
             // 대사 실행
             case CommandList.Talk:
-                GameObject npc1 = characters[cmdParam[0]];
+                GameObject npc1 = tempObjects[characObjects[cmdParam[0]]];
                 for (int i = 1; i < cmdParam.Count; ++i)
                 {
                     if(null != cmdParam[i])
@@ -344,31 +323,36 @@ public class StoryManager : MonoBehaviour
 
             case CommandList.Move:
                 {
-                    GameObject npc2 = characters[cmdParam[0]];
-                    StartCoroutine(Move(npc2, new Vector3(float.Parse(cmdParam[1]), float.Parse(cmdParam[2]), 0f), 1, 0.05f * float.Parse(cmdParam[3])));
+                    GameObject npc2 = tempObjects[0];
+                    for (int i = 0; i < cmdParam.Count; i += 2)
+                    {
+                        yield return new WaitForSeconds(1);
+                        if ("x" == cmdParam[i])
+                        {
+                            yield return StartCoroutine(Move(npc2, new Vector3(float.Parse(cmdParam[i + 1]), 0, 0)));
+                        }
+                        else if ("y" == cmdParam[i])
+                        {
+                            yield return StartCoroutine(Move(npc2, new Vector3(0, float.Parse(cmdParam[i + 1]), 0)));
+                        }
+                    }
                     break;
                 }
 
             case CommandList.CameraMove:
-                StartCoroutine(Move(storyCamera, new Vector3(float.Parse(cmdParam[0]), float.Parse(cmdParam[1]), 0f), 1, 0.05f * float.Parse(cmdParam[2])));
-                break;
-            case CommandList.CameraFocus:
-                if("NULL" == cmdParam[0] || "null" == cmdParam[0])
-                    CameraFocus(null);
-                else
-                    CameraFocus(characters[cmdParam[0]]);
+                GameObject cam = storyCamera;
+                for (int i = 0; i < cmdParam.Count; i += 2)
+                {
+                    yield return new WaitForSeconds(1);
+                    yield return StartCoroutine(Move(cam, new Vector3(float.Parse(cmdParam[i]), float.Parse(cmdParam[i + 1]), 0)));
+                }
                 break;
 
             case CommandList.FadeIn:
-                yield return StartCoroutine(Fade(black, false));
-                break;
-            case CommandList.FadeOut:
                 yield return StartCoroutine(Fade(black));
                 break;
-            case CommandList.Postprocess:
-                {
-                    yield return StartCoroutine(Fade(black));
-                }
+            case CommandList.FadeOut:
+                yield return StartCoroutine(Fade(black, false));
                 break;
             case CommandList.ParamClear:
                 cmdParam.Clear();
@@ -377,27 +361,6 @@ public class StoryManager : MonoBehaviour
 
 
 
-    }
-
-    private void CameraFocus(GameObject target)
-    {
-        if (target == null)
-        {
-            // 포커스 종료
-            StopCoroutine(coCamFocus);
-        }
-
-        coCamFocus = StartCoroutine(OnCameraFocus(target));
-    }
-
-    IEnumerator OnCameraFocus(GameObject target)
-    {
-        while(true)
-        {
-            Vector3 TargetPos = new Vector3(target.transform.position.x, target.transform.position.y, storyCamera.transform.position.z);
-            storyCamera.transform.position = Vector3.Lerp(storyCamera.transform.position, TargetPos, Time.deltaTime);
-            yield return null;
-        }
     }
 
     public void ShowStory(int stroyID)
@@ -545,6 +508,7 @@ public class StoryManager : MonoBehaviour
         // 데이터 읽기
         foreach (var item in data)
         {
+            yield return new WaitForSeconds(1);
             for(int i = 0; i < CommandList_String.Length; ++i)
             {
                 if (item.Column0 == CommandList_String[i])
@@ -552,6 +516,8 @@ public class StoryManager : MonoBehaviour
                     cmdId = (CommandList)i;
                     cmdParam.Clear();
 
+                    if (item.Column6 != null)
+                        cmdParam.Insert(5, item.Column6);
                     if (item.Column1 != null)
                         cmdParam.Insert(0, item.Column1);
                     if (item.Column2 != null)
@@ -562,21 +528,10 @@ public class StoryManager : MonoBehaviour
                         cmdParam.Insert(3, item.Column4);
                     if (item.Column5 != null)
                         cmdParam.Insert(4, item.Column5);
-                    if (item.Column6 != null)
-                        cmdParam.Insert(5, item.Column6);
                 }
             }
 
-            float time = 0f;
-            if ("" != item.Column6 && null != item.Column6)
-                time = float.Parse(item.Column6);
-
-            if(-1 == time)
-                StartCoroutine(ShowActionCo());
-            else
-                yield return StartCoroutine(ShowActionCo());
-
-            yield return new WaitForSeconds(time);
+            yield return StartCoroutine(ShowActionCo());
         }
     }
     public IEnumerator OffStory()
@@ -1517,6 +1472,7 @@ public class StoryManager : MonoBehaviour
         {
             Vector3 curPos = npc.transform.localPosition;
             Vector3 headPos = curPos + head;
+            // ��???? ??? ???
             while (true)
             {
                 npc.transform.Translate(head * speed);

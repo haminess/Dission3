@@ -286,13 +286,13 @@ public class ResultManager : MonoBehaviour
 
             if (miss < 100)
             {
-                // 효과음을 출력하는 코드를 작성하세요.
+                soundmanager.SetEffect(3);
                 soundmanager.PlayEffect();
                 animName += "happy";
             }
             else
             {
-                // 효과음을 출력하는 코드를 작성하세요.
+                soundmanager.SetEffect(4);
                 soundmanager.PlayEffect();
                 animName += "sad";
             }

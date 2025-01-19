@@ -62,6 +62,6 @@ public class Filedataconvey : MonoBehaviour
     public void OnSelected()
     {
         DataManager dm = GameObject.FindObjectOfType<DataManager>();
-        //dm.chartNum = this.gameObject.name;
+        dm.chartNum = this.gameObject.name;
     }
 }
