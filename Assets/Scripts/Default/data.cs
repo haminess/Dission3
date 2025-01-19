@@ -3,6 +3,7 @@
 using UnityEngine;
 using System;
 using System.Numerics;
+using System.Collections.Generic;
 
 class SettingData : ISaveData
 {
@@ -34,6 +35,43 @@ struct Volume
 {
     public float music;
     public float effect;
+}
+
+
+[Serializable]
+public class ChartData
+{
+    public string name = "empty_name";
+    public int difficulty = 0;
+    public AudioClip bgm;
+    public Note[] note;
+}
+
+[Serializable]
+public class ChartList : ISaveData
+{
+    public string   music_name;
+    public List<ChartData> list;
+
+    public string GetFileName() => "chart_" + music_name + ".json";
+}
+
+
+
+    // 리듬게임 플레이 데이터
+    [Serializable]
+public class PlayData : ISaveData
+{
+    public float    score;
+    public int      perfect;
+    public int      good;
+    public int      bad;
+    public int      miss;
+    public int      combo;
+
+    public int      rank;
+
+    public string GetFileName() => "playData.json";
 }
 
 
