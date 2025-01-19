@@ -46,7 +46,7 @@ public class StoryManager : MonoBehaviour
         StoryStart,
         StoryEnd,
 
-        // 1: string prefabfile-name, 2: character-key 3: float posx, 4: float posy
+        // 1: string prefabfile-name, 2: character-key, 3: float posx, 4: float posy
         CreateCharacter,
         DeleteCharacter,
 
@@ -58,16 +58,54 @@ public class StoryManager : MonoBehaviour
 
         // 1: string dir (ex; x, y), 2: float distance, 3..:
         CameraMove,
-        CameraFocusOn,
-        CameraFocusOff,
+
+        // 1: string character-key (non-use "NULL")
+        CameraFocus,
 
         FadeIn,
         FadeOut,
 
+        // Postprocess
+        Postprocess,
+
         ParamClear,
     }
 
-    public string[] CommandList_String =
+    private static StoryManager instance;
+    public static StoryManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                // 1. 먼저 씬에서 찾아보기
+                instance = FindObjectOfType<StoryManager>();
+
+                // 2. 씬에도 없다면 프리팹에서 생성
+                if (instance == null)
+                {
+                    // Resources 폴더에서 프리팹 로드
+                    GameObject prefab = Resources.Load<GameObject>("Prefabs/StoryManager");
+                    if (prefab == null)
+                    {
+                        Debug.LogError("StoryManager 프리팹을 찾을 수 없습니다!");
+                        return null;
+                    }
+
+                    GameObject container = Instantiate(prefab);
+                    instance = container.GetComponent<StoryManager>();
+                    container.name = "StoryManager";
+                }
+
+                DontDestroyOnLoad(instance.gameObject);
+            }
+
+            instance?.Start();
+            return instance;
+        }
+    }
+
+    private string[] CommandList_String =
     {
         "StoryStart",
         "StoryEnd",
@@ -76,14 +114,16 @@ public class StoryManager : MonoBehaviour
         "Talk",
         "Move",
         "CameraMove",
-        "CameraFocusOn",
-        "CameraFocusOff",
+        "CameraFocus",
         "FadeIn",
         "FadeOut",
+        "Postprocess",
         "ParamClear",
     };
 
-    [HideInInspector] public int sID = 0;
+    public int packID = 0;
+
+    public int sID = 0;
     public StoryNum sId = StoryNum.s1;
 
     public CommandList cmdId = CommandList.Talk;
@@ -99,8 +139,6 @@ public class StoryManager : MonoBehaviour
     public GameObject playerCam;
     public GameObject storyCamera;
     public GameObject gameCanvas;
-    public GameObject playerPrefab;
-    public GameObject[] stageObject;
     public Transform storyObject;
 
     // camera
@@ -108,10 +146,10 @@ public class StoryManager : MonoBehaviour
 
     // story object
     public GameObject pack;
-    public GameObject[] characterprefeb; // 0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
-    public Sprite baby;
-    public Sprite student;
-    public Sprite friend1;
+    private GameObject[] characterprefeb; // 0 main, 1 girl, 2 boy, 3 teacher, 4 mom, 5 doc, 6 cat
+    private Sprite baby;
+    private Sprite student;
+    private Sprite friend1;
     public GameObject black;
     public GameObject splash;
     public UnityEngine.Rendering.Volume volume;
@@ -134,7 +172,14 @@ public class StoryManager : MonoBehaviour
         excelConverter = GetComponent<ExcelToJsonConverter>();
         jsonReader = GetComponent<JsonReader>();
 
-        playerCam.SetActive(true);
+        player = GameObject.Find("Player");
+        playerCam = GameObject.Find("PlayerCamera");
+        storyCamera = GameObject.Find("StoryCamera");
+        gameCanvas = GameObject.Find("GameCanvas");
+        black = GameObject.Find("Black");
+        storyObject = new GameObject("StoryObject").transform;
+        ChatPrefab = Resources.Load<GameObject>("Prefabs/ChatPrefab.prefab");
+        playerCam?.SetActive(true);
     }
 
     void CreateScripts()
@@ -348,11 +393,11 @@ public class StoryManager : MonoBehaviour
             case CommandList.CameraMove:
                 StartCoroutine(Move(storyCamera, new Vector3(float.Parse(cmdParam[0]), float.Parse(cmdParam[1]), 0f), 1, 0.05f * float.Parse(cmdParam[2])));
                 break;
-            case CommandList.CameraFocusOn:
-                CameraFocus(characters[cmdParam[0]]);
-                break;
-            case CommandList.CameraFocusOff:
-                CameraFocus(null);
+            case CommandList.CameraFocus:
+                if("NULL" == cmdParam[0] || "null" == cmdParam[0])
+                    CameraFocus(null);
+                else
+                    CameraFocus(characters[cmdParam[0]]);
                 break;
 
             case CommandList.FadeIn:
@@ -360,6 +405,11 @@ public class StoryManager : MonoBehaviour
                 break;
             case CommandList.FadeOut:
                 yield return StartCoroutine(Fade(black));
+                break;
+            case CommandList.Postprocess:
+                {
+                    yield return StartCoroutine(Fade(black));
+                }
                 break;
             case CommandList.ParamClear:
                 cmdParam.Clear();
@@ -385,7 +435,8 @@ public class StoryManager : MonoBehaviour
     {
         while(true)
         {
-            storyCamera.transform.position = target.transform.position;
+            Vector3 TargetPos = new Vector3(target.transform.position.x, target.transform.position.y, storyCamera.transform.position.z);
+            storyCamera.transform.position = Vector3.Lerp(storyCamera.transform.position, TargetPos, Time.deltaTime);
             yield return null;
         }
     }
@@ -535,11 +586,6 @@ public class StoryManager : MonoBehaviour
         // 데이터 읽기
         foreach (var item in data)
         {
-            float time = 0f;
-            if ("" != item.Column6)
-                time = float.Parse(item.Column6);
-
-            yield return new WaitForSeconds(time);
             for(int i = 0; i < CommandList_String.Length; ++i)
             {
                 if (item.Column0 == CommandList_String[i])
@@ -562,7 +608,16 @@ public class StoryManager : MonoBehaviour
                 }
             }
 
-            yield return StartCoroutine(ShowActionCo());
+            float time = 0f;
+            if ("" != item.Column6 && null != item.Column6)
+                time = float.Parse(item.Column6);
+
+            if(-1 == time)
+                StartCoroutine(ShowActionCo());
+            else
+                yield return StartCoroutine(ShowActionCo());
+
+            yield return new WaitForSeconds(time);
         }
     }
     public IEnumerator OffStory()

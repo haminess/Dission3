@@ -155,7 +155,7 @@ public class Makemadi : MonoBehaviour
                 {
                     return;
                 }
-                if (sec * madimultiplyer + (pos.y - madimultiplyer) - 78< madimultiplyer)
+                if (-pos.y > sec * madimultiplyer - 78)
                 {
                      madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(anchorpos, - sec * madimultiplyer + 78);
                     sliderefresh();

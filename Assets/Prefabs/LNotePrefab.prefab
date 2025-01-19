@@ -120,6 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96cbbe4767a9db4a92e973a9739b08b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  note:
+    note: {fileID: 0}
   route: []
 --- !u!61 &8966839877560183782
 BoxCollider2D:
