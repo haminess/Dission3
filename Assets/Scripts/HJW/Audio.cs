@@ -55,7 +55,7 @@ public class Audio : MonoBehaviour
         if (playing)
         {
             Makemadi.instance.sliderefresh();
-            if (Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y >= -(Makemadi.instance.sec * Makemadi.instance.madimultiplyer- 77.8f))
+            if (-Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition.y < Makemadi.instance.sec * Makemadi.instance.madimultiplyer- 78)
             {
                 Makemadi.instance.madi.GetComponent<RectTransform>().anchoredPosition = new Vector2(Makemadi.instance.anchorpos, -Makemadi.instance.madimultiplyer * mainmusic.time);
             }
@@ -92,6 +92,7 @@ public class Audio : MonoBehaviour
     }
     public void resetmusic()
     {
+        print(Mathf.Abs(mainmusic.time - Makemadi.instance.sec));
         mainmusic.Stop();
         gameObject.GetComponent<Image>().sprite = play;
         mainmusic.time = 0;
