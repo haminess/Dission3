@@ -57,7 +57,7 @@ public class Makemadi : MonoBehaviour
         madiset();
     }
 
-    void madiset()
+    public void madiset()
     {
         for (int i = 0; i < note.notedata.Count; i++)
         {

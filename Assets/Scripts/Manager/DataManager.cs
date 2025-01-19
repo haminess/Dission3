@@ -404,7 +404,7 @@ public class DataManager : MonoBehaviour
     public T Load<T>(string _file_name) where T : ISaveData, new()
     {
         T data = new T();
-        string filePath = Path.Combine(SavePath, _file_name);
+        string filePath = Path.Combine(Application.persistentDataPath, _file_name);
 
         try
         {
