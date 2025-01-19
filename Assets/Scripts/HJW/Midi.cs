@@ -12,6 +12,7 @@ using SimpleSynth.Parsing;
 using SimpleSynth.Providers;
 using SimpleSynth.Synths;
 using System;
+using Melanchall.DryWetMidi.MusicTheory;
 [System.Serializable]
 public class NoteForUnity
 {
@@ -135,25 +136,39 @@ public class Midi : MonoBehaviour
         {
             var newpos = new Vector2((float)NoteForUnity[i].timeStamps * Makemadi.instance.madimultiplyer, 0);
             GameObject n = null;
-            if(NoteForUnity[i].length > 0.2f)
-            {
-                n = Instantiate(MidiLongNote, newpos, Quaternion.identity, MidiMadi.transform);
-                var mid = n.transform.GetChild(1);
-                var end = n.transform.GetChild(2);
-                mid.gameObject.SetActive(true);
-                mid.GetComponent<RectTransform>().sizeDelta = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer, 103.87f);
-                end.gameObject.GetComponent<Image>().enabled = true;
-                end.GetComponent<RectTransform>().localPosition = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer + 0.49f, 0);
-                end.SetAsLastSibling();
-            }
-            else
-            {
+            //if(NoteForUnity[i].length > 0.2f)
+            //{
+            //    n = Instantiate(MidiLongNote, newpos, Quaternion.identity, MidiMadi.transform);
+            //    var mid = n.transform.GetChild(1);
+            //    var end = n.transform.GetChild(2);
+            //    mid.gameObject.SetActive(true);
+            //    mid.GetComponent<RectTransform>().sizeDelta = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer, 103.87f);
+            //    end.gameObject.GetComponent<Image>().enabled = true;
+            //    end.GetComponent<RectTransform>().localPosition = new Vector2((float)NoteForUnity[i].length * Makemadi.instance.madimultiplyer + 0.49f, 0);
+            //    end.SetAsLastSibling();
+            //}
+            //else
+            //{
                 n = Instantiate(MidiNote, newpos, Quaternion.identity, MidiMadi.transform);
 
-            }
+            //}
             n.transform.localPosition = newpos;
             NoteForUnity[i].obj = n;
 
+        }
+    }
+    public void AutoFill()
+    {
+        for (int i = 0; i < NoteForUnity.Count; i++)
+        {
+            var n = Instantiate(Makemadi.instance.note.note, Makemadi.instance.madi.transform);
+            var tempos = NoteForUnity[i].obj.transform.localPosition;
+            n.transform.localPosition = new Vector2(tempos.x, 0);
+            Notedata tempdata = new Notedata();
+            tempdata.notedata = (float)NoteForUnity[i].timeStamps;
+            tempdata.noteobj = n;
+            Makemadi.instance.note.notedata.Add(tempdata);
+            
         }
     }
 

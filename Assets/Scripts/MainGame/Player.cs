@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -37,8 +38,6 @@ public class Player : MonoBehaviour
 
     public float setTime = 10;
 
-    // 메뉴
-    private GameObject menu;
 
 
     // Start is called before the first frame update
@@ -53,8 +52,6 @@ public class Player : MonoBehaviour
             bgm = MainMan.instance.bgm;
             effect = MainMan.instance.effect;
         }
-
-        menu = GameObject.Find("MenuUI");
 
 
         // 메인게임 아닐 때 리턴
@@ -132,8 +129,6 @@ public class Player : MonoBehaviour
 
         //transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y / 1000.0f);
 
-        // 메뉴 관리
-        ControlMenu();
     }
 
     [ContextMenu("ChangeCharacter")]
@@ -149,18 +144,6 @@ public class Player : MonoBehaviour
         animator = model[characterNum].GetComponent<Animator>();
     }
 
-    void ControlMenu()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            menu.SetActive(!menu.activeSelf);
-        }
-
-        if(menu)
-        {
-            print("메뉴 켜짐");
-        }
-    }
 
 
     public void PlayMove()
@@ -190,6 +173,12 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             animator.SetBool("Sit", true);
+        }
+
+        transform.position = Vector3.Lerp(transform.position, CurPos, Time.deltaTime * speed);
+        if(Vector3.Distance(transform.position, CurPos) < 0.01f)
+        {
+            transform.position = CurPos;
         }
 
     }

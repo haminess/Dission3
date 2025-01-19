@@ -71,6 +71,40 @@ public class StoryManager : MonoBehaviour
         ParamClear,
     }
 
+    private static StoryManager instance;
+    public static StoryManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                // 1. 먼저 씬에서 찾아보기
+                instance = FindObjectOfType<StoryManager>();
+
+                // 2. 씬에도 없다면 프리팹에서 생성
+                if (instance == null)
+                {
+                    // Resources 폴더에서 프리팹 로드
+                    GameObject prefab = Resources.Load<GameObject>("Prefabs/StoryManager");
+                    if (prefab == null)
+                    {
+                        Debug.LogError("StoryManager 프리팹을 찾을 수 없습니다!");
+                        return null;
+                    }
+
+                    GameObject container = Instantiate(prefab);
+                    instance = container.GetComponent<StoryManager>();
+                    container.name = "StoryManager";
+                }
+
+                DontDestroyOnLoad(instance.gameObject);
+            }
+
+            instance?.Start();
+            return instance;
+        }
+    }
+
     private string[] CommandList_String =
     {
         "StoryStart",
@@ -87,7 +121,9 @@ public class StoryManager : MonoBehaviour
         "ParamClear",
     };
 
-    [HideInInspector] public int sID = 0;
+    public int packID = 0;
+
+    public int sID = 0;
     public StoryNum sId = StoryNum.s1;
 
     public CommandList cmdId = CommandList.Talk;
@@ -103,8 +139,6 @@ public class StoryManager : MonoBehaviour
     public GameObject playerCam;
     public GameObject storyCamera;
     public GameObject gameCanvas;
-    public GameObject playerPrefab;
-    public GameObject[] stageObject;
     public Transform storyObject;
 
     // camera
@@ -138,7 +172,14 @@ public class StoryManager : MonoBehaviour
         excelConverter = GetComponent<ExcelToJsonConverter>();
         jsonReader = GetComponent<JsonReader>();
 
-        playerCam.SetActive(true);
+        player = GameObject.Find("Player");
+        playerCam = GameObject.Find("PlayerCamera");
+        storyCamera = GameObject.Find("StoryCamera");
+        gameCanvas = GameObject.Find("GameCanvas");
+        black = GameObject.Find("Black");
+        storyObject = new GameObject("StoryObject").transform;
+        ChatPrefab = Resources.Load<GameObject>("Prefabs/ChatPrefab.prefab");
+        playerCam?.SetActive(true);
     }
 
     void CreateScripts()

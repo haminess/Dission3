@@ -20,9 +20,8 @@ public class MainMan : MonoBehaviour
     [Header("Component")]
     public AudioSource bgm;
     public AudioSource effect;
-    public SoundManager soundMan;
     public ChangeScene sceneManager;
-    StoryManager storyManager;
+    private StoryManager story;
 
     // 게임 오브젝트
     [Header("GameObject")]
@@ -33,6 +32,7 @@ public class MainMan : MonoBehaviour
     public Animation judgeeff;
     public Animation cameff;
     public GameObject[] stageObject;
+    public ChartData[] stageChart;
 
     // 로컬 데이터
     DataManager dataMan;
@@ -48,7 +48,6 @@ public class MainMan : MonoBehaviour
     public bool startButton = false;
     public PLAY_MODE playMode = PLAY_MODE.DEBUG;
     public int stageNum = 1;
-    public List<bool> state;
     public bool isStart = false;
     public bool isGame = false;
     public bool isEnd = false;
@@ -109,8 +108,6 @@ public class MainMan : MonoBehaviour
     // 가이드 오브젝트
     public GameObject guidePrefab;
 
-
-
     public void Start()
     {
         // 메인게임 스크립트 싱글톤
@@ -118,7 +115,9 @@ public class MainMan : MonoBehaviour
 
         // 컴포넌트 연결
         sceneManager = GameObject.Find("SceneManager").GetComponent<ChangeScene>();
-        storyManager = GetComponent<StoryManager>();
+        story = GetComponent<StoryManager>();
+        bgm = SoundManager.Instance.bgm;
+        effect = SoundManager.Instance.effect;
 
         // 게임 데이터 초기화
         ResetMain();
@@ -165,11 +164,6 @@ public class MainMan : MonoBehaviour
             isEnd = true;
             player.GetComponentInChildren<Animator>().SetBool("IsGame", false);
             player.moveMode = MOVE_MODE.MAP;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            print("롱노트" + noteIndex);
         }
 
         // 배경음악 진행바
@@ -229,32 +223,30 @@ public class MainMan : MonoBehaviour
         comboUI.text = "";
         combotext.text = "";
 
-        // 占시뤄옙占싱억옙 占쏙옙트 占쏙옙占쏙옙占쏙옙 占쏙옙치
+        // 플레이어 시작 위치
         PlayerReposition();
 
-        // 첫 占쏙옙트 占쏙옙占쏙옙占쌍깍옙 
+        // 시작 전 첫 노트 보여주기
         yield return StartCoroutine(ShowNextNoteCo());
 
-        // 카占쏙옙트
+        // 시작 카운트
         yield return StartCoroutine(TimeCountCo(judgeUI));
 
-        // 占쏙옙占쌈쏙옙占쏙옙
+        // 게임 시작
         isStart = true;        
         isGame = true;
 
         player.GetComponentInChildren<Animator>().SetBool("IsGame", true);
         player.moveMode = MOVE_MODE.GAME_NORMAL;
  
-
-        // 占쏙옙占쏙옙 占십깍옙화
+        // 게임 시작
         bgm.Stop();                  
         bgm.time = 0;                
 
-        // 1占쏙옙 占쏙옙 占쏙옙占쏙옙 틀占쏙옙
         yield return new WaitForSeconds(1);
         bgm.Play();
         yield return new WaitForSeconds(3);
-        Settable(true);        // 占쏙옙占쏙옙창 占쏙옙諛∽옙占?
+        Settable(true);
     }
 
     public void StageStart()
@@ -270,7 +262,7 @@ public class MainMan : MonoBehaviour
         yield return StartCoroutine(OnStoryMusic());
 
         // 스토리 출력
-        yield return StartCoroutine(storyManager.ShowStoryCo());
+        yield return StartCoroutine(story.ShowStoryCo());
 
         // 스토리 노래 끄기
         yield return StartCoroutine(OffStoryMusic());
@@ -291,7 +283,7 @@ public class MainMan : MonoBehaviour
         //bgm.time = soundMan.bgmHookTime[stageNum - 1];
         bgm.volume = 0;
         bgm.Play();
-        storyManager.sID = (stageNum - 1) * 3;
+        story.sID = (stageNum - 1) * 3;
         while (bgm.volume < curVolume)
         {
             bgm.volume += 0.01f;
@@ -404,18 +396,18 @@ public class MainMan : MonoBehaviour
         // 엔딩 스토리 출력
         print("엔딩 스토리 출력");
         yield return new WaitForSeconds(1);
-        storyManager.sID = (stageNum - 1) * 3;
+        story.sID = (stageNum - 1) * 3;
         if(miss < 100)
         {
-            storyManager.sID += 1;
-            storyManager.sId += 1;
+            story.sID += 1;
+            story.sId += 1;
         }
         else
         {
-            storyManager.sID += 2;
-            storyManager.sId += 2;
+            story.sID += 2;
+            story.sId += 2;
         }
-        yield return StartCoroutine(storyManager.ShowStoryCo());
+        yield return StartCoroutine(story.ShowStoryCo());
 
         yield return StartCoroutine(ShowCollection());
 
@@ -924,7 +916,7 @@ public class MainMan : MonoBehaviour
         isStart = false;
         isGame = false;
         isEnd = false;
-        //bgm.Stop();
+        bgm.Stop();
         Settable(false);
         GetComponent<NoteMan>().note_idx = 0;
         collections.Clear();
@@ -956,7 +948,6 @@ public class MainMan : MonoBehaviour
     public void SetStage()
     {
         // 스테이지 데이터 세팅
-
 
         // 스테이지 음악 세팅
         // *코드를 작성하세요.
