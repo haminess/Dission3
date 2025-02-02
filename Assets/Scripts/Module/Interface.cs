@@ -7,3 +7,8 @@ public interface ISwitch
     int number { get; set; }
     void Switch(int _num);
 }
+
+public interface ISaveData
+{
+    string GetFileName();
+}
