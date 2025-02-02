@@ -1,0 +1,235 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+<<<<<<< HEAD
+guid: 87390e02d90174b4998eb9bfcf612645
+=======
+guid: 5f3bb99bf1442d04b841a63103db821d
+>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4)
+========
+guid: 733f4f8154c1fda45ab037e3939d8dc8
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+<<<<<<< HEAD
+    filterMode: 0
+=======
+    filterMode: 1
+>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4)
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+<<<<<<< HEAD
+  spritePixelsToUnits: 32
+=======
+  spritePixelsToUnits: 100
+>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4)
+========
+  spritePixelsToUnits: 100
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+<<<<<<< HEAD
+    textureFormat: 74
+=======
+    textureFormat: -1
+>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4)
+========
+    textureFormat: -1
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+<<<<<<< HEAD
+    overridden: 1
+=======
+    overridden: 0
+>>>>>>> parent of 7b77c2d (Merge branch 'RHJ_4' of https://github.com/haminess/Dission3 into RHJ_4)
+========
+    overridden: 0
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+    sprites: []
+========
+    sprites:
+    - serializedVersion: 2
+      name: button_test_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 29
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9ce8e116ecb7634495e754c6600b572
+      internalID: 52189511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: button_test_1
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 0
+        width: 29
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b228d93343023524f8187d33b3524dfa
+      internalID: 2040725163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+<<<<<<<< HEAD:Assets/Images_total/Map/object_sink.png.meta
+    nameFileIdTable: {}
+========
+    nameFileIdTable:
+      button_test_0: 52189511
+      button_test_1: 2040725163
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/UI_File (new)/UI_File/Option/button_test.png.meta
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
