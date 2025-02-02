@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/CafeteriaChairInteraction.cs.meta
+guid: 6c0209ce424ffe448aaa58aaf838d11b
+========
+guid: 715aa44d04277cd46aa3563ee674158a
+>>>>>>>> 7a7431e8acad38f215728f4b51d0acd063bff6cd:Assets/Scripts/UI/SoundManager.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
