@@ -12,6 +12,33 @@ using UnityEngine.Timeline;
 
 public class SoundManager : MonoBehaviour
 {
+
+    private static SoundManager instance;
+    public static SoundManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                // 1. 먼저 씬에서 찾아보기
+                instance = FindObjectOfType<SoundManager>();
+
+                // 2. 씬에도 없다면 생성
+                if (instance == null)
+                {
+                    GameObject container = new GameObject("SoundManager");
+                    instance = container.AddComponent<SoundManager>();
+                    instance.bgm = instance.AddComponent<AudioSource>();
+                    instance.effect = instance.AddComponent<AudioSource>();
+                }
+
+                DontDestroyOnLoad(instance.gameObject);
+            }
+            return instance;
+        }
+    }
+
+
     private SoundData sounddata => DataManager.Instance.sounddata;
 
     [HideInInspector] public AudioSource bgm;
