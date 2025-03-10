@@ -504,7 +504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3287753637693871864}
   - component: {fileID: 6182521436628177322}
-  - component: {fileID: 5832021388191893118}
+  - component: {fileID: 5768612126276367841}
   m_Layer: 0
   m_Name: ChairPosition_2
   m_TagString: Untagged
@@ -555,7 +555,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.21146064, y: 0.34023}
   m_EdgeRadius: 0
---- !u!114 &5832021388191893118
+--- !u!114 &5768612126276367841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -564,7 +564,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3367311044963339021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: 69f8c8b69a8d49d48bc8b0e5b22d7515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 3287753637693871864}
@@ -792,7 +792,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3423836800055423868}
   - component: {fileID: 6940988159225658587}
-  - component: {fileID: 337246249601916183}
+  - component: {fileID: 8368499095079607456}
   m_Layer: 0
   m_Name: ChairPosition_6
   m_TagString: Untagged
@@ -843,7 +843,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.210929, y: 0.66171265}
   m_EdgeRadius: 0
---- !u!114 &337246249601916183
+--- !u!114 &8368499095079607456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -852,7 +852,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4893688892976524883}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: ae205ff9b0fa5534bb5f0b4419670906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 3423836800055423868}
@@ -870,7 +870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1559285311080801450}
   - component: {fileID: 754112972801484646}
-  - component: {fileID: 5800341337053351143}
+  - component: {fileID: 6237053294763758702}
   m_Layer: 0
   m_Name: ChairPosition_1
   m_TagString: Untagged
@@ -921,7 +921,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.22178558, y: 0.34023}
   m_EdgeRadius: 0
---- !u!114 &5800341337053351143
+--- !u!114 &6237053294763758702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -930,7 +930,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4970300126523936406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: 69f8c8b69a8d49d48bc8b0e5b22d7515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 1559285311080801450}
@@ -1116,7 +1116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6688480762463593359}
   - component: {fileID: 5452355802754072237}
-  - component: {fileID: 3647981918622171322}
+  - component: {fileID: 3717288295458599323}
   m_Layer: 0
   m_Name: ChairPosition_4
   m_TagString: Untagged
@@ -1167,7 +1167,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.20510215, y: 0.665637}
   m_EdgeRadius: 0
---- !u!114 &3647981918622171322
+--- !u!114 &3717288295458599323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6186940564964458718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: ae205ff9b0fa5534bb5f0b4419670906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 6688480762463593359}
@@ -1383,7 +1383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9129229150969332409}
   - component: {fileID: 869606284157811526}
-  - component: {fileID: 3432671630777466158}
+  - component: {fileID: 4751059085666074482}
   m_Layer: 0
   m_Name: ChairPosition_5
   m_TagString: Untagged
@@ -1434,7 +1434,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2188633, y: 0.66563797}
   m_EdgeRadius: 0
---- !u!114 &3432671630777466158
+--- !u!114 &4751059085666074482
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1443,7 +1443,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7540586402126967018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: ae205ff9b0fa5534bb5f0b4419670906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 9129229150969332409}
@@ -1564,7 +1564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 810652350127908623}
   - component: {fileID: 1488642609718728651}
-  - component: {fileID: 8548056746096427094}
+  - component: {fileID: 6531663931114561205}
   m_Layer: 0
   m_Name: ChairPosition_3
   m_TagString: Untagged
@@ -1615,7 +1615,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.22957572, y: 0.34009743}
   m_EdgeRadius: 0
---- !u!114 &8548056746096427094
+--- !u!114 &6531663931114561205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1624,7 +1624,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8616175282148474873}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf39720dc129304ca54847ef5de1578, type: 3}
+  m_Script: {fileID: 11500000, guid: 69f8c8b69a8d49d48bc8b0e5b22d7515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chairPosition: {fileID: 810652350127908623}
