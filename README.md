@@ -1,4 +1,4 @@
-# Catch Note
+# CATCH NOTE!
 
 > Unity 기반 2D 이동형 리듬 액션 게임
 
